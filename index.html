@@ -469,6 +469,61 @@
       margin: 0 auto 16px;
       font-size: 24px;
     }
+
+    /* Footer & Compliance Policy Styling */
+    footer {
+      background: #111827;
+      color: #d1d5db;
+      padding: 40px 20px 25px;
+      margin-top: 50px;
+      border-top: 2px solid var(--accent);
+      font-size: 0.85rem;
+    }
+
+    .footer-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #374151;
+      padding-bottom: 6px;
+    }
+
+    .footer-col p {
+      color: #9ca3af;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .footer-col a {
+      color: #60a5fa;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .footer-col a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      max-width: 1000px;
+      margin: 30px auto 0;
+      padding-top: 15px;
+      border-top: 1px solid #374151;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -497,6 +552,46 @@
     <h2 class="section-title">Trending Accessories</h2>
     <div class="products-grid" id="productGrid"></div>
   </main>
+
+  <!-- Complete Compliant Footer (Razorpay Mandatory Policies) -->
+  <footer>
+    <div class="footer-grid">
+      <!-- About -->
+      <div class="footer-col">
+        <h4>About Zivora</h4>
+        <p>Zivora is your trusted fashion store for handpicked designer jewellery and modern accessories crafted to bring effortless elegance to your lifestyle.</p>
+      </div>
+
+      <!-- Shipping Policy -->
+      <div class="footer-col">
+        <h4>Shipping Policy</h4>
+        <p>• All orders are dispatched within <strong>24–48 hours</strong>.</p>
+        <p>• Standard delivery takes <strong>5 to 7 working days</strong> across India.</p>
+        <p>• Free shipping on all prepaid orders.</p>
+      </div>
+
+      <!-- Return & Refund Policy -->
+      <div class="footer-col">
+        <h4>Cancellation & Refund</h4>
+        <p>• <strong>7-Day Replacement/Refund</strong> available if product arrives damaged or defective.</p>
+        <p>• Parcel unboxing video is required for damage claims.</p>
+        <p>• Approved refunds are credited within 5–7 working days back to original payment mode.</p>
+      </div>
+
+      <!-- Contact & Grievance -->
+      <div class="footer-col">
+        <h4>Contact & Complaints</h4>
+        <p>Have a question or grievance? Contact our customer support:</p>
+        <p><strong>Email:</strong> <a href="mailto:official.zivora.store@gmail.com">official.zivora.store@gmail.com</a></p>
+        <p><strong>Response Time:</strong> Within 24 hours</p>
+        <p><strong>Operating Address:</strong> India</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 Zivora. All rights reserved. | Built with Security & Privacy Protection.
+    </div>
+  </footer>
 
   <!-- Cart Drawer -->
   <div class="cart-drawer-backdrop" id="backdrop" onclick="toggleCart()"></div>
@@ -578,7 +673,7 @@
     </div>
   </div>
 
-  <!-- Razorpay Checkout Script -->
+  <!-- Razorpay Script -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <script>
@@ -783,7 +878,7 @@
           "contact": custPhone
         },
         "theme": {
-          "color": "#1a1a1a"
+          "color": "#111827"
         },
         "modal": {
           "ondismiss": function() {
