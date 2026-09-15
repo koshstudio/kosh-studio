@@ -284,7 +284,7 @@
       border-color: var(--text);
     }
 
-    /* Product Filter Tabs */
+    /* Filter Tabs */
     .filter-tabs {
       display: flex;
       justify-content: center;
@@ -592,6 +592,16 @@
 
     .cart-drawer.open { transform: translateX(0); }
 
+    /* Cart Quick Link Bar */
+    .cart-quick-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: #fefce8;
+      border-bottom: 1px solid #fef08a;
+    }
+
     .cart-items {
       flex-grow: 1;
       overflow-y: auto;
@@ -652,6 +662,45 @@
       padding-top: 8px;
       margin-top: 8px;
     }
+
+    /* Order Tracking Step UI */
+    .order-track-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .track-step-bar {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 12px 0 6px;
+    }
+
+    .track-step {
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: #9ca3af;
+      position: relative;
+      z-index: 2;
+    }
+
+    .track-step.done { color: #15803d; }
+    .track-step.active { color: var(--accent); font-weight: 700; }
+
+    .track-bullet {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      margin: 0 auto 4px;
+    }
+
+    .track-step.done .track-bullet { background: #15803d; }
+    .track-step.active .track-bullet { background: var(--accent); }
 
     /* Sticky Bottom Navigation */
     .bottom-nav {
@@ -717,7 +766,7 @@
       cursor: pointer;
     }
 
-    /* OTP Simulation Toast Alert */
+    /* SMS Simulation Toast Alert */
     .sms-simulation-toast {
       display: none;
       background: #1e293b;
@@ -777,7 +826,7 @@
       <button class="icon-btn" onclick="openSearchModal()" title="Search">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
       </button>
-      <button class="icon-btn" onclick="openAccountModal()" title="Zivora Wallet & Account">
+      <button class="icon-btn" onclick="openAccountModal()" title="Zivora Wallet & Orders">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </button>
       <button class="icon-btn" onclick="toggleCart()" title="Cart">
@@ -893,7 +942,7 @@
     </div>
     <div class="nav-item" onclick="openAccountModal()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <span>Wallet/Account</span>
+      <span>Wallet/Orders</span>
     </div>
   </nav>
 
@@ -940,14 +989,22 @@
     </div>
   </div>
 
-  <!-- Cart Drawer -->
+  <!-- Cart Drawer (With My Orders & Live Status Option Inside) -->
   <div class="cart-drawer-backdrop" id="backdrop" onclick="toggleCart()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="modal-header" style="padding:16px;">
       <h3>Your Bag</h3>
       <button class="close-btn" onclick="toggleCart()">&times;</button>
     </div>
+
+    <!-- Quick "My Orders / Track Orders" link inside Cart -->
+    <div class="cart-quick-bar">
+      <span style="font-size:0.75rem; color:#854d0e; font-weight:600;">Check previous orders?</span>
+      <button onclick="goToOrdersFromCart()" style="background:#111827; color:#fff; border:none; padding:5px 12px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">📦 Track My Orders</button>
+    </div>
+
     <div class="cart-items" id="cartItems"></div>
+    
     <div style="padding:16px; background:#f9fafb; border-top:1px solid var(--border);">
       <div class="coupon-box">
         <input type="text" id="couponInput" placeholder="Enter coupon (ZIVORA10)">
@@ -993,7 +1050,7 @@
           </div>
         </div>
 
-        <!-- OTP Input Container (Initially Hidden) -->
+        <!-- OTP Input Container -->
         <div id="otpInputSection" style="display:none; background:#f3f4f6; border:1px solid #d1d5db; padding:12px; border-radius:8px; margin-bottom:12px;">
           <label style="font-size:0.75rem; font-weight:700; color:#374151; display:block; margin-bottom:6px;">Enter 4-Digit OTP *</label>
           <div style="display:flex; gap:8px;">
@@ -1027,7 +1084,7 @@
           <input type="text" id="custPin" placeholder="6-digit pincode" pattern="[0-9]{6}" required>
         </div>
 
-        <!-- Wallet Payment Option Checkbox -->
+        <!-- Wallet Payment Option -->
         <div id="checkoutWalletBox" style="background:#fefce8; border:1px solid #fde047; padding:10px; border-radius:6px; margin:10px 0; font-size:0.8rem; display:none;">
           <label style="display:flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
             <input type="checkbox" id="useWalletCheck" onchange="toggleWalletPayment()">
@@ -1058,7 +1115,7 @@
         <p style="font-size:0.85rem; color:#4b5563; margin-bottom:12px;">Mobile verified & payment received.</p>
         
         <div class="policy-warning-card" style="text-align:left; margin-bottom:16px;">
-          <strong>📦 Delivery Tip:</strong> Kripya packet open karte waqt unboxing video zaroor shoot karein. Agar koi piece wrong nikla toh aapko Zivora Wallet me turant refund mil jayega jise aap apne Bank/UPI me transfer kar payenge.
+          <strong>📦 Delivery Tip:</strong> Kripya packet open karte waqt unboxing video zaroor shoot karein. Agar koi piece wrong nikla toh aapko Zivora Wallet me turant refund mil jayega.
         </div>
 
         <p style="font-size:0.85rem; font-weight:700;" id="confirmedOrderId"></p>
@@ -1067,15 +1124,16 @@
     </div>
   </div>
 
-  <!-- User Account & Zivora Wallet Modal -->
+  <!-- User Account & Order Status Tracking Modal -->
   <div class="modal-overlay" id="accountModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3>Zivora Wallet & Orders</h3>
+        <h3>My Orders & Zivora Wallet</h3>
         <button class="close-btn" onclick="closeAccountModal()">&times;</button>
       </div>
       <div id="accountContent">
         
+        <!-- Wallet Card -->
         <div class="wallet-card">
           <div class="wallet-card-header">
             <span>✨ ZIVORA DIGITAL WALLET</span>
@@ -1087,17 +1145,19 @@
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h4 style="font-size:0.9rem;">Recent Orders</h4>
-          <button onclick="openReturnPortal()" style="background:#fef3c7; color:#92400e; border:1px solid #f59e0b; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">📹 Raise Return Request</button>
+          <h4 style="font-size:0.95rem; font-weight:700;">📦 My Order Tracking</h4>
+          <button onclick="openReturnPortal()" style="background:#fef3c7; color:#92400e; border:1px solid #f59e0b; padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">📹 Raise Return</button>
         </div>
+        
+        <!-- Interactive List of Orders with Step-by-Step Status Tracker -->
         <div id="orderHistoryList" style="font-size:0.85rem; color:#4b5563;">
-          <p>Koi purana order nahi mila.</p>
+          <p>Aapne abhi tak koi order place nahi kiya hai.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Wallet Withdrawal to Bank / UPI Modal -->
+  <!-- Wallet Withdrawal Modal -->
   <div class="modal-overlay" id="withdrawModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -1156,7 +1216,7 @@
       
       <div class="policy-warning-card">
         <strong>Strict Policy Notice:</strong><br>
-        Return sirf tabhi process hoga agar aapko <strong>Galat (Wrong) Product</strong> mila hai ya <strong>Kharab / Toota hua</strong> nikla hai. Bina continuous unboxing video proof ke koi request accept nahi hogi. Refund seedha aapke <strong>Zivora Wallet</strong> me credit hoga jise aap apne bank me withdraw kar sakenge.
+        Return sirf tabhi process hoga agar aapko <strong>Galat (Wrong) Product</strong> mila hai ya <strong>Kharab / Toota hua</strong> nikla hai. Bina continuous unboxing video proof ke koi request accept nahi hogi. Refund seedha aapke <strong>Zivora Wallet</strong> me credit hoga.
       </div>
 
       <form id="returnForm" onsubmit="handleReturnSubmit(event)">
@@ -1202,7 +1262,7 @@
     </div>
   </div>
 
-  <!-- Admin Dashboard Modal -->
+  <!-- Admin Dashboard Modal (With Super Easy Product Add & Order Status Updater) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width:650px;">
       <div class="modal-header">
@@ -1215,35 +1275,93 @@
         <input type="password" id="adminPassInput" placeholder="Password: Rohit@2006" style="width:100%; padding:9px 12px; margin-bottom:12px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit;">
         <button class="btn-full" onclick="checkAdminAuth()">Login</button>
       </div>
+
       <div id="adminDashboardSection" style="display:none;">
+        
+        <!-- Easy Product Add Box -->
+        <div style="background:#fdfbf7; border:2px solid var(--accent); border-radius:8px; padding:14px; margin-bottom:18px;">
+          <h4 style="color:#8c6838; font-size:0.95rem; margin-bottom:6px;">➕ Easy Product Add Section (Add in 30 Seconds)</h4>
+          <p style="font-size:0.75rem; color:#6b7280; margin-bottom:12px;">Bas photo ka link aur details daalein, naya product live website par jud jayega:</p>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:0.8rem;">
+            <div style="grid-column:span 2;">
+              <label style="font-weight:700; font-size:0.75rem;">Product Name *</label>
+              <input type="text" id="newPTitle" placeholder="e.g. Royal Emerald Choker Necklace" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+            </div>
+
+            <div>
+              <label style="font-weight:700; font-size:0.75rem;">Category *</label>
+              <select id="newPCat" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <option value="Earrings">Earrings</option>
+                <option value="Necklaces">Necklaces</option>
+                <option value="Bracelets">Bracelets</option>
+                <option value="Rings">Rings</option>
+                <option value="Bags">Bags</option>
+                <option value="Sunglasses">Sunglasses</option>
+                <option value="Watches">Watches</option>
+                <option value="Hair">Hair Accessories</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-weight:700; font-size:0.75rem;">Section / Badge *</label>
+              <select id="newPTag" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+                <option value="trending">Trending</option>
+                <option value="bestseller">Best Seller</option>
+                <option value="new">New Arrival</option>
+                <option value="offer">Special Offer</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-weight:700; font-size:0.75rem;">Selling Price (₹) *</label>
+              <input type="number" id="newPPrice" placeholder="e.g. 699" oninput="calculateAdminDiscount()" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+            </div>
+
+            <div>
+              <label style="font-weight:700; font-size:0.75rem;">Original MRP (₹) *</label>
+              <input type="number" id="newPMrp" placeholder="e.g. 1499" oninput="calculateAdminDiscount()" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+            </div>
+
+            <div style="grid-column:span 2;">
+              <label style="font-weight:700; font-size:0.75rem;">Photo Image Link (URL) *</label>
+              <input type="text" id="newPImg" placeholder="https://... (ImgBB, Unsplash ya Postimages link)" oninput="previewAdminImage(this.value)" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+              <div id="adminImgPreviewBox" style="margin-top:8px; display:none; align-items:center; gap:10px;">
+                <img id="adminImgPreview" src="" style="width:50px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
+                <span style="font-size:0.75rem; color:green; font-weight:600;">✓ Photo Preview Ready</span>
+              </div>
+            </div>
+
+            <div style="grid-column:span 2; font-size:0.75rem; color:#854d0e;" id="adminDiscountPreview"></div>
+          </div>
+
+          <button class="btn-full" style="margin-top:12px; background:var(--accent-dark);" onclick="adminAddProduct()">⚡ Publish Product to Store</button>
+        </div>
+
+        <!-- Manage Existing Products (Delete option) -->
+        <h4 style="margin-bottom:8px;">📦 Active Products on Store (<span id="adminTotalProdCount">0</span>)</h4>
+        <div id="adminProductListContainer" style="max-height:160px; overflow-y:auto; border:1px solid var(--border); padding:8px; font-size:0.75rem; margin-bottom:16px;"></div>
+
+        <!-- Orders & Status Updates -->
+        <h4 style="margin-bottom:8px;">🚚 Customer Orders & Status Update</h4>
+        <div id="adminOrdersContainer" style="max-height:180px; overflow-y:auto; border:1px solid var(--border); padding:8px; font-size:0.75rem; margin-bottom:16px;"></div>
+
+        <!-- Bank Withdrawals -->
         <h4 style="margin-bottom:8px;">💳 Customer Bank / UPI Withdrawal Requests</h4>
-        <div id="adminWithdrawalsContainer" style="max-height:160px; overflow-y:auto; border:1px solid #bbf7d0; background:#f0fdf4; padding:10px; font-size:0.75rem; margin-bottom:16px;"></div>
+        <div id="adminWithdrawalsContainer" style="max-height:140px; overflow-y:auto; border:1px solid #bbf7d0; background:#f0fdf4; padding:8px; font-size:0.75rem; margin-bottom:16px;"></div>
 
-        <h4 style="margin-bottom:8px;">📹 Return Claims (Video Proofs & Wallet Credit)</h4>
-        <div id="adminReturnsContainer" style="max-height:160px; overflow-y:auto; border:1px solid #fef3c7; background:#fffbeb; padding:10px; font-size:0.75rem; margin-bottom:16px;"></div>
+        <!-- Return Claims -->
+        <h4 style="margin-bottom:8px;">📹 Return Claims (Video Proofs)</h4>
+        <div id="adminReturnsContainer" style="max-height:140px; overflow-y:auto; border:1px solid #fef3c7; background:#fffbeb; padding:8px; font-size:0.75rem; margin-bottom:16px;"></div>
 
+        <!-- Add Money to Wallet -->
         <div style="background:#f9fafb; border:1px solid var(--border); padding:10px; border-radius:6px; margin-bottom:16px;">
-          <h4 style="font-size:0.85rem; margin-bottom:6px;">💰 Add Money Directly to Customer Wallet</h4>
+          <h4 style="font-size:0.85rem; margin-bottom:6px;">💰 Add Refund Directly to Customer Wallet</h4>
           <div style="display:flex; gap:8px;">
             <input type="number" id="adminCreditAmount" placeholder="Amount (₹)" style="padding:6px; font-size:0.8rem; width:120px;">
             <button onclick="adminManualCreditWallet()" style="background:#111; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Credit to Wallet</button>
           </div>
         </div>
-
-        <h4 style="margin-bottom:8px;">All Customer Prepaid Orders</h4>
-        <div id="adminOrdersContainer" style="max-height:160px; overflow-y:auto; border:1px solid var(--border); padding:10px; font-size:0.75rem; margin-bottom:16px;"></div>
-
-        <h4 style="margin-bottom:8px;">Add New Dropshipping Product</h4>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.8rem;">
-          <input type="text" id="newPTitle" placeholder="Product Title">
-          <select id="newPCat">
-            <option>Earrings</option><option>Necklaces</option><option>Bracelets</option><option>Rings</option><option>Bags</option><option>Sunglasses</option><option>Watches</option><option>Hair</option>
-          </select>
-          <input type="number" id="newPPrice" placeholder="Selling Price (₹)">
-          <input type="number" id="newPMrp" placeholder="MRP Price (₹)">
-          <input type="text" id="newPImg" placeholder="Image URL" style="grid-column: span 2;">
-        </div>
-        <button class="btn-full" style="margin-top:10px;" onclick="adminAddProduct()">+ Add Product to Store</button>
       </div>
     </div>
   </div>
@@ -1524,6 +1642,12 @@
       backdrop.style.display = drawer.classList.contains("open") ? "block" : "none";
     }
 
+    // Direct Switch to Orders from inside Cart
+    function goToOrdersFromCart() {
+      toggleCart();
+      openAccountModal();
+    }
+
     function addToCart(productId, qty = 1) {
       const product = products.find(p => p.id === productId);
       const existing = cart.find(item => item.id === productId);
@@ -1611,7 +1735,6 @@
       document.getElementById("checkoutModal").style.display = "flex";
     }
 
-    // OTP Generation and Sending
     function sendMobileOtp() {
       const phoneInput = document.getElementById("custPhone");
       const phone = phoneInput.value.trim();
@@ -1621,22 +1744,18 @@
         return;
       }
 
-      // Generate random 4-digit OTP
       currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
-      // Show SMS Alert Banner
       const toast = document.getElementById("smsNotificationToast");
       const text = document.getElementById("smsNotificationText");
       text.innerHTML = `Mobile <strong>+91 ${phone}</strong> par bheja gaya OTP hai: <span style="color:#38bdf8; font-size:1.1rem; font-weight:800; letter-spacing:2px;">${currentGeneratedOtp}</span>`;
       toast.style.display = "block";
 
-      // Show OTP Input Box
       document.getElementById("otpInputSection").style.display = "block";
       document.getElementById("btnSendOtp").innerText = "Resend OTP";
       phoneInput.setAttribute("readonly", "true");
     }
 
-    // OTP Verification
     function verifyMobileOtp() {
       const entered = document.getElementById("enteredOtpInput").value.trim();
       const badge = document.getElementById("otpStatusBadge");
@@ -1698,7 +1817,6 @@
       const custState = document.getElementById("custState").value;
       const custPin = document.getElementById("custPin").value;
 
-      // Strict OTP Check Before Payment
       if (!isPhoneVerified) {
         alert("❌ Order karne se pehle apna mobile number OTP ke sath verify karna anivarya hai! Kripya 'Send OTP' button par click karein.");
         return;
@@ -1708,7 +1826,6 @@
       const itemsSummary = cart.map(i => `${i.title} (Qty: ${i.qty}, Price: ₹${i.price * i.qty})`).join('\n');
       const useWallet = document.getElementById("useWalletCheck") && document.getElementById("useWalletCheck").checked;
 
-      // Pure paise Wallet se pay hone par
       if (payableAmount === 0 && useWallet) {
         const subTotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
         const orderVal = Math.max(0, subTotal - discountAmount);
@@ -1717,7 +1834,6 @@
         return;
       }
 
-      // Prepaid Razorpay Payment Flow
       submitBtn.disabled = true;
       submitBtn.innerText = "Opening Razorpay Prepaid Gateway...";
 
@@ -1775,7 +1891,8 @@
         address: `${address}, ${city} - ${pin}`,
         items: items,
         total: `₹${total}`,
-        status: "Processing (Paid & Verified)"
+        statusCode: "confirmed", // confirmed -> packed -> shipped -> delivered
+        statusText: "Order Confirmed (Processing)"
       });
       localStorage.setItem("zivora_orders", JSON.stringify(savedOrders));
 
@@ -1794,24 +1911,50 @@
       document.getElementById("successContent").style.display = "block";
     }
 
-    // User Account & Wallet Modal
+    // User Account & Orders Live Tracking View
     function openAccountModal() {
       updateWalletUI();
       const listEl = document.getElementById("orderHistoryList");
       const orders = JSON.parse(localStorage.getItem("zivora_orders") || "[]");
+      
       if (orders.length === 0) {
-        listEl.innerHTML = "<p>Aapne abhi tak koi order place nahi kiya hai.</p>";
+        listEl.innerHTML = "<p style='text-align:center; padding:20px; color:#9ca3af;'>Aapne abhi tak koi order place nahi kiya hai.</p>";
       } else {
-        listEl.innerHTML = orders.map(o => `
-          <div style="background:#f9fafb; padding:10px; border-radius:6px; margin-bottom:10px; border:1px solid var(--border);">
-            <div style="display:flex; justify-content:space-between; font-weight:700;">
-              <span>ID: ${o.id}</span>
-              <span style="color:var(--accent);">${o.total}</span>
+        listEl.innerHTML = orders.map(o => {
+          const s = o.statusCode || "confirmed";
+          return `
+            <div class="order-track-box">
+              <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.85rem;">
+                <span>ID: ${o.id}</span>
+                <span style="color:var(--accent);">${o.total}</span>
+              </div>
+              <div style="font-size:0.75rem; color:#6b7280; margin:3px 0;">Date: ${o.date} | Items: ${o.items}</div>
+              
+              <!-- Live Tracking Step Bar -->
+              <div class="track-step-bar">
+                <div class="track-step ${s==='confirmed'||s==='packed'||s==='shipped'||s==='delivered'?'done':''}">
+                  <div class="track-bullet"></div>
+                  Confirmed
+                </div>
+                <div class="track-step ${s==='packed'||s==='shipped'||s==='delivered'?'done':(s==='confirmed'?'active':'')}">
+                  <div class="track-bullet"></div>
+                  Packed
+                </div>
+                <div class="track-step ${s==='shipped'||s==='delivered'?'done':(s==='packed'?'active':'')}">
+                  <div class="track-bullet"></div>
+                  Shipped
+                </div>
+                <div class="track-step ${s==='delivered'?'done':(s==='shipped'?'active':'')}">
+                  <div class="track-bullet"></div>
+                  Delivered
+                </div>
+              </div>
+              <div style="font-size:0.75rem; font-weight:700; color:#15803d; text-align:center; margin-top:6px; background:#f0fdf4; padding:4px; border-radius:4px;">
+                Status: ${o.statusText || 'Order Confirmed (Processing)'}
+              </div>
             </div>
-            <div style="font-size:0.75rem; color:#6b7280; margin:4px 0;">Date: ${o.date} | Phone: ${o.phone}</div>
-            <div style="font-size:0.8rem; font-weight:600; color:green;">Status: ${o.status}</div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       }
       document.getElementById("accountModal").style.display = "flex";
     }
@@ -1960,7 +2103,7 @@
 
       btn.disabled = false;
       btn.innerText = "Submit for Video Verification";
-      alert("✅ Aapka Return Request darj ho gaya hai. Hamari team unboxing video verify karke refund seedha aapke Zivora Wallet me credit karegi jahan se aap apne bank me withdraw kar sakenge.");
+      alert("✅ Aapka Return Request darj ho gaya hai. Hamari team unboxing video verify karke refund seedha aapke Zivora Wallet me credit karegi.");
       closeReturnModal();
     }
 
@@ -1984,8 +2127,44 @@
       }
     }
 
+    function previewAdminImage(url) {
+      const box = document.getElementById("adminImgPreviewBox");
+      const img = document.getElementById("adminImgPreview");
+      if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
+        img.src = url;
+        box.style.display = "flex";
+      } else {
+        box.style.display = "none";
+      }
+    }
+
+    function calculateAdminDiscount() {
+      const p = Number(document.getElementById("newPPrice").value);
+      const m = Number(document.getElementById("newPMrp").value);
+      const prev = document.getElementById("adminDiscountPreview");
+      if (p && m && m > p) {
+        const disc = Math.round(((m - p) / m) * 100);
+        prev.innerHTML = `💡 Customer ko <strong>${disc}% OFF</strong> dikhega (Profit Margin: ₹${m - p} cut-off)`;
+      } else {
+        prev.innerText = "";
+      }
+    }
+
     function loadAdminData() {
-      // Bank Withdrawals List
+      // 1. Total Products & Delete Option
+      const pCont = document.getElementById("adminProductListContainer");
+      document.getElementById("adminTotalProdCount").innerText = products.length;
+      pCont.innerHTML = products.map(p => `
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding:6px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img src="${p.image}" style="width:34px; height:34px; object-fit:cover; border-radius:4px;">
+            <span><strong>${p.title}</strong> (₹${p.price})</span>
+          </div>
+          <button onclick="adminDeleteProduct(${p.id})" style="background:#dc2626; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">Delete</button>
+        </div>
+      `).join('');
+
+      // 2. Bank Withdrawals List
       const wCont = document.getElementById("adminWithdrawalsContainer");
       const wList = JSON.parse(localStorage.getItem("zivora_withdrawals") || "[]");
       if (wList.length === 0) {
@@ -1999,7 +2178,7 @@
         `).join('');
       }
 
-      // Return Claims List
+      // 3. Return Claims List
       const rCont = document.getElementById("adminReturnsContainer");
       const rList = JSON.parse(localStorage.getItem("zivora_returns") || "[]");
       if (rList.length === 0) {
@@ -2014,19 +2193,94 @@
         `).join('');
       }
 
-      // Orders List
+      // 4. Orders with Live Status Update Dropdown
       const oCont = document.getElementById("adminOrdersContainer");
       const oList = JSON.parse(localStorage.getItem("zivora_orders") || "[]");
       if (oList.length === 0) {
         oCont.innerHTML = "<p>No orders yet.</p>";
       } else {
         oCont.innerHTML = oList.map(o => `
-          <div style="border-bottom:1px solid #ddd; padding:6px 0; margin-bottom:4px;">
-            <strong>${o.id}</strong> | ${o.name} - ${o.total}<br>
-            <em>${o.phone}</em> | <em>Address: ${o.address}</em>
+          <div style="border-bottom:1px solid #ddd; padding:8px 0; margin-bottom:6px;">
+            <strong>${o.id}</strong> | ${o.name} - <strong>${o.total}</strong><br>
+            <em>Address: ${o.address}</em><br>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+              <span>Current: <strong>${o.statusText || 'Order Confirmed'}</strong></span>
+              <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; font-size:0.72rem; border-radius:4px; border:1px solid #999;">
+                <option value="">Update Status...</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="packed">Packed & Ready</option>
+                <option value="shipped">Shipped / Dispatched</option>
+                <option value="delivered">Delivered Successfully</option>
+              </select>
+            </div>
           </div>
         `).join('');
       }
+    }
+
+    function updateOrderStatus(orderId, statusCode) {
+      if (!statusCode) return;
+      let orders = JSON.parse(localStorage.getItem("zivora_orders") || "[]");
+      const ord = orders.find(o => o.id === orderId);
+      if (ord) {
+        ord.statusCode = statusCode;
+        if (statusCode === "confirmed") ord.statusText = "Order Confirmed (Processing)";
+        if (statusCode === "packed") ord.statusText = "Packed & Ready for Courier";
+        if (statusCode === "shipped") ord.statusText = "Shipped / In Transit with Courier";
+        if (statusCode === "delivered") ord.statusText = "Delivered to Customer";
+        localStorage.setItem("zivora_orders", JSON.stringify(orders));
+        alert(`Status updated to: ${ord.statusText}`);
+        loadAdminData();
+      }
+    }
+
+    function adminDeleteProduct(id) {
+      if (confirm("Kya aap sach me is product ko store se delete karna chahte hain?")) {
+        products = products.filter(p => p.id !== id);
+        renderProducts();
+        loadAdminData();
+      }
+    }
+
+    function adminAddProduct() {
+      const title = document.getElementById("newPTitle").value.trim();
+      const cat = document.getElementById("newPCat").value;
+      const tag = document.getElementById("newPTag").value;
+      const price = Number(document.getElementById("newPPrice").value);
+      const mrp = Number(document.getElementById("newPMrp").value);
+      const img = document.getElementById("newPImg").value.trim() || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600";
+
+      if (!title || !price || !mrp) {
+        alert("Product title, selling price aur MRP bharna zaroori hai!");
+        return;
+      }
+
+      const newId = Date.now();
+      products.unshift({
+        id: newId,
+        title: title,
+        category: cat,
+        tag: tag,
+        price: price,
+        mrp: mrp,
+        rating: 5.0,
+        reviews: 1,
+        desc: `Premium handcrafted ${cat.toLowerCase()} piece designed with elegance for modern styling.`,
+        image: img,
+        supplierSku: "DROPSHIP-" + newId
+      });
+
+      renderProducts();
+      loadAdminData();
+      alert("🎉 Mubarak ho! Naya product live store par add ho gaya hai!");
+      
+      // Form reset
+      document.getElementById("newPTitle").value = "";
+      document.getElementById("newPPrice").value = "";
+      document.getElementById("newPMrp").value = "";
+      document.getElementById("newPImg").value = "";
+      document.getElementById("adminImgPreviewBox").style.display = "none";
+      document.getElementById("adminDiscountPreview").innerText = "";
     }
 
     function adminManualCreditWallet() {
@@ -2038,38 +2292,6 @@
       setWalletBalance(getWalletBalance() + amt);
       alert(`✅ ₹${amt} customer ke Zivora Wallet me credit kar diye gaye hain!`);
       document.getElementById("adminCreditAmount").value = "";
-    }
-
-    function adminAddProduct() {
-      const title = document.getElementById("newPTitle").value;
-      const cat = document.getElementById("newPCat").value;
-      const price = Number(document.getElementById("newPPrice").value);
-      const mrp = Number(document.getElementById("newPMrp").value);
-      const img = document.getElementById("newPImg").value || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600";
-
-      if (!title || !price) {
-        alert("Product title and price required!");
-        return;
-      }
-
-      const newId = products.length + 1;
-      products.unshift({
-        id: newId,
-        title: title,
-        category: cat,
-        tag: "new",
-        price: price,
-        mrp: mrp || price + 400,
-        rating: 5.0,
-        reviews: 1,
-        desc: "Handcrafted trending designer accessory.",
-        image: img,
-        supplierSku: "DROPSHIP-" + newId
-      });
-
-      renderProducts();
-      alert("Naya product store par live ho gaya!");
-      closeAdminModal();
     }
 
     renderProducts();
