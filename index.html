@@ -14,9 +14,9 @@
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #2874f0; /* Flipkart Blue */
+      --primary: #2874f0;
       --primary-dark: #1e5bb8;
-      --accent: #fb641b; /* Flipkart Orange */
+      --accent: #fb641b;
       --border: #e0e0e0;
       --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
       --success: #388e3c;
@@ -32,7 +32,6 @@
       padding-bottom: 70px;
     }
 
-    /* Top Strip */
     .top-strip {
       background: #2874f0;
       color: #fff;
@@ -43,7 +42,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Professional Header */
     header {
       background: #2874f0;
       color: #fff;
@@ -124,7 +122,6 @@
       border: 1px solid #fff;
     }
 
-    /* Category Bar */
     .categories-bar {
       background: #ffffff;
       display: flex;
@@ -149,14 +146,12 @@
 
     .cat-item.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-    /* Main Container */
     .container {
       max-width: 1200px;
       margin: 12px auto;
       padding: 0 10px;
     }
 
-    /* Products Grid */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -237,7 +232,7 @@
       background: #2874f0; color: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10;
     }
 
-    .back-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .back-btn { background: none; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
     .product-page-content {
       max-width: 900px; margin: 20px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr; gap: 20px;
@@ -256,7 +251,6 @@
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
-    /* Modals & Overlays */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6);
       z-index: 100; display: none; align-items: center; justify-content: center; padding: 10px;
@@ -274,7 +268,6 @@
 
     .close-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); }
 
-    /* Order Tracking Timeline */
     .order-tracker {
       background: #f9f9f9; border: 1px solid var(--border); border-radius: 4px; padding: 14px; margin-bottom: 12px;
     }
@@ -286,7 +279,6 @@
     .t-step.done .t-dot { background: var(--success); }
     .t-step.active .t-dot { background: var(--primary); }
 
-    /* Form Controls */
     .form-group { margin-bottom: 10px; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; color: #212121; }
     .form-group input, .form-group textarea, .form-group select {
@@ -300,7 +292,6 @@
     }
     .btn-primary-solid:hover { background: #e05312; }
 
-    /* Bottom App Navigation */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff;
       border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 55;
@@ -318,7 +309,6 @@
 
   <div class="top-strip">⚡ 100% PREPAID SECURE STORE | FREE EXPRESS DELIVERY ACROSS INDIA</div>
 
-  <!-- Professional Header -->
   <header>
     <a href="#" class="brand-name">Zivora<span>plus</span></a>
     
@@ -339,7 +329,6 @@
     </div>
   </header>
 
-  <!-- Categories Bar -->
   <div class="categories-bar">
     <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
     <div class="cat-item" onclick="filterCategory('Earrings')">Earrings</div>
@@ -368,7 +357,6 @@
     </div>
   </footer>
 
-  <!-- Bottom App Navigation -->
   <nav class="bottom-nav">
     <a class="nav-tab active" onclick="window.scrollTo({top:0, behavior:'smooth'})">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
@@ -384,10 +372,10 @@
     </a>
   </nav>
 
-  <!-- Dedicated Full Product Page View (Opens like an individual page) -->
+  <!-- Dedicated Full Product Page View -->
   <div class="product-page-view" id="productPageView">
     <div class="page-header">
-      <button class="back-btn" onclick="closeProductPage()">← Back to Store</button>
+      <button class="back-btn" onclick="closeProductPage()">← Back</button>
       <span style="font-weight:700; font-size:0.95rem;" id="headerPageTitle">Product Overview</span>
     </div>
     <div class="product-page-content">
@@ -405,7 +393,6 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
-        <!-- Pincode Checker -->
         <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
           <strong>Delivery Options:</strong>
           <div style="display:flex; gap:8px; margin-top:8px;">
@@ -423,7 +410,7 @@
     </div>
   </div>
 
-  <!-- Cart Slide Drawer (Coupons Removed) -->
+  <!-- Cart Slide Drawer -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="modal-header" style="padding:16px;">
@@ -510,4 +497,306 @@
       <div id="adminLoginBox">
         <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:2px;">
         <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:2px;">
-        <button class="btn-primary-sol
+        <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login</button>
+      </div>
+      <div id="adminDashBox" style="display:none;">
+        <p style="font-size:0.85rem; color:var(--success); font-weight:700; margin-bottom:10px;">✓ Admin Verified</p>
+        <div style="background:#f9f9f9; padding:10px; border-radius:4px;">
+          <h4 style="font-size:0.85rem; margin-bottom:6px;">Add Product</h4>
+          <input type="text" id="npTitle" placeholder="Title" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid var(--border);">
+          <div class="form-row">
+            <input type="number" id="npPrice" placeholder="Price" style="padding:6px; border:1px solid var(--border);">
+            <input type="number" id="npMrp" placeholder="MRP" style="padding:6px; border:1px solid var(--border);">
+          </div>
+          <input type="text" id="npImg" placeholder="Image URL" style="width:100%; padding:6px; margin:6px 0; border:1px solid var(--border);">
+          <button class="btn-primary-solid" style="padding:8px; font-size:0.8rem;" onclick="adminAddNewProduct()">Publish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    const SUPABASE_URL = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_9nVcO5j-oTG36AExeoiLMQ_N0b8naYn';
+    let db = null;
+    try { if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+    let catalog = [
+      { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600" },
+      { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600" },
+      { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600" },
+      { id: 4, title: "Sleek Emerald Baguette Ring", category: "Rings", tag: "offer", price: 649, mrp: 1299, rating: 4.6, reviews: 51, desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600" },
+      { id: 5, title: "Minimalist Italian Leather Shoulder Bag", category: "Bags", tag: "bestseller", price: 1499, mrp: 2999, rating: 4.9, reviews: 33, desc: "Premium PU leather luxury handbag with gold magnetic clasp.", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600" },
+      { id: 6, title: "Chic Cat-Eye Retro Sunglasses", category: "Sunglasses", tag: "new", price: 749, mrp: 1499, rating: 4.7, reviews: 18, desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600" },
+      { id: 7, title: "Rose Gold Mesh Classic Watch", category: "Watches", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 64, desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic strap.", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600" },
+      { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600" }
+    ];
+
+    let cart = [];
+    let currentCategory = 'All';
+    let activePageProduct = null;
+
+    async function syncSupabaseCatalog() {
+      if (!db) return;
+      try {
+        let { data } = await db.from('products').select('*');
+        if (data && data.length > 0) {
+          catalog = data.map(p => ({
+            id: p.id, title: p.title, category: p.category, tag: p.tag || 'trending',
+            price: Number(p.price), mrp: Number(p.mrp), rating: Number(p.rating || 4.8),
+            reviews: p.reviews || 12, desc: p.description || '', image: p.image
+          }));
+          renderGrid();
+        }
+      } catch(e){}
+    }
+
+    function renderGrid(list = null) {
+      let grid = document.getElementById("productGrid");
+      if (!grid) return;
+      let items = list || catalog;
+      if (currentCategory !== 'All' && !list) {
+        items = items.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
+      }
+      grid.innerHTML = items.map(p => {
+        let disc = Math.round(((p.mrp - p.price) / p.mrp) * 100);
+        return `
+          <div class="product-card">
+            <span class="badge-discount">${disc}% OFF</span>
+            <div class="product-img" onclick="openProductPage(${p.id})">
+              <img src="${p.image}" alt="${p.title}" loading="lazy">
+            </div>
+            <div class="product-info">
+              <span class="p-category">${p.category}</span>
+              <h3 class="p-title" onclick="openProductPage(${p.id})">${p.title}</h3>
+              <div class="p-rating-row">★ ${p.rating} (${p.reviews})</div>
+              <div class="p-price-row">
+                <span class="p-price">₹${p.price}</span>
+                <span class="p-mrp">₹${p.mrp}</span>
+              </div>
+              <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-item').forEach(el => el.classList.toggle('active', el.innerText.includes(cat) || (cat==='All' && el.innerText.includes('All'))));
+      renderGrid();
+    }
+
+    function handleSearch(q) {
+      q = q.trim().toLowerCase();
+      if (!q) { renderGrid(); return; }
+      renderGrid(catalog.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
+    }
+
+    function openProductPage(id) {
+      let p = catalog.find(item => item.id == id);
+      if (!p) return;
+      activePageProduct = p;
+      document.getElementById("pPageTitle").innerText = p.title;
+      document.getElementById("pPageCategory").innerText = p.category;
+      document.getElementById("pPageImg").src = p.image;
+      document.getElementById("pPagePrice").innerText = `₹${p.price}`;
+      document.getElementById("pPageMrp").innerText = `₹${p.mrp}`;
+      document.getElementById("pPageDiscount").innerText = `${Math.round(((p.mrp - p.price)/p.mrp)*100)}% OFF`;
+      document.getElementById("pPageDesc").innerText = p.desc;
+      document.getElementById("pPageRating").innerHTML = `★ ${p.rating} (${p.reviews || 12} reviews)`;
+      document.getElementById("pinResult").innerText = "";
+      document.getElementById("checkPin").value = "";
+      document.getElementById("headerPageTitle").innerText = p.title;
+      
+      document.getElementById("productPageView").style.display = "block";
+      window.scrollTo(0,0);
+    }
+
+    function closeProductPage() {
+      document.getElementById("productPageView").style.display = "none";
+    }
+
+    function checkPinDelivery() {
+      let pin = document.getElementById("checkPin").value.trim();
+      let res = document.getElementById("pinResult");
+      if (pin.length === 6) {
+        res.style.color = "var(--success)";
+        res.innerText = "✓ Delivery available (5-7 days)";
+      } else {
+        res.style.color = "#d32f2f";
+        res.innerText = "Enter valid 6-digit Pincode";
+      }
+    }
+
+    function addCurrentToPageCart() {
+      if (activePageProduct) { addToCart(activePageProduct.id); closeProductPage(); }
+    }
+
+    function buyNowCurrentPage() {
+      if (activePageProduct) {
+        addToCart(activePageProduct.id);
+        closeProductPage();
+        openCheckoutModal();
+      }
+    }
+
+    function toggleCart() {
+      let drawer = document.getElementById("cartDrawer");
+      let backdrop = document.getElementById("cartBackdrop");
+      let isOpen = drawer.classList.contains("open");
+      drawer.classList.toggle("open", !isOpen);
+      backdrop.style.display = !isOpen ? "block" : "none";
+    }
+
+    function addToCart(id) {
+      let p = catalog.find(item => item.id == id);
+      let exist = cart.find(item => item.id == id);
+      if (exist) exist.qty += 1;
+      else cart.push({ ...p, qty: 1 });
+      updateCartUI();
+      toggleCart();
+    }
+
+    function updateCartUI() {
+      let totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      document.getElementById("cartCount").innerText = totalQty;
+      document.getElementById("cartTotalPrice").innerText = `₹${totalPrice}`;
+
+      let container = document.getElementById("cartItemsContainer");
+      if (cart.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--muted); padding:30px;">Your cart is empty</p>`;
+        return;
+      }
+      container.innerHTML = cart.map(item => `
+        <div style="display:flex; gap:10px; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+          <img src="${item.image}" style="width:60px; height:70px; object-fit:cover; border-radius:2px;">
+          <div style="flex-grow:1;">
+            <div style="font-size:0.8rem; font-weight:600;">${item.title}</div>
+            <div style="font-size:0.85rem; font-weight:700; margin-top:4px;">₹${item.price} × ${item.qty}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) return alert("Cart is empty!");
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      document.getElementById("checkoutPayableAmount").innerText = `₹${totalPrice}`;
+      if (document.getElementById("cartDrawer").classList.contains("open")) toggleCart();
+      document.getElementById("checkoutModal").style.display = "flex";
+    }
+
+    function closeCheckoutModal() { document.getElementById("checkoutModal").style.display = "none"; }
+
+    function processRazorpayPayment(e) {
+      e.preventDefault();
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let name = document.getElementById("cName").value;
+      let phone = document.getElementById("cPhone").value;
+      let email = document.getElementById("cEmail").value;
+
+      let options = {
+        key: "rzp_test_TcBzIPGiQ5PniF",
+        amount: totalPrice * 100,
+        currency: "INR",
+        name: "Zivora Plus",
+        description: "Secure Prepaid Order",
+        handler: async function (response) {
+          let orderId = "ZIV-" + Date.now().toString().slice(-6);
+          if (db) {
+            await db.from('orders').insert([{
+              id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
+              shipping_address: document.getElementById("cAddress").value,
+              city: document.getElementById("cCity").value, state: "State", pincode: document.getElementById("cPin").value,
+              total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed"
+            }]);
+          }
+          localStorage.setItem("ziv_phone", phone);
+          alert("✓ Order Placed Successfully! ID: " + orderId);
+          cart = []; updateCartUI(); closeCheckoutModal();
+        },
+        prefill: { name, contact: phone, email }
+      };
+      let rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+    async function openAccountModal() {
+      let phone = localStorage.getItem("ziv_phone") || "";
+      let list = document.getElementById("orderHistoryList");
+      if (phone && db) {
+        let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+        if (data && data.length > 0) {
+          list.innerHTML = data.map(o => `
+            <div class="order-tracker">
+              <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                <span>Order ID: ${o.id}</span>
+                <span style="color:var(--primary);">₹${o.total_amount}</span>
+              </div>
+              <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
+              <div class="timeline">
+                <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
+                <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
+                <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
+                <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          list.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this number.</p>`;
+        }
+      } else {
+        list.innerHTML = `
+          <div style="text-align:center; padding:10px;">
+            <p style="margin-bottom:8px; font-size:0.85rem;">Enter registered phone number to track orders:</p>
+            <input type="tel" id="trackPhone" placeholder="10-digit number" style="padding:7px; width:170px; border:1px solid var(--border); border-radius:2px; font-size:0.85rem;">
+            <button onclick="syncTrackPhone()" style="background:var(--primary); color:#fff; border:none; padding:7px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Track</button>
+          </div>
+        `;
+      }
+      document.getElementById("accountModal").style.display = "flex";
+    }
+
+    function syncTrackPhone() {
+      let p = document.getElementById("trackPhone").value.trim();
+      if (p.length === 10) { localStorage.setItem("ziv_phone", p); openAccountModal(); }
+      else alert("Enter valid 10 digit number");
+    }
+
+    function closeAccountModal() { document.getElementById("accountModal").style.display = "none"; }
+    function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; }
+    function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
+
+    function verifyAdminLogin() {
+      if (document.getElementById("admUser").value === "rohitku316" && document.getElementById("admPass").value === "Rohit@2006") {
+        document.getElementById("adminLoginBox").style.display = "none";
+        document.getElementById("adminDashBox").style.display = "block";
+      } else alert("Invalid credentials");
+    }
+
+    async function adminAddNewProduct() {
+      let title = document.getElementById("npTitle").value;
+      let price = Number(document.getElementById("npPrice").value);
+      let mrp = Number(document.getElementById("npMrp").value);
+      let image = document.getElementById("npImg").value;
+      if (!title || !price) return alert("Fill required fields");
+
+      if (db) {
+        await db.from('products').insert([{ title, price, mrp, image, category: "Necklaces", stock: 10 }]);
+      }
+      alert("✓ Product published live!");
+      closeAdminModal();
+      syncSupabaseCatalog();
+    }
+
+    // Initialize Catalog Grid on Load
+    renderGrid();
+    syncSupabaseCatalog();
+  </script>
+</body>
+</html>
