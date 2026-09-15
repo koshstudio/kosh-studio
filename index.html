@@ -695,7 +695,6 @@
 
     .track-step.done { color: #15803d; }
     .track-step.active { color: var(--accent); font-weight: 700; }
-    .track-step.rejected { color: #dc2626; font-weight: 700; }
 
     .track-bullet {
       width: 14px;
@@ -707,7 +706,6 @@
 
     .track-step.done .track-bullet { background: #15803d; }
     .track-step.active .track-bullet { background: var(--accent); }
-    .track-step.rejected .track-bullet { background: #dc2626; }
 
     .bottom-nav {
       position: fixed;
@@ -1324,9 +1322,139 @@
   <script>
     const SUPABASE_URL = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_9nVcO5j-oTG36AExeoiLMQ_N0b8naYn';
-    const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    let db = null;
+    try {
+      if (window.supabase) {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (e) {
+      console.warn("Supabase init error:", e);
+    }
 
-    let products = [];
+    // Immediate 8 Fallback Products (Store never renders blank)
+    let products = [
+      {
+        id: 1,
+        title: "18K Gold Plated Minimalist Chain",
+        category: "Necklaces",
+        tag: "trending",
+        price: 799,
+        mrp: 1499,
+        rating: 4.8,
+        reviews: 42,
+        desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold. Perfect for daily modern layering.",
+        image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
+        stock: 15,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-NK-01"
+      },
+      {
+        id: 2,
+        title: "Crystal Pearl Drop Earrings",
+        category: "Earrings",
+        tag: "bestseller",
+        price: 599,
+        mrp: 1199,
+        rating: 4.9,
+        reviews: 78,
+        desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs. Lightweight & timeless.",
+        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=600&q=80",
+        stock: 20,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-ER-02"
+      },
+      {
+        id: 3,
+        title: "Vintage Textured Gold Cuff Bracelet",
+        category: "Bracelets",
+        tag: "trending",
+        price: 899,
+        mrp: 1699,
+        rating: 4.7,
+        reviews: 29,
+        desc: "Adjustable artisanal cuff bracelet with hammered satin finish. Anti-allergic and waterproof.",
+        image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?auto=format&fit=crop&w=600&q=80",
+        stock: 12,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-BR-03"
+      },
+      {
+        id: 4,
+        title: "Sleek Emerald Baguette Ring",
+        category: "Rings",
+        tag: "offer",
+        price: 649,
+        mrp: 1299,
+        rating: 4.6,
+        reviews: 51,
+        desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band. Perfect statement piece.",
+        image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80",
+        stock: 8,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-RG-04"
+      },
+      {
+        id: 5,
+        title: "Minimalist Italian Leather Shoulder Bag",
+        category: "Bags",
+        tag: "bestseller",
+        price: 1499,
+        mrp: 2999,
+        rating: 4.9,
+        reviews: 33,
+        desc: "Premium PU leather luxury handbag with gold magnetic clasp and adjustable strap.",
+        image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80",
+        stock: 5,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-BG-05"
+      },
+      {
+        id: 6,
+        title: "Chic Cat-Eye Retro Sunglasses",
+        category: "Sunglasses",
+        tag: "new",
+        price: 749,
+        mrp: 1499,
+        rating: 4.7,
+        reviews: 18,
+        desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.",
+        image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",
+        stock: 10,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-SG-06"
+      },
+      {
+        id: 7,
+        title: "Rose Gold Mesh Classic Watch",
+        category: "Watches",
+        tag: "trending",
+        price: 1299,
+        mrp: 2499,
+        rating: 4.8,
+        reviews: 64,
+        desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic mesh strap.",
+        image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=600&q=80",
+        stock: 6,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-WT-07"
+      },
+      {
+        id: 8,
+        title: "Silk French Knot Velvet Hairband",
+        category: "Hair",
+        tag: "offer",
+        price: 449,
+        mrp: 899,
+        rating: 4.6,
+        reviews: 24,
+        desc: "Luxurious velvet padded headband providing all-day comfort without pressure.",
+        image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=600&q=80",
+        stock: 25,
+        is_out_of_stock: false,
+        supplierSku: "DROPSHIP-HR-08"
+      }
+    ];
+
     let cart = [];
     let currentCategory = 'All';
     let currentTab = 'trending';
@@ -1338,7 +1466,10 @@
       if (!db) return;
       try {
         const { data, error } = await db.from('products').select('*').order('id', { ascending: true });
-        if (error) throw error;
+        if (error) {
+          console.warn("Supabase fetch warning:", error.message);
+          return;
+        }
         if (data && data.length > 0) {
           products = data.map(p => ({
             id: p.id,
@@ -1358,12 +1489,13 @@
           renderProducts();
         }
       } catch (err) {
-        console.error("Database product load error:", err);
+        console.warn("Database sync error (using local cache):", err);
       }
     }
 
     function renderProducts(listToRender = null) {
       const grid = document.getElementById("productGrid");
+      if (!grid) return;
       let items = listToRender || products;
 
       if (currentCategory !== 'All' && !listToRender) {
@@ -2081,6 +2213,9 @@
       document.getElementById("adminCreditAmount").value = "";
     }
 
+    // Step 1: Render fallback immediately
+    renderProducts();
+    // Step 2: Sync with Supabase live
     loadProductsFromSupabase();
   </script>
 </body>
