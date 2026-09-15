@@ -870,7 +870,7 @@
     <div class="products-grid" id="productGrid"></div>
   </main>
 
-  <!-- Footer with Wallet & Return Policies -->
+  <!-- Footer with Wallet & Return Policies (Clean & Secure) -->
   <footer>
     <div class="footer-grid">
       <div class="footer-col">
@@ -878,7 +878,6 @@
         <p>Zivora is a modern 100% prepaid boutique bringing designer jewellery straight to your doorstep.</p>
         <p style="margin-top:8px;"><a href="javascript:void(0)" onclick="openReturnPortal()" style="color:#f59e0b; font-weight:700;">📹 Raise Return (With Video Proof)</a></p>
         <p><a href="javascript:void(0)" onclick="openAccountModal()" style="color:#b38b59; font-weight:600;">💰 My Zivora Wallet & Bank Withdrawal</a></p>
-        <p><a href="javascript:void(0)" onclick="openAdminModal()" style="color:#9ca3af; font-size:0.75rem;">⚙️ Store Admin Login</a></p>
       </div>
 
       <div class="footer-col">
@@ -903,7 +902,8 @@
       </div>
     </div>
     <div style="text-align:center; margin-top:25px; padding-top:15px; border-top:1px solid #374151; color:#9ca3af; font-size:0.75rem;">
-      © 2026 Zivora. All rights reserved. 100% Prepaid & Verified Store.
+      <!-- Secret Admin Trigger on the Copyright Symbol -->
+      <span onclick="openAdminModal()" style="cursor:pointer; color:#6b7280;" title="Zivora Secured">©</span> 2026 Zivora. All rights reserved. 100% Prepaid & Verified Store.
     </div>
   </footer>
 
@@ -970,7 +970,7 @@
     </div>
   </div>
 
-  <!-- Cart Drawer (With My Orders & Live Status Option Inside) -->
+  <!-- Cart Drawer -->
   <div class="cart-drawer-backdrop" id="backdrop" onclick="toggleCart()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="modal-header" style="padding:16px;">
@@ -999,7 +999,7 @@
     </div>
   </aside>
 
-  <!-- Checkout Modal (Clean & Fast Phone Input) -->
+  <!-- Checkout Modal -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -1220,7 +1220,7 @@
     </div>
   </div>
 
-  <!-- Admin Dashboard Modal -->
+  <!-- Admin Dashboard Modal (Completely Clean - No Hints/Placeholders) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width:650px;">
       <div class="modal-header">
@@ -1228,9 +1228,9 @@
         <button class="close-btn" onclick="closeAdminModal()">&times;</button>
       </div>
       <div id="adminLoginSection">
-        <p style="font-size:0.85rem; margin-bottom:10px;">Admin Login Details enter kijiye:</p>
-        <input type="text" id="adminUserInput" placeholder="User ID: rohitku316" style="width:100%; padding:9px 12px; margin-bottom:10px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit;">
-        <input type="password" id="adminPassInput" placeholder="Password: Rohit@2006" style="width:100%; padding:9px 12px; margin-bottom:12px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit;">
+        <p style="font-size:0.85rem; margin-bottom:10px; color:#4b5563;">Admin Login Credentials enter kijiye:</p>
+        <input type="text" id="adminUserInput" placeholder="Enter User ID" autocomplete="off" style="width:100%; padding:9px 12px; margin-bottom:10px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit;">
+        <input type="password" id="adminPassInput" placeholder="Enter Password" autocomplete="off" style="width:100%; padding:9px 12px; margin-bottom:12px; border:1px solid #d1d5db; border-radius:6px; font-family:inherit;">
         <button class="btn-full" onclick="checkAdminAuth()">Login</button>
       </div>
 
@@ -1740,7 +1740,7 @@
         return;
       }
 
-      // Razorpay Prepaid Flow (Real SMS/OTP by Razorpay & Banks)
+      // Razorpay Prepaid Flow (Real Verification by Razorpay)
       submitBtn.disabled = true;
       submitBtn.innerText = "Opening Razorpay Secure Gateway...";
 
@@ -2108,7 +2108,7 @@
         oCont.innerHTML = oList.map(o => `
           <div style="border-bottom:1px solid #ddd; padding:8px 0; margin-bottom:6px;">
             <strong>${o.id}</strong> | ${o.name} - <strong>${o.total}</strong><br>
-            <em>${o.phone}</em> | <em>Address: ${o.address}</em><br>
+            <em>Address: ${o.address}</em><br>
             <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
               <span>Current: <strong>${o.statusText || 'Order Confirmed'}</strong></span>
               <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; font-size:0.72rem; border-radius:4px; border:1px solid #999;">
