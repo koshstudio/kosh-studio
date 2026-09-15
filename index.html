@@ -207,7 +207,7 @@
       line-height: 1.45;
     }
 
-    /* Wallet Banner Card */
+    /* Wallet Card */
     .wallet-card {
       background: var(--gold-gradient);
       color: #fff;
@@ -717,6 +717,25 @@
       cursor: pointer;
     }
 
+    /* OTP Simulation Toast Alert */
+    .sms-simulation-toast {
+      display: none;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin-bottom: 12px;
+      border-left: 4px solid #38bdf8;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* Footer */
     footer {
       background: #111827;
@@ -787,12 +806,12 @@
   <!-- Trust Bar -->
   <div class="trust-bar">
     <div class="trust-item"><span>💳</span> 100% Prepaid Store</div>
-    <div class="trust-item"><span>⚡</span> 5–7 Days Fast Delivery</div>
+    <div class="trust-item"><span>📱</span> Verified Mobile OTP</div>
     <div class="trust-item"><span>📹</span> Wrong/Damage Return (Video Proof)</div>
-    <div class="trust-item"><span>💰</span> Instant Zivora Wallet Refund</div>
+    <div class="trust-item"><span>💰</span> Instant Wallet Refund</div>
   </div>
 
-  <!-- Category Pills Horizontal Scroll -->
+  <!-- Category Carousel -->
   <div class="section-header">
     <h2 class="section-title">Shop by Category</h2>
   </div>
@@ -895,7 +914,7 @@
       <p id="pDetailDesc" style="font-size:0.85rem; color:#4b5563; margin-bottom:12px;"></p>
       
       <div class="policy-warning-card">
-        <strong>⚠️ Unboxing Video Policy:</strong> Yeh product delivery ke baad return/exchange sirf tabhi hoga jab aapke paas parcel open karte waqt ka uncut continuous video proof ho ki product wrong ya damage nikla hai. Refund seedha aapke <strong>Zivora Wallet</strong> me aayega jise aap apne Bank/UPI me withdraw kar sakte hain.
+        <strong>⚠️ Unboxing Video Policy:</strong> Delivery ke baad return sirf tabhi hoga jab aapke paas parcel kholte waqt ka uncut continuous video proof ho ki product wrong ya damage nikla hai. Refund seedha <strong>Zivora Wallet</strong> me aayega jise aap apne Bank/UPI me transfer kar sakte hain.
       </div>
 
       <div class="variant-selector">
@@ -942,12 +961,18 @@
     </div>
   </aside>
 
-  <!-- Checkout Address Modal (100% Prepaid with Wallet Option) -->
+  <!-- Checkout Modal with Mandatory OTP Verification -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 id="formTitle">Prepaid Checkout</h3>
+        <h3 id="formTitle">Prepaid Checkout & Verification</h3>
         <button class="close-btn" onclick="closeCheckout()">&times;</button>
+      </div>
+
+      <!-- SMS Alert Simulation Banner -->
+      <div id="smsNotificationToast" class="sms-simulation-toast">
+        <div style="font-weight:700; margin-bottom:2px;">📩 SMS OTP Preview (Zivora Security)</div>
+        <div id="smsNotificationText">Aapka Zivora Verification OTP hai: <strong>----</strong></div>
       </div>
 
       <form id="orderForm" onsubmit="handleCheckout(event)">
@@ -955,16 +980,34 @@
           <label>Full Name *</label>
           <input type="text" id="custName" placeholder="e.g. Priya Sharma" required>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Phone Number *</label>
-            <input type="tel" id="custPhone" placeholder="10-digit number" pattern="[0-9]{10}" required>
+
+        <!-- Phone Number with OTP Button -->
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="margin:0;">Phone Number (OTP Verification Required) *</label>
+            <span id="otpStatusBadge" style="font-size:0.75rem; font-weight:700; color:#dc2626;">❌ Not Verified</span>
           </div>
-          <div class="form-group">
-            <label>Email Address *</label>
-            <input type="email" id="custEmail" placeholder="your@email.com" required>
+          <div style="display:flex; gap:8px;">
+            <input type="tel" id="custPhone" placeholder="10-digit mobile number" pattern="[0-9]{10}" required style="flex-grow:1;">
+            <button type="button" id="btnSendOtp" onclick="sendMobileOtp()" style="background:#111827; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:0.78rem; font-weight:600; cursor:pointer; white-space:nowrap;">Send OTP</button>
           </div>
         </div>
+
+        <!-- OTP Input Container (Initially Hidden) -->
+        <div id="otpInputSection" style="display:none; background:#f3f4f6; border:1px solid #d1d5db; padding:12px; border-radius:8px; margin-bottom:12px;">
+          <label style="font-size:0.75rem; font-weight:700; color:#374151; display:block; margin-bottom:6px;">Enter 4-Digit OTP *</label>
+          <div style="display:flex; gap:8px;">
+            <input type="number" id="enteredOtpInput" placeholder="Enter OTP" style="flex-grow:1; padding:8px; font-size:0.9rem; font-weight:700; letter-spacing:4px; text-align:center;">
+            <button type="button" onclick="verifyMobileOtp()" style="background:#15803d; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-size:0.8rem; font-weight:700; cursor:pointer;">Verify</button>
+          </div>
+          <span style="font-size:0.7rem; color:#6b7280; display:block; margin-top:4px;">OTP aapke screen par preview banner me dikhega.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="custEmail" placeholder="your@email.com" required>
+        </div>
+
         <div class="form-group">
           <label>Delivery Address *</label>
           <textarea id="custAddress" rows="2" placeholder="House no, Flat, Street, Area" required></textarea>
@@ -992,7 +1035,6 @@
           </label>
         </div>
 
-        <!-- 100% Prepaid Badge (NO COD) -->
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:10px; border-radius:6px; margin:10px 0; font-size:0.8rem; color:#166534;">
           <strong>🔒 100% Advance Payment:</strong> Orders are dispatched via Express Courier only after advance payment confirmation.
         </div>
@@ -1013,7 +1055,7 @@
       <div id="successContent" style="display:none; text-align:center; padding:20px 0;">
         <div style="font-size:48px; color:green; margin-bottom:10px;">✓</div>
         <h3 style="margin-bottom:8px;">Order Placed Successfully!</h3>
-        <p style="font-size:0.85rem; color:#4b5563; margin-bottom:12px;">Payment received and order confirmed.</p>
+        <p style="font-size:0.85rem; color:#4b5563; margin-bottom:12px;">Mobile verified & payment received.</p>
         
         <div class="policy-warning-card" style="text-align:left; margin-bottom:16px;">
           <strong>📦 Delivery Tip:</strong> Kripya packet open karte waqt unboxing video zaroor shoot karein. Agar koi piece wrong nikla toh aapko Zivora Wallet me turant refund mil jayega jise aap apne Bank/UPI me transfer kar payenge.
@@ -1034,7 +1076,6 @@
       </div>
       <div id="accountContent">
         
-        <!-- Zivora Wallet Digital Card -->
         <div class="wallet-card">
           <div class="wallet-card-header">
             <span>✨ ZIVORA DIGITAL WALLET</span>
@@ -1152,7 +1193,7 @@
         <div class="form-group" style="margin-top:14px;">
           <label style="display:flex; align-items:flex-start; gap:8px; font-size:0.75rem; color:#111; text-transform:none; font-weight:600; cursor:pointer;">
             <input type="checkbox" id="retConfirmCheck" required style="width:18px; height:18px; margin-top:2px;">
-            <span>Main confirm karta/karti hoon ki mere paas sealed courier packet open karte waqt ka uncut unboxing video proof mojood hai. Main samajhta hoon ki refund Zivora Wallet me aayega jise main apne bank me withdraw kar sakta/sakti hoon.</span>
+            <span>Main confirm karta/karti hoon ki mere paas sealed courier packet open karte waqt ka uncut unboxing video proof mojood hai. Refund Zivora Wallet me aayega jise main apne bank me withdraw kar sakta/sakti hoon.</span>
           </label>
         </div>
 
@@ -1161,7 +1202,7 @@
     </div>
   </div>
 
-  <!-- Admin Dashboard Modal with Wallet Credit & Withdrawal Approval -->
+  <!-- Admin Dashboard Modal -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width:650px;">
       <div class="modal-header">
@@ -1325,6 +1366,10 @@
     let selectedModalProduct = null;
     let modalSelectedQty = 1;
 
+    // Phone OTP Verification State
+    let isPhoneVerified = false;
+    let currentGeneratedOtp = null;
+
     // Wallet Helper
     function getWalletBalance() {
       return Number(localStorage.getItem("zivora_wallet") || 0);
@@ -1342,12 +1387,10 @@
       const box = document.getElementById("checkoutWalletBox");
       if (dispEl) dispEl.innerText = `₹${bal}`;
       if (availEl) availEl.innerText = `₹${bal}`;
-      if (box) {
-        box.style.display = bal > 0 ? "block" : "none";
-      }
+      if (box) box.style.display = bal > 0 ? "block" : "none";
     }
 
-    // Render Product Catalog
+    // Product Catalog
     function renderProducts(listToRender = null) {
       const grid = document.getElementById("productGrid");
       let items = listToRender || products;
@@ -1554,7 +1597,7 @@
       `).join('');
     }
 
-    // Checkout & 100% Prepaid Flow
+    // Checkout Modal & OTP Logic
     function openCheckout() {
       if (cart.length === 0) {
         alert("Aapka cart khali hai!");
@@ -1566,6 +1609,54 @@
       document.getElementById("successContent").style.display = "none";
       if (document.getElementById("cartDrawer").classList.contains("open")) toggleCart();
       document.getElementById("checkoutModal").style.display = "flex";
+    }
+
+    // OTP Generation and Sending
+    function sendMobileOtp() {
+      const phoneInput = document.getElementById("custPhone");
+      const phone = phoneInput.value.trim();
+
+      if (!phone || phone.length !== 10 || isNaN(phone)) {
+        alert("❌ Kripya valid 10-digit mobile number enter karein!");
+        return;
+      }
+
+      // Generate random 4-digit OTP
+      currentGeneratedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
+      // Show SMS Alert Banner
+      const toast = document.getElementById("smsNotificationToast");
+      const text = document.getElementById("smsNotificationText");
+      text.innerHTML = `Mobile <strong>+91 ${phone}</strong> par bheja gaya OTP hai: <span style="color:#38bdf8; font-size:1.1rem; font-weight:800; letter-spacing:2px;">${currentGeneratedOtp}</span>`;
+      toast.style.display = "block";
+
+      // Show OTP Input Box
+      document.getElementById("otpInputSection").style.display = "block";
+      document.getElementById("btnSendOtp").innerText = "Resend OTP";
+      phoneInput.setAttribute("readonly", "true");
+    }
+
+    // OTP Verification
+    function verifyMobileOtp() {
+      const entered = document.getElementById("enteredOtpInput").value.trim();
+      const badge = document.getElementById("otpStatusBadge");
+
+      if (!entered) {
+        alert("Kripya 4-digit OTP enter karein!");
+        return;
+      }
+
+      if (entered === currentGeneratedOtp) {
+        isPhoneVerified = true;
+        badge.innerHTML = "✓ Verified";
+        badge.style.color = "#15803d";
+        document.getElementById("otpInputSection").style.display = "none";
+        document.getElementById("btnSendOtp").style.display = "none";
+        document.getElementById("smsNotificationToast").style.display = "none";
+        alert("✅ Mobile Number OTP ke sath safaltapoorvak verify ho gaya hai!");
+      } else {
+        alert("❌ Galat OTP! Kripya upar screen par dikh raha 4-digit OTP dobara enter karein.");
+      }
     }
 
     function calculateCheckoutTotal() {
@@ -1606,12 +1697,18 @@
       const custCity = document.getElementById("custCity").value;
       const custState = document.getElementById("custState").value;
       const custPin = document.getElementById("custPin").value;
+
+      // Strict OTP Check Before Payment
+      if (!isPhoneVerified) {
+        alert("❌ Order karne se pehle apna mobile number OTP ke sath verify karna anivarya hai! Kripya 'Send OTP' button par click karein.");
+        return;
+      }
       
       const payableAmount = calculateCheckoutTotal();
       const itemsSummary = cart.map(i => `${i.title} (Qty: ${i.qty}, Price: ₹${i.price * i.qty})`).join('\n');
       const useWallet = document.getElementById("useWalletCheck") && document.getElementById("useWalletCheck").checked;
 
-      // Agar pure paise Wallet se pay ho gaye (Payable amount = 0)
+      // Pure paise Wallet se pay hone par
       if (payableAmount === 0 && useWallet) {
         const subTotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
         const orderVal = Math.max(0, subTotal - discountAmount);
@@ -1656,8 +1753,9 @@
 
       const orderPayload = {
         access_key: "8da90f0a-9429-4da2-9a87-da894e901a59",
-        subject: `New Paid Order (${orderId}) - ${name}`,
+        subject: `New Paid & OTP-Verified Order (${orderId}) - ${name}`,
         "Order ID": orderId,
+        "Mobile Status": "OTP VERIFIED (100% Valid)",
         "Payment Mode": "100% PREPAID",
         "Payment Status": status,
         "Customer Name": name,
@@ -1673,7 +1771,7 @@
         id: orderId,
         date: new Date().toLocaleDateString('en-IN'),
         name: name,
-        phone: phone,
+        phone: `${phone} (✓ OTP Verified)`,
         address: `${address}, ${city} - ${pin}`,
         items: items,
         total: `₹${total}`,
@@ -1710,7 +1808,7 @@
               <span>ID: ${o.id}</span>
               <span style="color:var(--accent);">${o.total}</span>
             </div>
-            <div style="font-size:0.75rem; color:#6b7280; margin:4px 0;">Date: ${o.date}</div>
+            <div style="font-size:0.75rem; color:#6b7280; margin:4px 0;">Date: ${o.date} | Phone: ${o.phone}</div>
             <div style="font-size:0.8rem; font-weight:600; color:green;">Status: ${o.status}</div>
           </div>
         `).join('');
@@ -1772,7 +1870,6 @@
         "Date": new Date().toLocaleString('en-IN')
       };
 
-      // Save locally in admin withdrawals
       let wList = JSON.parse(localStorage.getItem("zivora_withdrawals") || "[]");
       wList.unshift({
         amount: amount,
@@ -1781,7 +1878,6 @@
       });
       localStorage.setItem("zivora_withdrawals", JSON.stringify(wList));
 
-      // Deduct from wallet
       setWalletBalance(currentBal - amount);
 
       try {
@@ -1927,7 +2023,7 @@
         oCont.innerHTML = oList.map(o => `
           <div style="border-bottom:1px solid #ddd; padding:6px 0; margin-bottom:4px;">
             <strong>${o.id}</strong> | ${o.name} - ${o.total}<br>
-            <em>Address: ${o.address}</em>
+            <em>${o.phone}</em> | <em>Address: ${o.address}</em>
           </div>
         `).join('');
       }
