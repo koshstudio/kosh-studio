@@ -89,7 +89,7 @@
     .header-icons {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
     }
 
     .icon-btn {
@@ -302,7 +302,7 @@
     .nav-tab.active { color: var(--primary); }
     .nav-tab svg { width: 20px; height: 20px; margin-bottom: 2px; }
 
-    footer { background: #212121; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; }
+    footer { background: #212121; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; text-align: center; }
   </style>
 </head>
 <body>
@@ -317,9 +317,9 @@
     </div>
 
     <div class="header-icons">
-      <button class="icon-btn" onclick="openAccountModal()">
+      <button class="icon-btn" onclick="openProfileModal()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span>Orders</span>
+        <span>Profile</span>
       </button>
       <button class="icon-btn" onclick="toggleCart()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -346,15 +346,7 @@
   </main>
 
   <footer>
-    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-      <div>
-        <h4 style="color:#fff; margin-bottom:6px;">Zivora E-Commerce</h4>
-        <p>Verified secure payments via Razorpay. Fast courier dispatch.</p>
-      </div>
-      <div>
-        <span onclick="openAdminModal()" style="cursor:pointer; color:#ff9f00;" title="Admin Portal">⚙️ Admin Portal Login</span>
-      </div>
-    </div>
+    <p>Zivora E-Commerce Store. Secured Payments via Razorpay. All rights reserved. <span onclick="openAdminModal()" style="cursor:pointer; color:#878787;" title="Zivora">©</span></p>
   </footer>
 
   <nav class="bottom-nav">
@@ -366,9 +358,9 @@
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path></svg>
       Cart
     </a>
-    <a class="nav-tab" onclick="openAccountModal()">
-      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
-      My Orders
+    <a class="nav-tab" onclick="openProfileModal()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      My Profile
     </a>
   </nav>
 
@@ -394,12 +386,12 @@
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
         <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
-          <strong>Delivery Options:</strong>
+          <strong>Check Delivery & Pincode:</strong>
           <div style="display:flex; gap:8px; margin-top:8px;">
-            <input type="text" id="checkPin" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding:8px 12px; border:1px solid var(--border); border-radius:2px; width:160px; font-size:0.85rem;">
-            <button onclick="checkPinDelivery()" style="background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Check</button>
+            <input type="text" id="checkPin" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding:8px 12px; border:1px solid var(--border); border-radius:2px; width:160px; font-size:0.85rem;" oninput="verifyLivePincode(this.value, 'pinResult')">
+            <button onclick="verifyLivePincode(document.getElementById('checkPin').value, 'pinResult')" style="background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Verify</button>
           </div>
-          <div id="pinResult" style="margin-top:6px; font-weight:600; color:var(--success);"></div>
+          <div id="pinResult" style="margin-top:6px; font-weight:600; font-size:0.8rem;"></div>
         </div>
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
@@ -427,7 +419,7 @@
     </div>
   </aside>
 
-  <!-- Checkout Modal -->
+  <!-- Checkout Modal with Real Pincode Auto-Detect -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -455,14 +447,19 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>City *</label>
-            <input type="text" id="cCity" placeholder="City" required>
+            <label>PIN Code (6 digits) *</label>
+            <input type="text" id="cPin" placeholder="Enter PIN code" maxlength="6" pattern="[0-9]{6}" required oninput="handleCheckoutPinInput(this.value)">
           </div>
           <div class="form-group">
-            <label>PIN Code *</label>
-            <input type="text" id="cPin" placeholder="6-digit PIN" pattern="[0-9]{6}" required>
+            <label>City (Auto-detected) *</label>
+            <input type="text" id="cCity" placeholder="City" required readonly style="background:#f3f4f6;">
           </div>
         </div>
+        <div class="form-group">
+          <label>State (Auto-detected) *</label>
+          <input type="text" id="cState" placeholder="State" required readonly style="background:#f3f4f6;">
+        </div>
+        <div id="checkoutPinMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:600;"></div>
 
         <div style="display:flex; justify-content:space-between; font-weight:700; margin:14px 0; font-size:1rem;">
           <span>Payable Amount:</span>
@@ -474,15 +471,15 @@
     </div>
   </div>
 
-  <!-- Orders Tracking Modal -->
-  <div class="modal-overlay" id="accountModal">
+  <!-- My Profile Modal (Orders, Tracking, Wishlist & Phone Sync) -->
+  <div class="modal-overlay" id="profileModal">
     <div class="modal-box" style="max-width:540px;">
       <div class="modal-header">
-        <h3 style="font-size:1rem;">My Orders & Live Tracking</h3>
-        <button class="close-btn" onclick="closeAccountModal()">&times;</button>
+        <h3 style="font-size:1rem;">👤 My Profile & Orders</h3>
+        <button class="close-btn" onclick="closeProfileModal()">&times;</button>
       </div>
-      <div id="orderHistoryList" style="font-size:0.85rem;">
-        <p style="text-align:center; padding:15px; color:var(--muted);">Loading orders...</p>
+      <div id="profileContent" style="font-size:0.85rem;">
+        <!-- Dynamic Profile Content -->
       </div>
     </div>
   </div>
@@ -620,15 +617,67 @@
       document.getElementById("productPageView").style.display = "none";
     }
 
-    function checkPinDelivery() {
-      let pin = document.getElementById("checkPin").value.trim();
-      let res = document.getElementById("pinResult");
-      if (pin.length === 6) {
-        res.style.color = "var(--success)";
-        res.innerText = "✓ Delivery available (5-7 days)";
-      } else {
-        res.style.color = "#d32f2f";
-        res.innerText = "Enter valid 6-digit Pincode";
+    // Real Pincode API Verification using India Post API
+    async function verifyLivePincode(pin, resultElementId) {
+      let resDiv = document.getElementById(resultElementId);
+      if (pin.length !== 6) {
+        resDiv.style.color = "#d32f2f";
+        resDiv.innerText = "Please enter a valid 6-digit Pincode";
+        return;
+      }
+      resDiv.style.color = "var(--muted)";
+      resDiv.innerText = "Checking real delivery status...";
+      try {
+        let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        let data = await response.json();
+        if (data[0].Status === "Success") {
+          let details = data[0].PostOffice[0];
+          resDiv.style.color = "var(--success)";
+          resDiv.innerText = `✓ Express Delivery Available to ${details.District}, ${details.State} (5-7 days)`;
+        } else {
+          resDiv.style.color = "#d32f2f";
+          resDiv.innerText = "❌ Invalid Pincode or Delivery not available.";
+        }
+      } catch (err) {
+        resDiv.style.color = "#d32f2f";
+        resDiv.innerText = "Error verifying pincode.";
+      }
+    }
+
+    // Checkout Pincode Auto-Detect City & State
+    async function handleCheckoutPinInput(pin) {
+      let msg = document.getElementById("checkoutPinMsg");
+      let cityInput = document.getElementById("cCity");
+      let stateInput = document.getElementById("cState");
+
+      if (pin.length !== 6) {
+        cityInput.value = "";
+        stateInput.value = "";
+        msg.style.color = "#d32f2f";
+        msg.innerText = "Enter 6 digits for auto-detect.";
+        return;
+      }
+
+      msg.style.color = "var(--muted)";
+      msg.innerText = "Fetching location from PIN code...";
+      try {
+        let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        let data = await response.json();
+        if (data[0].Status === "Success") {
+          let info = data[0].PostOffice[0];
+          cityInput.value = info.District || info.Block || info.Name;
+          stateInput.value = info.State;
+          msg.style.color = "var(--success)";
+          msg.innerText = `✓ Location auto-detected: ${cityInput.value}, ${stateInput.value}`;
+        } else {
+          cityInput.value = "";
+          stateInput.value = "";
+          msg.style.color = "#d32f2f";
+          msg.innerText = "❌ Invalid PIN Code. Please check.";
+        }
+      } catch (e) {
+        msg.style.color = "#d32f2f";
+        msg.innerText = "Failed to auto-detect location.";
       }
     }
 
@@ -712,7 +761,7 @@
             await db.from('orders').insert([{
               id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
               shipping_address: document.getElementById("cAddress").value,
-              city: document.getElementById("cCity").value, state: "State", pincode: document.getElementById("cPin").value,
+              city: document.getElementById("cCity").value, state: document.getElementById("cState").value, pincode: document.getElementById("cPin").value,
               total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed"
             }]);
           }
@@ -726,49 +775,76 @@
       rzp.open();
     }
 
-    async function openAccountModal() {
+    async function openProfileModal() {
       let phone = localStorage.getItem("ziv_phone") || "";
-      let list = document.getElementById("orderHistoryList");
-      if (phone && db) {
-        let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
-        if (data && data.length > 0) {
-          list.innerHTML = data.map(o => `
-            <div class="order-tracker">
-              <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
-                <span>Order ID: ${o.id}</span>
-                <span style="color:var(--primary);">₹${o.total_amount}</span>
-              </div>
-              <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
-              <div class="timeline">
-                <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
-                <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
-                <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
-                <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
-              </div>
-            </div>
-          `).join('');
-        } else {
-          list.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this number.</p>`;
-        }
-      } else {
-        list.innerHTML = `
-          <div style="text-align:center; padding:10px;">
-            <p style="margin-bottom:8px; font-size:0.85rem;">Enter registered phone number to track orders:</p>
-            <input type="tel" id="trackPhone" placeholder="10-digit number" style="padding:7px; width:170px; border:1px solid var(--border); border-radius:2px; font-size:0.85rem;">
-            <button onclick="syncTrackPhone()" style="background:var(--primary); color:#fff; border:none; padding:7px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Track</button>
+      let content = document.getElementById("profileContent");
+      
+      if (!phone) {
+        content.innerHTML = `
+          <div style="text-align:center; padding:15px;">
+            <p style="margin-bottom:10px; font-weight:600;">Enter your registered mobile number to view profile, orders & tracking:</p>
+            <input type="tel" id="profilePhoneInput" placeholder="10-digit number" pattern="[0-9]{10}" style="padding:8px; width:180px; border:1px solid var(--border); border-radius:2px; font-size:0.9rem;">
+            <button onclick="saveProfilePhone()" style="background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Login / View</button>
           </div>
         `;
+      } else {
+        let ordersHtml = `<p style="text-align:center; padding:10px; color:var(--muted);">Loading orders for ${phone}...</p>`;
+        content.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px;">
+            <div>
+              <strong>Logged-in Mobile:</strong> +91 ${phone}
+            </div>
+            <button onclick="logoutProfile()" style="background:#dc2626; color:#fff; border:none; padding:4px 10px; border-radius:2px; font-size:0.75rem; cursor:pointer;">Logout</button>
+          </div>
+          <h4 style="margin-bottom:8px; font-size:0.9rem;">📦 Your Order History & Live Tracking Numbers</h4>
+          <div id="profileOrdersContainer">${ordersHtml}</div>
+        `;
+
+        if (db) {
+          let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+          let oContainer = document.getElementById("profileOrdersContainer");
+          if (data && data.length > 0) {
+            oContainer.innerHTML = data.map(o => `
+              <div class="order-tracker">
+                <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                  <span>Order ID: ${o.id}</span>
+                  <span style="color:var(--primary);">₹${o.total_amount}</span>
+                </div>
+                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
+                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
+                <div class="timeline">
+                  <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
+                  <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
+                  <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
+                  <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
+                </div>
+              </div>
+            `).join('');
+          } else {
+            oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
+          }
+        }
       }
-      document.getElementById("accountModal").style.display = "flex";
+
+      document.getElementById("profileModal").style.display = "flex";
     }
 
-    function syncTrackPhone() {
-      let p = document.getElementById("trackPhone").value.trim();
-      if (p.length === 10) { localStorage.setItem("ziv_phone", p); openAccountModal(); }
-      else alert("Enter valid 10 digit number");
+    function saveProfilePhone() {
+      let p = document.getElementById("profilePhoneInput").value.trim();
+      if (p.length === 10) {
+        localStorage.setItem("ziv_phone", p);
+        openProfileModal();
+      } else {
+        alert("Please enter a valid 10-digit phone number.");
+      }
     }
 
-    function closeAccountModal() { document.getElementById("accountModal").style.display = "none"; }
+    function logoutProfile() {
+      localStorage.removeItem("ziv_phone");
+      openProfileModal();
+    }
+
+    function closeProfileModal() { document.getElementById("profileModal").style.display = "none"; }
     function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; }
     function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
 
@@ -794,7 +870,6 @@
       syncSupabaseCatalog();
     }
 
-    // Initialize Catalog Grid on Load
     renderGrid();
     syncSupabaseCatalog();
   </script>
