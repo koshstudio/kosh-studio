@@ -578,6 +578,9 @@
     </div>
   </div>
 
+  <!-- Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
   <script>
     const products = [
       {
@@ -712,49 +715,86 @@
     async function handleCheckout(event) {
       event.preventDefault();
       const submitBtn = document.getElementById("submitBtn");
+
+      const custName = document.getElementById('custName').value;
+      const custPhone = document.getElementById('custPhone').value;
+      const custAddress = document.getElementById('custAddress').value;
+      const custCity = document.getElementById('custCity').value;
+      const custPin = document.getElementById('custPin').value;
+      const totalPaise = cart.reduce((acc, item) => acc + (item.price * item.qty), 0) * 100;
+      const itemsSummary = cart.map(i => `${i.title} (Qty: ${i.qty}, Price: ₹${i.price * i.qty})`).join('\n');
+      const totalAmountText = document.getElementById('modalTotal').innerText;
+
+      if (totalPaise <= 0) {
+        alert("Aapka cart khali hai!");
+        return;
+      }
+
       submitBtn.disabled = true;
-      submitBtn.innerText = "Placing Order...";
+      submitBtn.innerText = "Payment window khul rahi hai...";
 
-      const itemsSummary = cart.map(i => `${i.title} (Qty: ${i.qty}, Price: ₹${i.price * i.qty})`).join("\n");
-      const totalAmount = document.getElementById("modalTotal").innerText;
+      const options = {
+        "key": "rzp_test_TcBzIPGiQ5PniF",
+        "amount": totalPaise,
+        "currency": "INR",
+        "name": "Zivora",
+        "description": "Order Payment",
+        "handler": async function (response) {
+          submitBtn.innerText = "Order confirm ho raha hai...";
+          const orderPayload = {
+            access_key: "8da90f0a-9429-4da2-9a87-da894e901a59",
+            subject: `New Paid Order (${response.razorpay_payment_id}) - ${custName}`,
+            "Customer Name": custName,
+            "Customer Phone": custPhone,
+            "Delivery Address": custAddress,
+            "City": custCity,
+            "Pincode": custPin,
+            "Ordered Products": itemsSummary,
+            "Total Bill": totalAmountText,
+            "Payment ID": response.razorpay_payment_id,
+            "Payment Status": "PAID"
+          };
 
-      const orderPayload = {
-        access_key: "8da90f0a-9429-4da2-9a87-da894e901a59",
-        subject: `New Order from ${document.getElementById("custName").value} - Zivora`,
-        "Customer Name": document.getElementById("custName").value,
-        "Customer Phone": document.getElementById("custPhone").value,
-        "Delivery Address": document.getElementById("custAddress").value,
-        "City": document.getElementById("custCity").value,
-        "Pincode": document.getElementById("custPin").value,
-        "Ordered Products": itemsSummary,
-        "Total Bill": totalAmount
+          try {
+            const res = await fetch("https://api.web3forms.com/submit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "Accept": "application/json" },
+              body: JSON.stringify(orderPayload)
+            });
+            const result = await res.json();
+            if (result.success) {
+              cart = [];
+              updateCart();
+              document.getElementById('orderForm').style.display = "none";
+              document.getElementById('formTitle').innerText = "Order Confirmed!";
+              document.getElementById('successContent').style.display = "block";
+            } else {
+              alert("Payment ho gaya! Payment ID note kar lein: " + response.razorpay_payment_id);
+            }
+          } catch(e) {
+            alert("Order save nahi hua, par payment ho gaya. ID: " + response.razorpay_payment_id);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Place Order";
+          }
+        },
+        "prefill": {
+          "name": custName,
+          "contact": custPhone
+        },
+        "theme": {
+          "color": "#1a1a1a"
+        },
+        "modal": {
+          "ondismiss": function() {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Place Order";
+          }
+        }
       };
 
-      try {
-        const response = await fetch("https://api.web3forms.com/submit", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify(orderPayload)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          document.getElementById("orderForm").style.display = "none";
-          document.getElementById("formTitle").innerText = "Order Status";
-          document.getElementById("successContent").style.display = "block";
-        } else {
-          alert("Order place karne me error aayi. Kripya dobara try karein.");
-        }
-      } catch (error) {
-        alert("Internet error! Kripya connection check karein.");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Place Order";
-      }
+      const rzp = new Razorpay(options);
+      rzp.open();
     }
 
     renderProducts();
