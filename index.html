@@ -304,7 +304,6 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page active">
     <header>
-      <!-- Hidden Admin Trigger: Tap the brand name 'Zivora' 3 times quickly -->
       <a class="brand-name" onclick="handleBrandTap()">Zivora</a>
       <div class="header-search">
         <input type="text" id="searchInput" placeholder="Search by Keyword or Product ID" oninput="handleSearch(this.value)">
@@ -429,9 +428,7 @@
         <div style="background:#f3e5f5; color:var(--primary); padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
           👋 Welcome to Zivora Support! Type your query regarding orders, shipping, or returns below.
         </div>
-        <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;">
-          <!-- Loaded dynamically -->
-        </div>
+        <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;"></div>
         <div style="display:flex; gap:8px;">
           <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.88rem;" onkeypress="if(event.key==='Enter') sendCustomerSupportMsg()">
           <button onclick="sendCustomerSupportMsg()" class="btn-primary-solid" style="width:100px; padding:10px;">Send</button>
@@ -463,21 +460,19 @@
           <button onclick="switchAdminTab('addProduct')" id="tabBtnAdd" style="flex:1; min-width:140px; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Add Product</button>
         </div>
 
-        <!-- Section 1: Orders & Tracking -->
         <div id="adminSectionOrders" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px;">
           <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">📦 Live Customer Orders</h4>
           <div id="adminOrdersListContainer" style="max-height:400px; overflow-y:auto; font-size:0.85rem;">Loading live orders...</div>
         </div>
 
-        <!-- Section 2: Customer Support Chats & Reply Manager -->
         <div id="adminSectionSupport" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px; display:none;">
           <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">💬 Customer Support Inquiries & Reply</h4>
           <div id="adminSupportListContainer" style="max-height:450px; overflow-y:auto; font-size:0.85rem;">Loading support chats...</div>
         </div>
 
-        <!-- Section 3: Add Product -->
+        <!-- Section 3: Add Product with Unlimited Color Variants -->
         <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
-          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Color Variants</h4>
+          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Unlimited Color Variants</h4>
           
           <div class="form-group">
             <label>Product Name / Title *</label>
@@ -498,16 +493,16 @@
             <input type="text" id="npImg" placeholder="https://images.unsplash.com/...">
           </div>
 
+          <!-- Dynamic Color Variants Container -->
           <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
-            <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:6px; display:block;">🎨 Color Variants & Photos</label>
-            <div class="form-row" style="margin-bottom:6px;">
-              <input type="text" id="npColor1" placeholder="Color 1 Name (e.g. Blue)">
-              <input type="text" id="npColor1Img" placeholder="Color 1 Image URL">
+            <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:8px; display:block;">🎨 Color Variants (Add as many as you want)</label>
+            <div id="adminColorInputsContainer">
+              <div class="form-row" style="margin-bottom:6px;">
+                <input type="text" class="color-name-input" placeholder="Color Name (e.g. Pink)">
+                <input type="text" class="color-img-input" placeholder="Image URL for this color">
+              </div>
             </div>
-            <div class="form-row">
-              <input type="text" id="npColor2" placeholder="Color 2 Name (e.g. Red)">
-              <input type="text" id="npColor2Img" placeholder="Color 2 Image URL">
-            </div>
+            <button type="button" onclick="addColorVariantInput()" style="background:#e0e0e0; border:none; padding:6px 12px; font-size:0.78rem; font-weight:700; border-radius:4px; cursor:pointer; margin-top:4px;">+ Add Another Color Variant</button>
           </div>
 
           <div class="form-group">
@@ -1116,7 +1111,6 @@
       }
     }
 
-    // Persistent Customer Support Chat Functions
     function renderCustomerChat() {
       let phone = localStorage.getItem("ziv_phone") || "Guest";
       let box = document.getElementById("chatMessagesBox");
@@ -1184,7 +1178,6 @@
       renderProfilePage();
     }
 
-    // Admin Session & Navigation Logic
     function checkAdminSession() {
       let isAdmin = localStorage.getItem("ziv_admin_auth") === "true";
       if (isAdmin) {
@@ -1218,7 +1211,6 @@
       let secSupport = document.getElementById("adminSectionSupport");
       let secAdd = document.getElementById("adminSectionAddProduct");
 
-      // Reset all buttons
       [btnOrders, btnSupport, btnAdd].forEach(b => { b.style.background = "#e0e0e0"; b.style.color = "#333"; });
       [secOrders, secSupport, secAdd].forEach(s => s.style.display = "none");
 
@@ -1236,7 +1228,6 @@
       }
     }
 
-    // Admin Load Support Chats & Reply
     function loadAdminSupportChats() {
       let container = document.getElementById("adminSupportListContainer");
       let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
@@ -1327,6 +1318,19 @@
       }
     }
 
+    // Dynamic Color Variants Addition in Admin Panel
+    function addColorVariantInput() {
+      let container = document.getElementById("adminColorInputsContainer");
+      let div = document.createElement("div");
+      div.className = "form-row";
+      div.style.marginBottom = "6px";
+      div.innerHTML = `
+        <input type="text" class="color-name-input" placeholder="Color Name (e.g. Red)">
+        <input type="text" class="color-img-input" placeholder="Image URL for this color">
+      `;
+      container.appendChild(div);
+    }
+
     function adminAddNewProduct() {
       let title = document.getElementById("npTitle").value.trim();
       let price = Number(document.getElementById("npPrice").value);
@@ -1338,16 +1342,19 @@
       let reviews = Number(document.getElementById("npReviews").value) || 128;
       let fakeReview = document.getElementById("npFakeReview").value.trim();
 
-      let c1Name = document.getElementById("npColor1").value.trim();
-      let c1Img = document.getElementById("npColor1Img").value.trim();
-      let c2Name = document.getElementById("npColor2").value.trim();
-      let c2Img = document.getElementById("npColor2Img").value.trim();
-
       if (!title || !price || !image || !desc) return alert("Please fill all required product fields!");
 
       let colorsArr = [{ name: 'Default', img: image }];
-      if (c1Name && c1Img) colorsArr.push({ name: c1Name, img: c1Img });
-      if (c2Name && c2Img) colorsArr.push({ name: c2Name, img: c2Img });
+      let nameInputs = document.querySelectorAll(".color-name-input");
+      let imgInputs = document.querySelectorAll(".color-img-input");
+
+      for (let i = 0; i < nameInputs.length; i++) {
+        let cName = nameInputs[i].value.trim();
+        let cImg = imgInputs[i].value.trim();
+        if (cName && cImg) {
+          colorsArr.push({ name: cName, img: cImg });
+        }
+      }
 
       let newProd = {
         id: Date.now(),
@@ -1374,7 +1381,7 @@
       catalog.unshift(newProd);
       renderGrid();
 
-      alert("✓ Product published live and saved permanently!");
+      alert("✓ Product published live with all color variants saved permanently!");
       navigateTo('home');
     }
   </script>
