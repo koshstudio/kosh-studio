@@ -470,9 +470,8 @@
           <div id="adminSupportListContainer" style="max-height:450px; overflow-y:auto; font-size:0.85rem;">Loading support chats...</div>
         </div>
 
-        <!-- Section 3: Add Product with Unlimited Color Variants -->
         <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
-          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Unlimited Color Variants</h4>
+          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Color Variants</h4>
           
           <div class="form-group">
             <label>Product Name / Title *</label>
@@ -493,7 +492,6 @@
             <input type="text" id="npImg" placeholder="https://images.unsplash.com/...">
           </div>
 
-          <!-- Dynamic Color Variants Container -->
           <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
             <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:8px; display:block;">🎨 Color Variants (Add as many as you want)</label>
             <div id="adminColorInputsContainer">
@@ -570,16 +568,39 @@
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="modal-header" style="padding:16px;">
-      <h3 style="font-size:1rem;">CART <span style="font-size:0.8rem; color:var(--muted); font-weight:normal;" id="cartStepIndicator">STEP 1/3</span></h3>
+      <h3 style="font-size:1rem;">YOUR CART</h3>
       <button class="close-btn" onclick="toggleCart()">&times;</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+    
+    <!-- Coupon & Summary Section -->
     <div style="padding:16px; border-top:1px solid var(--border); background:#fff;">
-      <div style="display:flex; justify-content:space-between; font-size:1rem; margin-bottom:12px; font-weight:700;">
-        <span>Order Total:</span>
+      <div style="margin-bottom:10px;">
+        <div style="display:flex; gap:6px; margin-bottom:6px;">
+          <input type="text" id="couponInput" placeholder="Enter promo code (e.g. FIRST30)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
+          <button onclick="applyCoupon()" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Apply</button>
+        </div>
+        <!-- Suggested Coupons -->
+        <div style="display:flex; gap:6px; align-items:center; font-size:0.75rem;">
+          <span style="color:var(--muted);">Suggestion:</span>
+          <span onclick="applySuggestedCoupon('FIRST30')" style="background:#f3e5f5; color:var(--primary); padding:2px 6px; border-radius:4px; font-weight:700; cursor:pointer; border:1px dashed var(--primary);">FIRST30 (-₹30)</span>
+        </div>
+        <div id="couponMsg" style="font-size:0.75rem; margin-top:4px; font-weight:600;"></div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px; color:var(--muted);">
+        <span>Delivery:</span>
+        <span style="color:var(--success); font-weight:700;">FREE</span>
+      </div>
+      <div id="discountRow" style="display:none; justify-content:space-between; font-size:0.85rem; margin-bottom:4px; color:var(--success);">
+        <span>Discount Applied:</span>
+        <span id="discountAmountText">-₹0</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:1rem; margin-bottom:12px; font-weight:700; border-top:1px solid var(--border); padding-top:6px;">
+        <span>Final Payable:</span>
         <span id="cartTotalPrice">₹0</span>
       </div>
-      <button class="btn-primary-solid" onclick="openCheckoutModal()">Continue</button>
+      <button class="btn-primary-solid" onclick="openCheckoutModal()">Continue to Checkout</button>
     </div>
   </aside>
 
@@ -667,6 +688,7 @@
     let currentCategory = 'All';
     let activePageProduct = null;
     let brandTapCount = 0;
+    let appliedDiscount = 0;
 
     function handleBrandTap() {
       brandTapCount++;
@@ -921,15 +943,48 @@
       updateCartUI();
     }
 
+    // Coupon Code Logic
+    function applyCoupon() {
+      let code = document.getElementById("couponInput").value.trim().toUpperCase();
+      let msg = document.getElementById("couponMsg");
+      let discountRow = document.getElementById("discountRow");
+
+      if (code === "FIRST30") {
+        appliedDiscount = 30;
+        msg.style.color = "var(--success)";
+        msg.innerText = "✓ Coupon FIRST30 applied (-₹30)";
+        discountRow.style.display = "flex";
+        document.getElementById("discountAmountText").innerText = `-₹30`;
+      } else {
+        appliedDiscount = 0;
+        msg.style.color = "#d32f2f";
+        msg.innerText = "❌ Invalid Promo Code";
+        discountRow.style.display = "none";
+      }
+      updateCartUI();
+    }
+
+    function applySuggestedCoupon(code) {
+      document.getElementById("couponInput").value = code;
+      applyCoupon();
+    }
+
     function updateCartUI() {
       let totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
-      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let finalPrice = Math.max(0, subtotal - appliedDiscount);
+
       document.getElementById("cartCount").innerText = totalQty;
-      document.getElementById("cartTotalPrice").innerText = `₹${totalPrice}`;
+      document.getElementById("cartTotalPrice").innerText = `₹${finalPrice}`;
 
       let container = document.getElementById("cartItemsContainer");
       if (cart.length === 0) {
         container.innerHTML = `<p style="text-align:center; color:var(--muted); padding:30px;">Your cart is empty</p>`;
+        appliedDiscount = 0;
+        document.getElementById("discountRow").style.display = "none";
+        document.getElementById("couponMsg").innerText = "";
+        document.getElementById("couponInput").value = "";
+        document.getElementById("cartTotalPrice").innerText = `₹0`;
         return;
       }
       container.innerHTML = cart.map(item => `
@@ -959,8 +1014,9 @@
 
     function openCheckoutModal() {
       if (cart.length === 0) return alert("Cart is empty!");
-      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-      document.getElementById("checkoutPayableAmount").innerText = `₹${totalPrice}`;
+      let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let finalPrice = Math.max(0, subtotal - appliedDiscount);
+      document.getElementById("checkoutPayableAmount").innerText = `₹${finalPrice}`;
       if (document.getElementById("cartDrawer").classList.contains("open")) toggleCart();
       document.getElementById("checkoutModal").style.display = "flex";
     }
@@ -969,7 +1025,8 @@
 
     function processRazorpayPayment(e) {
       e.preventDefault();
-      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let subtotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let finalPrice = Math.max(0, subtotal - appliedDiscount);
       let name = document.getElementById("cName").value;
       let phone = document.getElementById("cPhone").value;
       let email = document.getElementById("cEmail").value;
@@ -980,7 +1037,7 @@
 
       let options = {
         key: "rzp_test_TcBzIPGiQ5PniF",
-        amount: totalPrice * 100,
+        amount: finalPrice * 100,
         currency: "INR",
         name: "Zivora Plus",
         description: "Secure Prepaid Order",
@@ -990,13 +1047,13 @@
             await db.from('orders').insert([{
               id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
               shipping_address: address, city: city, state: state, pincode: pincode,
-              total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet"
+              total_amount: finalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet"
             }]);
           }
           localStorage.setItem("ziv_phone", phone);
           localStorage.setItem("ziv_address", `${address}, ${city}, ${state} - ${pincode}`);
           alert("✓ Order Placed Successfully! ID: " + orderId);
-          cart = []; updateCartUI(); closeCheckoutModal();
+          cart = []; appliedDiscount = 0; updateCartUI(); closeCheckoutModal();
         },
         prefill: { name, contact: phone, email }
       };
@@ -1318,7 +1375,6 @@
       }
     }
 
-    // Dynamic Color Variants Addition in Admin Panel
     function addColorVariantInput() {
       let container = document.getElementById("adminColorInputsContainer");
       let div = document.createElement("div");
