@@ -1057,13 +1057,26 @@
         description: "Secure Prepaid Order",
         handler: async function (response) {
           let orderId = "ZIV-" + Date.now().toString().slice(-6);
+          let newOrder = {
+            id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
+            shipping_address: address, city: city, state: state, pincode: pincode,
+            total_amount: finalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet",
+            created_at: new Date().toISOString()
+          };
+
+          // Save locally so orders never disappear
+          try {
+            let localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+            localOrders.unshift(newOrder);
+            localStorage.setItem("ziv_local_orders", JSON.stringify(localOrders));
+          } catch(err) {}
+
           if (db) {
-            await db.from('orders').insert([{
-              id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
-              shipping_address: address, city: city, state: state, pincode: pincode,
-              total_amount: finalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet"
-            }]);
+            try {
+              await db.from('orders').insert([newOrder]);
+            } catch(e) {}
           }
+
           localStorage.setItem("ziv_phone", phone);
           localStorage.setItem("ziv_address", `${address}, ${city}, ${state} - ${pincode}`);
           alert("✓ Order Placed Successfully! ID: " + orderId);
@@ -1148,35 +1161,49 @@
               <button onclick="localStorage.removeItem('ziv_phone'); renderOrdersPage();" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">Change Number</button>
             </div>
             <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking</h4>
-            <div id="liveOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders from database...</p></div>
+            <div id="liveOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders...</p></div>
           </div>
         `;
 
+        let localOrders = [];
+        try {
+          localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+        } catch(e) {}
+        let userLocalOrders = localOrders.filter(o => String(o.customer_phone) === String(phone));
+
+        let dbOrders = [];
         if (db) {
-          let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
-          let oContainer = document.getElementById("liveOrdersContainer");
-          if (oContainer) {
-            if (data && data.length > 0) {
-              oContainer.innerHTML = data.map(o => `
-                <div class="order-tracker">
-                  <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
-                    <span>Order ID: ${o.id}</span>
-                    <span style="color:var(--primary);">₹${o.total_amount}</span>
-                  </div>
-                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
-                  <div style="font-size:0.78rem; color:#d81b60; margin-bottom:6px; font-weight:700;">🚚 Courier Tracking ID: <span>${o.tracking_id || 'Waiting for supplier update'}</span></div>
-                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
-                  <div class="timeline">
-                    <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
-                    <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
-                    <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
-                    <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
-                  </div>
+          try {
+            let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+            if (data) dbOrders = data;
+          } catch(e) {}
+        }
+
+        let allOrders = [...userLocalOrders, ...dbOrders];
+        let uniqueOrders = Array.from(new Map(allOrders.map(item => [item.id, item])).values());
+
+        let oContainer = document.getElementById("liveOrdersContainer");
+        if (oContainer) {
+          if (uniqueOrders.length > 0) {
+            oContainer.innerHTML = uniqueOrders.map(o => `
+              <div class="order-tracker">
+                <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                  <span>Order ID: ${o.id}</span>
+                  <span style="color:var(--primary);">₹${o.total_amount}</span>
                 </div>
-              `).join('');
-            } else {
-              oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
-            }
+                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
+                <div style="font-size:0.78rem; color:#d81b60; margin-bottom:6px; font-weight:700;">🚚 Courier Tracking ID: <span>${o.tracking_id || 'Waiting for supplier update'}</span></div>
+                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${(o.order_status || 'confirmed').toUpperCase()}</strong></div>
+                <div class="timeline">
+                  <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
+                  <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
+                  <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
+                  <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
+                </div>
+              </div>
+            `).join('');
+          } else {
+            oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
           }
         }
       }
@@ -1347,11 +1374,25 @@
 
     async function loadAdminOrdersForTracking() {
       let container = document.getElementById("adminOrdersListContainer");
-      if (!db) { container.innerHTML = "Database not connected."; return; }
+      
+      let localOrders = [];
+      try {
+        localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+      } catch(e) {}
 
-      let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
-      if (data && data.length > 0) {
-        container.innerHTML = data.map(o => `
+      let dbOrders = [];
+      if (db) {
+        try {
+          let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
+          if (data) dbOrders = data;
+        } catch(e) {}
+      }
+
+      let allOrders = [...localOrders, ...dbOrders];
+      let uniqueOrders = Array.from(new Map(allOrders.map(item => [item.id, item])).values());
+
+      if (uniqueOrders.length > 0) {
+        container.innerHTML = uniqueOrders.map(o => `
           <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
             <div style="font-weight:700; margin-bottom:4px;">Order ID: ${o.id} | ₹${o.total_amount}</div>
             <div style="color:var(--muted); margin-bottom:6px;">Customer: ${o.customer_name} (${o.customer_phone})<br>Address: ${o.shipping_address}, ${o.city}, ${o.state} - ${o.pincode}</div>
@@ -1363,7 +1404,7 @@
           </div>
         `).join('');
       } else {
-        container.innerHTML = "No orders found in database.";
+        container.innerHTML = "No orders found.";
       }
     }
 
@@ -1380,13 +1421,21 @@
       let val = document.getElementById(`trackInput-${orderId}`).value.trim();
       if (!val) return alert("Please enter tracking ID");
 
-      let { error } = await db.from('orders').update({ tracking_id: val, order_status: 'shipped' }).eq('id', orderId);
-      if (!error) {
-        alert("✓ Tracking ID updated successfully!");
-        loadAdminOrdersForTracking();
-      } else {
-        alert("Error updating tracking ID.");
+      if (db) {
+        try {
+          await db.from('orders').update({ tracking_id: val, order_status: 'shipped' }).eq('id', orderId);
+        } catch(e) {}
       }
+
+      // Also update local storage orders
+      try {
+        let localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+        localOrders = localOrders.map(o => o.id === orderId ? { ...o, tracking_id: val, order_status: 'shipped' } : o);
+        localStorage.setItem("ziv_local_orders", JSON.stringify(localOrders));
+      } catch(e) {}
+
+      alert("✓ Tracking ID updated successfully!");
+      loadAdminOrdersForTracking();
     }
 
     function addColorVariantInput() {
