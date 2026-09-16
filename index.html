@@ -14,7 +14,7 @@
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #9c27b0; /* Meesho Style Purple Theme Accent */
+      --primary: #9c27b0;
       --primary-dark: #7b1fa2;
       --accent: #f43397;
       --border: #e0e0e0;
@@ -236,7 +236,7 @@
     .product-page-content { display: grid; grid-template-columns: 1fr; gap: 20px; }
     @media(min-width: 768px) { .product-page-content { grid-template-columns: 1fr 1fr; } }
 
-    /* Meesho Style Cart Drawer */
+    /* Cart Slide Drawer */
     .cart-drawer {
       position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 420px;
       background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.2s ease;
@@ -810,7 +810,7 @@
       rzp.open();
     }
 
-    // Dedicated Full Page Profile View Logic (Meesho style)
+    // Dedicated Full Page Profile View Logic (Meesho style UI)
     async function openProfilePage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
@@ -818,10 +818,10 @@
 
       if (!phone) {
         contentArea.innerHTML = `
-          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
-            <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Customer Login</h3>
+          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Login to Zivora</h3>
             <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile, orders & tracking:</p>
-            <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 9px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem;">
+            <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
             <button onclick="saveProfilePhone()" class="btn-primary-solid">Continue</button>
           </div>
         `;
@@ -829,29 +829,32 @@
         let ordersHtml = `<p style="text-align:center; padding:15px; color:var(--muted);">Loading orders for +91 ${phone}...</p>`;
         
         let wishlistHtml = wishlist.length === 0 ? `<p style="color:var(--muted); font-size:0.85rem;">No items in wishlist.</p>` : wishlist.map(w => `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:8px; border-radius:4px; margin-bottom:6px; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border);">
             <span>${w.title} (₹${w.price})</span>
-            <button onclick="addToCart(${w.id})" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:2px; cursor:pointer;">Move to Cart</button>
+            <button onclick="addToCart(${w.id})" style="background:var(--primary); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-weight:700;">Move to Cart</button>
           </div>
         `).join('');
 
         contentArea.innerHTML = `
           <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
-              <div>
-                <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Registered Mobile</div>
-                <div style="font-size:1rem; font-weight:800; color:var(--text);">+91 ${phone}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; background:#f3e5f5; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">👤</div>
+                <div>
+                  <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Mobile Number</div>
+                  <div style="font-size:0.95rem; font-weight:800; color:var(--text);">+91 ${phone}</div>
+                </div>
               </div>
-              <button onclick="logoutProfile()" style="background:#dc2626; color:#fff; border:none; padding:6px 12px; border-radius:2px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
+              <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
             </div>
 
-            <div style="background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
-              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px;">❤️ Wishlisted Products</h4>
+            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:var(--primary);">❤️ Wishlisted Products</h4>
               ${wishlistHtml}
             </div>
 
-            <div style="background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
-              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px;">📍 Saved Delivery Address</h4>
+            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px; color:var(--primary);">📍 Saved Delivery Address</h4>
               <p style="font-size:0.85rem; color:var(--muted);">${savedAddress}</p>
             </div>
 
