@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zivora | Luxury Fashion & Accessories</title>
+  <title>Zivora Plus | Luxury Fashion & Accessories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,15 +14,15 @@
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #2874f0;
-      --primary-dark: #1e5bb8;
-      --accent: #fb641b;
+      --primary: #9c27b0; /* Meesho Style Purple Theme Accent */
+      --primary-dark: #7b1fa2;
+      --accent: #f43397;
       --border: #e0e0e0;
       --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
       --success: #388e3c;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -33,7 +33,7 @@
     }
 
     .top-strip {
-      background: #2874f0;
+      background: var(--primary);
       color: #fff;
       text-align: center;
       padding: 6px 12px;
@@ -43,8 +43,8 @@
     }
 
     header {
-      background: #2874f0;
-      color: #fff;
+      background: #ffffff;
+      color: var(--text);
       position: sticky;
       top: 0;
       z-index: 60;
@@ -53,35 +53,33 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
     .brand-name {
       font-size: 1.5rem;
       font-weight: 800;
       letter-spacing: 1px;
-      color: #fff;
+      color: var(--primary);
       text-decoration: none;
       font-style: italic;
     }
-
-    .brand-name span { color: #ffe11b; font-style: normal; }
 
     .header-search {
       flex-grow: 1;
       max-width: 550px;
       display: flex;
-      background: #fff;
-      border-radius: 2px;
+      background: #f8f8f8;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       overflow: hidden;
-      box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
     }
 
     .header-search input {
       width: 100%;
       border: none;
       background: transparent;
-      padding: 9px 14px;
+      padding: 8px 12px;
       font-size: 0.85rem;
       outline: none;
     }
@@ -101,7 +99,7 @@
       flex-direction: column;
       align-items: center;
       font-size: 0.72rem;
-      color: #fff;
+      color: var(--text);
       font-weight: 600;
     }
 
@@ -109,7 +107,7 @@
       position: absolute;
       top: -4px;
       right: 2px;
-      background: #ff6161;
+      background: var(--accent);
       color: white;
       font-size: 0.6rem;
       font-weight: 700;
@@ -170,10 +168,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: all 0.2s;
     }
-
-    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
 
     .badge-discount {
       position: absolute;
@@ -218,34 +213,33 @@
     .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
 
     .btn-add-cart {
-      width: 100%; background: #ff9f00; border: none; color: #fff; padding: 8px;
-      border-radius: 2px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+      width: 100%; background: #fff; border: 1px solid var(--primary); color: var(--primary); padding: 8px;
+      border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-add-cart:hover { background: #fb641b; }
+    .btn-add-cart:active { background: #f3e5f5; }
 
-    /* Dedicated Full Product Page View */
-    .product-page-view {
+    /* Dedicated Full Pages */
+    .product-page-view, .profile-page-view {
       position: fixed; inset: 0; background: #fff; z-index: 90; display: none; overflow-y: auto;
     }
 
     .page-header {
-      background: #2874f0; color: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10;
+      background: #fff; color: var(--text); padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
     }
 
-    .back-btn { background: none; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .back-btn { background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
-    .product-page-content {
-      max-width: 900px; margin: 20px auto; padding: 0 16px; display: grid; grid-template-columns: 1fr; gap: 20px;
+    .product-page-content, .profile-page-content {
+      max-width: 900px; margin: 20px auto; padding: 0 16px;
     }
 
-    @media(min-width: 768px) {
-      .product-page-content { grid-template-columns: 1fr 1fr; }
-    }
+    .product-page-content { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media(min-width: 768px) { .product-page-content { grid-template-columns: 1fr 1fr; } }
 
-    /* Cart Slide Drawer */
+    /* Meesho Style Cart Drawer */
     .cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 400px;
-      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
+      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 420px;
+      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.2s ease;
       display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
     }
     .cart-drawer.open { transform: translateX(0); }
@@ -282,15 +276,15 @@
     .form-group { margin-bottom: 10px; }
     .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; color: #212121; }
     .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 2px; font-size: 0.88rem; font-family: inherit; outline: none;
+      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.88rem; font-family: inherit; outline: none;
     }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
     .btn-primary-solid {
-      width: 100%; background: #fb641b; color: #fff; border: none; padding: 12px;
-      border-radius: 2px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+      width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
+      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-primary-solid:hover { background: #e05312; }
+    .btn-primary-solid:active { background: var(--primary-dark); }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff;
@@ -310,14 +304,14 @@
   <div class="top-strip">⚡ 100% PREPAID SECURE STORE | FREE EXPRESS DELIVERY ACROSS INDIA</div>
 
   <header>
-    <a href="#" class="brand-name">Zivora<span>plus</span></a>
+    <a href="#" class="brand-name" onclick="window.scrollTo(0,0)">Zivora</a>
     
     <div class="header-search">
-      <input type="text" id="searchInput" placeholder="Search for products, brands and more" oninput="handleSearch(this.value)">
+      <input type="text" id="searchInput" placeholder="Search by Keyword or Product ID" oninput="handleSearch(this.value)">
     </div>
 
     <div class="header-icons">
-      <button class="icon-btn" onclick="openProfileModal()">
+      <button class="icon-btn" onclick="openProfilePage()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
         <span>Profile</span>
       </button>
@@ -358,7 +352,7 @@
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path></svg>
       Cart
     </a>
-    <a class="nav-tab" onclick="openProfileModal()">
+    <a class="nav-tab" onclick="openProfilePage()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       My Profile
     </a>
@@ -402,20 +396,31 @@
     </div>
   </div>
 
-  <!-- Cart Slide Drawer -->
+  <!-- Dedicated Full My Profile Page View -->
+  <div class="profile-page-view" id="profilePageView">
+    <div class="page-header">
+      <button class="back-btn" onclick="closeProfilePage()">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Profile & Orders</span>
+    </div>
+    <div class="profile-page-content" id="profilePageContentArea" style="padding: 20px 0;">
+      <!-- Dynamic Profile Data -->
+    </div>
+  </div>
+
+  <!-- Meesho Style Cart Drawer -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div class="modal-header" style="padding:16px;">
-      <h3 style="font-size:1rem;">My Shopping Cart</h3>
+      <h3 style="font-size:1rem;">CART <span style="font-size:0.8rem; color:var(--muted); font-weight:normal;" id="cartStepIndicator">STEP 1/3</span></h3>
       <button class="close-btn" onclick="toggleCart()">&times;</button>
     </div>
-    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px;"></div>
-    <div style="padding:16px; border-top:1px solid var(--border); background:#f9f9f9;">
+    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+    <div style="padding:16px; border-top:1px solid var(--border); background:#fff;">
       <div style="display:flex; justify-content:space-between; font-size:1rem; margin-bottom:12px; font-weight:700;">
-        <span>Total Amount:</span>
+        <span>Order Total:</span>
         <span id="cartTotalPrice">₹0</span>
       </div>
-      <button class="btn-primary-solid" onclick="openCheckoutModal()">Place Order</button>
+      <button class="btn-primary-solid" onclick="openCheckoutModal()">Continue</button>
     </div>
   </aside>
 
@@ -471,19 +476,6 @@
     </div>
   </div>
 
-  <!-- My Profile Modal (Orders, Tracking, Wishlist & Phone Sync) -->
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal-box" style="max-width:540px;">
-      <div class="modal-header">
-        <h3 style="font-size:1rem;">👤 My Profile & Orders</h3>
-        <button class="close-btn" onclick="closeProfileModal()">&times;</button>
-      </div>
-      <div id="profileContent" style="font-size:0.85rem;">
-        <!-- Dynamic Profile Content -->
-      </div>
-    </div>
-  </div>
-
   <!-- Admin Modal -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width:420px;">
@@ -492,8 +484,8 @@
         <button class="close-btn" onclick="closeAdminModal()">&times;</button>
       </div>
       <div id="adminLoginBox">
-        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:2px;">
-        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:2px;">
+        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:4px;">
+        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:4px;">
         <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login</button>
       </div>
       <div id="adminDashBox" style="display:none;">
@@ -533,6 +525,7 @@
     ];
 
     let cart = [];
+    let wishlist = [];
     let currentCategory = 'All';
     let activePageProduct = null;
 
@@ -617,7 +610,6 @@
       document.getElementById("productPageView").style.display = "none";
     }
 
-    // Real Pincode API Verification using India Post API
     async function verifyLivePincode(pin, resultElementId) {
       let resDiv = document.getElementById(resultElementId);
       if (pin.length !== 6) {
@@ -644,7 +636,6 @@
       }
     }
 
-    // Checkout Pincode Auto-Detect City & State
     async function handleCheckoutPinInput(pin) {
       let msg = document.getElementById("checkoutPinMsg");
       let cityInput = document.getElementById("cCity");
@@ -710,6 +701,31 @@
       toggleCart();
     }
 
+    function changeCartQty(id, delta) {
+      let item = cart.find(i => i.id == id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id != id);
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id != id);
+      updateCartUI();
+    }
+
+    function moveToWishlist(id) {
+      let item = cart.find(i => i.id == id);
+      if (item) {
+        if (!wishlist.some(w => w.id == id)) wishlist.push(item);
+        cart = cart.filter(i => i.id != id);
+        updateCartUI();
+        alert("Moved to Wishlist!");
+      }
+    }
+
     function updateCartUI() {
       let totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
       let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
@@ -722,11 +738,26 @@
         return;
       }
       container.innerHTML = cart.map(item => `
-        <div style="display:flex; gap:10px; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-          <img src="${item.image}" style="width:60px; height:70px; object-fit:cover; border-radius:2px;">
-          <div style="flex-grow:1;">
-            <div style="font-size:0.8rem; font-weight:600;">${item.title}</div>
-            <div style="font-size:0.85rem; font-weight:700; margin-top:4px;">₹${item.price} × ${item.qty}</div>
+        <div style="background:#fff; border-radius:4px; padding:12px; margin-bottom:12px; border:1px solid var(--border);">
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <img src="${item.image}" style="width:70px; height:80px; object-fit:cover; border-radius:4px;">
+            <div>
+              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
+              <div style="font-size:0.9rem; font-weight:700; color:var(--text);">₹${item.price} <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${item.mrp}</span></div>
+              <div style="font-size:0.75rem; color:var(--success); margin-top:2px;">Free Delivery</div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; font-size:0.8rem;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span>Qty:</span>
+              <button onclick="changeCartQty(${item.id}, -1)" style="padding:2px 8px; border:1px solid var(--border); background:#fff; cursor:pointer;">-</button>
+              <strong>${item.qty}</strong>
+              <button onclick="changeCartQty(${item.id}, 1)" style="padding:2px 8px; border:1px solid var(--border); background:#fff; cursor:pointer;">+</button>
+            </div>
+            <div>
+              <button onclick="moveToWishlist(${item.id})" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; margin-right:12px;">Move to Wishlist</button>
+              <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:#dc2626; font-weight:700; cursor:pointer;">Remove</button>
+            </div>
           </div>
         </div>
       `).join('');
@@ -748,6 +779,10 @@
       let name = document.getElementById("cName").value;
       let phone = document.getElementById("cPhone").value;
       let email = document.getElementById("cEmail").value;
+      let address = document.getElementById("cAddress").value;
+      let city = document.getElementById("cCity").value;
+      let state = document.getElementById("cState").value;
+      let pincode = document.getElementById("cPin").value;
 
       let options = {
         key: "rzp_test_TcBzIPGiQ5PniF",
@@ -760,12 +795,12 @@
           if (db) {
             await db.from('orders').insert([{
               id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
-              shipping_address: document.getElementById("cAddress").value,
-              city: document.getElementById("cCity").value, state: document.getElementById("cState").value, pincode: document.getElementById("cPin").value,
+              shipping_address: address, city: city, state: state, pincode: pincode,
               total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed"
             }]);
           }
           localStorage.setItem("ziv_phone", phone);
+          localStorage.setItem("ziv_address", `${address}, ${city}, ${state} - ${pincode}`);
           alert("✓ Order Placed Successfully! ID: " + orderId);
           cart = []; updateCartUI(); closeCheckoutModal();
         },
@@ -775,29 +810,54 @@
       rzp.open();
     }
 
-    async function openProfileModal() {
+    // Dedicated Full Page Profile View Logic (Meesho style)
+    async function openProfilePage() {
       let phone = localStorage.getItem("ziv_phone") || "";
-      let content = document.getElementById("profileContent");
-      
+      let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
+      let contentArea = document.getElementById("profilePageContentArea");
+
       if (!phone) {
-        content.innerHTML = `
-          <div style="text-align:center; padding:15px;">
-            <p style="margin-bottom:10px; font-weight:600;">Enter your registered mobile number to view profile, orders & tracking:</p>
-            <input type="tel" id="profilePhoneInput" placeholder="10-digit number" pattern="[0-9]{10}" style="padding:8px; width:180px; border:1px solid var(--border); border-radius:2px; font-size:0.9rem;">
-            <button onclick="saveProfilePhone()" style="background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Login / View</button>
+        contentArea.innerHTML = `
+          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 12px; font-size: 1.1rem;">Customer Login</h3>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile, orders & tracking:</p>
+            <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 9px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem;">
+            <button onclick="saveProfilePhone()" class="btn-primary-solid">Continue</button>
           </div>
         `;
       } else {
-        let ordersHtml = `<p style="text-align:center; padding:10px; color:var(--muted);">Loading orders for ${phone}...</p>`;
-        content.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px;">
-            <div>
-              <strong>Logged-in Mobile:</strong> +91 ${phone}
-            </div>
-            <button onclick="logoutProfile()" style="background:#dc2626; color:#fff; border:none; padding:4px 10px; border-radius:2px; font-size:0.75rem; cursor:pointer;">Logout</button>
+        let ordersHtml = `<p style="text-align:center; padding:15px; color:var(--muted);">Loading orders for +91 ${phone}...</p>`;
+        
+        let wishlistHtml = wishlist.length === 0 ? `<p style="color:var(--muted); font-size:0.85rem;">No items in wishlist.</p>` : wishlist.map(w => `
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:8px; border-radius:4px; margin-bottom:6px; font-size:0.85rem;">
+            <span>${w.title} (₹${w.price})</span>
+            <button onclick="addToCart(${w.id})" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:2px; cursor:pointer;">Move to Cart</button>
           </div>
-          <h4 style="margin-bottom:8px; font-size:0.9rem;">📦 Your Order History & Live Tracking Numbers</h4>
-          <div id="profileOrdersContainer">${ordersHtml}</div>
+        `).join('');
+
+        contentArea.innerHTML = `
+          <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+              <div>
+                <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Registered Mobile</div>
+                <div style="font-size:1rem; font-weight:800; color:var(--text);">+91 ${phone}</div>
+              </div>
+              <button onclick="logoutProfile()" style="background:#dc2626; color:#fff; border:none; padding:6px 12px; border-radius:2px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
+            </div>
+
+            <div style="background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px;">❤️ Wishlisted Products</h4>
+              ${wishlistHtml}
+            </div>
+
+            <div style="background:#fff; padding:15px; border: 1px solid var(--border); border-radius:4px; margin-bottom:16px;">
+              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px;">📍 Saved Delivery Address</h4>
+              <p style="font-size:0.85rem; color:var(--muted);">${savedAddress}</p>
+            </div>
+
+            <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking Numbers</h4>
+            <div id="profileOrdersContainer">${ordersHtml}</div>
+          </div>
         `;
 
         if (db) {
@@ -826,14 +886,15 @@
         }
       }
 
-      document.getElementById("profileModal").style.display = "flex";
+      document.getElementById("profilePageView").style.display = "block";
+      window.scrollTo(0,0);
     }
 
     function saveProfilePhone() {
       let p = document.getElementById("profilePhoneInput").value.trim();
       if (p.length === 10) {
         localStorage.setItem("ziv_phone", p);
-        openProfileModal();
+        openProfilePage();
       } else {
         alert("Please enter a valid 10-digit phone number.");
       }
@@ -841,10 +902,13 @@
 
     function logoutProfile() {
       localStorage.removeItem("ziv_phone");
-      openProfileModal();
+      openProfilePage();
     }
 
-    function closeProfileModal() { document.getElementById("profileModal").style.display = "none"; }
+    function closeProfilePage() {
+      document.getElementById("profilePageView").style.display = "none";
+    }
+
     function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; }
     function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
 
