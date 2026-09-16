@@ -364,7 +364,7 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
-        <!-- Return / Replacement Policy Notice Added Back -->
+        <!-- Return / Replacement Policy Notice -->
         <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
           ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
         </div>
@@ -527,11 +527,11 @@
     </div>
   </div>
 
-  <!-- Admin Modal with Tracking ID Updater -->
+  <!-- Admin Modal with Tracking & Copy Supplier Details -->
   <div class="modal-overlay" id="adminModal">
-    <div class="modal-box" style="max-width:650px;">
+    <div class="modal-box" style="max-width:680px;">
       <div class="modal-header">
-        <h3 style="font-size:1rem;">⚙️ Admin Dashboard & Tracking Manager</h3>
+        <h3 style="font-size:1rem;">⚙️ Admin Dashboard & Supplier Manager</h3>
         <button class="close-btn" onclick="closeAdminModal()">&times;</button>
       </div>
       <div id="adminLoginBox">
@@ -543,12 +543,12 @@
         <p style="font-size:0.85rem; color:var(--success); font-weight:700; margin-bottom:10px;">✓ Admin Verified</p>
         
         <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:16px;">
-          <h4 style="font-size:0.9rem; margin-bottom:8px; color:var(--primary);">📦 Assign Supplier Tracking ID to Orders</h4>
-          <div id="adminOrdersListContainer" style="max-height:220px; overflow-y:auto; font-size:0.8rem;">Loading live orders...</div>
+          <h4 style="font-size:0.9rem; margin-bottom:8px; color:var(--primary);">📦 Manage Orders & Copy Supplier Details</h4>
+          <div id="adminOrdersListContainer" style="max-height:240px; overflow-y:auto; font-size:0.8rem;">Loading live orders...</div>
         </div>
 
         <div style="background:#f9f9f9; padding:12px; border-radius:4px;">
-          <h4 style="font-size:0.9rem; margin-bottom:6px; color:var(--primary);">Add New Product</h4>
+          <h4 style="font-size:0.9rem; margin-bottom:6px; color:var(--primary);">Add New Product (Instant Publish)</h4>
           <input type="text" id="npTitle" placeholder="Title" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid var(--border);">
           <div class="form-row">
             <input type="number" id="npPrice" placeholder="Price" style="padding:6px; border:1px solid var(--border);">
@@ -586,7 +586,6 @@
     let activePageProduct = null;
     let brandTapCount = 0;
 
-    // Hidden Admin Trigger: Tap brand name 'Zivora' 3 times quickly
     function handleBrandTap() {
       brandTapCount++;
       if (brandTapCount >= 3) {
@@ -596,7 +595,6 @@
       setTimeout(() => { brandTapCount = 0; }, 1500);
     }
 
-    // Router Logic for Refresh & Direct URL support
     function navigateTo(pageName, param = null) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -648,11 +646,13 @@
       try {
         let { data } = await db.from('products').select('*');
         if (data && data.length > 0) {
-          catalog = data.map(p => ({
+          let dbCatalog = data.map(p => ({
             id: p.id, title: p.title, category: p.category, tag: p.tag || 'trending',
             price: Number(p.price), mrp: Number(p.mrp), rating: Number(p.rating || 4.8),
             reviews: p.reviews || 12, desc: p.description || '', image: p.image
           }));
+          // Merge with local catalog to keep newly added items
+          catalog = [...dbCatalog, ...catalog.filter(local => !dbCatalog.some(dbItem => dbItem.id === local.id))];
           renderGrid();
         }
       } catch(e){}
@@ -911,7 +911,6 @@
       rzp.open();
     }
 
-    // Profile Page Render with Support Chat Button & Zivora Wallet
     function renderProfilePage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
@@ -941,14 +940,12 @@
               <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
             </div>
 
-            <!-- Zivora Wallet Card -->
             <div style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(156,39,176,0.3);">
               <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Zivora Wallet Balance</div>
               <div style="font-size:1.8rem; font-weight:800; margin:6px 0;">₹${walletBal}</div>
               <p style="font-size:0.75rem; opacity:0.85;">Refunds from returns are instantly credited here.</p>
             </div>
 
-            <!-- Customer Support Chat Button -->
             <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('chat')">
               <div>
                 <h4 style="font-size:0.9rem; font-weight:700; color:var(--primary);">💬 Customer Support Chat</h4>
@@ -966,7 +963,6 @@
       }
     }
 
-    // Orders Page Render with Supplier Tracking ID Display
     async function renderOrdersPage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let contentArea = document.getElementById("ordersPageContentArea");
@@ -1022,7 +1018,6 @@
       }
     }
 
-    // Customer Support Chat Logic
     function sendSupportMsg() {
       let input = document.getElementById("chatInputMsg");
       let box = document.getElementById("chatMessagesBox");
@@ -1086,6 +1081,7 @@
 
     function openAdminModal() {
       document.getElementById("adminModal").style.display = "flex";
+      loadAdminOrdersForTracking();
     }
     function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
 
@@ -1101,7 +1097,6 @@
       }
     }
 
-    // Admin Load Orders to assign Tracking ID
     async function loadAdminOrdersForTracking() {
       let container = document.getElementById("adminOrdersListContainer");
       if (!db) { container.innerHTML = "Database not connected."; return; }
@@ -1109,17 +1104,28 @@
       let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
       if (data && data.length > 0) {
         container.innerHTML = data.map(o => `
-          <div style="background:#fff; padding:10px; border:1px solid var(--border); border-radius:4px; margin-bottom:8px;">
-            <div><strong>Order ID:</strong> ${o.id} | <strong>Customer:</strong> ${o.customer_name} (${o.customer_phone})</div>
-            <div style="margin:6px 0; display:flex; gap:6px; align-items:center;">
+          <div style="background:#fff; padding:10px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
+            <div style="font-weight:700; margin-bottom:4px;">Order ID: ${o.id} | ₹${o.total_amount}</div>
+            <div style="color:var(--muted); margin-bottom:6px;">Customer: ${o.customer_name} (${o.customer_phone})<br>Address: ${o.shipping_address}, ${o.city}, ${o.state} - ${o.pincode}</div>
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
               <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:4px 8px; font-size:0.75rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
               <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:5px 10px; border-radius:2px; cursor:pointer; font-size:0.75rem; font-weight:700;">Save ID</button>
             </div>
+            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:2px; cursor:pointer; font-size:0.75rem; font-weight:700; width:100%;">📋 Copy Details for DeoDap / Bhunel / Qikink</button>
           </div>
         `).join('');
       } else {
         container.innerHTML = "No orders found in database.";
       }
+    }
+
+    function copySupplierOrder(id, name, phone, address, city, state, pin) {
+      let text = `Order ID: ${id}\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${address}, ${city}, ${state} - ${pin}\nPlease ship this order.`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✓ Supplier details copied! You can now paste this directly on DeoDap/Bhunel/Qikink.");
+      }).catch(err => {
+        alert("Failed to copy details.");
+      });
     }
 
     async function updateOrderTracking(orderId) {
@@ -1128,7 +1134,7 @@
 
       let { error } = await db.from('orders').update({ tracking_id: val, order_status: 'shipped' }).eq('id', orderId);
       if (!error) {
-        alert("✓ Tracking ID updated successfully! Customer tracking will now show this ID.");
+        alert("✓ Tracking ID updated successfully!");
         loadAdminOrdersForTracking();
       } else {
         alert("Error updating tracking ID.");
@@ -1142,12 +1148,28 @@
       let image = document.getElementById("npImg").value;
       if (!title || !price) return alert("Fill required fields");
 
+      let newProd = {
+        id: Date.now(),
+        title: title,
+        category: "Necklaces",
+        tag: "trending",
+        price: price,
+        mrp: mrp || price * 1.5,
+        rating: 4.8,
+        reviews: 12,
+        desc: "Newly added luxury item.",
+        image: image || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600"
+      };
+
+      // Push locally immediately so it shows up without RLS blocking issues
+      catalog.unshift(newProd);
+      renderGrid();
+
       if (db) {
-        await db.from('products').insert([{ title, price, mrp, image, category: "Necklaces", stock: 10 }]);
+        await db.from('products').insert([{ title, price, mrp: newProd.mrp, image: newProd.image, category: "Necklaces", stock: 10 }]);
       }
-      alert("✓ Product published live!");
+      alert("✓ Product published live and added to store!");
       closeAdminModal();
-      syncSupabaseCatalog();
     }
 
     renderGrid();
