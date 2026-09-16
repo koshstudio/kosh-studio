@@ -63,6 +63,7 @@
       color: var(--primary);
       text-decoration: none;
       font-style: italic;
+      cursor: pointer;
     }
 
     .header-search {
@@ -219,7 +220,7 @@
     .btn-add-cart:active { background: #f3e5f5; }
 
     /* Dedicated Full Pages */
-    .product-page-view, .profile-page-view {
+    .product-page-view, .profile-page-view, .orders-page-view {
       position: fixed; inset: 0; background: #fff; z-index: 90; display: none; overflow-y: auto;
     }
 
@@ -229,7 +230,7 @@
 
     .back-btn { background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
-    .product-page-content, .profile-page-content {
+    .product-page-content, .profile-page-content, .orders-page-content {
       max-width: 900px; margin: 20px auto; padding: 0 16px;
     }
 
@@ -304,7 +305,7 @@
   <div class="top-strip">⚡ 100% PREPAID SECURE STORE | FREE EXPRESS DELIVERY ACROSS INDIA</div>
 
   <header>
-    <a href="#" class="brand-name" onclick="window.scrollTo(0,0)">Zivora</a>
+    <a class="brand-name" onclick="window.scrollTo(0,0)">Zivora</a>
     
     <div class="header-search">
       <input type="text" id="searchInput" placeholder="Search by Keyword or Product ID" oninput="handleSearch(this.value)">
@@ -351,6 +352,10 @@
     <a class="nav-tab" onclick="toggleCart()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path></svg>
       Cart
+    </a>
+    <a class="nav-tab" onclick="openOrdersPage()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      My Orders
     </a>
     <a class="nav-tab" onclick="openProfilePage()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -400,10 +405,21 @@
   <div class="profile-page-view" id="profilePageView">
     <div class="page-header">
       <button class="back-btn" onclick="closeProfilePage()">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Profile & Orders</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Profile</span>
     </div>
     <div class="profile-page-content" id="profilePageContentArea" style="padding: 20px 0;">
       <!-- Dynamic Profile Data -->
+    </div>
+  </div>
+
+  <!-- Dedicated Full My Orders & Tracking Page View -->
+  <div class="orders-page-view" id="ordersPageView">
+    <div class="page-header">
+      <button class="back-btn" onclick="closeOrdersPage()">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders & Live Tracking</span>
+    </div>
+    <div class="orders-page-content" id="ordersPageContentArea" style="padding: 20px 0;">
+      <!-- Dynamic Orders Data -->
     </div>
   </div>
 
@@ -496,8 +512,8 @@
         <button class="close-btn" onclick="closeAdminModal()">&times;</button>
       </div>
       <div id="adminLoginBox">
-        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:4px;">
-        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:4px;">
+        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:2px;">
+        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:2px;">
         <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login</button>
       </div>
       <div id="adminDashBox" style="display:none;">
@@ -537,7 +553,6 @@
     ];
 
     let cart = [];
-    let wishlist = [];
     let currentCategory = 'All';
     let activePageProduct = null;
 
@@ -728,16 +743,6 @@
       updateCartUI();
     }
 
-    function moveToWishlist(id) {
-      let item = cart.find(i => i.id == id);
-      if (item) {
-        if (!wishlist.some(w => w.id == id)) wishlist.push(item);
-        cart = cart.filter(i => i.id != id);
-        updateCartUI();
-        alert("Moved to Wishlist!");
-      }
-    }
-
     function updateCartUI() {
       let totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
       let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
@@ -767,7 +772,6 @@
               <button onclick="changeCartQty(${item.id}, 1)" style="padding:2px 8px; border:1px solid var(--border); background:#fff; cursor:pointer;">+</button>
             </div>
             <div>
-              <button onclick="moveToWishlist(${item.id})" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; margin-right:12px;">Move to Wishlist</button>
               <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:#dc2626; font-weight:700; cursor:pointer;">Remove</button>
             </div>
           </div>
@@ -826,26 +830,19 @@
     async function openProfilePage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
+      let walletBal = localStorage.getItem("ziv_wallet") || "0";
       let contentArea = document.getElementById("profilePageContentArea");
 
-      // Instant render for zero lag
       if (!phone) {
         contentArea.innerHTML = `
           <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
             <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Login to Zivora</h3>
-            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile, orders & tracking:</p>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile & wallet:</p>
             <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
             <button onclick="saveProfilePhone()" class="btn-primary-solid">Continue</button>
           </div>
         `;
       } else {
-        let wishlistHtml = wishlist.length === 0 ? `<p style="color:var(--muted); font-size:0.85rem;">No items in wishlist.</p>` : wishlist.map(w => `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border);">
-            <span onclick="closeProfilePage(); openProductPage(${w.id})" style="cursor:pointer; font-weight:600; color:var(--primary);">${w.title} (₹${w.price})</span>
-            <button onclick="addToCart(${w.id})" style="background:var(--primary); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-weight:700;">Move to Cart</button>
-          </div>
-        `).join('');
-
         contentArea.innerHTML = `
           <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
@@ -859,52 +856,95 @@
               <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
             </div>
 
-            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:var(--primary);">❤️ Wishlisted Products</h4>
-              ${wishlistHtml}
+            <!-- Zivora Wallet Card -->
+            <div style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(156,39,176,0.3);">
+              <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Zivora Wallet Balance</div>
+              <div style="font-size:1.8rem; font-weight:800; margin:6px 0;">₹${walletBal}</div>
+              <p style="font-size:0.75rem; opacity:0.85;">Refunds from returns are instantly credited here.</p>
             </div>
 
             <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;" onclick="openAddressModalView()">
               <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px; color:var(--primary);">📍 Saved Delivery Address <span style="font-size:0.75rem; color:var(--muted); float:right;">View Details →</span></h4>
               <p style="font-size:0.85rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${savedAddress}</p>
             </div>
-
-            <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking Numbers</h4>
-            <div id="profileOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders...</p></div>
           </div>
         `;
-
-        if (db) {
-          db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false }).then(({ data }) => {
-            let oContainer = document.getElementById("profileOrdersContainer");
-            if (oContainer) {
-              if (data && data.length > 0) {
-                oContainer.innerHTML = data.map(o => `
-                  <div class="order-tracker">
-                    <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
-                      <span>Order ID: ${o.id}</span>
-                      <span style="color:var(--primary);">₹${o.total_amount}</span>
-                    </div>
-                    <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
-                    <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
-                    <div class="timeline">
-                      <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
-                      <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
-                      <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
-                      <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
-                    </div>
-                  </div>
-                `).join('');
-              } else {
-                oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
-              }
-            }
-          });
-        }
       }
 
       document.getElementById("profilePageView").style.display = "block";
       window.scrollTo(0,0);
+    }
+
+    // Dedicated Full Page Orders & Tracking View Logic
+    async function openOrdersPage() {
+      let phone = localStorage.getItem("ziv_phone") || "";
+      let contentArea = document.getElementById("ordersPageContentArea");
+
+      if (!phone) {
+        contentArea.innerHTML = `
+          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Track Your Orders</h3>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view orders & tracking:</p>
+            <input type="tel" id="ordersPhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
+            <button onclick="saveOrdersPhone()" class="btn-primary-solid">View Orders</button>
+          </div>
+        `;
+      } else {
+        contentArea.innerHTML = `
+          <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:12px 16px; border:1px solid var(--border); border-radius:6px; margin-bottom:16px;">
+              <span style="font-size:0.85rem; font-weight:700;">Showing orders for: +91 ${phone}</span>
+              <button onclick="localStorage.removeItem('ziv_phone'); openOrdersPage();" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">Change Number</button>
+            </div>
+            <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking</h4>
+            <div id="liveOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders from database...</p></div>
+          </div>
+        `;
+
+        if (db) {
+          let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+          let oContainer = document.getElementById("liveOrdersContainer");
+          if (oContainer) {
+            if (data && data.length > 0) {
+              oContainer.innerHTML = data.map(o => `
+                <div class="order-tracker">
+                  <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                    <span>Order ID: ${o.id}</span>
+                    <span style="color:var(--primary);">₹${o.total_amount}</span>
+                  </div>
+                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
+                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
+                  <div class="timeline">
+                    <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
+                    <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
+                    <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
+                    <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
+            }
+          }
+        }
+      }
+
+      document.getElementById("ordersPageView").style.display = "block";
+      window.scrollTo(0,0);
+    }
+
+    function saveOrdersPhone() {
+      let p = document.getElementById("ordersPhoneInput").value.trim();
+      if (p.length === 10) {
+        localStorage.setItem("ziv_phone", p);
+        openOrdersPage();
+      } else {
+        alert("Please enter a valid 10-digit phone number.");
+      }
+    }
+
+    function closeOrdersPage() {
+      document.getElementById("ordersPageView").style.display = "none";
     }
 
     function openAddressModalView() {
