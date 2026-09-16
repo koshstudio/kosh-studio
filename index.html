@@ -352,7 +352,6 @@
     <div class="page-content" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
       <div>
         <img id="pPageImg" src="" alt="Product Image" style="width:100%; height:380px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-        <!-- Color Variants Selector -->
         <div id="colorVariantsContainer" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;"></div>
       </div>
       <div>
@@ -366,18 +365,15 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
-        <!-- Additional Information / Specifications -->
         <div style="background:#fff; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:16px;">
           <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:6px; color:var(--primary);">Product Specifications / Additional Info</h4>
           <p id="pPageAddInfo" style="font-size:0.82rem; color:#444; line-height:1.5;"></p>
         </div>
 
-        <!-- Return Policy Notice -->
         <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
           ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
         </div>
 
-        <!-- Fake Reviews / Customer Trust Section -->
         <div style="background:#fff; border:1px solid var(--border); padding:14px; border-radius:4px; margin-bottom:20px;">
           <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:var(--primary);">Customer Ratings & Reviews</h4>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
@@ -458,4 +454,861 @@
         <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login to Dashboard</button>
       </div>
 
-      <div id="adminDashBo
+      <div id="adminDashBox" style="display:none;">
+        <p style="font-size:0.9rem; color:var(--success); font-weight:700; margin-bottom:16px;">✓ Admin Verified Successfully</p>
+        
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" style="flex:1; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Manage Orders & Supplier</button>
+          <button onclick="switchAdminTab('addProduct')" id="tabBtnAdd" style="flex:1; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Add New Product</button>
+        </div>
+
+        <div id="adminSectionOrders" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px;">
+          <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">📦 Live Customer Orders</h4>
+          <div id="adminOrdersListContainer" style="max-height:400px; overflow-y:auto; font-size:0.85rem;">Loading live orders...</div>
+        </div>
+
+        <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
+          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Color Variants</h4>
+          
+          <div class="form-group">
+            <label>Product Name / Title *</label>
+            <input type="text" id="npTitle" placeholder="e.g. Designer Party Wear Saree">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Selling Price (₹) *</label>
+              <input type="number" id="npPrice" placeholder="499">
+            </div>
+            <div class="form-group">
+              <label>MRP (₹) *</label>
+              <input type="number" id="npMrp" placeholder="999">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Default Main Image URL *</label>
+            <input type="text" id="npImg" placeholder="https://images.unsplash.com/...">
+          </div>
+
+          <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
+            <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:6px; display:block;">🎨 Color Variants & Photos</label>
+            <div class="form-row" style="margin-bottom:6px;">
+              <input type="text" id="npColor1" placeholder="Color 1 Name (e.g. Blue)">
+              <input type="text" id="npColor1Img" placeholder="Color 1 Image URL">
+            </div>
+            <div class="form-row">
+              <input type="text" id="npColor2" placeholder="Color 2 Name (e.g. Red)">
+              <input type="text" id="npColor2Img" placeholder="Color 2 Image URL">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Full Product Description *</label>
+            <textarea id="npDesc" rows="3" placeholder="Detailed fabric and design description..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Additional Information / Specifications *</label>
+            <textarea id="npAddInfo" rows="2" placeholder="Fabric: Chiffon | Work: Embroidered | Blouse: Separate Piece"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rating (Out of 5)</label>
+              <input type="number" step="0.1" id="npRating" value="4.8" placeholder="4.8">
+            </div>
+            <div class="form-group">
+              <label>Total Reviews Count</label>
+              <input type="number" id="npReviews" value="128" placeholder="128">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Customer Trust Review (Fake Review Text)</label>
+            <input type="text" id="npFakeReview" placeholder="e.g. Saree is so beautiful, fabric is high quality! - Priya S.">
+          </div>
+
+          <button class="btn-primary-solid" style="margin-top:10px;" onclick="adminAddNewProduct()">Publish Product Live</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a class="nav-tab active" id="nav-home" onclick="navigateTo('home')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      Home
+    </a>
+    <a class="nav-tab" onclick="toggleCart()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path></svg>
+      Cart
+    </a>
+    <a class="nav-tab" id="nav-orders" onclick="navigateTo('orders')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      My Orders
+    </a>
+    <a class="nav-tab" id="nav-profile" onclick="navigateTo('profile')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      My Profile
+    </a>
+  </nav>
+
+  <!-- Address Modal -->
+  <div class="modal-overlay" id="addressModal">
+    <div class="modal-box" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;">Saved Delivery Address</h3>
+        <button class="close-btn" onclick="closeAddressModal()">&times;</button>
+      </div>
+      <p id="fullAddressText" style="font-size:0.9rem; color:var(--text); line-height:1.6; padding:10px 0;"></p>
+      <button class="btn-primary-solid" onclick="closeAddressModal()">Close</button>
+    </div>
+  </div>
+
+  <!-- Cart Slide Drawer -->
+  <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="modal-header" style="padding:16px;">
+      <h3 style="font-size:1rem;">CART <span style="font-size:0.8rem; color:var(--muted); font-weight:normal;" id="cartStepIndicator">STEP 1/3</span></h3>
+      <button class="close-btn" onclick="toggleCart()">&times;</button>
+    </div>
+    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+    <div style="padding:16px; border-top:1px solid var(--border); background:#fff;">
+      <div style="display:flex; justify-content:space-between; font-size:1rem; margin-bottom:12px; font-weight:700;">
+        <span>Order Total:</span>
+        <span id="cartTotalPrice">₹0</span>
+      </div>
+      <button class="btn-primary-solid" onclick="openCheckoutModal()">Continue</button>
+    </div>
+  </aside>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:1rem;">Secure Prepaid Checkout</h3>
+        <button class="close-btn" onclick="closeCheckoutModal()">&times;</button>
+      </div>
+      <form id="checkoutForm" onsubmit="processRazorpayPayment(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="cName" placeholder="Priya Sharma" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="cPhone" placeholder="10-digit mobile" pattern="[0-9]{10}" required>
+          </div>
+          <div class="form-group">
+            <label>Email ID *</label>
+            <input type="email" id="cEmail" placeholder="email@domain.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Delivery Address *</label>
+          <textarea id="cAddress" rows="2" placeholder="House no, Street name, Landmark" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>PIN Code (6 digits) *</label>
+            <input type="text" id="cPin" placeholder="Enter PIN code" maxlength="6" pattern="[0-9]{6}" required oninput="handleCheckoutPinInput(this.value)">
+          </div>
+          <div class="form-group">
+            <label>City (Auto-detected) *</label>
+            <input type="text" id="cCity" placeholder="City" required readonly style="background:#f3f4f6;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>State (Auto-detected) *</label>
+          <input type="text" id="cState" placeholder="State" required readonly style="background:#f3f4f6;">
+        </div>
+        <div id="checkoutPinMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:600;"></div>
+
+        <div style="display:flex; justify-content:space-between; font-weight:700; margin:14px 0; font-size:1rem;">
+          <span>Payable Amount:</span>
+          <span id="checkoutPayableAmount">₹0</span>
+        </div>
+
+        <button type="submit" class="btn-primary-solid">Proceed to Pay via Razorpay</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    const SUPABASE_URL = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_9nVcO5j-oTG36AExeoiLMQ_N0b8naYn';
+    let db = null;
+    try { if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+    let defaultCatalog = [
+      { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", addInfo: "Material: Stainless Steel | Plating: 18K Gold", fakeReview: "Very elegant and shiny! - Sneha M.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600", colors: [{name: 'Gold', img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600'}] },
+      { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", addInfo: "Material: Alloy | Closure: Push Back", fakeReview: "So beautiful and lightweight. - Ritu K.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600", colors: [{name: 'Pearl White', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600'}] },
+      { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", addInfo: "Material: Brass | Finish: Hammered Gold", fakeReview: "Fits perfectly and looks very premium. - Pooja D.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600", colors: [{name: 'Gold', img: 'https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600'}] },
+      { id: 4, title: "Sleek Emerald Baguette Ring", category: "Rings", tag: "offer", price: 649, mrp: 1299, rating: 4.6, reviews: 51, desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band.", addInfo: "Gemstone: Emerald Green | Metal: Gold Plated", fakeReview: "The green color pops out so nicely. - Anita S.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600", colors: [{name: 'Emerald', img: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600'}] },
+      { id: 5, title: "Minimalist Italian Leather Shoulder Bag", category: "Bags", tag: "bestseller", price: 1499, mrp: 2999, rating: 4.9, reviews: 33, desc: "Premium PU leather luxury handbag with gold magnetic clasp.", addInfo: "Material: Vegan PU Leather", fakeReview: "Super classy bag with lots of space. - Divya R.", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600", colors: [{name: 'Black', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600'}] },
+      { id: 6, title: "Chic Cat-Eye Retro Sunglasses", category: "Sunglasses", tag: "new", price: 749, mrp: 1499, rating: 4.7, reviews: 18, desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.", addInfo: "Lens Protection: UV400 Polarized", fakeReview: "Stylish frames and great sun protection. - Neha G.", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600", colors: [{name: 'Tortoiseshell', img: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600'}] },
+      { id: 7, title: "Rose Gold Mesh Classic Watch", category: "Watches", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 64, desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic strap.", addInfo: "Movement: Japanese Quartz", fakeReview: "Easy to adjust and wear. Love it! - Simran T.", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600", colors: [{name: 'Rose Gold', img: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600'}] },
+      { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", addInfo: "Fabric: Premium French Velvet", fakeReview: "Very soft fabric and doesn't hurt ears. - Megha P.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600", colors: [{name: 'Pink', img: 'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600'}] }
+    ];
+
+    let localProducts = [];
+    try {
+      localProducts = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+    } catch(e) {
+      localProducts = [];
+      localStorage.setItem("ziv_local_products", "[]");
+    }
+
+    let catalog = [...localProducts, ...defaultCatalog];
+    let cart = [];
+    let currentCategory = 'All';
+    let activePageProduct = null;
+    let brandTapCount = 0;
+
+    function handleBrandTap() {
+      brandTapCount++;
+      if (brandTapCount >= 3) {
+        brandTapCount = 0;
+        navigateTo('admin');
+      }
+      setTimeout(() => { brandTapCount = 0; }, 1500);
+    }
+
+    function navigateTo(pageName, param = null) {
+      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+      if (pageName === 'home') {
+        document.getElementById('page-home').classList.add('active');
+        document.getElementById('nav-home').classList.add('active');
+        window.location.hash = '';
+      } else if (pageName === 'product') {
+        document.getElementById('page-product').classList.add('active');
+        window.location.hash = `product-${param}`;
+      } else if (pageName === 'profile') {
+        document.getElementById('page-profile').classList.add('active');
+        document.getElementById('nav-profile').classList.add('active');
+        renderProfilePage();
+        window.location.hash = 'profile';
+      } else if (pageName === 'orders') {
+        document.getElementById('page-orders').classList.add('active');
+        document.getElementById('nav-orders').classList.add('active');
+        renderOrdersPage();
+        window.location.hash = 'orders';
+      } else if (pageName === 'chat') {
+        document.getElementById('page-chat').classList.add('active');
+        window.location.hash = 'chat';
+      } else if (pageName === 'admin') {
+        document.getElementById('page-admin').classList.add('active');
+        checkAdminSession();
+        window.location.hash = 'admin';
+      }
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('load', () => {
+      try {
+        renderGrid();
+        let hash = window.location.hash;
+        if (hash.startsWith('#product-')) {
+          let id = hash.replace('#product-', '');
+          let p = catalog.find(item => item.id == id);
+          if (p) openProductPageDirect(p);
+          else navigateTo('home');
+        } else if (hash === '#profile') {
+          navigateTo('profile');
+        } else if (hash === '#orders') {
+          navigateTo('orders');
+        } else if (hash === '#chat') {
+          navigateTo('chat');
+        } else if (hash === '#admin') {
+          navigateTo('admin');
+        } else {
+          navigateTo('home');
+        }
+      } catch(err) {
+        navigateTo('home');
+      }
+    });
+
+    function renderGrid(list = null) {
+      let grid = document.getElementById("productGrid");
+      if (!grid) return;
+      let items = list || catalog;
+      if (currentCategory !== 'All' && !list) {
+        items = items.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
+      }
+      grid.innerHTML = items.map(p => {
+        let disc = Math.round(((p.mrp - p.price) / p.mrp) * 100);
+        return `
+          <div class="product-card">
+            <span class="badge-discount">${disc}% OFF</span>
+            <div class="product-img" onclick="openProductPage(${p.id})">
+              <img src="${p.image}" alt="${p.title}" loading="lazy">
+            </div>
+            <div class="product-info">
+              <span class="p-category">${p.category}</span>
+              <h3 class="p-title" onclick="openProductPage(${p.id})">${p.title}</h3>
+              <div class="p-rating-row">★ ${p.rating} (${p.reviews})</div>
+              <div class="p-price-row">
+                <span class="p-price">₹${p.price}</span>
+                <span class="p-mrp">₹${p.mrp}</span>
+              </div>
+              <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-item').forEach(el => el.classList.toggle('active', el.innerText.includes(cat) || (cat==='All' && el.innerText.includes('All'))));
+      renderGrid();
+    }
+
+    function handleSearch(q) {
+      q = q.trim().toLowerCase();
+      if (!q) { renderGrid(); return; }
+      renderGrid(catalog.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)));
+    }
+
+    function openProductPage(id) {
+      let p = catalog.find(item => item.id == id);
+      if (!p) return;
+      activePageProduct = p;
+      openProductPageDirect(p);
+      navigateTo('product', p.id);
+    }
+
+    function openProductPageDirect(p) {
+      activePageProduct = p;
+      document.getElementById("pPageTitle").innerText = p.title;
+      document.getElementById("pPageCategory").innerText = p.category;
+      document.getElementById("pPageImg").src = p.image;
+      document.getElementById("pPagePrice").innerText = `₹${p.price}`;
+      document.getElementById("pPageMrp").innerText = `₹${p.mrp}`;
+      document.getElementById("pPageDiscount").innerText = `${Math.round(((p.mrp - p.price)/p.mrp)*100)}% OFF`;
+      document.getElementById("pPageDesc").innerText = p.desc;
+      document.getElementById("pPageAddInfo").innerText = p.addInfo || "Standard quality luxury item with secure packaging.";
+      document.getElementById("pPageRatingNum").innerText = `${p.rating} ★`;
+      document.getElementById("pPageReviewCount").innerText = `Based on ${p.reviews || 42} verified customer reviews`;
+      document.getElementById("pPageFakeReview").innerText = `"${p.fakeReview || 'Amazing product quality and very fast delivery!'}"`;
+      document.getElementById("pinResult").innerText = "";
+      document.getElementById("checkPin").value = "";
+      document.getElementById("headerPageTitle").innerText = p.title;
+
+      let colorBox = document.getElementById("colorVariantsContainer");
+      if (p.colors && p.colors.length > 0) {
+        colorBox.innerHTML = `<span style="font-size:0.8rem; font-weight:700; width:100%;">Select Color:</span>` + p.colors.map(c => `
+          <button onclick="changeProductColor('${c.img}')" style="padding:6px 12px; border:1px solid var(--border); background:#fff; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">${c.name}</button>
+        `).join('');
+      } else {
+        colorBox.innerHTML = "";
+      }
+    }
+
+    function changeProductColor(imgUrl) {
+      document.getElementById("pPageImg").src = imgUrl;
+    }
+
+    async function verifyLivePincode(pin, resultElementId) {
+      let resDiv = document.getElementById(resultElementId);
+      if (pin.length !== 6) {
+        resDiv.style.color = "#d32f2f";
+        resDiv.innerText = "Please enter a valid 6-digit Pincode";
+        return;
+      }
+      resDiv.style.color = "var(--muted)";
+      resDiv.innerText = "Checking real delivery status...";
+      try {
+        let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        let data = await response.json();
+        if (data[0].Status === "Success") {
+          let details = data[0].PostOffice[0];
+          resDiv.style.color = "var(--success)";
+          resDiv.innerText = `✓ Express Delivery Available to ${details.District}, ${details.State} (5-7 days)`;
+        } else {
+          resDiv.style.color = "#d32f2f";
+          resDiv.innerText = "❌ Invalid Pincode or Delivery not available.";
+        }
+      } catch (err) {
+        resDiv.style.color = "#d32f2f";
+        resDiv.innerText = "Error verifying pincode.";
+      }
+    }
+
+    async function handleCheckoutPinInput(pin) {
+      let msg = document.getElementById("checkoutPinMsg");
+      let cityInput = document.getElementById("cCity");
+      let stateInput = document.getElementById("cState");
+
+      if (pin.length !== 6) {
+        cityInput.value = "";
+        stateInput.value = "";
+        msg.style.color = "#d32f2f";
+        msg.innerText = "Enter 6 digits for auto-detect.";
+        return;
+      }
+
+      msg.style.color = "var(--muted)";
+      msg.innerText = "Fetching location from PIN code...";
+      try {
+        let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+        let data = await response.json();
+        if (data[0].Status === "Success") {
+          let info = data[0].PostOffice[0];
+          cityInput.value = info.District || info.Block || info.Name;
+          stateInput.value = info.State;
+          msg.style.color = "var(--success)";
+          msg.innerText = `✓ Location auto-detected: ${cityInput.value}, ${stateInput.value}`;
+        } else {
+          cityInput.value = "";
+          stateInput.value = "";
+          msg.style.color = "#d32f2f";
+          msg.innerText = "❌ Invalid PIN Code. Please check.";
+        }
+      } catch (e) {
+        msg.style.color = "#d32f2f";
+        msg.innerText = "Failed to auto-detect location.";
+      }
+    }
+
+    function addCurrentToPageCart() {
+      if (activePageProduct) { addToCart(activePageProduct.id); navigateTo('home'); }
+    }
+
+    function buyNowCurrentPage() {
+      if (activePageProduct) {
+        addToCart(activePageProduct.id);
+        openCheckoutModal();
+      }
+    }
+
+    function toggleCart() {
+      let drawer = document.getElementById("cartDrawer");
+      let backdrop = document.getElementById("cartBackdrop");
+      let isOpen = drawer.classList.contains("open");
+      drawer.classList.toggle("open", !isOpen);
+      backdrop.style.display = !isOpen ? "block" : "none";
+    }
+
+    function addToCart(id) {
+      let p = catalog.find(item => item.id == id);
+      let exist = cart.find(item => item.id == id);
+      if (exist) exist.qty += 1;
+      else cart.push({ ...p, qty: 1 });
+      updateCartUI();
+      toggleCart();
+    }
+
+    function changeCartQty(id, delta) {
+      let item = cart.find(i => i.id == id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id != id);
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id != id);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      let totalQty = cart.reduce((acc, i) => acc + i.qty, 0);
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      document.getElementById("cartCount").innerText = totalQty;
+      document.getElementById("cartTotalPrice").innerText = `₹${totalPrice}`;
+
+      let container = document.getElementById("cartItemsContainer");
+      if (cart.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--muted); padding:30px;">Your cart is empty</p>`;
+        return;
+      }
+      container.innerHTML = cart.map(item => `
+        <div style="background:#fff; border-radius:4px; padding:12px; margin-bottom:12px; border:1px solid var(--border);">
+          <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <img src="${item.image}" style="width:70px; height:80px; object-fit:cover; border-radius:4px;">
+            <div>
+              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
+              <div style="font-size:0.9rem; font-weight:700; color:var(--text);">₹${item.price} <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${item.mrp}</span></div>
+              <div style="font-size:0.75rem; color:var(--success); margin-top:2px;">Free Delivery</div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; font-size:0.8rem;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span>Qty:</span>
+              <button onclick="changeCartQty(${item.id}, -1)" style="padding:2px 8px; border:1px solid var(--border); background:#fff; cursor:pointer;">-</button>
+              <strong>${item.qty}</strong>
+              <button onclick="changeCartQty(${item.id}, 1)" style="padding:2px 8px; border:1px solid var(--border); background:#fff; cursor:pointer;">+</button>
+            </div>
+            <div>
+              <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:#dc2626; font-weight:700; cursor:pointer;">Remove</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) return alert("Cart is empty!");
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      document.getElementById("checkoutPayableAmount").innerText = `₹${totalPrice}`;
+      if (document.getElementById("cartDrawer").classList.contains("open")) toggleCart();
+      document.getElementById("checkoutModal").style.display = "flex";
+    }
+
+    function closeCheckoutModal() { document.getElementById("checkoutModal").style.display = "none"; }
+
+    function processRazorpayPayment(e) {
+      e.preventDefault();
+      let totalPrice = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+      let name = document.getElementById("cName").value;
+      let phone = document.getElementById("cPhone").value;
+      let email = document.getElementById("cEmail").value;
+      let address = document.getElementById("cAddress").value;
+      let city = document.getElementById("cCity").value;
+      let state = document.getElementById("cState").value;
+      let pincode = document.getElementById("cPin").value;
+
+      let options = {
+        key: "rzp_test_TcBzIPGiQ5PniF",
+        amount: totalPrice * 100,
+        currency: "INR",
+        name: "Zivora Plus",
+        description: "Secure Prepaid Order",
+        handler: async function (response) {
+          let orderId = "ZIV-" + Date.now().toString().slice(-6);
+          if (db) {
+            await db.from('orders').insert([{
+              id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
+              shipping_address: address, city: city, state: state, pincode: pincode,
+              total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet"
+            }]);
+          }
+          localStorage.setItem("ziv_phone", phone);
+          localStorage.setItem("ziv_address", `${address}, ${city}, ${state} - ${pincode}`);
+          alert("✓ Order Placed Successfully! ID: " + orderId);
+          cart = []; updateCartUI(); closeCheckoutModal();
+        },
+        prefill: { name, contact: phone, email }
+      };
+      let rzp = new Razorpay(options);
+      rzp.open();
+    }
+
+    function renderProfilePage() {
+      let phone = localStorage.getItem("ziv_phone") || "";
+      let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
+      let walletBal = localStorage.getItem("ziv_wallet") || "0";
+      let contentArea = document.getElementById("profilePageContentArea");
+
+      if (!phone) {
+        contentArea.innerHTML = `
+          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Login to Zivora</h3>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile & wallet:</p>
+            <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
+            <button onclick="saveProfilePhone()" class="btn-primary-solid">Continue</button>
+          </div>
+        `;
+      } else {
+        contentArea.innerHTML = `
+          <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; background:#f3e5f5; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">👤</div>
+                <div>
+                  <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Mobile Number</div>
+                  <div style="font-size:0.95rem; font-weight:800; color:var(--text);">+91 ${phone}</div>
+                </div>
+              </div>
+              <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(156,39,176,0.3);">
+              <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Zivora Wallet Balance</div>
+              <div style="font-size:1.8rem; font-weight:800; margin:6px 0;">₹${walletBal}</div>
+              <p style="font-size:0.75rem; opacity:0.85;">Refunds from returns are instantly credited here.</p>
+            </div>
+
+            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('chat')">
+              <div>
+                <h4 style="font-size:0.9rem; font-weight:700; color:var(--primary);">💬 Customer Support Chat</h4>
+                <p style="font-size:0.78rem; color:var(--muted);">Chat with our executive for help or returns</p>
+              </div>
+              <span style="font-weight:700; color:var(--primary);">Open →</span>
+            </div>
+
+            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;" onclick="openAddressModalView()">
+              <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:6px; color:var(--primary);">📍 Saved Delivery Address <span style="font-size:0.75rem; color:var(--muted); float:right;">View Details →</span></h4>
+              <p style="font-size:0.85rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${savedAddress}</p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    async function renderOrdersPage() {
+      let phone = localStorage.getItem("ziv_phone") || "";
+      let contentArea = document.getElementById("ordersPageContentArea");
+
+      if (!phone) {
+        contentArea.innerHTML = `
+          <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
+            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Track Your Orders</h3>
+            <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view orders & tracking:</p>
+            <input type="tel" id="ordersPhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
+            <button onclick="saveOrdersPhone()" class="btn-primary-solid">View Orders</button>
+          </div>
+        `;
+      } else {
+        contentArea.innerHTML = `
+          <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:12px 16px; border:1px solid var(--border); border-radius:6px; margin-bottom:16px;">
+              <span style="font-size:0.85rem; font-weight:700;">Showing orders for: +91 ${phone}</span>
+              <button onclick="localStorage.removeItem('ziv_phone'); renderOrdersPage();" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">Change Number</button>
+            </div>
+            <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking</h4>
+            <div id="liveOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders from database...</p></div>
+          </div>
+        `;
+
+        if (db) {
+          let { data } = await db.from('orders').select('*').eq('customer_phone', phone).order('created_at', { ascending: false });
+          let oContainer = document.getElementById("liveOrdersContainer");
+          if (oContainer) {
+            if (data && data.length > 0) {
+              oContainer.innerHTML = data.map(o => `
+                <div class="order-tracker">
+                  <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                    <span>Order ID: ${o.id}</span>
+                    <span style="color:var(--primary);">₹${o.total_amount}</span>
+                  </div>
+                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
+                  <div style="font-size:0.78rem; color:#d81b60; margin-bottom:6px; font-weight:700;">🚚 Courier Tracking ID: <span>${o.tracking_id || 'Waiting for supplier update'}</span></div>
+                  <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
+                  <div class="timeline">
+                    <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
+                    <div class="t-step ${['packed','shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Packed</div>
+                    <div class="t-step ${['shipped','delivered'].includes(o.order_status)?'done':''}"><div class="t-dot"></div>Shipped</div>
+                    <div class="t-step ${o.order_status==='delivered'?'done':''}"><div class="t-dot"></div>Delivered</div>
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              oContainer.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No orders found for this mobile number.</p>`;
+            }
+          }
+        }
+      }
+    }
+
+    function sendSupportMsg() {
+      let input = document.getElementById("chatInputMsg");
+      let box = document.getElementById("chatMessagesBox");
+      let text = input.value.trim();
+      if (!text) return;
+
+      if (box.innerHTML.includes("No messages yet")) box.innerHTML = "";
+
+      box.innerHTML += `
+        <div style="text-align:right; margin-bottom:8px;">
+          <span style="background:var(--primary); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%; text-align:left;">${text}</span>
+        </div>
+      `;
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+
+      setTimeout(() => {
+        box.innerHTML += `
+          <div style="text-align:left; margin-bottom:8px;">
+            <span style="background:#e0e0e0; color:#212121; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%;">Thanks for reaching out! Our support executive will respond shortly.</span>
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+      }, 1000);
+    }
+
+    function saveOrdersPhone() {
+      let p = document.getElementById("ordersPhoneInput").value.trim();
+      if (p.length === 10) {
+        localStorage.setItem("ziv_phone", p);
+        renderOrdersPage();
+      } else {
+        alert("Please enter a valid 10-digit phone number.");
+      }
+    }
+
+    function openAddressModalView() {
+      let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
+      document.getElementById("fullAddressText").innerText = savedAddress;
+      document.getElementById("addressModal").style.display = "flex";
+    }
+
+    function closeAddressModal() {
+      document.getElementById("addressModal").style.display = "none";
+    }
+
+    function saveProfilePhone() {
+      let p = document.getElementById("profilePhoneInput").value.trim();
+      if (p.length === 10) {
+        localStorage.setItem("ziv_phone", p);
+        renderProfilePage();
+      } else {
+        alert("Please enter a valid 10-digit phone number.");
+      }
+    }
+
+    function logoutProfile() {
+      localStorage.removeItem("ziv_phone");
+      renderProfilePage();
+    }
+
+    function checkAdminSession() {
+      let isAdmin = localStorage.getItem("ziv_admin_auth") === "true";
+      if (isAdmin) {
+        document.getElementById("adminLoginBox").style.display = "none";
+        document.getElementById("adminDashBox").style.display = "block";
+        loadAdminOrdersForTracking();
+      } else {
+        document.getElementById("adminLoginBox").style.display = "block";
+        document.getElementById("adminDashBox").style.display = "none";
+      }
+    }
+
+    function verifyAdminLogin() {
+      let u = document.getElementById("admUser").value.trim();
+      let p = document.getElementById("admPass").value;
+      if (u === "rohitku316" && p === "Rohit@2006") {
+        localStorage.setItem("ziv_admin_auth", "true");
+        checkAdminSession();
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    function switchAdminTab(tab) {
+      let btnOrders = document.getElementById("tabBtnOrders");
+      let btnAdd = document.getElementById("tabBtnAdd");
+      let secOrders = document.getElementById("adminSectionOrders");
+      let secAdd = document.getElementById("adminSectionAddProduct");
+
+      if (tab === 'orders') {
+        btnOrders.style.background = "var(--primary)";
+        btnOrders.style.color = "#fff";
+        btnAdd.style.background = "#e0e0e0";
+        btnAdd.style.color = "#333";
+        secOrders.style.display = "block";
+        secAdd.style.display = "none";
+        loadAdminOrdersForTracking();
+      } else {
+        btnAdd.style.background = "var(--primary)";
+        btnAdd.style.color = "#fff";
+        btnOrders.style.background = "#e0e0e0";
+        btnOrders.style.color = "#333";
+        secAdd.style.display = "block";
+        secOrders.style.display = "none";
+      }
+    }
+
+    async function loadAdminOrdersForTracking() {
+      let container = document.getElementById("adminOrdersListContainer");
+      if (!db) { container.innerHTML = "Database not connected."; return; }
+
+      let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        container.innerHTML = data.map(o => `
+          <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
+            <div style="font-weight:700; margin-bottom:4px;">Order ID: ${o.id} | ₹${o.total_amount}</div>
+            <div style="color:var(--muted); margin-bottom:6px;">Customer: ${o.customer_name} (${o.customer_phone})<br>Address: ${o.shipping_address}, ${o.city}, ${o.state} - ${o.pincode}</div>
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+              <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
+              <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-size:0.8rem; font-weight:700;">Save ID</button>
+            </div>
+            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700; width:100%;">📋 Copy Details for DeoDap / Bhunel / Qikink</button>
+          </div>
+        `).join('');
+      } else {
+        container.innerHTML = "No orders found in database.";
+      }
+    }
+
+    function copySupplierOrder(id, name, phone, address, city, state, pin) {
+      let text = `Order ID: ${id}\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${address}, ${city}, ${state} - ${pin}\nPlease ship this order.`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("✓ Supplier details copied! You can now paste this directly on DeoDap/Bhunel/Qikink.");
+      }).catch(err => {
+        alert("Failed to copy details.");
+      });
+    }
+
+    async function updateOrderTracking(orderId) {
+      let val = document.getElementById(`trackInput-${orderId}`).value.trim();
+      if (!val) return alert("Please enter tracking ID");
+
+      let { error } = await db.from('orders').update({ tracking_id: val, order_status: 'shipped' }).eq('id', orderId);
+      if (!error) {
+        alert("✓ Tracking ID updated successfully!");
+        loadAdminOrdersForTracking();
+      } else {
+        alert("Error updating tracking ID.");
+      }
+    }
+
+    function adminAddNewProduct() {
+      let title = document.getElementById("npTitle").value.trim();
+      let price = Number(document.getElementById("npPrice").value);
+      let mrp = Number(document.getElementById("npMrp").value);
+      let image = document.getElementById("npImg").value.trim();
+      let desc = document.getElementById("npDesc").value.trim();
+      let addInfo = document.getElementById("npAddInfo").value.trim();
+      let rating = Number(document.getElementById("npRating").value) || 4.8;
+      let reviews = Number(document.getElementById("npReviews").value) || 42;
+      let fakeReview = document.getElementById("npFakeReview").value.trim();
+
+      let c1Name = document.getElementById("npColor1").value.trim();
+      let c1Img = document.getElementById("npColor1Img").value.trim();
+      let c2Name = document.getElementById("npColor2").value.trim();
+      let c2Img = document.getElementById("npColor2Img").value.trim();
+
+      if (!title || !price || !image || !desc) return alert("Please fill all required product fields!");
+
+      let colorsArr = [{ name: 'Default', img: image }];
+      if (c1Name && c1Img) colorsArr.push({ name: c1Name, img: c1Img });
+      if (c2Name && c2Img) colorsArr.push({ name: c2Name, img: c2Img });
+
+      let newProd = {
+        id: Date.now(),
+        title: title,
+        category: "Necklaces",
+        tag: "trending",
+        price: price,
+        mrp: mrp || price * 1.5,
+        rating: rating,
+        reviews: reviews,
+        desc: desc,
+        addInfo: addInfo || "Standard quality luxury item with secure packaging.",
+        fakeReview: fakeReview || "Amazing quality product! Highly recommended.",
+        image: image,
+        colors: colorsArr
+      };
+
+      try {
+        let savedLocal = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+        savedLocal.unshift(newProd);
+        localStorage.setItem("ziv_local_products", JSON.stringify(savedLocal));
+      } catch(e) {}
+
+      catalog.unshift(newProd);
+      renderGrid();
+
+      alert("✓ Product published live and saved permanently!");
+      navigateTo('home');
+    }
+  </script>
+</body>
+</html>
