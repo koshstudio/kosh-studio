@@ -632,7 +632,7 @@
     let db = null;
     try { if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
 
-    let catalog = [
+    let defaultCatalog = [
       { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", addInfo: "Material: Stainless Steel | Plating: 18K Gold | Stone: Cubic Zirconia", fakeReview: "Very elegant and shiny! Wore it daily and color hasn't faded. - Sneha M.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600" },
       { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", addInfo: "Material: Alloy | Pearl Type: Freshwater Fuals Pearls | Closure: Push Back", fakeReview: "So beautiful and lightweight. Perfect for parties! - Ritu K.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600" },
       { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", addInfo: "Material: Brass | Finish: Hammered Satin Gold | Size: Adjustable", fakeReview: "Fits perfectly and looks very premium. Highly satisfied! - Pooja D.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600" },
@@ -643,12 +643,14 @@
       { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", addInfo: "Fabric: Premium French Velvet | Comfort: Non-slip padded base", fakeReview: "Very soft fabric and doesn't hurt behind the ears at all. - Megha P.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600" }
     ];
 
+    let localProducts = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+    let catalog = [...localProducts, ...defaultCatalog];
+
     let cart = [];
     let currentCategory = 'All';
     let activePageProduct = null;
     let brandTapCount = 0;
 
-    // Secret Admin Trigger: 3 fast taps on 'Zivora' logo in header
     function handleBrandTap() {
       brandTapCount++;
       if (brandTapCount >= 3) {
@@ -709,22 +711,6 @@
         navigateTo('home');
       }
     });
-
-    async function syncSupabaseCatalog() {
-      if (!db) return;
-      try {
-        let { data } = await db.from('products').select('*');
-        if (data && data.length > 0) {
-          let dbCatalog = data.map(p => ({
-            id: p.id, title: p.title, category: p.category, tag: p.tag || 'trending',
-            price: Number(p.price), mrp: Number(p.mrp), rating: Number(p.rating || 4.8),
-            reviews: p.reviews || 12, desc: p.description || '', addInfo: p.additional_info || 'Standard Quality', fakeReview: p.fake_review || 'Great product!', image: p.image
-          }));
-          catalog = [...dbCatalog, ...catalog.filter(local => !dbCatalog.some(dbItem => dbItem.id === local.id))];
-          renderGrid();
-        }
-      } catch(e){}
-    }
 
     function renderGrid(list = null) {
       let grid = document.getElementById("productGrid");
@@ -1242,7 +1228,7 @@
       }
     }
 
-    async function adminAddNewProduct() {
+    function adminAddNewProduct() {
       let title = document.getElementById("npTitle").value.trim();
       let price = Number(document.getElementById("npPrice").value);
       let mrp = Number(document.getElementById("npMrp").value);
@@ -1270,22 +1256,19 @@
         image: image
       };
 
+      // Save to localStorage so it stays permanent across refreshes
+      let savedLocal = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+      savedLocal.unshift(newProd);
+      localStorage.setItem("ziv_local_products", JSON.stringify(savedLocal));
+
       catalog.unshift(newProd);
       renderGrid();
 
-      if (db) {
-        await db.from('products').insert([{
-          title, price, mrp: newProd.mrp, image, category: "Necklaces",
-          description: desc, additional_info: newProd.addInfo, fake_review: newProd.fakeReview, rating, reviews, stock: 10
-        }]);
-      }
-
-      alert("✓ Product published live successfully!");
+      alert("✓ Product published live and saved permanently!");
       navigateTo('home');
     }
 
     renderGrid();
-    syncSupabaseCatalog();
   </script>
 </body>
 </html>
