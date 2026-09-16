@@ -364,9 +364,25 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
-        <!-- Return / Replacement Policy Notice -->
+        <!-- Additional Information / Specifications -->
+        <div style="background:#fff; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:16px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:6px; color:var(--primary);">Product Specifications / Additional Info</h4>
+          <p id="pPageAddInfo" style="font-size:0.82rem; color:#444; line-height:1.5;"></p>
+        </div>
+
+        <!-- Return Policy Notice -->
         <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
           ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
+        </div>
+
+        <!-- Fake Reviews / Customer Trust Section -->
+        <div style="background:#fff; border:1px solid var(--border); padding:14px; border-radius:4px; margin-bottom:20px;">
+          <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:var(--primary);">Customer Ratings & Reviews</h4>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span style="background:var(--success); color:#fff; padding:2px 8px; border-radius:4px; font-weight:700; font-size:0.85rem;" id="pPageRatingNum">4.8 ★</span>
+            <span style="font-size:0.8rem; color:var(--muted);" id="pPageReviewCount">Based on verified customer reviews</span>
+          </div>
+          <p id="pPageFakeReview" style="font-size:0.85rem; font-style:italic; color:#333; background:#f9f9f9; padding:8px; border-left:3px solid var(--primary); border-radius:2px;"></p>
         </div>
 
         <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
@@ -421,6 +437,86 @@
         <div style="display:flex; gap:8px;">
           <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:9px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;" onkeypress="if(event.key==='Enter') sendSupportMsg()">
           <button onclick="sendSupportMsg()" class="btn-primary-solid" style="width:100px; padding:9px;">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL FULL PAGE -->
+  <div id="page-admin" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back to Store</button>
+      <span style="font-weight:700; font-size:0.95rem;">Admin Control Panel</span>
+    </div>
+    <div class="page-content" style="padding: 20px 0; max-width: 800px;">
+      <div id="adminLoginBox" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); text-align:center; max-width:400px; margin:40px auto;">
+        <h3 style="margin-bottom:14px; color:var(--primary);">Admin Secure Login</h3>
+        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid var(--border); border-radius:4px;">
+        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:10px; margin-bottom:16px; border:1px solid var(--border); border-radius:4px;">
+        <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login to Dashboard</button>
+      </div>
+
+      <div id="adminDashBox" style="display:none;">
+        <p style="font-size:0.9rem; color:var(--success); font-weight:700; margin-bottom:16px;">✓ Admin Verified Successfully</p>
+        
+        <!-- Tab Navigation for Admin -->
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" style="flex:1; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Manage Orders & Supplier</button>
+          <button onclick="switchAdminTab('addProduct')" id="tabBtnAdd" style="flex:1; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Add New Product</button>
+        </div>
+
+        <!-- Section 1: Orders & Tracking -->
+        <div id="adminSectionOrders" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px;">
+          <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">📦 Live Customer Orders</h4>
+          <div id="adminOrdersListContainer" style="max-height:400px; overflow-y:auto; font-size:0.85rem;">Loading live orders...</div>
+        </div>
+
+        <!-- Section 2: Add Product (Advanced with Desc, Specs & Fake Reviews) -->
+        <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
+          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Trust Reviews</h4>
+          
+          <div class="form-group">
+            <label>Product Name / Title *</label>
+            <input type="text" id="npTitle" placeholder="e.g. Designer Party Wear Saree">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Selling Price (₹) *</label>
+              <input type="number" id="npPrice" placeholder="499">
+            </div>
+            <div class="form-group">
+              <label>MRP (₹) *</label>
+              <input type="number" id="npMrp" placeholder="999">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Product Image URL *</label>
+            <input type="text" id="npImg" placeholder="https://images.unsplash.com/...">
+          </div>
+          <div class="form-group">
+            <label>Full Product Description *</label>
+            <textarea id="npDesc" rows="3" placeholder="Detailed fabric and design description..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Additional Information / Specifications *</label>
+            <textarea id="npAddInfo" rows="2" placeholder="Fabric: Chiffon | Work: Embroidered | Blouse: Separate Piece"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rating (Out of 5)</label>
+              <input type="number" step="0.1" id="npRating" value="4.8" placeholder="4.8">
+            </div>
+            <div class="form-group">
+              <label>Total Reviews Count</label>
+              <input type="number" id="npReviews" value="128" placeholder="128">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Customer Trust Review (Fake Review Text)</label>
+            <input type="text" id="npFakeReview" placeholder="e.g. Saree is so beautiful, fabric is high quality! Highly recommended. - Priya S.">
+          </div>
+
+          <button class="btn-primary-solid" style="margin-top:10px;" onclick="adminAddNewProduct()">Publish Product Live</button>
         </div>
       </div>
     </div>
@@ -527,40 +623,6 @@
     </div>
   </div>
 
-  <!-- Admin Modal with Tracking & Copy Supplier Details -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-box" style="max-width:680px;">
-      <div class="modal-header">
-        <h3 style="font-size:1rem;">⚙️ Admin Dashboard & Supplier Manager</h3>
-        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
-      </div>
-      <div id="adminLoginBox">
-        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:9px; margin-bottom:8px; border:1px solid var(--border); border-radius:2px;">
-        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:9px; margin-bottom:12px; border:1px solid var(--border); border-radius:2px;">
-        <button class="btn-primary-solid" onclick="verifyAdminLogin()">Login</button>
-      </div>
-      <div id="adminDashBox" style="display:none;">
-        <p style="font-size:0.85rem; color:var(--success); font-weight:700; margin-bottom:10px;">✓ Admin Verified</p>
-        
-        <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:16px;">
-          <h4 style="font-size:0.9rem; margin-bottom:8px; color:var(--primary);">📦 Manage Orders & Copy Supplier Details</h4>
-          <div id="adminOrdersListContainer" style="max-height:240px; overflow-y:auto; font-size:0.8rem;">Loading live orders...</div>
-        </div>
-
-        <div style="background:#f9f9f9; padding:12px; border-radius:4px;">
-          <h4 style="font-size:0.9rem; margin-bottom:6px; color:var(--primary);">Add New Product (Instant Publish)</h4>
-          <input type="text" id="npTitle" placeholder="Title" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid var(--border);">
-          <div class="form-row">
-            <input type="number" id="npPrice" placeholder="Price" style="padding:6px; border:1px solid var(--border);">
-            <input type="number" id="npMrp" placeholder="MRP" style="padding:6px; border:1px solid var(--border);">
-          </div>
-          <input type="text" id="npImg" placeholder="Image URL" style="width:100%; padding:6px; margin:6px 0; border:1px solid var(--border);">
-          <button class="btn-primary-solid" style="padding:8px; font-size:0.8rem;" onclick="adminAddNewProduct()">Publish Product</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -571,14 +633,14 @@
     try { if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
 
     let catalog = [
-      { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600" },
-      { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600" },
-      { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600" },
-      { id: 4, title: "Sleek Emerald Baguette Ring", category: "Rings", tag: "offer", price: 649, mrp: 1299, rating: 4.6, reviews: 51, desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600" },
-      { id: 5, title: "Minimalist Italian Leather Shoulder Bag", category: "Bags", tag: "bestseller", price: 1499, mrp: 2999, rating: 4.9, reviews: 33, desc: "Premium PU leather luxury handbag with gold magnetic clasp.", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600" },
-      { id: 6, title: "Chic Cat-Eye Retro Sunglasses", category: "Sunglasses", tag: "new", price: 749, mrp: 1499, rating: 4.7, reviews: 18, desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600" },
-      { id: 7, title: "Rose Gold Mesh Classic Watch", category: "Watches", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 64, desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic strap.", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600" },
-      { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600" }
+      { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", addInfo: "Material: Stainless Steel | Plating: 18K Gold | Stone: Cubic Zirconia", fakeReview: "Very elegant and shiny! Wore it daily and color hasn't faded. - Sneha M.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600" },
+      { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", addInfo: "Material: Alloy | Pearl Type: Freshwater Fuals Pearls | Closure: Push Back", fakeReview: "So beautiful and lightweight. Perfect for parties! - Ritu K.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600" },
+      { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", addInfo: "Material: Brass | Finish: Hammered Satin Gold | Size: Adjustable", fakeReview: "Fits perfectly and looks very premium. Highly satisfied! - Pooja D.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600" },
+      { id: 4, title: "Sleek Emerald Baguette Ring", category: "Rings", tag: "offer", price: 649, mrp: 1299, rating: 4.6, reviews: 51, desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band.", addInfo: "Gemstone: Emerald Green Baguette | Metal: Gold Plated Alloy", fakeReview: "The green color pops out so nicely. Got so many compliments! - Anita S.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600" },
+      { id: 5, title: "Minimalist Italian Leather Shoulder Bag", category: "Bags", tag: "bestseller", price: 1499, mrp: 2999, rating: 4.9, reviews: 33, desc: "Premium PU leather luxury handbag with gold magnetic clasp.", addInfo: "Material: Vegan PU Leather | Compartments: 2 Main + 1 Zip Pocket", fakeReview: "Super classy bag with lots of space inside. Worth every rupee! - Divya R.", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600" },
+      { id: 6, title: "Chic Cat-Eye Retro Sunglasses", category: "Sunglasses", tag: "new", price: 749, mrp: 1499, rating: 4.7, reviews: 18, desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.", addInfo: "Lens Protection: UV400 Polarized | Frame: Glossy Acetate", fakeReview: "Stylish frames and great eye protection against bright sun. - Neha G.", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600" },
+      { id: 7, title: "Rose Gold Mesh Classic Watch", category: "Watches", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 64, desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic strap.", addInfo: "Movement: Japanese Quartz | Strap: Milanese Magnetic Stainless Steel", fakeReview: "The magnetic strap is extremely easy to adjust and wear. Love it! - Simran T.", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600" },
+      { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", addInfo: "Fabric: Premium French Velvet | Comfort: Non-slip padded base", fakeReview: "Very soft fabric and doesn't hurt behind the ears at all. - Megha P.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600" }
     ];
 
     let cart = [];
@@ -586,11 +648,12 @@
     let activePageProduct = null;
     let brandTapCount = 0;
 
+    // Secret Admin Trigger: 3 fast taps on 'Zivora' logo in header
     function handleBrandTap() {
       brandTapCount++;
       if (brandTapCount >= 3) {
         brandTapCount = 0;
-        openAdminModal();
+        navigateTo('admin');
       }
       setTimeout(() => { brandTapCount = 0; }, 1500);
     }
@@ -619,6 +682,10 @@
       } else if (pageName === 'chat') {
         document.getElementById('page-chat').classList.add('active');
         window.location.hash = 'chat';
+      } else if (pageName === 'admin') {
+        document.getElementById('page-admin').classList.add('active');
+        checkAdminSession();
+        window.location.hash = 'admin';
       }
       window.scrollTo(0, 0);
     }
@@ -636,6 +703,8 @@
         navigateTo('orders');
       } else if (hash === '#chat') {
         navigateTo('chat');
+      } else if (hash === '#admin') {
+        navigateTo('admin');
       } else {
         navigateTo('home');
       }
@@ -649,9 +718,8 @@
           let dbCatalog = data.map(p => ({
             id: p.id, title: p.title, category: p.category, tag: p.tag || 'trending',
             price: Number(p.price), mrp: Number(p.mrp), rating: Number(p.rating || 4.8),
-            reviews: p.reviews || 12, desc: p.description || '', image: p.image
+            reviews: p.reviews || 12, desc: p.description || '', addInfo: p.additional_info || 'Standard Quality', fakeReview: p.fake_review || 'Great product!', image: p.image
           }));
-          // Merge with local catalog to keep newly added items
           catalog = [...dbCatalog, ...catalog.filter(local => !dbCatalog.some(dbItem => dbItem.id === local.id))];
           renderGrid();
         }
@@ -717,7 +785,10 @@
       document.getElementById("pPageMrp").innerText = `₹${p.mrp}`;
       document.getElementById("pPageDiscount").innerText = `${Math.round(((p.mrp - p.price)/p.mrp)*100)}% OFF`;
       document.getElementById("pPageDesc").innerText = p.desc;
-      document.getElementById("pPageRating").innerHTML = `★ ${p.rating} (${p.reviews || 12} reviews)`;
+      document.getElementById("pPageAddInfo").innerText = p.addInfo || "Standard quality luxury item with secure packaging.";
+      document.getElementById("pPageRatingNum").innerText = `${p.rating} ★`;
+      document.getElementById("pPageReviewCount").innerText = `Based on ${p.reviews || 42} verified customer reviews`;
+      document.getElementById("pPageFakeReview").innerText = `"${p.fakeReview || 'Amazing product quality and very fast delivery!'}"`;
       document.getElementById("pinResult").innerText = "";
       document.getElementById("checkPin").value = "";
       document.getElementById("headerPageTitle").innerText = p.title;
@@ -1079,21 +1150,51 @@
       renderProfilePage();
     }
 
-    function openAdminModal() {
-      document.getElementById("adminModal").style.display = "flex";
-      loadAdminOrdersForTracking();
-    }
-    function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
-
-    async function verifyAdminLogin() {
-      let u = document.getElementById("admUser").value.trim();
-      let p = document.getElementById("admPass").value;
-      if (u === "rohitku316" && p === "Rohit@2006") {
+    // Admin Session & Navigation Logic
+    function checkAdminSession() {
+      let isAdmin = localStorage.getItem("ziv_admin_auth") === "true";
+      if (isAdmin) {
         document.getElementById("adminLoginBox").style.display = "none";
         document.getElementById("adminDashBox").style.display = "block";
         loadAdminOrdersForTracking();
       } else {
+        document.getElementById("adminLoginBox").style.display = "block";
+        document.getElementById("adminDashBox").style.display = "none";
+      }
+    }
+
+    function verifyAdminLogin() {
+      let u = document.getElementById("admUser").value.trim();
+      let p = document.getElementById("admPass").value;
+      if (u === "rohitku316" && p === "Rohit@2006") {
+        localStorage.setItem("ziv_admin_auth", "true");
+        checkAdminSession();
+      } else {
         alert("Invalid credentials");
+      }
+    }
+
+    function switchAdminTab(tab) {
+      let btnOrders = document.getElementById("tabBtnOrders");
+      let btnAdd = document.getElementById("tabBtnAdd");
+      let secOrders = document.getElementById("adminSectionOrders");
+      let secAdd = document.getElementById("adminSectionAddProduct");
+
+      if (tab === 'orders') {
+        btnOrders.style.background = "var(--primary)";
+        btnOrders.style.color = "#fff";
+        btnAdd.style.background = "#e0e0e0";
+        btnAdd.style.color = "#333";
+        secOrders.style.display = "block";
+        secAdd.style.display = "none";
+        loadAdminOrdersForTracking();
+      } else {
+        btnAdd.style.background = "var(--primary)";
+        btnAdd.style.color = "#fff";
+        btnOrders.style.background = "#e0e0e0";
+        btnOrders.style.color = "#333";
+        secAdd.style.display = "block";
+        secOrders.style.display = "none";
       }
     }
 
@@ -1104,14 +1205,14 @@
       let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
       if (data && data.length > 0) {
         container.innerHTML = data.map(o => `
-          <div style="background:#fff; padding:10px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
+          <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:10px;">
             <div style="font-weight:700; margin-bottom:4px;">Order ID: ${o.id} | ₹${o.total_amount}</div>
             <div style="color:var(--muted); margin-bottom:6px;">Customer: ${o.customer_name} (${o.customer_phone})<br>Address: ${o.shipping_address}, ${o.city}, ${o.state} - ${o.pincode}</div>
-            <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
-              <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:4px 8px; font-size:0.75rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
-              <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:5px 10px; border-radius:2px; cursor:pointer; font-size:0.75rem; font-weight:700;">Save ID</button>
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+              <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
+              <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-size:0.8rem; font-weight:700;">Save ID</button>
             </div>
-            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:2px; cursor:pointer; font-size:0.75rem; font-weight:700; width:100%;">📋 Copy Details for DeoDap / Bhunel / Qikink</button>
+            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700; width:100%;">📋 Copy Details for DeoDap / Bhunel / Qikink</button>
           </div>
         `).join('');
       } else {
@@ -1142,11 +1243,17 @@
     }
 
     async function adminAddNewProduct() {
-      let title = document.getElementById("npTitle").value;
+      let title = document.getElementById("npTitle").value.trim();
       let price = Number(document.getElementById("npPrice").value);
       let mrp = Number(document.getElementById("npMrp").value);
-      let image = document.getElementById("npImg").value;
-      if (!title || !price) return alert("Fill required fields");
+      let image = document.getElementById("npImg").value.trim();
+      let desc = document.getElementById("npDesc").value.trim();
+      let addInfo = document.getElementById("npAddInfo").value.trim();
+      let rating = Number(document.getElementById("npRating").value) || 4.8;
+      let reviews = Number(document.getElementById("npReviews").value) || 42;
+      let fakeReview = document.getElementById("npFakeReview").value.trim();
+
+      if (!title || !price || !image || !desc) return alert("Please fill all required product fields!");
 
       let newProd = {
         id: Date.now(),
@@ -1155,21 +1262,26 @@
         tag: "trending",
         price: price,
         mrp: mrp || price * 1.5,
-        rating: 4.8,
-        reviews: 12,
-        desc: "Newly added luxury item.",
-        image: image || "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600"
+        rating: rating,
+        reviews: reviews,
+        desc: desc,
+        addInfo: addInfo || "Standard quality luxury item with secure packaging.",
+        fakeReview: fakeReview || "Amazing quality product! Highly recommended.",
+        image: image
       };
 
-      // Push locally immediately so it shows up without RLS blocking issues
       catalog.unshift(newProd);
       renderGrid();
 
       if (db) {
-        await db.from('products').insert([{ title, price, mrp: newProd.mrp, image: newProd.image, category: "Necklaces", stock: 10 }]);
+        await db.from('products').insert([{
+          title, price, mrp: newProd.mrp, image, category: "Necklaces",
+          description: desc, additional_info: newProd.addInfo, fake_review: newProd.fakeReview, rating, reviews, stock: 10
+        }]);
       }
-      alert("✓ Product published live and added to store!");
-      closeAdminModal();
+
+      alert("✓ Product published live successfully!");
+      navigateTo('home');
     }
 
     renderGrid();
