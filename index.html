@@ -425,16 +425,16 @@
       <span style="font-weight:700; font-size:0.95rem;">Customer Support Chat</span>
     </div>
     <div class="page-content" style="padding: 20px 0; max-width: 600px;">
-      <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:400px; display:flex; flex-direction:column; padding:16px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:450px; display:flex; flex-direction:column; padding:16px;">
         <div style="background:#f3e5f5; color:var(--primary); padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
-          👋 Hello! Welcome to Zivora Support. How can we help you today?
+          👋 Welcome to Zivora Support! Type your query regarding orders, shipping, or returns below.
         </div>
         <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;">
-          <div style="color:var(--muted); text-align:center; margin-top:20px;">No messages yet. Type your query below.</div>
+          <!-- Loaded dynamically -->
         </div>
         <div style="display:flex; gap:8px;">
-          <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:9px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;" onkeypress="if(event.key==='Enter') sendSupportMsg()">
-          <button onclick="sendSupportMsg()" class="btn-primary-solid" style="width:100px; padding:9px;">Send</button>
+          <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.88rem;" onkeypress="if(event.key==='Enter') sendCustomerSupportMsg()">
+          <button onclick="sendCustomerSupportMsg()" class="btn-primary-solid" style="width:100px; padding:10px;">Send</button>
         </div>
       </div>
     </div>
@@ -457,16 +457,25 @@
       <div id="adminDashBox" style="display:none;">
         <p style="font-size:0.9rem; color:var(--success); font-weight:700; margin-bottom:16px;">✓ Admin Verified Successfully</p>
         
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" style="flex:1; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Manage Orders & Supplier</button>
-          <button onclick="switchAdminTab('addProduct')" id="tabBtnAdd" style="flex:1; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Add New Product</button>
+        <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;">
+          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" style="flex:1; min-width:140px; padding:10px; background:var(--primary); color:#fff; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Orders & Supplier</button>
+          <button onclick="switchAdminTab('support')" id="tabBtnSupport" style="flex:1; min-width:140px; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Customer Support</button>
+          <button onclick="switchAdminTab('addProduct')" id="tabBtnAdd" style="flex:1; min-width:140px; padding:10px; background:#e0e0e0; color:#333; border:none; border-radius:4px; font-weight:700; cursor:pointer;">Add Product</button>
         </div>
 
+        <!-- Section 1: Orders & Tracking -->
         <div id="adminSectionOrders" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px;">
           <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">📦 Live Customer Orders</h4>
           <div id="adminOrdersListContainer" style="max-height:400px; overflow-y:auto; font-size:0.85rem;">Loading live orders...</div>
         </div>
 
+        <!-- Section 2: Customer Support Chats & Reply Manager -->
+        <div id="adminSectionSupport" style="background:#fff; padding:16px; border:1px solid var(--border); border-radius:6px; margin-bottom:20px; display:none;">
+          <h4 style="font-size:1rem; margin-bottom:12px; color:var(--primary);">💬 Customer Support Inquiries & Reply</h4>
+          <div id="adminSupportListContainer" style="max-height:450px; overflow-y:auto; font-size:0.85rem;">Loading support chats...</div>
+        </div>
+
+        <!-- Section 3: Add Product -->
         <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
           <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Color Variants</h4>
           
@@ -521,7 +530,7 @@
           </div>
           <div class="form-group">
             <label>Customer Trust Review (Fake Review Text)</label>
-            <input type="text" id="npFakeReview" placeholder="e.g. Saree is so beautiful, fabric is high quality! - Priya S.">
+            <input type="text" id="npFakeReview" placeholder="e.g. Saree is so beautiful! - Priya S.">
           </div>
 
           <button class="btn-primary-solid" style="margin-top:10px;" onclick="adminAddNewProduct()">Publish Product Live</button>
@@ -656,7 +665,6 @@
       localProducts = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
     } catch(e) {
       localProducts = [];
-      localStorage.setItem("ziv_local_products", "[]");
     }
 
     let catalog = [...localProducts, ...defaultCatalog];
@@ -697,6 +705,7 @@
         window.location.hash = 'orders';
       } else if (pageName === 'chat') {
         document.getElementById('page-chat').classList.add('active');
+        renderCustomerChat();
         window.location.hash = 'chat';
       } else if (pageName === 'admin') {
         document.getElementById('page-admin').classList.add('active');
@@ -1107,30 +1116,37 @@
       }
     }
 
-    function sendSupportMsg() {
-      let input = document.getElementById("chatInputMsg");
+    // Persistent Customer Support Chat Functions
+    function renderCustomerChat() {
+      let phone = localStorage.getItem("ziv_phone") || "Guest";
       let box = document.getElementById("chatMessagesBox");
+      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let userMessages = allChats[phone] || [
+        { sender: 'admin', text: 'Hello! Welcome to Zivora Support. How can we help you today?' }
+      ];
+
+      box.innerHTML = userMessages.map(m => `
+        <div style="text-align:${m.sender === 'customer' ? 'right' : 'left'}; margin-bottom:8px;">
+          <span style="background:${m.sender === 'customer' ? 'var(--primary)' : '#e0e0e0'}; color:${m.sender === 'customer' ? '#fff' : '#212121'}; padding:8px 12px; border-radius:6px; font-size:0.85rem; display:inline-block; max-width:80%; text-align:left;">${m.text}</span>
+        </div>
+      `).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendCustomerSupportMsg() {
+      let input = document.getElementById("chatInputMsg");
       let text = input.value.trim();
       if (!text) return;
 
-      if (box.innerHTML.includes("No messages yet")) box.innerHTML = "";
+      let phone = localStorage.getItem("ziv_phone") || "Guest_" + Date.now().toString().slice(-4);
+      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      if (!allChats[phone]) allChats[phone] = [];
 
-      box.innerHTML += `
-        <div style="text-align:right; margin-bottom:8px;">
-          <span style="background:var(--primary); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%; text-align:left;">${text}</span>
-        </div>
-      `;
+      allChats[phone].push({ sender: 'customer', text: text, time: new Date().toLocaleTimeString() });
+      localStorage.setItem("ziv_support_chats", JSON.stringify(allChats));
+
       input.value = "";
-      box.scrollTop = box.scrollHeight;
-
-      setTimeout(() => {
-        box.innerHTML += `
-          <div style="text-align:left; margin-bottom:8px;">
-            <span style="background:#e0e0e0; color:#212121; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%;">Thanks for reaching out! Our support executive will respond shortly.</span>
-          </div>
-        `;
-        box.scrollTop = box.scrollHeight;
-      }, 1000);
+      renderCustomerChat();
     }
 
     function saveOrdersPhone() {
@@ -1168,12 +1184,14 @@
       renderProfilePage();
     }
 
+    // Admin Session & Navigation Logic
     function checkAdminSession() {
       let isAdmin = localStorage.getItem("ziv_admin_auth") === "true";
       if (isAdmin) {
         document.getElementById("adminLoginBox").style.display = "none";
         document.getElementById("adminDashBox").style.display = "block";
         loadAdminOrdersForTracking();
+        loadAdminSupportChats();
       } else {
         document.getElementById("adminLoginBox").style.display = "block";
         document.getElementById("adminDashBox").style.display = "none";
@@ -1193,26 +1211,76 @@
 
     function switchAdminTab(tab) {
       let btnOrders = document.getElementById("tabBtnOrders");
+      let btnSupport = document.getElementById("tabBtnSupport");
       let btnAdd = document.getElementById("tabBtnAdd");
+      
       let secOrders = document.getElementById("adminSectionOrders");
+      let secSupport = document.getElementById("adminSectionSupport");
       let secAdd = document.getElementById("adminSectionAddProduct");
 
+      // Reset all buttons
+      [btnOrders, btnSupport, btnAdd].forEach(b => { b.style.background = "#e0e0e0"; b.style.color = "#333"; });
+      [secOrders, secSupport, secAdd].forEach(s => s.style.display = "none");
+
       if (tab === 'orders') {
-        btnOrders.style.background = "var(--primary)";
-        btnOrders.style.color = "#fff";
-        btnAdd.style.background = "#e0e0e0";
-        btnAdd.style.color = "#333";
+        btnOrders.style.background = "var(--primary)"; btnOrders.style.color = "#fff";
         secOrders.style.display = "block";
-        secAdd.style.display = "none";
         loadAdminOrdersForTracking();
-      } else {
-        btnAdd.style.background = "var(--primary)";
-        btnAdd.style.color = "#fff";
-        btnOrders.style.background = "#e0e0e0";
-        btnOrders.style.color = "#333";
+      } else if (tab === 'support') {
+        btnSupport.style.background = "var(--primary)"; btnSupport.style.color = "#fff";
+        secSupport.style.display = "block";
+        loadAdminSupportChats();
+      } else if (tab === 'addProduct') {
+        btnAdd.style.background = "var(--primary)"; btnAdd.style.color = "#fff";
         secAdd.style.display = "block";
-        secOrders.style.display = "none";
       }
+    }
+
+    // Admin Load Support Chats & Reply
+    function loadAdminSupportChats() {
+      let container = document.getElementById("adminSupportListContainer");
+      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let phones = Object.keys(allChats);
+
+      if (phones.length === 0) {
+        container.innerHTML = `<p style="text-align:center; padding:15px; color:var(--muted);">No customer support inquiries yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = phones.map(phone => {
+        let msgs = allChats[phone].map(m => `
+          <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
+            <span style="background:${m.sender === 'admin' ? '#e1bee7' : '#f5f5f5'}; padding:4px 8px; border-radius:4px; font-size:0.8rem; display:inline-block;"><strong>${m.sender === 'admin' ? 'You' : phone}:</strong> ${m.text}</span>
+          </div>
+        `).join('');
+
+        return `
+          <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:6px; margin-bottom:12px;">
+            <div style="font-weight:700; margin-bottom:8px; color:var(--primary);">Customer Phone: +91 ${phone}</div>
+            <div style="background:#fff; padding:8px; border:1px solid var(--border); border-radius:4px; max-height:150px; overflow-y:auto; margin-bottom:8px;">${msgs}</div>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="adminReplyInput-${phone}" placeholder="Type reply to customer..." style="padding:6px; font-size:0.8rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
+              <button onclick="sendAdminReply('${phone}')" style="background:var(--primary); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-weight:700; font-size:0.8rem;">Send Reply</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function sendAdminReply(phone) {
+      let input = document.getElementById(`adminReplyInput-${phone}`);
+      let text = input.value.trim();
+      if (!text) return;
+
+      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      if (!allChats[phone]) allChats[phone] = [];
+
+      allChats[phone].push({ sender: 'admin', text: text, time: new Date().toLocaleTimeString() });
+      localStorage.setItem("ziv_support_chats", JSON.stringify(allChats));
+
+      input.value = "";
+      loadAdminSupportChats();
+      alert("✓ Reply sent to customer!");
     }
 
     async function loadAdminOrdersForTracking() {
@@ -1267,7 +1335,7 @@
       let desc = document.getElementById("npDesc").value.trim();
       let addInfo = document.getElementById("npAddInfo").value.trim();
       let rating = Number(document.getElementById("npRating").value) || 4.8;
-      let reviews = Number(document.getElementById("npReviews").value) || 42;
+      let reviews = Number(document.getElementById("npReviews").value) || 128;
       let fakeReview = document.getElementById("npFakeReview").value.trim();
 
       let c1Name = document.getElementById("npColor1").value.trim();
