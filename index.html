@@ -304,7 +304,8 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page active">
     <header>
-      <a class="brand-name" onclick="navigateTo('home')">Zivora</a>
+      <!-- Hidden Admin Trigger: Tap the brand name 'Zivora' 3 times quickly -->
+      <a class="brand-name" onclick="handleBrandTap()">Zivora</a>
       <div class="header-search">
         <input type="text" id="searchInput" placeholder="Search by Keyword or Product ID" oninput="handleSearch(this.value)">
       </div>
@@ -338,7 +339,7 @@
     </main>
 
     <footer>
-      <p>Zivora E-Commerce Store. Secured Payments via Razorpay. All rights reserved. <span onclick="openAdminModal()" style="cursor:pointer; color:#878787;" title="Zivora">©</span></p>
+      <p>Zivora E-Commerce Store. Secured Payments via Razorpay. All rights reserved.</p>
     </footer>
   </div>
 
@@ -362,6 +363,11 @@
           <span id="pPageDiscount" style="font-size:0.85rem; color:#388e3c; font-weight:700;"></span>
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
+
+        <!-- Return / Replacement Policy Notice Added Back -->
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
+          ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
+        </div>
 
         <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
           <strong>Check Delivery & Pincode:</strong>
@@ -396,6 +402,28 @@
       <span style="font-weight:700; font-size:0.95rem;">My Orders & Live Tracking</span>
     </div>
     <div class="page-content" id="ordersPageContentArea" style="padding: 20px 0;"></div>
+  </div>
+
+  <!-- SUPPORT CHAT PAGE -->
+  <div id="page-chat" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('profile')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">Customer Support Chat</span>
+    </div>
+    <div class="page-content" style="padding: 20px 0; max-width: 600px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:400px; display:flex; flex-direction:column; padding:16px;">
+        <div style="background:#f3e5f5; color:var(--primary); padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
+          👋 Hello! Welcome to Zivora Support. How can we help you today?
+        </div>
+        <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;">
+          <div style="color:var(--muted); text-align:center; margin-top:20px;">No messages yet. Type your query below.</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:9px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;" onkeypress="if(event.key==='Enter') sendSupportMsg()">
+          <button onclick="sendSupportMsg()" class="btn-primary-solid" style="width:100px; padding:9px;">Send</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- BOTTOM NAVIGATION -->
@@ -499,11 +527,11 @@
     </div>
   </div>
 
-  <!-- Admin Modal -->
+  <!-- Admin Modal with Tracking ID Updater -->
   <div class="modal-overlay" id="adminModal">
-    <div class="modal-box" style="max-width:420px;">
+    <div class="modal-box" style="max-width:650px;">
       <div class="modal-header">
-        <h3 style="font-size:1rem;">⚙️ Admin Login</h3>
+        <h3 style="font-size:1rem;">⚙️ Admin Dashboard & Tracking Manager</h3>
         <button class="close-btn" onclick="closeAdminModal()">&times;</button>
       </div>
       <div id="adminLoginBox">
@@ -513,15 +541,21 @@
       </div>
       <div id="adminDashBox" style="display:none;">
         <p style="font-size:0.85rem; color:var(--success); font-weight:700; margin-bottom:10px;">✓ Admin Verified</p>
-        <div style="background:#f9f9f9; padding:10px; border-radius:4px;">
-          <h4 style="font-size:0.85rem; margin-bottom:6px;">Add Product</h4>
+        
+        <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:16px;">
+          <h4 style="font-size:0.9rem; margin-bottom:8px; color:var(--primary);">📦 Assign Supplier Tracking ID to Orders</h4>
+          <div id="adminOrdersListContainer" style="max-height:220px; overflow-y:auto; font-size:0.8rem;">Loading live orders...</div>
+        </div>
+
+        <div style="background:#f9f9f9; padding:12px; border-radius:4px;">
+          <h4 style="font-size:0.9rem; margin-bottom:6px; color:var(--primary);">Add New Product</h4>
           <input type="text" id="npTitle" placeholder="Title" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid var(--border);">
           <div class="form-row">
             <input type="number" id="npPrice" placeholder="Price" style="padding:6px; border:1px solid var(--border);">
             <input type="number" id="npMrp" placeholder="MRP" style="padding:6px; border:1px solid var(--border);">
           </div>
           <input type="text" id="npImg" placeholder="Image URL" style="width:100%; padding:6px; margin:6px 0; border:1px solid var(--border);">
-          <button class="btn-primary-solid" style="padding:8px; font-size:0.8rem;" onclick="adminAddNewProduct()">Publish</button>
+          <button class="btn-primary-solid" style="padding:8px; font-size:0.8rem;" onclick="adminAddNewProduct()">Publish Product</button>
         </div>
       </div>
     </div>
@@ -550,6 +584,17 @@
     let cart = [];
     let currentCategory = 'All';
     let activePageProduct = null;
+    let brandTapCount = 0;
+
+    // Hidden Admin Trigger: Tap brand name 'Zivora' 3 times quickly
+    function handleBrandTap() {
+      brandTapCount++;
+      if (brandTapCount >= 3) {
+        brandTapCount = 0;
+        openAdminModal();
+      }
+      setTimeout(() => { brandTapCount = 0; }, 1500);
+    }
 
     // Router Logic for Refresh & Direct URL support
     function navigateTo(pageName, param = null) {
@@ -573,6 +618,9 @@
         document.getElementById('nav-orders').classList.add('active');
         renderOrdersPage();
         window.location.hash = 'orders';
+      } else if (pageName === 'chat') {
+        document.getElementById('page-chat').classList.add('active');
+        window.location.hash = 'chat';
       }
       window.scrollTo(0, 0);
     }
@@ -588,6 +636,8 @@
         navigateTo('profile');
       } else if (hash === '#orders') {
         navigateTo('orders');
+      } else if (hash === '#chat') {
+        navigateTo('chat');
       } else {
         navigateTo('home');
       }
@@ -847,7 +897,7 @@
             await db.from('orders').insert([{
               id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
               shipping_address: address, city: city, state: state, pincode: pincode,
-              total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed"
+              total_amount: totalPrice, payment_id: response.razorpay_payment_id, payment_status: "PAID", order_status: "confirmed", tracking_id: "Not Assigned Yet"
             }]);
           }
           localStorage.setItem("ziv_phone", phone);
@@ -861,7 +911,7 @@
       rzp.open();
     }
 
-    // Profile Page Render
+    // Profile Page Render with Support Chat Button & Zivora Wallet
     function renderProfilePage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
@@ -891,10 +941,20 @@
               <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
             </div>
 
+            <!-- Zivora Wallet Card -->
             <div style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(156,39,176,0.3);">
               <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Zivora Wallet Balance</div>
               <div style="font-size:1.8rem; font-weight:800; margin:6px 0;">₹${walletBal}</div>
               <p style="font-size:0.75rem; opacity:0.85;">Refunds from returns are instantly credited here.</p>
+            </div>
+
+            <!-- Customer Support Chat Button -->
+            <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('chat')">
+              <div>
+                <h4 style="font-size:0.9rem; font-weight:700; color:var(--primary);">💬 Customer Support Chat</h4>
+                <p style="font-size:0.78rem; color:var(--muted);">Chat with our executive for help or returns</p>
+              </div>
+              <span style="font-weight:700; color:var(--primary);">Open →</span>
             </div>
 
             <div style="background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;" onclick="openAddressModalView()">
@@ -906,7 +966,7 @@
       }
     }
 
-    // Orders Page Render
+    // Orders Page Render with Supplier Tracking ID Display
     async function renderOrdersPage() {
       let phone = localStorage.getItem("ziv_phone") || "";
       let contentArea = document.getElementById("ordersPageContentArea");
@@ -944,6 +1004,7 @@
                     <span style="color:var(--primary);">₹${o.total_amount}</span>
                   </div>
                   <div style="font-size:0.75rem; color:var(--muted); margin-bottom:4px;">Payment ID: <code>${o.payment_id}</code></div>
+                  <div style="font-size:0.78rem; color:#d81b60; margin-bottom:6px; font-weight:700;">🚚 Courier Tracking ID: <span>${o.tracking_id || 'Waiting for supplier update'}</span></div>
                   <div style="font-size:0.75rem; color:var(--muted); margin-bottom:8px;">Status: <strong>${o.order_status.toUpperCase()}</strong></div>
                   <div class="timeline">
                     <div class="t-step done"><div class="t-dot"></div>Confirmed</div>
@@ -959,6 +1020,33 @@
           }
         }
       }
+    }
+
+    // Customer Support Chat Logic
+    function sendSupportMsg() {
+      let input = document.getElementById("chatInputMsg");
+      let box = document.getElementById("chatMessagesBox");
+      let text = input.value.trim();
+      if (!text) return;
+
+      if (box.innerHTML.includes("No messages yet")) box.innerHTML = "";
+
+      box.innerHTML += `
+        <div style="text-align:right; margin-bottom:8px;">
+          <span style="background:var(--primary); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%; text-align:left;">${text}</span>
+        </div>
+      `;
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+
+      setTimeout(() => {
+        box.innerHTML += `
+          <div style="text-align:left; margin-bottom:8px;">
+            <span style="background:#e0e0e0; color:#212121; padding:6px 12px; border-radius:6px; font-size:0.8rem; display:inline-block; max-width:80%;">Thanks for reaching out! Our support executive will respond shortly.</span>
+          </div>
+        `;
+        box.scrollTop = box.scrollHeight;
+      }, 1000);
     }
 
     function saveOrdersPhone() {
@@ -996,14 +1084,55 @@
       renderProfilePage();
     }
 
-    function openAdminModal() { document.getElementById("adminModal").style.display = "flex"; }
+    function openAdminModal() {
+      document.getElementById("adminModal").style.display = "flex";
+    }
     function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
 
-    function verifyAdminLogin() {
-      if (document.getElementById("admUser").value === "rohitku316" && document.getElementById("admPass").value === "Rohit@2006") {
+    async function verifyAdminLogin() {
+      let u = document.getElementById("admUser").value.trim();
+      let p = document.getElementById("admPass").value;
+      if (u === "rohitku316" && p === "Rohit@2006") {
         document.getElementById("adminLoginBox").style.display = "none";
         document.getElementById("adminDashBox").style.display = "block";
-      } else alert("Invalid credentials");
+        loadAdminOrdersForTracking();
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    // Admin Load Orders to assign Tracking ID
+    async function loadAdminOrdersForTracking() {
+      let container = document.getElementById("adminOrdersListContainer");
+      if (!db) { container.innerHTML = "Database not connected."; return; }
+
+      let { data } = await db.from('orders').select('*').order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        container.innerHTML = data.map(o => `
+          <div style="background:#fff; padding:10px; border:1px solid var(--border); border-radius:4px; margin-bottom:8px;">
+            <div><strong>Order ID:</strong> ${o.id} | <strong>Customer:</strong> ${o.customer_name} (${o.customer_phone})</div>
+            <div style="margin:6px 0; display:flex; gap:6px; align-items:center;">
+              <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:4px 8px; font-size:0.75rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
+              <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:5px 10px; border-radius:2px; cursor:pointer; font-size:0.75rem; font-weight:700;">Save ID</button>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        container.innerHTML = "No orders found in database.";
+      }
+    }
+
+    async function updateOrderTracking(orderId) {
+      let val = document.getElementById(`trackInput-${orderId}`).value.trim();
+      if (!val) return alert("Please enter tracking ID");
+
+      let { error } = await db.from('orders').update({ tracking_id: val, order_status: 'shipped' }).eq('id', orderId);
+      if (!error) {
+        alert("✓ Tracking ID updated successfully! Customer tracking will now show this ID.");
+        loadAdminOrdersForTracking();
+      } else {
+        alert("Error updating tracking ID.");
+      }
     }
 
     async function adminAddNewProduct() {
