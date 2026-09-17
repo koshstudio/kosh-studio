@@ -226,11 +226,12 @@
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; }
     .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none;
+      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.88rem; outline: none;
     }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
     .btn-solid {
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
@@ -433,33 +434,60 @@
     </div>
   </div>
 
-  <!-- CHECKOUT & PAYMENT OTP MODAL -->
+  <!-- CHECKOUT & DETAILED ADDRESS MODAL -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Checkout & Payment</h3>
+        <h3 style="font-size:1.1rem;">Secure Checkout</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
+      
       <div class="form-group">
-        <label>Customer Full Name</label>
-        <input type="text" id="chkName" placeholder="Enter full name">
+        <label>Customer Full Name (Required)</label>
+        <input type="text" id="chkName" placeholder="Enter full name" required>
       </div>
+
       <div class="form-group">
-        <label>Phone Number</label>
-        <input type="text" id="chkPhone" placeholder="10-digit mobile number" maxlength="10">
+        <label>Phone Number (Required)</label>
+        <input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required>
       </div>
+
       <div class="form-group">
-        <label>Delivery Address</label>
-        <textarea id="chkAddress" rows="3" placeholder="Street, City, Pincode"></textarea>
+        <label>House No. / Building / Area / Street (Required)</label>
+        <input type="text" id="chkArea" placeholder="e.g. Near Main Market, Flat 204" required>
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>6-Digit PIN Code (Auto-Fill)</label>
+          <input type="text" id="chkPincode" placeholder="e.g. 110001" maxlength="6" oninput="lookupPincode(this.value)" required>
+        </div>
+        <div class="form-group">
+          <label>City / Post Office</label>
+          <input type="text" id="chkCity" placeholder="City name" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>District</label>
+          <input type="text" id="chkDistrict" placeholder="Auto-selected district" readonly style="background:#f1f3f6;" required>
+        </div>
+        <div class="form-group">
+          <label>State</label>
+          <input type="text" id="chkState" placeholder="Auto-selected state" readonly style="background:#f1f3f6;" required>
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Payment Mode</label>
-        <select id="chkPaymentMode" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:4px; background:#fff; font-size:0.9rem;">
+        <select id="chkPaymentMode" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:4px; background:#fff; font-size:0.88rem;">
           <option value="UPI / Online">UPI / Credit Card / Online (OTP Verified)</option>
           <option value="COD">Cash on Delivery</option>
         </select>
       </div>
-      <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:12px; display:none;"></div>
+
+      <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:10px; display:none;"></div>
       <button class="btn-solid" onclick="initiateCheckoutOtp()">Proceed & Verify Payment OTP</button>
     </div>
   </div>
@@ -528,7 +556,6 @@
 
   <script>
     // --- Initialize Supabase & EmailJS ---
-    // (Aap yahan apna Supabase URL aur Anon Key daal sakte hain jab project set ho)
     const SUPABASE_URL = "YOUR_SUPABASE_URL";
     const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
     const supabaseClient = (SUPABASE_URL !== "YOUR_SUPABASE_URL") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
@@ -701,7 +728,27 @@
       else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
     }
 
-    // --- Authentication Flow (Supabase Free Auth & Reset Password) ---
+    // --- Auto Pin Code Lookup (India Post API) ---
+    async function lookupPincode(pin) {
+      if(pin.length === 6) {
+        try {
+          let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+          let data = await response.json();
+          if(data[0].Status === "Success") {
+            let details = data[0].PostOffice[0];
+            document.getElementById('chkCity').value = details.Name || details.Block || '';
+            document.getElementById('chkDistrict').value = details.District || '';
+            document.getElementById('chkState').value = details.State || '';
+          } else {
+            alert('Invalid PIN code entered.');
+          }
+        } catch(err) {
+          console.error("Pincode lookup error:", err);
+        }
+      }
+    }
+
+    // --- Authentication Flow ---
     function switchAuthView(view) {
       document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
       document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
@@ -802,17 +849,23 @@
     function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
 
     function initiateCheckoutOtp() {
-      const name = document.getElementById('chkName').value;
-      const phone = document.getElementById('chkPhone').value;
-      const address = document.getElementById('chkAddress').value;
+      const name = document.getElementById('chkName').value.trim();
+      const phone = document.getElementById('chkPhone').value.trim();
+      const area = document.getElementById('chkArea').value.trim();
+      const pincode = document.getElementById('chkPincode').value.trim();
+      const city = document.getElementById('chkCity').value.trim();
+      const district = document.getElementById('chkDistrict').value.trim();
+      const state = document.getElementById('chkState').value.trim();
       const payMode = document.getElementById('chkPaymentMode').value;
 
-      if(!name || phone.length !== 10 || !address) {
-        alert('Please fill in all valid delivery details.');
+      if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district || !state) {
+        alert('Please fill in all mandatory address and contact fields correctly.');
         return;
       }
 
-      tempCheckoutData = { name, phone, address, payMode };
+      let fullAddress = `${area}, City: ${city}, District: ${district}, State: ${state} - PIN: ${pincode}`;
+
+      tempCheckoutData = { name, phone, address: fullAddress, payMode };
       paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
       document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
