@@ -1055,8 +1055,8 @@
     }
     function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
     function verifyAdminPassword() {
-      let userId = document.getElementById('admUserInput').value;
-      let pass = document.getElementById('admPassInput').value;
+      let userId = document.getElementById('admUserInput').value.trim();
+      let pass = document.getElementById('adminPassInput').value.trim();
       
       if(userId === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
