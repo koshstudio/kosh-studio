@@ -560,7 +560,7 @@
         </div>
         <div class="form-group">
           <label>Admin Password</label>
-          <input type="password" id="adminPassInput" placeholder="Enter password">
+          <input type="password" id="admPassInput" placeholder="Enter password">
         </div>
         <button class="btn-solid" onclick="verifyAdminPassword()">Login to Dashboard</button>
       </div>
@@ -581,7 +581,7 @@
 
         <!-- Tab 1: Customer Orders -->
         <div id="admTabOrders" class="admin-tab-content active">
-          <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">All Customer Orders & Details (Copy Button Enabled)</h5>
+          <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">All Customer Orders & Details (Copy & Remove Enabled)</h5>
           <div id="admOrdersList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
         </div>
 
@@ -1113,7 +1113,7 @@
       let area = document.getElementById('admOrdersList');
       if(ordersList.length === 0) { area.innerHTML = 'No orders received yet.'; return; }
       let h = '';
-      ordersList.forEach(o => {
+      ordersList.forEach((o, index) => {
         let textToCopy = `Order ID: #${o.id}\nName: ${o.name}\nPhone: ${o.phone}\nAddress: ${o.address}\nItems: ${o.summary}\nTotal: ₹${o.total}\nPayment: ${o.payMode}\nStatus: ${o.status}`;
         h += `
           <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
@@ -1122,12 +1122,24 @@
             <div style="color:#333; font-weight:600;">${o.summary} | <b>₹${o.total}</b></div>
             <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
               <span style="color:var(--success); font-weight:bold;">${o.status}</span>
-              <button onclick="navigator.clipboard.writeText(\`${textToCopy}\`); alert('Order details copied successfully!');" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">📋 Copy Details</button>
+              <div style="display:flex; gap:6px;">
+                <button onclick="navigator.clipboard.writeText(\`${textToCopy}\`); alert('Order details copied successfully!');" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">📋 Copy</button>
+                <button onclick="removeAdminOrder(${index})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">🗑️ Remove</button>
+              </div>
             </div>
           </div>
         `;
       });
       area.innerHTML = h;
+    }
+
+    function removeAdminOrder(index) {
+      if(confirm('Are you sure you want to remove this order from history?')) {
+        ordersList.splice(index, 1);
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        loadAdminOrders();
+        loadAdminReturns();
+      }
     }
 
     function loadAdminReturns() {
