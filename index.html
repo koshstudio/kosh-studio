@@ -407,6 +407,10 @@
       </div>
       <div id="adminLoginScreen">
         <div class="form-group">
+          <label>Admin User ID</label>
+          <input type="text" id="admUserInput" placeholder="Enter admin user ID">
+        </div>
+        <div class="form-group">
           <label>Admin Password</label>
           <input type="password" id="adminPassInput" placeholder="Enter password">
         </div>
@@ -703,8 +707,10 @@
       document.getElementById('adminModal').style.display = 'none';
     }
     function verifyAdminPassword() {
+      let userId = document.getElementById('admUserInput').value;
       let pass = document.getElementById('adminPassInput').value;
-      if(pass === 'admin123') {
+      
+      if(userId === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
         document.getElementById('adminDashboardScreen').style.display = 'block';
         document.getElementById('admTotalProducts').innerText = products.length;
@@ -721,7 +727,7 @@
           oArea.innerHTML = h;
         }
       } else {
-        alert('Incorrect Admin Password!');
+        alert('Incorrect Admin User ID or Password!');
       }
     }
 
