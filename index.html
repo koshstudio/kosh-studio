@@ -3,40 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kosh Studio | Luxury Lifestyle Accessories</title>
-  <meta name="google-site-verification" content="IiV0SCiMAAaHgnf24fdIInf1Qkuu0BC4aMAlH3iMY2g" />
+  <title>Kosh Studio | Luxury Lifestyle & Accessories</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
   <style>
     :root {
-      --bg: #f1f3f6;
+      --bg: #f8f9fa;
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #d4af37; /* Champagne Gold Theme for Kosh Studio */
-      --primary-dark: #b3922b;
-      --accent: #f43397;
+      --primary: #111111;
+      --accent: #d4af37; /* Champagne Gold */
       --border: #e0e0e0;
-      --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+      --shadow: 0 2px 8px rgba(0,0,0,0.06);
       --success: #388e3c;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
-    input, textarea { -webkit-user-select: text; user-select: text; }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 70px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
     .top-strip {
-      background: #111;
-      color: #d4af37;
+      background: var(--primary);
+      color: var(--accent);
       text-align: center;
       padding: 6px 12px;
       font-size: 0.72rem;
@@ -46,32 +39,31 @@
 
     header {
       background: #ffffff;
-      color: var(--text);
       position: sticky;
       top: 0;
       z-index: 60;
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: var(--shadow);
     }
 
     .brand-name {
       font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: 1px;
-      color: #111;
+      color: var(--primary);
       text-decoration: none;
       cursor: pointer;
     }
 
     .header-search {
       flex-grow: 1;
-      max-width: 550px;
+      max-width: 500px;
       display: flex;
-      background: #f8f8f8;
+      background: #f1f3f6;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -110,7 +102,7 @@
       top: -4px;
       right: 2px;
       background: var(--accent);
-      color: white;
+      color: #000;
       font-size: 0.6rem;
       font-weight: 700;
       width: 16px;
@@ -119,7 +111,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #fff;
     }
 
     .categories-bar {
@@ -129,65 +120,55 @@
       gap: 20px;
       padding: 12px 20px;
       border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow);
       scrollbar-width: none;
     }
-
     .categories-bar::-webkit-scrollbar { display: none; }
 
     .cat-item {
       flex: 0 0 auto;
       font-size: 0.82rem;
       font-weight: 700;
-      color: #212121;
+      color: #555;
       cursor: pointer;
       padding-bottom: 2px;
     }
-
-    .cat-item.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
+    .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
     .container {
       max-width: 1200px;
-      margin: 12px auto;
+      margin: 16px auto;
       padding: 0 10px;
     }
 
     .products-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
 
     @media (min-width: 768px) {
-      .products-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+      .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
     }
 
     .product-card {
       background: var(--card-bg);
-      border-radius: 4px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       position: relative;
+      transition: transform 0.2s;
     }
-
-    .badge-discount {
-      position: absolute;
-      top: 8px; left: 8px;
-      background: #388e3c; color: #fff;
-      font-size: 0.62rem; font-weight: 700;
-      padding: 2px 6px; border-radius: 2px; z-index: 2;
-    }
+    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
     .product-img {
       width: 100%;
-      padding-top: 110%;
+      padding-top: 100%;
       position: relative;
       background: #f9f9f9;
       cursor: pointer;
     }
-
     .product-img img {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
     }
@@ -205,108 +186,82 @@
       display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em;
     }
 
-    .p-rating-row {
-      display: flex; align-items: center; gap: 4px; font-size: 0.7rem;
-      background: #388e3c; color: white; padding: 1px 6px; border-radius: 3px; width: fit-content; font-weight: 700; margin-bottom: 6px;
-    }
-
     .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
-    .p-price { font-size: 1rem; font-weight: 700; color: #212121; }
+    .p-price { font-size: 1rem; font-weight: 700; color: #111; }
     .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
 
     .btn-add-cart {
-      width: 100%; background: #fff; border: 1px solid #111; color: #111; padding: 8px;
+      width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px;
       border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-add-cart:active { background: #f3f3f3; }
+    .btn-add-cart:hover { background: #333; }
 
+    /* Pages */
     .app-page { display: none; }
     .app-page.active { display: block; }
 
     .page-header {
-      background: #fff; color: var(--text); padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
+      background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
     }
+    .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
+    .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
 
-    .back-btn { background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-
-    .page-content {
-      max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px;
-    }
-
-    .sticky-product-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--border);
-      padding: 10px 16px; display: none; gap: 12px; z-index: 90; box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
-    }
-    .sticky-product-bar.active { display: grid; grid-template-columns: 1fr 1fr; }
-
+    /* Cart Drawer */
     .cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 420px;
-      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.2s ease;
+      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 400px;
+      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
       display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
     }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
+    /* Modal / Admin / Reseller */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      z-index: 100; display: none; align-items: center; justify-content: center; padding: 10px;
+      z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
     }
-
     .modal-box {
-      background: #fff; width: 100%; max-width: 520px; max-height: 92vh;
-      border-radius: 6px; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
+      max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .modal-header {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 14px;
-    }
-
-    .close-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); }
-
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; color: #212121; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.88rem; font-family: inherit; outline: none;
+      width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-    .btn-primary-solid {
-      width: 100%; background: #111; color: #fff; border: none; padding: 12px;
+    .btn-solid {
+      width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
       border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-primary-solid:active { background: #333; }
+    .btn-solid:hover { background: #333; }
 
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff;
-      border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 55;
-    }
-    .nav-tab {
-      display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 0.65rem; font-weight: 700; cursor: pointer; text-decoration: none;
-    }
-    .nav-tab.active { color: #111; }
-    .nav-tab svg { width: 20px; height: 20px; margin-bottom: 2px; }
-
-    footer { background: #111; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; text-align: center; }
+    footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
+    .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE CHECKOUT | FREE EXPRESS DELIVERY ACROSS INDIA</div>
+  <div class="top-strip">⚡ LUXURY ACCESSORIES | RESELLER PROGRAM ENABLED | FREE SHIPPING</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page active">
     <header>
-      <a class="brand-name" onclick="handleBrandTap()">Kosh Studio</a>
+      <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
         <input type="text" id="searchInput" placeholder="Search luxury accessories..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
+        <button class="icon-btn" onclick="openResellerModal()">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a5 5 0 0 0-10 0v2a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z"></path></svg>
+          <span>Resell</span>
+        </button>
         <button class="icon-btn" onclick="navigateTo('profile')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Profile</span>
         </button>
-        <button class="icon-btn" onclick="toggleCart()">
+        <button class="icon-btn" onclick="toggleCartDrawer(true)">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span>Cart</span>
           <span class="cart-badge" id="cartCount">0</span>
@@ -315,142 +270,463 @@
     </header>
 
     <div class="categories-bar">
-      <div class="cat-item active" onclick="filterCategory('All')">All Accessories</div>
-      <div class="cat-item" onclick="filterCategory('Earrings')">Earrings</div>
-      <div class="cat-item" onclick="filterCategory('Necklaces')">Necklaces</div>
-      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
-      <div class="cat-item" onclick="filterCategory('Rings')">Rings</div>
-      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
-      <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
+      <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
       <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Hair')">Hair Accessories</div>
+      <div class="cat-item" onclick="filterCategory('Wallets')">Wallets</div>
+      <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
+      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
+      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
     </div>
 
     <main class="container">
+      <div id="resellerBanner" style="background:#fff8e1; border:1px solid #ffe082; padding:10px 15px; border-radius:6px; margin-bottom:15px; display:none; font-size:0.85rem; font-weight:600; color:#b78103;">
+        🛍️ Reseller Mode Active: Added Margin <span id="activeMarginDisplay">₹0</span> per item. Share products & keep your profit!
+      </div>
       <div class="products-grid" id="productGrid"></div>
     </main>
 
     <footer>
-      <p>Kosh Studio Luxury Store. Secured Payments via Razorpay. All rights reserved.</p>
+      <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
+      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Powered for direct & reseller retail.</p>
     </footer>
   </div>
 
-  <!-- PRODUCT PAGE -->
+  <!-- PRODUCT DETAILS PAGE -->
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;" id="headerPageTitle">Product Overview</span>
+      <span style="font-weight:700; font-size:0.95rem;">Product Details</span>
     </div>
-    <div class="page-content" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+    <div class="page-content" style="display:grid; grid-template-columns: 1fr; gap:20px;">
       <div>
-        <img id="pPageImg" src="" alt="Product Image" style="width:100%; height:380px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-        <div id="colorVariantsContainer" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;"></div>
+        <img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
       </div>
       <div>
         <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
-        <div id="pPageRating" class="p-rating-row" style="margin-bottom:10px;">★ 4.8</div>
-        <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:12px;">
+        <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
-          <span id="pPageDiscount" style="font-size:0.85rem; color:#388e3c; font-weight:700;"></span>
         </div>
-
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
-          <button class="btn-primary-solid" style="background:#d4af37; color:#000;" onclick="addCurrentToPageCart()">Add to Cart</button>
-          <button class="btn-primary-solid" onclick="buyNowCurrentPage()">Buy Now</button>
+          <button class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
+          <button class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:16px;">
-          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:6px; color:#111;">Product Specifications / Additional Info</h4>
-          <p id="pPageAddInfo" style="font-size:0.82rem; color:#444; line-height:1.5;"></p>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
-          ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
-        </div>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:14px; border-radius:4px; margin-bottom:20px;">
-          <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:#111;">Customer Ratings & Reviews</h4>
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-            <span style="background:var(--success); color:#fff; padding:2px 8px; border-radius:4px; font-weight:700; font-size:0.85rem;" id="pPageRatingNum">4.8 ★</span>
-            <span style="font-size:0.8rem; color:var(--muted);" id="pPageReviewCount">Based on verified customer reviews</span>
-          </div>
-          <p id="pPageFakeReview" style="font-size:0.85rem; font-style:italic; color:#333; background:#f9f9f9; padding:8px; border-left:3px solid #111; border-radius:2px;"></p>
-        </div>
-
-        <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
-          <strong>Check Delivery & Pincode:</strong>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <input type="text" id="checkPin" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding:8px 12px; border:1px solid var(--border); border-radius:2px; width:160px; font-size:0.85rem;" oninput="verifyLivePincode(this.value, 'pinResult')">
-            <button onclick="verifyLivePincode(document.getElementById('checkPin').value, 'pinResult')" style="background:#111; color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Verify</button>
-          </div>
-          <div id="pinResult" style="margin-top:6px; font-weight:600; font-size:0.8rem;"></div>
-        </div>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
       </div>
     </div>
-  </div>
-
-  <div class="sticky-product-bar" id="stickyProductBar">
-    <button class="btn-primary-solid" style="background:#d4af37; color:#000;" onclick="addCurrentToPageCart()">Add to Cart</button>
-    <button class="btn-primary-solid" onclick="buyNowCurrentPage()">Buy Now</button>
   </div>
 
   <!-- PROFILE PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Profile</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Account & Reseller Dashboard</span>
     </div>
-    <div class="page-content" id="profilePageContentArea" style="padding: 20px 0;"></div>
-  </div>
-
-  <!-- ORDERS PAGE -->
-  <div id="page-orders" class="app-page">
-    <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders & Live Tracking</span>
-    </div>
-    <div class="page-content" id="ordersPageContentArea" style="padding: 20px 0;"></div>
-  </div>
-
-  <!-- SUPPORT CHAT PAGE -->
-  <div id="page-chat" class="app-page">
-    <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('profile')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Support Chat</span>
-    </div>
-    <div class="page-content" style="padding: 20px 0; max-width: 600px;">
-      <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:450px; display:flex; flex-direction:column; padding:16px;">
-        <div style="background:#fdf8e2; color:#111; padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
-          👋 Welcome to Kosh Studio Support! Type your query regarding orders, shipping, or returns below.
+    <div class="page-content">
+      <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+        <h3 style="margin-bottom:10px; font-size:1rem;">💼 Reseller Margin Setup</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:12px;">Set your custom profit margin for reselling Kosh Studio products to your customers.</p>
+        <div class="form-group">
+          <label>Your Profit Margin per Item (₹)</label>
+          <input type="number" id="resellerMarginInput" placeholder="e.g. 200" oninput="updateResellerMargin(this.value)">
         </div>
-        <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;"></div>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.88rem;" onkeypress="if(event.key==='Enter') sendCustomerSupportMsg()">
-          <button onclick="sendCustomerSupportMsg()" class="btn-primary-solid" style="width:100px; padding:10px;">Send</button>
-        </div>
+      </div>
+      <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:10px; font-size:1rem;">📦 Order History & Tracking</h3>
+        <div id="userOrdersList" style="font-size:0.85rem; color:var(--muted);">No orders placed yet.</div>
       </div>
     </div>
   </div>
 
-  <!-- ADMIN PANEL FULL PAGE -->
-  <div id="page-admin" class="app-page">
-    <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back to Store</button>
-      <span style="font-weight:700; font-size:0.95rem;">Admin Control Panel</span>
+  <!-- CART DRAWER -->
+  <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:1rem; font-weight:700;">Your Shopping Cart</h3>
+      <button onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
-    <div class="page-content" style="padding: 20px 0; max-width: 800px;">
-      <div id="adminLoginBox" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); text-align:center; max-width:400px; margin:40px auto;">
-        <h3 style="margin-bottom:14px; color:#111;">Admin Secure Login</h3>
-        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid var(--border); border-radius:4px;">
-        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid var(--border); border-radius:4px;">
-        <button onclick="verifyAdminLogin()" class="btn-primary-solid">Login</button>
+    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px;"></div>
+    <div style="padding:16px; border-top:1px solid var(--border); background:#fdfdfd;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-weight:700;">
+        <span>Total Amount:</span>
+        <span id="cartTotalPrice">₹0</span>
+      </div>
+      <button class="btn-solid" onclick="openCheckoutModal()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+        <h3 style="font-size:1.1rem;">Secure Checkout</h3>
+        <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group">
+        <label>Customer Full Name</label>
+        <input type="text" id="chkName" placeholder="Enter full name">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="chkPhone" placeholder="10-digit mobile number">
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="chkAddress" rows="3" placeholder="Street, City, Pincode"></textarea>
+      </div>
+      <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:12px; display:none;"></div>
+      <button class="btn-solid" onclick="finalizeOrder()">Place Order (Email Notification)</button>
+    </div>
+  </div>
+
+  <!-- RESELLER QUICK MODAL -->
+  <div class="modal-overlay" id="resellerModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+        <h3 style="font-size:1.1rem;">Kosh Studio Reseller Program</h3>
+        <button onclick="closeResellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <p style="font-size:0.88rem; color:#555; margin-bottom:14px; line-height:1.5;">
+        Want to start your own online business without inventory? Enter your desired profit margin below. Share product screenshots or links with your customers at your selling price, and keep your profit!
+      </p>
+      <div class="form-group">
+        <label>Set Margin per Product (₹)</label>
+        <input type="number" id="quickMarginInput" placeholder="e.g. 250">
+      </div>
+      <button class="btn-solid" onclick="applyQuickReseller()">Activate Reseller Mode</button>
+    </div>
+  </div>
+
+  <!-- SECRET ADMIN PANEL MODAL -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin Control Panel</h3>
+        <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div id="adminLoginScreen">
+        <div class="form-group">
+          <label>Admin Password</label>
+          <input type="password" id="adminPassInput" placeholder="Enter password">
+        </div>
+        <button class="btn-solid" onclick="verifyAdminPassword()">Login to Dashboard</button>
+      </div>
+      <div id="adminDashboardScreen" style="display:none;">
+        <h4 style="margin-bottom:10px; font-size:0.95rem; color:var(--success);">✅ Admin Authenticated</h4>
+        <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:14px;">
+          <h5 style="margin-bottom:6px; font-size:0.85rem;">Store Stats</h5>
+          <p style="font-size:0.8rem; color:var(--muted);">Total Products: <span id="admTotalProducts">0</span> | Total Orders: <span id="admTotalOrders">0</span></p>
+        </div>
+        <h4 style="margin-bottom:8px; font-size:0.9rem;">Recent Orders Received</h4>
+        <div id="admOrdersList" style="max-height:200px; overflow-y:auto; font-size:0.8rem; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
       </div>
     </div>
   </div>
 
+  <script>
+    // --- Initialize EmailJS ---
+    (function() {
+      emailjs.init("YOUR_PUBLIC_KEY"); // Apna EmailJS Public Key yahan dalein
+    })();
+
+    // --- Products Database ---
+    let products = [
+      { id: 1, title: "Classic Chronograph Luxury Watch", category: "Watches", price: 2999, mrp: 5999, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
+      { id: 2, title: "Minimalist Black Leather Wallet", category: "Wallets", price: 1299, mrp: 2499, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
+      { id: 3, title: "Designer Gradient Sunglasses", category: "Sunglasses", price: 1499, mrp: 2999, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60", desc: "UV400 protected stylish gradient sunglasses for daily luxury." },
+      { id: 4, title: "Signature Gold-Plated Bracelet", category: "Bracelets", price: 999, mrp: 1999, image: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=500&auto=format&fit=crop&q=60", desc: "Elegant gold-plated stainless steel fashion bracelet." },
+      { id: 5, title: "Executive Leather Messenger Bag", category: "Bags", price: 3499, mrp: 6999, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
+    ];
+
+    let cart = [];
+    let resellerMargin = 0;
+    let currentSelectedProduct = null;
+    let ordersList = [];
+    let secretClickCount = 0;
+
+    // --- Render Products ---
+    function renderProducts(filterCat = 'All') {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      
+      const filtered = filterCat === 'All' ? products : products.filter(p => p.category === filterCat);
+      const searchKey = document.getElementById('searchInput').value.toLowerCase();
+
+      const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey));
+
+      if (finalFiltered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found.</p>';
+        return;
+      }
+
+      finalFiltered.forEach(p => {
+        let displayPrice = p.price + resellerMargin;
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img" onclick="openProductDetail(${p.id})">
+            <img src="${p.image}" alt="${p.title}">
+          </div>
+          <div class="product-info">
+            <span class="p-category">${p.category}</span>
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row">
+              <span class="p-price">₹${displayPrice}</span>
+              <span class="p-mrp">₹${p.mrp + resellerMargin}</span>
+            </div>
+            <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // --- Navigation & Pages ---
+    function navigateTo(pageId) {
+      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      window.scrollTo(0, 0);
+      if(pageId === 'profile') {
+        renderProfileOrders();
+      }
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+      event.target.classList.add('active');
+      renderProducts(cat);
+    }
+
+    function handleSearch(val) {
+      renderProducts();
+    }
+
+    // --- Product Detail View ---
+    function openProductDetail(id) {
+      currentSelectedProduct = products.find(p => p.id === id);
+      if(!currentSelectedProduct) return;
+
+      document.getElementById('pPageImg').src = currentSelectedProduct.image;
+      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
+      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
+      document.getElementById('pPagePrice').innerText = '₹' + (currentSelectedProduct.price + resellerMargin);
+      document.getElementById('pPageMrp').innerText = '₹' + (currentSelectedProduct.mrp + resellerMargin);
+      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
+
+      navigateTo('product');
+    }
+
+    function addCurrentProductToCart() {
+      if(currentSelectedProduct) {
+        addToCart(currentSelectedProduct.id);
+        toggleCartDrawer(true);
+      }
+    }
+
+    function buyNowCurrentProduct() {
+      if(currentSelectedProduct) {
+        addToCart(currentSelectedProduct.id);
+        openCheckoutModal();
+      }
+    }
+
+    // --- Cart System ---
+    function addToCart(id) {
+      let prod = products.find(p => p.id === id);
+      if(!prod) return;
+      let itemPrice = prod.price + resellerMargin;
+      let existing = cart.find(item => item.id === id);
+      if(existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...prod, finalPrice: itemPrice, qty: 1 });
+      }
+      updateCartUI();
+      alert(prod.title + " added to cart!");
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+      const container = document.getElementById('cartItemsContainer');
+      container.innerHTML = '';
+
+      if(cart.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>';
+        document.getElementById('cartTotalPrice').innerText = '₹0';
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += (item.finalPrice * item.qty);
+        let div = document.createElement('div');
+        div.style.cssText = "display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;";
+        div.innerHTML = `
+          <div>
+            <div style="font-size:0.85rem; font-weight:600;">${item.title}</div>
+            <div style="font-size:0.75rem; color:var(--muted);">₹${item.finalPrice} × ${item.qty}</div>
+          </div>
+          <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; cursor:pointer; font-weight:bold;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById('cartTotalPrice').innerText = '₹' + total;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cartDrawer');
+      const backdrop = document.getElementById('cartBackdrop');
+      if(open) {
+        drawer.classList.add('open');
+        backdrop.style.display = 'block';
+      } else {
+        drawer.classList.remove('open');
+        backdrop.style.display = 'none';
+      }
+    }
+
+    // --- Checkout & EmailJS ---
+    function openCheckoutModal() {
+      if(cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      toggleCartDrawer(false);
+      if(resellerMargin > 0) {
+        let profit = resellerMargin * cart.reduce((s, i) => s + i.qty, 0);
+        document.getElementById('resellerOrderNote').style.display = 'block';
+        document.getElementById('resellerOrderNote').innerHTML = `💡 Reseller Note: Your total profit of <strong>₹${profit}</strong> is included in this order.`;
+      } else {
+        document.getElementById('resellerOrderNote').style.display = 'none';
+      }
+      document.getElementById('checkoutModal').style.display = 'flex';
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').style.display = 'none';
+    }
+
+    function finalizeOrder() {
+      const name = document.getElementById('chkName').value;
+      const phone = document.getElementById('chkPhone').value;
+      const address = document.getElementById('chkAddress').value;
+
+      if(!name || !phone || !address) {
+        alert('Please fill in all delivery details.');
+        return;
+      }
+
+      let summary = cart.map(i => `${i.title} (${i.qty} x ₹${i.finalPrice})`).join(', ');
+      let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+
+      var templateParams = {
+        from_name: name,
+        phone: phone,
+        address: address,
+        message: `Order Details: ${summary} | Total: ₹${total} | Reseller Margin: ₹${resellerMargin}`
+      };
+
+      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+          alert("Order placed successfully! Email sent to store owner.");
+          ordersList.push({ id: Date.now(), name, phone, address, summary, total, status: 'Order Confirmed' });
+          cart = [];
+          updateCartUI();
+          closeCheckoutModal();
+          navigateTo('home');
+        }, function(error) {
+          alert("Order saved locally, but email dispatch failed. Check EmailJS configuration.");
+          ordersList.push({ id: Date.now(), name, phone, address, summary, total, status: 'Order Confirmed' });
+          cart = [];
+          updateCartUI();
+          closeCheckoutModal();
+          navigateTo('home');
+        });
+    }
+
+    // --- Reseller Modal & Settings ---
+    function openResellerModal() {
+      document.getElementById('resellerModal').style.display = 'flex';
+    }
+    function closeResellerModal() {
+      document.getElementById('resellerModal').style.display = 'none';
+    }
+    function applyQuickReseller() {
+      let val = parseInt(document.getElementById('quickMarginInput').value) || 0;
+      updateResellerMargin(val);
+      closeResellerModal();
+    }
+    function updateResellerMargin(val) {
+      resellerMargin = parseInt(val) || 0;
+      if(resellerMargin > 0) {
+        document.getElementById('resellerBanner').style.display = 'block';
+        document.getElementById('activeMarginDisplay').innerText = '₹' + resellerMargin;
+      } else {
+        document.getElementById('resellerBanner').style.display = 'none';
+      }
+      renderProducts();
+    }
+
+    function renderProfileOrders() {
+      const area = document.getElementById('userOrdersList');
+      if(ordersList.length === 0) {
+        area.innerHTML = 'No orders placed yet.';
+        return;
+      }
+      let html = '';
+      ordersList.forEach(o => {
+        html += `<div style="padding:10px; border-bottom:1px solid #eee; margin-bottom:8px;">
+          <strong>Order ID:</strong> #${o.id}<br>
+          <strong>Items:</strong> ${o.summary}<br>
+          <strong>Total:</strong> ₹${o.total} | <span style="color:var(--success); font-weight:700;">${o.status}</span>
+        </div>`;
+      });
+      area.innerHTML = html;
+    }
+
+    // --- Secret Admin Panel Trigger ---
+    function triggerAdminSecret() {
+      secretClickCount++;
+      if(secretClickCount >= 5) {
+        secretClickCount = 0;
+        document.getElementById('adminModal').style.display = 'flex';
+      }
+    }
+    function closeAdminModal() {
+      document.getElementById('adminModal').style.display = 'none';
+    }
+    function verifyAdminPassword() {
+      let pass = document.getElementById('adminPassInput').value;
+      if(pass === 'admin123') {
+        document.getElementById('adminLoginScreen').style.display = 'none';
+        document.getElementById('adminDashboardScreen').style.display = 'block';
+        document.getElementById('admTotalProducts').innerText = products.length;
+        document.getElementById('admTotalOrders').innerText = ordersList.length;
+        
+        let oArea = document.getElementById('admOrdersList');
+        if(ordersList.length === 0) {
+          oArea.innerHTML = 'No orders received yet.';
+        } else {
+          let h = '';
+          ordersList.forEach(o => {
+            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
+          });
+          oArea.innerHTML = h;
+        }
+      } else {
+        alert('Incorrect Admin Password!');
+      }
+    }
+
+    // Initial Render
+    renderProducts();
+  </script>
 </body>
 </html>
