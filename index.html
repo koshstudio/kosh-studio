@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Zivora Plus | Luxury Fashion & Accessories</title>
+  <title>Kosh Studio | Luxury Accessories & Lifestyle</title>
   <meta name="google-site-verification" content="IiV0SCiMAAaHgnf24fdIInf1Qkuu0BC4aMAlH3iMY2g" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,16 +11,16 @@
   
   <style>
     :root {
-      --bg: #f1f3f6;
+      --bg: #f8f9fa;
       --card-bg: #ffffff;
-      --text: #212121;
-      --muted: #878787;
-      --primary: #9c27b0;
-      --primary-dark: #7b1fa2;
-      --accent: #f43397;
+      --text: #1a1a1a;
+      --muted: #757575;
+      --primary: #212121;
+      --primary-dark: #000000;
+      --accent: #e91e63;
       --border: #e0e0e0;
-      --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
-      --success: #388e3c;
+      --shadow: 0 2px 6px 0 rgba(0,0,0,.06);
+      --success: #2e7d32;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
@@ -50,7 +50,7 @@
       position: sticky;
       top: 0;
       z-index: 60;
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -59,20 +59,20 @@
     }
 
     .brand-name {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       color: var(--primary);
       text-decoration: none;
-      font-style: italic;
+      text-transform: uppercase;
       cursor: pointer;
     }
 
     .header-search {
       flex-grow: 1;
-      max-width: 550px;
+      max-width: 500px;
       display: flex;
-      background: #f8f8f8;
+      background: #f1f3f6;
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -140,7 +140,7 @@
       flex: 0 0 auto;
       font-size: 0.82rem;
       font-weight: 700;
-      color: #212121;
+      color: #555;
       cursor: pointer;
       padding-bottom: 2px;
     }
@@ -176,7 +176,7 @@
     .badge-discount {
       position: absolute;
       top: 8px; left: 8px;
-      background: #388e3c; color: #fff;
+      background: #2e7d32; color: #fff;
       font-size: 0.62rem; font-weight: 700;
       padding: 2px 6px; border-radius: 2px; z-index: 2;
     }
@@ -208,7 +208,7 @@
 
     .p-rating-row {
       display: flex; align-items: center; gap: 4px; font-size: 0.7rem;
-      background: #388e3c; color: white; padding: 1px 6px; border-radius: 3px; width: fit-content; font-weight: 700; margin-bottom: 6px;
+      background: #2e7d32; color: white; padding: 1px 6px; border-radius: 3px; width: fit-content; font-weight: 700; margin-bottom: 6px;
     }
 
     .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
@@ -219,7 +219,7 @@
       width: 100%; background: #fff; border: 1px solid var(--primary); color: var(--primary); padding: 8px;
       border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-add-cart:active { background: #f3e5f5; }
+    .btn-add-cart:active { background: #f0f0f0; }
 
     /* Page Views */
     .app-page { display: none; }
@@ -301,7 +301,7 @@
     .nav-tab.active { color: var(--primary); }
     .nav-tab svg { width: 20px; height: 20px; margin-bottom: 2px; }
 
-    footer { background: #212121; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; text-align: center; }
+    footer { background: #1a1a1a; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; text-align: center; }
   </style>
 </head>
 <body>
@@ -311,9 +311,9 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page active">
     <header>
-      <a class="brand-name" onclick="handleBrandTap()">Zivora</a>
+      <a class="brand-name" onclick="handleBrandTap()">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search by Keyword or Product ID" oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search bags, wallets, sunglasses..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button class="icon-btn" onclick="navigateTo('profile')">
@@ -330,14 +330,13 @@
 
     <div class="categories-bar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Earrings')">Earrings</div>
-      <div class="cat-item" onclick="filterCategory('Necklaces')">Necklaces</div>
-      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
-      <div class="cat-item" onclick="filterCategory('Rings')">Rings</div>
-      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
+      <div class="cat-item" onclick="filterCategory('Bags')">Bags & Slings</div>
+      <div class="cat-item" onclick="filterCategory('Wallets')">Wallets</div>
       <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
       <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Hair')">Hair Accessories</div>
+      <div class="cat-item" onclick="filterCategory('Caps')">Caps & Hats</div>
+      <div class="cat-item" onclick="filterCategory('Belts')">Belts</div>
+      <div class="cat-item" onclick="filterCategory('Travel')">Travel Gear</div>
     </div>
 
     <main class="container">
@@ -345,7 +344,7 @@
     </main>
 
     <footer>
-      <p>Zivora E-Commerce Store. Secured Payments via Razorpay. All rights reserved.</p>
+      <p>Kosh Studio E-Commerce Store. Secured Payments via Razorpay. All rights reserved.</p>
     </footer>
   </div>
 
@@ -367,7 +366,7 @@
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:12px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
-          <span id="pPageDiscount" style="font-size:0.85rem; color:#388e3c; font-weight:700;"></span>
+          <span id="pPageDiscount" style="font-size:0.85rem; color:#2e7d32; font-weight:700;"></span>
         </div>
 
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
@@ -439,7 +438,7 @@
     <div class="page-content" style="padding: 20px 0; max-width: 600px;">
       <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:450px; display:flex; flex-direction:column; padding:16px;">
         <div style="background:#f3e5f5; color:var(--primary); padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
-          👋 Welcome to Zivora Support! Type your query regarding orders, shipping, or returns below.
+          👋 Welcome to Kosh Support! Type your query regarding orders, shipping, or returns below.
         </div>
         <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;"></div>
         <div style="display:flex; gap:8px;">
@@ -484,20 +483,20 @@
         </div>
 
         <div id="adminSectionAddProduct" style="background:#fff; padding:20px; border:1px solid var(--border); border-radius:6px; display:none;">
-          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Product with Color Variants</h4>
+          <h4 style="font-size:1rem; margin-bottom:14px; color:var(--primary);">✨ Add New Accessory Product with Variants</h4>
           
           <div class="form-group">
             <label>Product Name / Title *</label>
-            <input type="text" id="npTitle" placeholder="e.g. Designer Party Wear Saree">
+            <input type="text" id="npTitle" placeholder="e.g. Minimalist Vegan Leather Sling Bag">
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>Selling Price (₹) *</label>
-              <input type="number" id="npPrice" placeholder="499">
+              <input type="number" id="npPrice" placeholder="799">
             </div>
             <div class="form-group">
               <label>MRP (₹) *</label>
-              <input type="number" id="npMrp" placeholder="999">
+              <input type="number" id="npMrp" placeholder="1499">
             </div>
           </div>
           <div class="form-group">
@@ -506,23 +505,23 @@
           </div>
 
           <div style="background:#f9f9f9; padding:12px; border:1px solid var(--border); border-radius:4px; margin-bottom:12px;">
-            <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:8px; display:block;">🎨 Color Variants (Add as many as you want)</label>
+            <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); margin-bottom:8px; display:block;">🎨 Color / Variant Options</label>
             <div id="adminColorInputsContainer">
               <div class="form-row" style="margin-bottom:6px;">
-                <input type="text" class="color-name-input" placeholder="Color Name (e.g. Pink)">
-                <input type="text" class="color-img-input" placeholder="Image URL for this color">
+                <input type="text" class="color-name-input" placeholder="Color/Style (e.g. Tan Brown)">
+                <input type="text" class="color-img-input" placeholder="Image URL for this variant">
               </div>
             </div>
-            <button type="button" onclick="addColorVariantInput()" style="background:#e0e0e0; border:none; padding:6px 12px; font-size:0.78rem; font-weight:700; border-radius:4px; cursor:pointer; margin-top:4px;">+ Add Another Color Variant</button>
+            <button type="button" onclick="addColorVariantInput()" style="background:#e0e0e0; border:none; padding:6px 12px; font-size:0.78rem; font-weight:700; border-radius:4px; cursor:pointer; margin-top:4px;">+ Add Another Variant</button>
           </div>
 
           <div class="form-group">
             <label>Full Product Description *</label>
-            <textarea id="npDesc" rows="3" placeholder="Detailed fabric and design description..."></textarea>
+            <textarea id="npDesc" rows="3" placeholder="Detailed material and compartment description..."></textarea>
           </div>
           <div class="form-group">
             <label>Additional Information / Specifications *</label>
-            <textarea id="npAddInfo" rows="2" placeholder="Fabric: Chiffon | Work: Embroidered | Blouse: Separate Piece"></textarea>
+            <textarea id="npAddInfo" rows="2" placeholder="Material: Vegan Leather | Dimensions: Standard"></textarea>
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -536,7 +535,7 @@
           </div>
           <div class="form-group">
             <label>Customer Trust Review (Fake Review Text)</label>
-            <input type="text" id="npFakeReview" placeholder="e.g. Saree is so beautiful! - Priya S.">
+            <input type="text" id="npFakeReview" placeholder="e.g. Premium quality leather! - Rahul S.">
           </div>
 
           <button class="btn-primary-solid" style="margin-top:10px;" onclick="adminAddNewProduct()">Publish Product Live</button>
@@ -625,7 +624,7 @@
       <form id="checkoutForm" onsubmit="processRazorpayPayment(event)">
         <div class="form-group">
           <label>Full Name *</label>
-          <input type="text" id="cName" placeholder="Priya Sharma" required>
+          <input type="text" id="cName" placeholder="Rahul Sharma" required>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -677,19 +676,19 @@
     try { if (window.supabase) db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
 
     let defaultCatalog = [
-      { id: 1, title: "18K Gold Plated Minimalist Chain", category: "Necklaces", tag: "trending", price: 799, mrp: 1499, rating: 4.8, reviews: 42, desc: "Hypoallergenic, tarnish-free stainless steel coated with pure 18K gold.", addInfo: "Material: Stainless Steel | Plating: 18K Gold", fakeReview: "Very elegant and shiny! - Sneha M.", image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600", colors: [{name: 'Gold', img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600'}] },
-      { id: 2, title: "Crystal Pearl Drop Earrings", category: "Earrings", tag: "bestseller", price: 599, mrp: 1199, rating: 4.9, reviews: 78, desc: "Hand-finished freshwater faux pearls hanging from polished cubic zirconia studs.", addInfo: "Material: Alloy | Closure: Push Back", fakeReview: "So beautiful and lightweight. - Ritu K.", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600", colors: [{name: 'Pearl White', img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600'}] },
-      { id: 3, title: "Vintage Textured Gold Cuff Bracelet", category: "Bracelets", tag: "trending", price: 899, mrp: 1699, rating: 4.7, reviews: 29, desc: "Adjustable artisanal cuff bracelet with hammered satin finish.", addInfo: "Material: Brass | Finish: Hammered Gold", fakeReview: "Fits perfectly and looks very premium. - Pooja D.", image: "https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600", colors: [{name: 'Gold', img: 'https://images.unsplash.com/photo-1611591475281-a1c9c51ea590?w=600'}] },
-      { id: 4, title: "Sleek Emerald Baguette Ring", category: "Rings", tag: "offer", price: 649, mrp: 1299, rating: 4.6, reviews: 51, desc: "Intense green baguette gemstone prong-set in an adjustable gold-toned band.", addInfo: "Gemstone: Emerald Green | Metal: Gold Plated", fakeReview: "The green color pops out so nicely. - Anita S.", image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600", colors: [{name: 'Emerald', img: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600'}] },
-      { id: 5, title: "Minimalist Italian Leather Shoulder Bag", category: "Bags", tag: "bestseller", price: 1499, mrp: 2999, rating: 4.9, reviews: 33, desc: "Premium PU leather luxury handbag with gold magnetic clasp.", addInfo: "Material: Vegan PU Leather", fakeReview: "Super classy bag with lots of space. - Divya R.", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600", colors: [{name: 'Black', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600'}] },
-      { id: 6, title: "Chic Cat-Eye Retro Sunglasses", category: "Sunglasses", tag: "new", price: 749, mrp: 1499, rating: 4.7, reviews: 18, desc: "UV400 protection polarized lenses with glossy tortoiseshell accents.", addInfo: "Lens Protection: UV400 Polarized", fakeReview: "Stylish frames and great sun protection. - Neha G.", image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600", colors: [{name: 'Tortoiseshell', img: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600'}] },
-      { id: 7, title: "Rose Gold Mesh Classic Watch", category: "Watches", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 64, desc: "Ultra-slim Japanese quartz movement with metallic Milanese magnetic strap.", addInfo: "Movement: Japanese Quartz", fakeReview: "Easy to adjust and wear. Love it! - Simran T.", image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600", colors: [{name: 'Rose Gold', img: 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600'}] },
-      { id: 8, title: "Silk French Knot Velvet Hairband", category: "Hair", tag: "offer", price: 449, mrp: 899, rating: 4.6, reviews: 24, desc: "Luxurious velvet padded headband providing all-day comfort.", addInfo: "Fabric: Premium French Velvet", fakeReview: "Very soft fabric and doesn't hurt ears. - Megha P.", image: "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600", colors: [{name: 'Pink', img: 'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=600'}] }
+      { id: 1, title: "Minimalist Vegan Leather Sling Bag", category: "Bags", tag: "trending", price: 1299, mrp: 2499, rating: 4.8, reviews: 54, desc: "Premium handcrafted vegan leather crossbody bag with multiple zippered compartments.", addInfo: "Material: Vegan Leather | Strap: Adjustable", fakeReview: "The leather quality is top notch! - Amit K.", image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600", colors: [{name: 'Tan Brown', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600'}, {name: 'Jet Black', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600'}] },
+      { id: 2, title: "Classic Polarized Aviator Sunglasses", category: "Sunglasses", tag: "bestseller", price: 899, mrp: 1799, rating: 4.9, reviews: 88, desc: "UV400 protection polarized lenses set in a lightweight metallic alloy frame.", addInfo: "Protection: UV400 Polarized | Frame: Metal", fakeReview: "Very stylish and gives clear vision in sunlight. - Neha S.", image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600", colors: [{name: 'Gold / Black', img: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600'}] },
+      { id: 3, title: "Artisanal Crafted Card Holder Wallet", category: "Wallets", tag: "trending", price: 599, mrp: 1199, rating: 4.7, reviews: 41, desc: "Slim profile genuine texture wallet equipped with RFID blocking technology.", addInfo: "Features: RFID Protected | Slots: 6 Cards", fakeReview: "So slim and fits easily in front pocket. - Rohit M.", image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=600", colors: [{name: 'Brown', img: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600'}] },
+      { id: 4, title: "Minimalist Stainless Steel Mesh Watch", category: "Watches", tag: "offer", price: 1499, mrp: 2999, rating: 4.8, reviews: 67, desc: "Ultra-slim quartz timepiece featuring a breathable Milanese stainless steel strap.", addInfo: "Movement: Quartz | Water Resistant: 3ATM", fakeReview: "Looks like a luxury expensive watch! - Priya D.", image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600", colors: [{name: 'Rose Gold', img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600'}] },
+      { id: 5, title: "Urban Streetwear Cotton Cap", category: "Caps", tag: "new", price: 499, mrp: 999, rating: 4.6, reviews: 32, desc: "Breathable 100% cotton baseball cap with adjustable metal strap closure.", addInfo: "Material: 100% Cotton | Fit: Adjustable", fakeReview: "Comfortable for daily wear and gym. - Karan T.", image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600", colors: [{name: 'Black', img: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600'}] },
+      { id: 6, title: "Reversible Premium Leather Belt", category: "Belts", tag: "trending", price: 799, mrp: 1599, rating: 4.7, reviews: 45, desc: "Two-in-one reversible leather belt with a rotating metallic buckle clasp.", addInfo: "Material: Premium PU Leather | Reversible", fakeReview: "Great utility, two belts in one price! - Manish G.", image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600", colors: [{name: 'Black & Brown', img: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600'}] },
+      { id: 7, title: "Travel Passport & Document Organizer", category: "Travel", tag: "bestseller", price: 699, mrp: 1399, rating: 4.9, reviews: 59, desc: "Multi-slot travel wallet designed to securely hold passports, cards, and boarding passes.", addInfo: "Water-resistant canvas lining", fakeReview: "Made my airport travel so organized! - Sneha P.", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600", colors: [{name: 'Navy Blue', img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600'}] },
+      { id: 8, title: "Chic Quilted Makeup & Vanity Pouch", category: "Bags", tag: "offer", price: 549, mrp: 1099, rating: 4.8, reviews: 38, desc: "Soft quilted fabric zip pouch ideal for carrying cosmetics and daily essentials.", addInfo: "Fabric: Quilted Cotton Velvet", fakeReview: "Very spacious and cute design. - Ritu N.", image: "https://images.unsplash.com/photo-1585553616435-2dc0a53e271d?w=600", colors: [{name: 'Pastel Pink', img: 'https://images.unsplash.com/photo-1585553616435-2dc0a53e271d?w=600'}] }
     ];
 
     let localProducts = [];
     try {
-      localProducts = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+      localProducts = JSON.parse(localStorage.getItem("kosh_local_products") || "[]");
     } catch(e) {
       localProducts = [];
     }
@@ -831,7 +830,7 @@
       document.getElementById("pPageMrp").innerText = `₹${p.mrp}`;
       document.getElementById("pPageDiscount").innerText = `${Math.round(((p.mrp - p.price)/p.mrp)*100)}% OFF`;
       document.getElementById("pPageDesc").innerText = p.desc;
-      document.getElementById("pPageAddInfo").innerText = p.addInfo || "Standard quality luxury item with secure packaging.";
+      document.getElementById("pPageAddInfo").innerText = p.addInfo || "Standard quality luxury accessory with secure packaging.";
       document.getElementById("pPageRatingNum").innerText = `${p.rating} ★`;
       document.getElementById("pPageReviewCount").innerText = `Based on ${p.reviews || 42} verified customer reviews`;
       document.getElementById("pPageFakeReview").innerText = `"${p.fakeReview || 'Amazing product quality and very fast delivery!'}"`;
@@ -841,7 +840,7 @@
 
       let colorBox = document.getElementById("colorVariantsContainer");
       if (p.colors && p.colors.length > 0) {
-        colorBox.innerHTML = `<span style="font-size:0.8rem; font-weight:700; width:100%;">Select Color:</span>` + p.colors.map(c => `
+        colorBox.innerHTML = `<span style="font-size:0.8rem; font-weight:700; width:100%;">Select Variant/Color:</span>` + p.colors.map(c => `
           <button onclick="changeProductColor('${c.img}')" style="padding:6px 12px; border:1px solid var(--border); background:#fff; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">${c.name}</button>
         `).join('');
       } else {
@@ -1053,10 +1052,10 @@
         key: "rzp_test_TcBzIPGiQ5PniF",
         amount: finalPrice * 100,
         currency: "INR",
-        name: "Zivora Plus",
+        name: "Kosh Studio",
         description: "Secure Prepaid Order",
         handler: async function (response) {
-          let orderId = "ZIV-" + Date.now().toString().slice(-6);
+          let orderId = "KOSH-" + Date.now().toString().slice(-6);
           let newOrder = {
             id: orderId, customer_name: name, customer_phone: phone, customer_email: email,
             shipping_address: address, city: city, state: state, pincode: pincode,
@@ -1064,11 +1063,10 @@
             created_at: new Date().toISOString()
           };
 
-          // Save locally so orders never disappear
           try {
-            let localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+            let localOrders = JSON.parse(localStorage.getItem("kosh_local_orders") || "[]");
             localOrders.unshift(newOrder);
-            localStorage.setItem("ziv_local_orders", JSON.stringify(localOrders));
+            localStorage.setItem("kosh_local_orders", JSON.stringify(localOrders));
           } catch(err) {}
 
           if (db) {
@@ -1077,8 +1075,8 @@
             } catch(e) {}
           }
 
-          localStorage.setItem("ziv_phone", phone);
-          localStorage.setItem("ziv_address", `${address}, ${city}, ${state} - ${pincode}`);
+          localStorage.setItem("kosh_phone", phone);
+          localStorage.setItem("kosh_address", `${address}, ${city}, ${state} - ${pincode}`);
           alert("✓ Order Placed Successfully! ID: " + orderId);
           cart = []; appliedDiscount = 0; updateCartUI(); closeCheckoutModal();
         },
@@ -1089,15 +1087,15 @@
     }
 
     function renderProfilePage() {
-      let phone = localStorage.getItem("ziv_phone") || "";
-      let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
-      let walletBal = localStorage.getItem("ziv_wallet") || "0";
+      let phone = localStorage.getItem("kosh_phone") || "";
+      let savedAddress = localStorage.getItem("kosh_address") || "No saved address yet. Place an order to save address.";
+      let walletBal = localStorage.getItem("kosh_wallet") || "0";
       let contentArea = document.getElementById("profilePageContentArea");
 
       if (!phone) {
         contentArea.innerHTML = `
           <div style="max-width: 400px; margin: 40px auto; background: #fff; padding: 25px; border-radius: 6px; border: 1px solid var(--border); text-align: center;">
-            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Login to Zivora</h3>
+            <h3 style="margin-bottom: 12px; font-size: 1.2rem; color:var(--primary);">Login to Kosh Studio</h3>
             <p style="margin-bottom: 15px; font-size: 0.85rem; color: var(--muted);">Enter your 10-digit mobile number to view profile & wallet:</p>
             <input type="tel" id="profilePhoneInput" placeholder="10-digit mobile number" pattern="[0-9]{10}" style="padding: 10px; width: 100%; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.95rem; outline:none;">
             <button onclick="saveProfilePhone()" class="btn-primary-solid">Continue</button>
@@ -1108,7 +1106,7 @@
           <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:16px; border: 1px solid var(--border); border-radius:6px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
               <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:40px; height:40px; background:#f3e5f5; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">👤</div>
+                <div style="width:40px; height:40px; background:#f0f0f0; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem;">👤</div>
                 <div>
                   <div style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Mobile Number</div>
                   <div style="font-size:0.95rem; font-weight:800; color:var(--text);">+91 ${phone}</div>
@@ -1117,8 +1115,8 @@
               <button onclick="logoutProfile()" style="background:#ffebee; color:#c62828; border:none; padding:6px 14px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:700;">Logout</button>
             </div>
 
-            <div style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(156,39,176,0.3);">
-              <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Zivora Wallet Balance</div>
+            <div style="background: linear-gradient(135deg, #212121 0%, #000000 100%); color:#fff; padding:18px; border-radius:6px; margin-bottom:16px; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+              <div style="font-size:0.75rem; text-transform:uppercase; font-weight:700; opacity:0.9;">Kosh Wallet Balance</div>
               <div style="font-size:1.8rem; font-weight:800; margin:6px 0;">₹${walletBal}</div>
               <p style="font-size:0.75rem; opacity:0.85;">Refunds from returns are instantly credited here.</p>
             </div>
@@ -1141,7 +1139,7 @@
     }
 
     async function renderOrdersPage() {
-      let phone = localStorage.getItem("ziv_phone") || "";
+      let phone = localStorage.getItem("kosh_phone") || "";
       let contentArea = document.getElementById("ordersPageContentArea");
 
       if (!phone) {
@@ -1158,7 +1156,7 @@
           <div style="max-width: 600px; margin: 0 auto; padding: 0 10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:12px 16px; border:1px solid var(--border); border-radius:6px; margin-bottom:16px;">
               <span style="font-size:0.85rem; font-weight:700;">Showing orders for: +91 ${phone}</span>
-              <button onclick="localStorage.removeItem('ziv_phone'); renderOrdersPage();" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">Change Number</button>
+              <button onclick="localStorage.removeItem('kosh_phone'); renderOrdersPage();" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:700; cursor:pointer;">Change Number</button>
             </div>
             <h4 style="margin-bottom:10px; font-size:1rem; font-weight:700;">📦 My Orders & Live Tracking</h4>
             <div id="liveOrdersContainer"><p style="text-align:center; padding:15px; color:var(--muted);">Loading orders...</p></div>
@@ -1167,7 +1165,7 @@
 
         let localOrders = [];
         try {
-          localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+          localOrders = JSON.parse(localStorage.getItem("kosh_local_orders") || "[]");
         } catch(e) {}
         let userLocalOrders = localOrders.filter(o => String(o.customer_phone) === String(phone));
 
@@ -1210,11 +1208,11 @@
     }
 
     function renderCustomerChat() {
-      let phone = localStorage.getItem("ziv_phone") || "Guest";
+      let phone = localStorage.getItem("kosh_phone") || "Guest";
       let box = document.getElementById("chatMessagesBox");
-      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let allChats = JSON.parse(localStorage.getItem("kosh_support_chats") || "{}");
       let userMessages = allChats[phone] || [
-        { sender: 'admin', text: 'Hello! Welcome to Zivora Support. How can we help you today?' }
+        { sender: 'admin', text: 'Hello! Welcome to Kosh Support. How can we help you today?' }
       ];
 
       box.innerHTML = userMessages.map(m => `
@@ -1230,12 +1228,12 @@
       let text = input.value.trim();
       if (!text) return;
 
-      let phone = localStorage.getItem("ziv_phone") || "Guest_" + Date.now().toString().slice(-4);
-      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let phone = localStorage.getItem("kosh_phone") || "Guest_" + Date.now().toString().slice(-4);
+      let allChats = JSON.parse(localStorage.getItem("kosh_support_chats") || "{}");
       if (!allChats[phone]) allChats[phone] = [];
 
       allChats[phone].push({ sender: 'customer', text: text, time: new Date().toLocaleTimeString() });
-      localStorage.setItem("ziv_support_chats", JSON.stringify(allChats));
+      localStorage.setItem("kosh_support_chats", JSON.stringify(allChats));
 
       input.value = "";
       renderCustomerChat();
@@ -1244,7 +1242,7 @@
     function saveOrdersPhone() {
       let p = document.getElementById("ordersPhoneInput").value.trim();
       if (p.length === 10) {
-        localStorage.setItem("ziv_phone", p);
+        localStorage.setItem("kosh_phone", p);
         renderOrdersPage();
       } else {
         alert("Please enter a valid 10-digit phone number.");
@@ -1252,7 +1250,7 @@
     }
 
     function openAddressModalView() {
-      let savedAddress = localStorage.getItem("ziv_address") || "No saved address yet. Place an order to save address.";
+      let savedAddress = localStorage.getItem("kosh_address") || "No saved address yet. Place an order to save address.";
       document.getElementById("fullAddressText").innerText = savedAddress;
       document.getElementById("addressModal").style.display = "flex";
     }
@@ -1264,7 +1262,7 @@
     function saveProfilePhone() {
       let p = document.getElementById("profilePhoneInput").value.trim();
       if (p.length === 10) {
-        localStorage.setItem("ziv_phone", p);
+        localStorage.setItem("kosh_phone", p);
         renderProfilePage();
       } else {
         alert("Please enter a valid 10-digit phone number.");
@@ -1272,12 +1270,12 @@
     }
 
     function logoutProfile() {
-      localStorage.removeItem("ziv_phone");
+      localStorage.removeItem("kosh_phone");
       renderProfilePage();
     }
 
     function checkAdminSession() {
-      let isAdmin = localStorage.getItem("ziv_admin_auth") === "true";
+      let isAdmin = localStorage.getItem("kosh_admin_auth") === "true";
       if (isAdmin) {
         document.getElementById("adminLoginBox").style.display = "none";
         document.getElementById("adminDashBox").style.display = "block";
@@ -1293,7 +1291,7 @@
       let u = document.getElementById("admUser").value.trim();
       let p = document.getElementById("admPass").value;
       if (u === "rohitku316" && p === "Rohit@2006") {
-        localStorage.setItem("ziv_admin_auth", "true");
+        localStorage.setItem("kosh_admin_auth", "true");
         checkAdminSession();
       } else {
         alert("Invalid credentials");
@@ -1328,7 +1326,7 @@
 
     function loadAdminSupportChats() {
       let container = document.getElementById("adminSupportListContainer");
-      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let allChats = JSON.parse(localStorage.getItem("kosh_support_chats") || "{}");
       let phones = Object.keys(allChats);
 
       if (phones.length === 0) {
@@ -1339,7 +1337,7 @@
       container.innerHTML = phones.map(phone => {
         let msgs = allChats[phone].map(m => `
           <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
-            <span style="background:${m.sender === 'admin' ? '#e1bee7' : '#f5f5f5'}; padding:4px 8px; border-radius:4px; font-size:0.8rem; display:inline-block;"><strong>${m.sender === 'admin' ? 'You' : phone}:</strong> ${m.text}</span>
+            <span style="background:${m.sender === 'admin' ? '#f0f0f0' : '#f5f5f5'}; padding:4px 8px; border-radius:4px; font-size:0.8rem; display:inline-block;"><strong>${m.sender === 'admin' ? 'You' : phone}:</strong> ${m.text}</span>
           </div>
         `).join('');
 
@@ -1361,11 +1359,11 @@
       let text = input.value.trim();
       if (!text) return;
 
-      let allChats = JSON.parse(localStorage.getItem("ziv_support_chats") || "{}");
+      let allChats = JSON.parse(localStorage.getItem("kosh_support_chats") || "{}");
       if (!allChats[phone]) allChats[phone] = [];
 
       allChats[phone].push({ sender: 'admin', text: text, time: new Date().toLocaleTimeString() });
-      localStorage.setItem("ziv_support_chats", JSON.stringify(allChats));
+      localStorage.setItem("kosh_support_chats", JSON.stringify(allChats));
 
       input.value = "";
       loadAdminSupportChats();
@@ -1377,7 +1375,7 @@
       
       let localOrders = [];
       try {
-        localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+        localOrders = JSON.parse(localStorage.getItem("kosh_local_orders") || "[]");
       } catch(e) {}
 
       let dbOrders = [];
@@ -1400,7 +1398,7 @@
               <input type="text" id="trackInput-${o.id}" value="${o.tracking_id || ''}" placeholder="Enter Supplier Tracking ID" style="padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:2px; flex-grow:1;">
               <button onclick="updateOrderTracking('${o.id}')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:2px; cursor:pointer; font-size:0.8rem; font-weight:700;">Save ID</button>
             </div>
-            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700; width:100%;">📋 Copy Details for DeoDap / Bhunel / Qikink</button>
+            <button onclick="copySupplierOrder('${o.id}', '${o.customer_name}', '${o.customer_phone}', '${o.shipping_address.replace(/'/g, "")}', '${o.city}', '${o.state}', '${o.pincode}')" style="background:var(--primary); color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:700; width:100%;">📋 Copy Details for Supplier</button>
           </div>
         `).join('');
       } else {
@@ -1411,7 +1409,7 @@
     function copySupplierOrder(id, name, phone, address, city, state, pin) {
       let text = `Order ID: ${id}\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${address}, ${city}, ${state} - ${pin}\nPlease ship this order.`;
       navigator.clipboard.writeText(text).then(() => {
-        alert("✓ Supplier details copied! You can now paste this directly on DeoDap/Bhunel/Qikink.");
+        alert("✓ Supplier details copied!");
       }).catch(err => {
         alert("Failed to copy details.");
       });
@@ -1427,11 +1425,10 @@
         } catch(e) {}
       }
 
-      // Also update local storage orders
       try {
-        let localOrders = JSON.parse(localStorage.getItem("ziv_local_orders") || "[]");
+        let localOrders = JSON.parse(localStorage.getItem("kosh_local_orders") || "[]");
         localOrders = localOrders.map(o => o.id === orderId ? { ...o, tracking_id: val, order_status: 'shipped' } : o);
-        localStorage.setItem("ziv_local_orders", JSON.stringify(localOrders));
+        localStorage.setItem("kosh_local_orders", JSON.stringify(localOrders));
       } catch(e) {}
 
       alert("✓ Tracking ID updated successfully!");
@@ -1444,8 +1441,8 @@
       div.className = "form-row";
       div.style.marginBottom = "6px";
       div.innerHTML = `
-        <input type="text" class="color-name-input" placeholder="Color Name (e.g. Red)">
-        <input type="text" class="color-img-input" placeholder="Image URL for this color">
+        <input type="text" class="color-name-input" placeholder="Color/Style (e.g. Brown)">
+        <input type="text" class="color-img-input" placeholder="Image URL">
       `;
       container.appendChild(div);
     }
@@ -1478,29 +1475,29 @@
       let newProd = {
         id: Date.now(),
         title: title,
-        category: "Necklaces",
+        category: "Bags",
         tag: "trending",
         price: price,
         mrp: mrp || price * 1.5,
         rating: rating,
         reviews: reviews,
         desc: desc,
-        addInfo: addInfo || "Standard quality luxury item with secure packaging.",
+        addInfo: addInfo || "Standard quality luxury accessory.",
         fakeReview: fakeReview || "Amazing quality product! Highly recommended.",
         image: image,
         colors: colorsArr
       };
 
       try {
-        let savedLocal = JSON.parse(localStorage.getItem("ziv_local_products") || "[]");
+        let savedLocal = JSON.parse(localStorage.getItem("kosh_local_products") || "[]");
         savedLocal.unshift(newProd);
-        localStorage.setItem("ziv_local_products", JSON.stringify(savedLocal));
+        localStorage.setItem("kosh_local_products", JSON.stringify(savedLocal));
       } catch(e) {}
 
       catalog.unshift(newProd);
       renderGrid();
 
-      alert("✓ Product published live with all color variants saved permanently!");
+      alert("✓ Accessory product published live!");
       navigateTo('home');
     }
   </script>
