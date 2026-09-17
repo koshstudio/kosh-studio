@@ -207,7 +207,7 @@
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
 
-    /* Cart Slide Drawer (Meesho Style) */
+    /* Cart Slide Drawer (Meesho Style Unique Design) */
     .cart-drawer {
       position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px;
       background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
@@ -291,7 +291,7 @@
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Product Details</span>
+      <span style="font-weight:700; font-size:0.95rem;" id="headerPageTitle">Product Details</span>
     </div>
     <div class="page-content" style="display:grid; grid-template-columns: 1fr; gap:20px;">
       <div>
@@ -544,7 +544,7 @@
         <h4 style="margin-bottom:10px; font-size:0.95rem; color:var(--success);">✅ Admin Authenticated</h4>
         <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:14px;">
           <h5 style="margin-bottom:6px; font-size:0.85rem;">Store Stats</h5>
-          <p style="font-size:0.8rem; color:var(--muted);">Total Products: <span id="admTotalProducts">0</span> | Total Orders: <span id="admTotalOrders">0</span></p>
+          <p style="font-size:0.80rem; color:var(--muted);">Total Products: <span id="admTotalProducts">0</span> | Total Orders: <span id="admTotalOrders">0</span></p>
         </div>
         <h4 style="margin-bottom:8px; font-size:0.9rem;">Recent Orders Received</h4>
         <div id="admOrdersList" style="max-height:200px; overflow-y:auto; font-size:0.8rem; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
@@ -571,7 +571,8 @@
       { id: 5, title: "Executive Leather Messenger Bag", category: "Bags", price: 3499, mrp: 6999, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
     ];
 
-    let cart = [];
+    // Load Cart from localStorage so it persists across refreshes
+    let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let currentSelectedProduct = null;
     let secretClickCount = 0;
     let tempCheckoutData = {};
@@ -633,6 +634,7 @@
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage);
       renderProducts();
+      updateCartUI(); // Restore cart state on load
     });
 
     function filterCategory(cat) {
@@ -671,13 +673,15 @@
       }
     }
 
-    // --- Cart System (Meesho Style Unique Design) ---
+    // --- Cart System (Meesho Style Unique Design with Persistence) ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod) return;
       let existing = cart.find(item => item.id === id);
       if(existing) { existing.qty += 1; }
       else { cart.push({ ...prod, finalPrice: prod.price, qty: 1 }); }
+      
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
       alert(prod.title + " added to cart!");
     }
@@ -738,6 +742,7 @@
 
     function removeFromCart(index) {
       cart.splice(index, 1);
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
     }
 
@@ -915,6 +920,11 @@
       ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
 
+      // Clear Cart and update localStorage
+      cart = [];
+      localStorage.removeItem('kosh_cart');
+      updateCartUI();
+
       var templateParams = {
         from_name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
@@ -925,13 +935,9 @@
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
         .then(function(response) {
           alert("Prepaid order placed successfully! Email notification sent.");
-          cart = [];
-          updateCartUI();
           navigateTo('orders');
         }, function(error) {
           alert("Order saved permanently, but email dispatch failed.");
-          cart = [];
-          updateCartUI();
           navigateTo('orders');
         });
     }
