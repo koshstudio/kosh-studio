@@ -1,2 +1,2 @@
-# zivora-store
-Zivora – Trendy Women's Fashion Accessories Online Store
+# Kosh Studio
+Luxury Accessories & Lifestyle Store
