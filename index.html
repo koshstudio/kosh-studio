@@ -9,18 +9,22 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        /* Dark Luxury Theme Styling */
+        /* Mobile-Optimized Dark Luxury Theme */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #0d0d0d;
             color: #fff;
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
         .navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 30px;
+            padding: 10px 15px;
             background-color: #111;
             border-bottom: 1px solid #222;
             position: sticky;
@@ -30,29 +34,30 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
         .logo-container img {
-            height: 45px;
-            width: 45px;
+            height: 38px;
+            width: 38px;
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid #d4af37;
         }
         .brand-name {
-            font-size: 22px;
+            font-size: 16px;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: #d4af37;
+            white-space: nowrap;
         }
         .nav-links {
             display: flex;
-            gap: 20px;
+            gap: 12px;
         }
         .nav-links a {
             color: #fff;
             text-decoration: none;
-            font-size: 15px;
+            font-size: 13px;
             transition: color 0.3s;
         }
         .nav-links a:hover {
@@ -60,41 +65,48 @@
         }
         .container {
             max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+            margin: 20px auto;
+            padding: 0 15px;
         }
         .hero {
             text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('logo.png');
+            padding: 40px 15px;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('logo.png');
             background-size: cover;
             background-position: center;
-            border-radius: 12px;
-            margin-bottom: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
             border: 1px solid #222;
         }
         .hero h1 {
-            font-size: 38px;
+            font-size: 26px;
             color: #d4af37;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .hero p {
             color: #ccc;
-            font-size: 18px;
+            font-size: 14px;
+            margin: 0;
+        }
+        #products {
+            background: #141414;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #222;
         }
         footer {
             text-align: center;
-            padding: 25px;
+            padding: 20px 15px;
             background-color: #111;
             color: #fff;
             border-top: 1px solid #222;
-            margin-top: 60px;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Header / Navbar with New Logo -->
+    <!-- Header / Navbar -->
     <header class="navbar">
         <div class="logo-container">
             <img src="logo.png" alt="Kosh Studio Logo">
@@ -115,18 +127,18 @@
         </div>
         
         <section id="products">
-            <h2 style="color: #d4af37; border-bottom: 2px solid #222; padding-bottom: 10px;">Featured Collection</h2>
-            <p style="color: #888;">Aapke products yahan display honge...</p>
+            <h2 style="color: #d4af37; border-bottom: 2px solid #222; padding-bottom: 10px; margin-top: 0; font-size: 20px;">Featured Collection</h2>
+            <p style="color: #888; font-size: 14px;">Aapke products yahan display honge...</p>
         </section>
     </div>
 
-    <!-- 2. Footer with Copyright & Legal Protection -->
+    <!-- Footer with Copyright & Legal Protection -->
     <footer>
-        <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: 500;">&copy; 2026 Kosh Studio. All rights reserved.</p>
-        <p style="font-size: 13px; color: #888; margin: 0;">This website, logo, and its content are protected under copyright laws. Unauthorized use or copying is strictly prohibited.</p>
+        <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">&copy; 2026 Kosh Studio. All rights reserved.</p>
+        <p style="font-size: 11px; color: #888; margin: 0;">This website, logo, and its content are protected under copyright laws. Unauthorized use or copying is strictly prohibited.</p>
     </footer>
 
-    <!-- 3. EmailJS Script Integration -->
+    <!-- EmailJS Script Integration -->
     <script type="text/javascript">
         (function() {
             emailjs.init("YOUR_PUBLIC_KEY"); // Yahan apni EmailJS Public Key dalein
