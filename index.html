@@ -246,7 +246,7 @@
   <div class="top-strip">⚡ LUXURY ACCESSORIES | RESELLER PROGRAM ENABLED | FREE SHIPPING</div>
 
   <!-- HOME PAGE -->
-  <div id="page-home" class="app-page active">
+  <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
@@ -317,25 +317,53 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- PROFILE & LOGIN PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Account & Reseller Dashboard</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Account</span>
     </div>
     <div class="page-content">
-      <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-        <h3 style="margin-bottom:10px; font-size:1rem;">💼 Reseller Margin Setup</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:12px;">Set your custom profit margin for reselling Kosh Studio products to your customers.</p>
-        <div class="form-group">
-          <label>Your Profit Margin per Item (₹)</label>
-          <input type="number" id="resellerMarginInput" placeholder="e.g. 200" oninput="updateResellerMargin(this.value)">
+      <!-- Login Box (Shown if not logged in) -->
+      <div id="loginSection" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center;">
+        <h3 style="margin-bottom:8px; font-size:1.2rem;">Login / Sign Up</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">Enter your phone number to access your account & orders.</p>
+        <div class="form-group" style="text-align:left;">
+          <label>Phone Number</label>
+          <input type="tel" id="loginPhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10">
+        </div>
+        <button class="btn-solid" onclick="handlePhoneLogin()">Continue with Phone</button>
+      </div>
+
+      <!-- Dashboard Box (Shown after login) -->
+      <div id="userDashboardSection" style="display:none;">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Welcome, User</h3>
+            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserPhone">+91 XXXXXXXXXX</p>
+          </div>
+          <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
+        </div>
+
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('orders')">
+          <div>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">View your order history & live tracking status</p>
+          </div>
+          <span style="font-size:1.2rem; color:var(--muted);">›</span>
         </div>
       </div>
-      <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
-        <h3 style="margin-bottom:10px; font-size:1rem;">📦 Order History & Tracking</h3>
-        <div id="userOrdersList" style="font-size:0.85rem; color:var(--muted);">No orders placed yet.</div>
-      </div>
+    </div>
+  </div>
+
+  <!-- MY ORDERS PAGE -->
+  <div id="page-orders" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('profile')">← Back to Profile</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders</span>
+    </div>
+    <div class="page-content">
+      <div id="ordersPageList"></div>
     </div>
   </div>
 
@@ -376,7 +404,7 @@
         <textarea id="chkAddress" rows="3" placeholder="Street, City, Pincode"></textarea>
       </div>
       <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:12px; display:none;"></div>
-      <button class="btn-solid" onclick="finalizeOrder()">Place Order (Email Notification)</button>
+      <button class="btn-solid" onclick="finalizeOrder()">Place Order & Send Email</button>
     </div>
   </div>
 
@@ -446,8 +474,11 @@
     let cart = [];
     let resellerMargin = 0;
     let currentSelectedProduct = null;
-    let ordersList = [];
     let secretClickCount = 0;
+
+    // Load Persistent Orders from localStorage
+    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
+    let loggedUser = localStorage.getItem('kosh_user_phone') || null;
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
@@ -486,15 +517,26 @@
       });
     }
 
-    // --- Navigation & Pages ---
+    // --- Navigation & Page Persistence Fix ---
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
+      localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
+
       if(pageId === 'profile') {
-        renderProfileOrders();
+        checkLoginStatus();
+      } else if(pageId === 'orders') {
+        renderOrdersPage();
       }
     }
+
+    // On page load, restore last active page
+    window.addEventListener('DOMContentLoaded', () => {
+      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
+      navigateTo(savedPage);
+      renderProducts();
+    });
 
     function filterCategory(cat) {
       document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
@@ -596,6 +638,36 @@
       }
     }
 
+    // --- Phone Number Login / Profile Handling ---
+    function handlePhoneLogin() {
+      let phone = document.getElementById('loginPhoneInput').value.trim();
+      if(phone.length !== 10 || isNaN(phone)) {
+        alert('Please enter a valid 10-digit mobile number.');
+        return;
+      }
+      loggedUser = phone;
+      localStorage.setItem('kosh_user_phone', phone);
+      checkLoginStatus();
+      alert('Login successful!');
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('kosh_user_phone');
+      loggedUser = null;
+      checkLoginStatus();
+    }
+
+    function checkLoginStatus() {
+      if(loggedUser) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('userDashboardSection').style.display = 'block';
+        document.getElementById('displayUserPhone').innerText = '+91 ' + loggedUser;
+      } else {
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('userDashboardSection').style.display = 'none';
+      }
+    }
+
     // --- Checkout & EmailJS ---
     function openCheckoutModal() {
       if(cart.length === 0) {
@@ -630,6 +702,20 @@
       let summary = cart.map(i => `${i.title} (${i.qty} x ₹${i.finalPrice})`).join(', ');
       let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
 
+      let newOrder = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        name,
+        phone,
+        address,
+        summary,
+        total,
+        status: 'Order Confirmed'
+      };
+
+      ordersList.unshift(newOrder);
+      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+
       var templateParams = {
         from_name: name,
         phone: phone,
@@ -640,19 +726,46 @@
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
         .then(function(response) {
           alert("Order placed successfully! Email sent to store owner.");
-          ordersList.push({ id: Date.now(), name, phone, address, summary, total, status: 'Order Confirmed' });
           cart = [];
           updateCartUI();
           closeCheckoutModal();
-          navigateTo('home');
+          navigateTo('orders');
         }, function(error) {
-          alert("Order saved locally, but email dispatch failed. Check EmailJS configuration.");
-          ordersList.push({ id: Date.now(), name, phone, address, summary, total, status: 'Order Confirmed' });
+          alert("Order saved permanently, but email dispatch failed.");
           cart = [];
           updateCartUI();
           closeCheckoutModal();
-          navigateTo('home');
+          navigateTo('orders');
         });
+    }
+
+    // --- Render My Orders Page ---
+    function renderOrdersPage() {
+      const area = document.getElementById('ordersPageList');
+      if(ordersList.length === 0) {
+        area.innerHTML = '<div style="background:#fff; padding:30px; border-radius:6px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders placed yet.</div>';
+        return;
+      }
+      let html = '';
+      ordersList.forEach(o => {
+        html += `
+          <div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.8rem; color:var(--muted);">
+              <span>Order ID: #${o.id}</span>
+              <span>${o.date}</span>
+            </div>
+            <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${o.summary}</div>
+            <div style="font-size:0.85rem; color:#555; margin-bottom:10px;">
+              <strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); pt:10px; padding-top:8px;">
+              <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
+              <span style="background:#e8f5e9; color:var(--success); padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${o.status}</span>
+            </div>
+          </div>
+        `;
+      });
+      area.innerHTML = html;
     }
 
     // --- Reseller Modal & Settings ---
@@ -664,11 +777,7 @@
     }
     function applyQuickReseller() {
       let val = parseInt(document.getElementById('quickMarginInput').value) || 0;
-      updateResellerMargin(val);
-      closeResellerModal();
-    }
-    function updateResellerMargin(val) {
-      resellerMargin = parseInt(val) || 0;
+      resellerMargin = val;
       if(resellerMargin > 0) {
         document.getElementById('resellerBanner').style.display = 'block';
         document.getElementById('activeMarginDisplay').innerText = '₹' + resellerMargin;
@@ -676,23 +785,7 @@
         document.getElementById('resellerBanner').style.display = 'none';
       }
       renderProducts();
-    }
-
-    function renderProfileOrders() {
-      const area = document.getElementById('userOrdersList');
-      if(ordersList.length === 0) {
-        area.innerHTML = 'No orders placed yet.';
-        return;
-      }
-      let html = '';
-      ordersList.forEach(o => {
-        html += `<div style="padding:10px; border-bottom:1px solid #eee; margin-bottom:8px;">
-          <strong>Order ID:</strong> #${o.id}<br>
-          <strong>Items:</strong> ${o.summary}<br>
-          <strong>Total:</strong> ₹${o.total} | <span style="color:var(--success); font-weight:700;">${o.status}</span>
-        </div>`;
-      });
-      area.innerHTML = html;
+      closeResellerModal();
     }
 
     // --- Secret Admin Panel Trigger ---
@@ -730,9 +823,6 @@
         alert('Incorrect Admin User ID or Password!');
       }
     }
-
-    // Initial Render
-    renderProducts();
   </script>
 </body>
 </html>
