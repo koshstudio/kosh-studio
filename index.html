@@ -36,7 +36,7 @@
       user-select: none; 
     }
 
-    input, textarea { 
+    input, textarea, select { 
       -webkit-user-select: text; 
       user-select: text; 
     }
@@ -237,7 +237,7 @@
       z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
     }
     .modal-box {
-      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
+      background: #fff; width: 100%; max-width: 600px; border-radius: 6px; padding: 20px; position: relative;
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
@@ -253,6 +253,13 @@
       border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
     .btn-solid:hover { background: #333; }
+
+    /* Admin Tabs Styling */
+    .admin-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; }
+    .admin-tab-btn { background: #f1f3f6; border: none; padding: 8px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; border-radius: 4px 4px 0 0; }
+    .admin-tab-btn.active { background: var(--primary); color: #fff; }
+    .admin-tab-content { display: none; }
+    .admin-tab-content.active { display: block; }
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
@@ -544,6 +551,8 @@
         <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin Control Panel</h3>
         <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
+      
+      <!-- Admin Login Screen -->
       <div id="adminLoginScreen">
         <div class="form-group">
           <label>Admin User ID</label>
@@ -555,14 +564,54 @@
         </div>
         <button class="btn-solid" onclick="verifyAdminPassword()">Login to Dashboard</button>
       </div>
+
+      <!-- Admin Dashboard Screen (Multi-Tab) -->
       <div id="adminDashboardScreen" style="display:none;">
-        <h4 style="margin-bottom:10px; font-size:0.95rem; color:var(--success);">✅ Admin Authenticated</h4>
-        <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:14px;">
-          <h5 style="margin-bottom:6px; font-size:0.85rem;">Store Stats</h5>
-          <p style="font-size:0.80rem; color:var(--muted);">Total Products: <span id="admTotalProducts">0</span> | Total Orders: <span id="admTotalOrders">0</span></p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h4 style="font-size:0.9rem; color:var(--success);">✅ Welcome Admin (rohitku316)</h4>
+          <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:700;">Logout</button>
         </div>
-        <h4 style="margin-bottom:8px; font-size:0.9rem;">Recent Orders Received</h4>
-        <div id="admOrdersList" style="max-height:200px; overflow-y:auto; font-size:0.8rem; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
+
+        <!-- Admin Tab Buttons -->
+        <div class="admin-tabs">
+          <button class="admin-tab-btn active" onclick="switchAdminTab('orders')">📦 Customer Orders</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('returns')">🔄 Return Requests</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('products')">🛍️ Manage Products</button>
+        </div>
+
+        <!-- Tab 1: Customer Orders -->
+        <div id="admTabOrders" class="admin-tab-content active">
+          <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">All Customer Orders & Details (Copy Button Enabled)</h5>
+          <div id="admOrdersList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
+        </div>
+
+        <!-- Tab 2: Return Requests -->
+        <div id="admTabReturns" class="admin-tab-content">
+          <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">Delivered Orders & Return Window Status</h5>
+          <div id="admReturnsList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No return claims.</div>
+        </div>
+
+        <!-- Tab 3: Manage Products (Add & Remove) -->
+        <div id="admTabProducts" class="admin-tab-content">
+          <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border); margin-bottom:12px;">
+            <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">➕ Add New Product</h5>
+            <div class="form-group"><input type="text" id="newProdTitle" placeholder="Product Title"></div>
+            <div class="form-row">
+              <div class="form-group"><input type="text" id="newProdCategory" placeholder="Category (e.g. Watches)"></div>
+              <div class="form-group"><input type="number" id="newProdPrice" placeholder="Selling Price (₹)"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><input type="number" id="newProdMrp" placeholder="MRP Price (₹)"></div>
+              <div class="form-group"><input type="text" id="newProdImage" placeholder="Image URL (Unsplash link)"></div>
+            </div>
+            <div class="form-group"><textarea id="newProdDesc" rows="2" placeholder="Product Description"></textarea></div>
+            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="addNewProductFromAdmin()">Add Product to Store</button>
+          </div>
+
+          <h5 style="margin-bottom:6px; font-size:0.85rem; color:var(--muted);">Existing Products List</h5>
+          <div id="admProductsList" style="max-height:200px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;"></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -577,8 +626,8 @@
       emailjs.init("YOUR_PUBLIC_KEY"); // Apna EmailJS Public Key yahan dalein
     })();
 
-    // --- Products Database ---
-    let products = [
+    // --- Products Database (Persistent with localStorage) ---
+    let defaultProducts = [
       { id: 1, title: "Classic Chronograph Luxury Watch", category: "Watches", price: 2999, mrp: 5999, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
       { id: 2, title: "Minimalist Black Leather Wallet", category: "Wallets", price: 1299, mrp: 2499, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
       { id: 3, title: "Designer Gradient Sunglasses", category: "Sunglasses", price: 1499, mrp: 2999, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60", desc: "UV400 protected stylish gradient sunglasses for daily luxury." },
@@ -586,7 +635,7 @@
       { id: 5, title: "Executive Leather Messenger Bag", category: "Bags", price: 3499, mrp: 6999, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
     ];
 
-    // Load Cart from localStorage so it persists across refreshes
+    let products = JSON.parse(localStorage.getItem('kosh_products')) || defaultProducts;
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let currentSelectedProduct = null;
     let secretClickCount = 0;
@@ -649,9 +698,8 @@
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage);
       renderProducts();
-      updateCartUI(); // Restore cart state on load
+      updateCartUI();
 
-      // Restore Cart Drawer state if it was open
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         toggleCartDrawer(true);
       }
@@ -693,7 +741,7 @@
       }
     }
 
-    // --- Cart System (Meesho Style Unique Design with Persistence) ---
+    // --- Cart System ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod) return;
@@ -780,7 +828,7 @@
       }
     }
 
-    // --- Auto Pin Code Lookup (India Post API) ---
+    // --- Auto Pin Code Lookup ---
     async function lookupPincode(pin) {
       if(pin.length === 6) {
         try {
@@ -794,9 +842,7 @@
           } else {
             alert('Invalid PIN code entered.');
           }
-        } catch(err) {
-          console.error("Pincode lookup error:", err);
-        }
+        } catch(err) { console.error(err); }
       }
     }
 
@@ -810,37 +856,25 @@
     async function handleSignup() {
       let email = document.getElementById('signupEmail').value.trim();
       let pass = document.getElementById('signupPass').value.trim();
-
-      if(!email || pass.length < 6) {
-        alert('Please enter a valid email and a password of at least 6 characters.');
-        return;
-      }
-
+      if(!email || pass.length < 6) { alert('Enter valid email & 6+ char password.'); return; }
       if(supabaseClient) {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password: pass });
+        const { error } = await supabaseClient.auth.signUp({ email, password: pass });
         if(error) { alert('Error: ' + error.message); return; }
       }
-
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      alert('Account created successfully & logged in!');
+      alert('Account created successfully!');
     }
 
     async function handleLogin() {
       let email = document.getElementById('loginEmail').value.trim();
       let pass = document.getElementById('loginPass').value.trim();
-
-      if(!email || !pass) {
-        alert('Please enter both email and password.');
-        return;
-      }
-
+      if(!email || !pass) { alert('Enter email and password.'); return; }
       if(supabaseClient) {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
         if(error) { alert('Login Failed: ' + error.message); return; }
       }
-
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
@@ -849,17 +883,12 @@
 
     async function handleForgotPassword() {
       let email = document.getElementById('forgotEmail').value.trim();
-      if(!email) {
-        alert('Please enter your registered email address.');
-        return;
-      }
-
+      if(!email) { alert('Enter registered email.'); return; }
       if(supabaseClient) {
-        const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email);
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
         if(error) { alert('Error: ' + error.message); return; }
       }
-
-      alert('Password reset link has been sent to your email (' + email + '). Check your inbox!');
+      alert('Password reset link sent to ' + email);
       switchAuthView('login');
     }
 
@@ -884,9 +913,9 @@
       }
     }
 
-    // --- Checkout & Payment OTP Verification Flow ---
+    // --- Checkout & Payment OTP Flow ---
     function openCheckoutModal() {
-      if(cart.length === 0) { alert('Your cart is empty!'); return; }
+      if(cart.length === 0) { alert('Cart is empty!'); return; }
       toggleCartDrawer(false);
       document.getElementById('checkoutModal').style.display = 'flex';
     }
@@ -903,12 +932,11 @@
       const state = document.getElementById('chkState').value.trim();
 
       if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district || !state) {
-        alert('Please fill in all mandatory address and contact fields correctly.');
+        alert('Please fill in all mandatory details correctly.');
         return;
       }
 
       let fullAddress = `${area}, City: ${city}, District: ${district}, State: ${state} - PIN: ${pincode}`;
-
       tempCheckoutData = { name, phone, address: fullAddress };
       paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -919,10 +947,7 @@
 
     function verifyAndFinalizeOrder() {
       let enteredOtp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(enteredOtp !== paymentOtpGenerated) {
-        alert('Incorrect Payment OTP! Please enter the correct code.');
-        return;
-      }
+      if(enteredOtp !== paymentOtpGenerated) { alert('Incorrect Payment OTP!'); return; }
 
       document.getElementById('paymentOtpModal').style.display = 'none';
 
@@ -947,7 +972,6 @@
       ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
 
-      // Clear Cart and update localStorage
       cart = [];
       localStorage.removeItem('kosh_cart');
       localStorage.setItem('kosh_cart_open', 'false');
@@ -957,36 +981,27 @@
         from_name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
-        message: `New Prepaid Order Received! Details: ${summary} | Total: ₹${total} | Payment: 100% Prepaid`
+        message: `New Prepaid Order Received! Details: ${summary} | Total: ₹${total}`
       };
 
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-        .then(function(response) {
-          alert("Prepaid order placed successfully! Email notification sent.");
+        .then(() => {
+          alert("Order placed successfully! Email sent.");
           navigateTo('orders');
-        }, function(error) {
-          alert("Order saved permanently, but email dispatch failed.");
+        }).catch(() => {
+          alert("Order saved permanently!");
           navigateTo('orders');
         });
     }
 
-    // --- Customer Delivery Confirmation & 3-Day Return Logic ---
+    // --- Customer Delivery Confirmation ---
     function markAsDeliveredByCustomer(orderId) {
       let order = ordersList.find(o => o.id === orderId);
       if(order) {
         order.status = 'Delivered';
         order.deliveredAt = Date.now();
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        
-        var templateParams = {
-          from_name: order.name,
-          phone: order.phone,
-          address: order.address,
-          message: `Delivery Confirmation: Customer has confirmed receiving Order #${order.id}!`
-        };
-        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams).catch(err => console.log(err));
-
-        alert("Delivery confirmed! Your 3-day return window starts now.");
+        alert("Delivery confirmed! 3-day return window started.");
         renderOrdersPage();
       }
     }
@@ -995,7 +1010,7 @@
     function renderOrdersPage() {
       const area = document.getElementById('ordersPageList');
       if(ordersList.length === 0) {
-        area.innerHTML = '<div style="background:#fff; padding:30px; border-radius:6px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders placed yet.</div>';
+        area.innerHTML = '<div style="background:#fff; padding:30px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders placed yet.</div>';
         return;
       }
       let html = '';
@@ -1008,13 +1023,11 @@
           if (daysPassed <= 3) {
             let daysLeft = Math.ceil(3 - daysPassed);
             returnSectionHtml = `<div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">
-              📦 Eligible for Return/Replacement (${daysLeft} day(s) left). Note: Uncut unboxing video from seal pack is mandatory for return.
-              <button onclick="alert('Please share your unboxing video via support/email to process your return.')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">Request Return / Replacement</button>
+              📦 Eligible for Return (${daysLeft} day(s) left). Uncut unboxing video required.
+              <button onclick="alert('Please share your unboxing video via support email to process return.')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Request Return / Replacement</button>
             </div>`;
           } else {
-            returnSectionHtml = `<div style="background:#f1f3f6; color:var(--muted); padding:6px; border-radius:4px; font-size:0.75rem; margin-top:8px;">
-              🔒 Return window closed (3-day policy expired).
-            </div>`;
+            returnSectionHtml = `<div style="background:#f1f3f6; color:var(--muted); padding:6px; border-radius:4px; font-size:0.75rem; margin-top:8px;">🔒 Return window closed (3 days expired).</div>`;
           }
         } else if (o.status === 'Order Confirmed & Processing') {
           returnSectionHtml = `<div style="margin-top:8px;">
@@ -1029,12 +1042,8 @@
               <span>${o.date}</span>
             </div>
             <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${o.summary}</div>
-            <div style="font-size:0.85rem; color:#555; margin-bottom:6px;">
-              <strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}
-            </div>
-            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;">
-              <strong>Payment:</strong> ${o.payMode} | <strong>Status:</strong> <span style="color:var(--success); font-weight:700;">${o.status}</span>
-            </div>
+            <div style="font-size:0.85rem; color:#555; margin-bottom:6px;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
+            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;"><strong>Status:</strong> <span style="color:var(--success); font-weight:700;">${o.status}</span></div>
             ${returnSectionHtml}
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px;">
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
@@ -1045,7 +1054,7 @@
       area.innerHTML = html;
     }
 
-    // --- Secret Admin Panel Trigger (rohitku316 / Rohit@2006) ---
+    // --- Secret Admin Panel Functions ---
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) {
@@ -1054,28 +1063,145 @@
       }
     }
     function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+
     function verifyAdminPassword() {
       let userId = document.getElementById('admUserInput').value.trim();
-      let pass = document.getElementById('adminPassInput').value.trim();
+      let pass = document.getElementById('admPassInput').value.trim();
       
       if(userId === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
         document.getElementById('adminDashboardScreen').style.display = 'block';
-        document.getElementById('admTotalProducts').innerText = products.length;
-        document.getElementById('admTotalOrders').innerText = ordersList.length;
-        
-        let oArea = document.getElementById('admOrdersList');
-        if(ordersList.length === 0) {
-          oArea.innerHTML = 'No orders received yet.';
-        } else {
-          let h = '';
-          ordersList.forEach(o => {
-            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} [${o.status}] <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
-          });
-          oArea.innerHTML = h;
-        }
+        loadAdminData();
       } else {
-        alert('Incorrect Admin User ID or Password!');
+        alert('Incorrect Admin ID or Password!');
+      }
+    }
+
+    function adminLogout() {
+      document.getElementById('adminLoginScreen').style.display = 'block';
+      document.getElementById('adminDashboardScreen').style.display = 'none';
+      document.getElementById('admUserInput').value = '';
+      document.getElementById('admPassInput').value = '';
+    }
+
+    function switchAdminTab(tab) {
+      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+      
+      if(tab === 'orders') {
+        event.target.classList.add('active');
+        document.getElementById('admTabOrders').classList.add('active');
+        loadAdminOrders();
+      } else if(tab === 'returns') {
+        event.target.classList.add('active');
+        document.getElementById('admTabReturns').classList.add('active');
+        loadAdminReturns();
+      } else if(tab === 'products') {
+        event.target.classList.add('active');
+        document.getElementById('admTabProducts').classList.add('active');
+        loadAdminProducts();
+      }
+    }
+
+    function loadAdminData() {
+      loadAdminOrders();
+      loadAdminReturns();
+      loadAdminProducts();
+    }
+
+    function loadAdminOrders() {
+      let area = document.getElementById('admOrdersList');
+      if(ordersList.length === 0) { area.innerHTML = 'No orders received yet.'; return; }
+      let h = '';
+      ordersList.forEach(o => {
+        let textToCopy = `Order ID: #${o.id}\nName: ${o.name}\nPhone: ${o.phone}\nAddress: ${o.address}\nItems: ${o.summary}\nTotal: ₹${o.total}\nPayment: ${o.payMode}\nStatus: ${o.status}`;
+        h += `
+          <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
+            <div><b>#${o.id}</b> - <b>${o.name}</b> (${o.phone})</div>
+            <div style="color:#555; margin:4px 0;">${o.address}</div>
+            <div style="color:#333; font-weight:600;">${o.summary} | <b>₹${o.total}</b></div>
+            <div style="margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="color:var(--success); font-weight:bold;">${o.status}</span>
+              <button onclick="navigator.clipboard.writeText(\`${textToCopy}\`); alert('Order details copied successfully!');" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">📋 Copy Details</button>
+            </div>
+          </div>
+        `;
+      });
+      area.innerHTML = h;
+    }
+
+    function loadAdminReturns() {
+      let area = document.getElementById('admReturnsList');
+      let deliveredOrders = ordersList.filter(o => o.status === 'Delivered');
+      if(deliveredOrders.length === 0) { area.innerHTML = 'No delivered orders for return check.'; return; }
+      let h = '';
+      let now = Date.now();
+      deliveredOrders.forEach(o => {
+        let daysPassed = (now - o.deliveredAt) / (1000 * 60 * 60 * 24);
+        let eligible = daysPassed <= 3;
+        h += `
+          <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
+            <div><b>Order #${o.id}</b> - ${o.name} (${o.phone})</div>
+            <div style="color:#555; margin:4px 0;">${o.summary}</div>
+            <div>Return Status: <span style="font-weight:bold; color:${eligible ? 'var(--success)' : 'red'};">${eligible ? 'Eligible for Return (Within 3 Days)' : 'Expired (Over 3 Days)'}</span></div>
+          </div>
+        `;
+      });
+      area.innerHTML = h;
+    }
+
+    function loadAdminProducts() {
+      let area = document.getElementById('admProductsList');
+      if(products.length === 0) { area.innerHTML = 'No products found.'; return; }
+      let h = '';
+      products.forEach((p, index) => {
+        h += `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:0.8rem;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <img src="${p.image}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
+              <div><b>${p.title}</b> <br><span style="color:var(--muted);">₹${p.price} (MRP: ₹${p.mrp})</span></div>
+            </div>
+            <button onclick="removeProductByAdmin(${index})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
+          </div>
+        `;
+      });
+      area.innerHTML = h;
+    }
+
+    function addNewProductFromAdmin() {
+      let title = document.getElementById('newProdTitle').value.trim();
+      let category = document.getElementById('newProdCategory').value.trim() || 'General';
+      let price = parseInt(document.getElementById('newProdPrice').value) || 0;
+      let mrp = parseInt(document.getElementById('newProdMrp').value) || 0;
+      let image = document.getElementById('newProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+      let desc = document.getElementById('newProdDesc').value.trim() || 'Luxury accessory item.';
+
+      if(!title || !price || !mrp) {
+        alert('Please fill Product Title, Price, and MRP.');
+        return;
+      }
+
+      let newP = { id: Date.now(), title, category, price, mrp, image, desc };
+      products.push(newP);
+      localStorage.setItem('kosh_products', JSON.stringify(products));
+      renderProducts();
+      loadAdminProducts();
+
+      document.getElementById('newProdTitle').value = '';
+      document.getElementById('newProdCategory').value = '';
+      document.getElementById('newProdPrice').value = '';
+      document.getElementById('newProdMrp').value = '';
+      document.getElementById('newProdImage').value = '';
+      document.getElementById('newProdDesc').value = '';
+      alert('Product added successfully to store!');
+    }
+
+    function removeProductByAdmin(index) {
+      if(confirm('Are you sure you want to remove this product?')) {
+        products.splice(index, 1);
+        localStorage.setItem('kosh_products', JSON.stringify(products));
+        renderProducts();
+        loadAdminProducts();
       }
     }
   </script>
