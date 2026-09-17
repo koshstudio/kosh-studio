@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- EmailJS SDK -->
+  <!-- Supabase SDK & EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <style>
@@ -239,11 +240,12 @@
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
+    .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ LUXURY ACCESSORIES | RESELLER PROGRAM ENABLED | FREE SHIPPING</div>
+  <div class="top-strip">⚡ LUXURY ACCESSORIES | SECURE ACCOUNT & PAYMENT OTP | FREE SHIPPING</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -317,41 +319,75 @@
     </div>
   </div>
 
-  <!-- PROFILE & SECURE EMAIL OTP LOGIN PAGE -->
+  <!-- PROFILE & AUTHENTICATION PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Account</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Account & Orders</span>
     </div>
     <div class="page-content">
-      <!-- Step 1: Enter Email for OTP -->
-      <div id="loginStep1" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center;">
-        <h3 style="margin-bottom:8px; font-size:1.2rem;">Secure Email Login</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">Enter your email to receive a real verification OTP.</p>
-        <div class="form-group" style="text-align:left;">
+      
+      <!-- LOGIN VIEW -->
+      <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login to Your Account</h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access your permanent order history & tracking</p>
+        
+        <div class="form-group">
           <label>Email Address</label>
-          <input type="email" id="loginEmailInput" placeholder="Enter your email address">
+          <input type="email" id="loginEmail" placeholder="Enter your email">
         </div>
-        <button class="btn-solid" onclick="sendEmailOtp()">Send Verification OTP</button>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="Enter password">
+        </div>
+        <div style="text-align:right; margin-bottom:12px;">
+          <span class="auth-link" style="font-size:0.78rem;" onclick="switchAuthView('forgot')">Forgot Password?</span>
+        </div>
+        <button class="btn-solid" onclick="handleLogin()">Login</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">
+          Don't have an account? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span>
+        </p>
       </div>
 
-      <!-- Step 2: Enter OTP -->
-      <div id="loginStep2" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center; display:none;">
-        <h3 style="margin-bottom:8px; font-size:1.2rem;">Enter OTP</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">OTP sent to <span id="sentEmailDisplay" style="font-weight:700; color:#111;"></span></p>
-        <div class="form-group" style="text-align:left;">
-          <label>4-Digit OTP</label>
-          <input type="text" id="otpInput" placeholder="Enter 4-digit code" maxlength="4">
+      <!-- SIGNUP VIEW -->
+      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create New Account</h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Secure cloud sync for all your orders</p>
+        
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="signupEmail" placeholder="Enter your email">
         </div>
-        <button class="btn-solid" onclick="verifyEmailOtp()">Verify & Login</button>
-        <button onclick="resetLoginStep()" style="background:none; border:none; color:var(--muted); margin-top:12px; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Change Email</button>
+        <div class="form-group">
+          <label>Create Password</label>
+          <input type="password" id="signupPass" placeholder="At least 6 characters">
+        </div>
+        <button class="btn-solid" onclick="handleSignup()">Sign Up</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">
+          Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span>
+        </p>
       </div>
 
-      <!-- Dashboard Box (Shown after successful login) -->
+      <!-- FORGOT PASSWORD VIEW -->
+      <div id="authForgotView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Reset Password</h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">We will send a secure password reset link to your email.</p>
+        
+        <div class="form-group">
+          <label>Registered Email</label>
+          <input type="email" id="forgotEmail" placeholder="Enter your email">
+        </div>
+        <button class="btn-solid" onclick="handleForgotPassword()">Send Reset Link</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">
+          Remembered password? <span class="auth-link" onclick="switchAuthView('login')">Login</span>
+        </p>
+      </div>
+
+      <!-- DASHBOARD VIEW (When Logged In) -->
       <div id="userDashboardSection" style="display:none;">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Welcome, User</h3>
+            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Welcome Back!</h3>
             <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
           </div>
           <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
@@ -359,12 +395,13 @@
 
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('orders')">
           <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">View your order history & live tracking status</p>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Permanent Orders</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">View your cloud-synced order history</p>
           </div>
           <span style="font-size:1.2rem; color:var(--muted);">›</span>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -372,7 +409,7 @@
   <div id="page-orders" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('profile')">← Back to Profile</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders & Cloud History</span>
     </div>
     <div class="page-content">
       <div id="ordersPageList"></div>
@@ -396,11 +433,11 @@
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL -->
+  <!-- CHECKOUT & PAYMENT OTP MODAL -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Checkout</h3>
+        <h3 style="font-size:1.1rem;">Secure Checkout & Payment</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div class="form-group">
@@ -409,14 +446,35 @@
       </div>
       <div class="form-group">
         <label>Phone Number</label>
-        <input type="text" id="chkPhone" placeholder="10-digit mobile number">
+        <input type="text" id="chkPhone" placeholder="10-digit mobile number" maxlength="10">
       </div>
       <div class="form-group">
         <label>Delivery Address</label>
         <textarea id="chkAddress" rows="3" placeholder="Street, City, Pincode"></textarea>
       </div>
+      <div class="form-group">
+        <label>Payment Mode</label>
+        <select id="chkPaymentMode" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:4px; background:#fff; font-size:0.9rem;">
+          <option value="UPI / Online">UPI / Credit Card / Online (OTP Verified)</option>
+          <option value="COD">Cash on Delivery</option>
+        </select>
+      </div>
       <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:12px; display:none;"></div>
-      <button class="btn-solid" onclick="finalizeOrder()">Place Order & Send Email</button>
+      <button class="btn-solid" onclick="initiateCheckoutOtp()">Proceed & Verify Payment OTP</button>
+    </div>
+  </div>
+
+  <!-- PAYMENT OTP VERIFICATION MODAL -->
+  <div class="modal-overlay" id="paymentOtpModal">
+    <div class="modal-box" style="max-width:380px; text-align:center;">
+      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment OTP Verification</h3>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code sent to complete your order transaction.</p>
+      <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
+      <div class="form-group" style="text-align:left;">
+        <label>Enter 4-Digit OTP</label>
+        <input type="text" id="enteredPaymentOtp" placeholder="Enter OTP code" maxlength="4">
+      </div>
+      <button class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
     </div>
   </div>
 
@@ -438,7 +496,7 @@
     </div>
   </div>
 
-  <!-- SECRET ADMIN PANEL MODAL -->
+  <!-- SECRET ADMIN PANEL MODAL (rohitku316 / Rohit@2006) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -469,7 +527,12 @@
   </div>
 
   <script>
-    // --- Initialize EmailJS ---
+    // --- Initialize Supabase & EmailJS ---
+    // (Aap yahan apna Supabase URL aur Anon Key daal sakte hain jab project set ho)
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const supabaseClient = (SUPABASE_URL !== "YOUR_SUPABASE_URL") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
     (function() {
       emailjs.init("YOUR_PUBLIC_KEY"); // Apna EmailJS Public Key yahan dalein
     })();
@@ -487,12 +550,11 @@
     let resellerMargin = 0;
     let currentSelectedProduct = null;
     let secretClickCount = 0;
-    let generatedOtpCode = "";
-    let tempLoginEmail = "";
+    let tempCheckoutData = {};
+    let paymentOtpGenerated = "";
 
-    // Load Persistent Orders from localStorage
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let loggedUser = localStorage.getItem('kosh_user_email') || null;
+    let currentUser = localStorage.getItem('kosh_logged_email') || null;
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
@@ -501,7 +563,6 @@
       
       const filtered = filterCat === 'All' ? products : products.filter(p => p.category === filterCat);
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
-
       const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey));
 
       if (finalFiltered.length === 0) {
@@ -531,7 +592,7 @@
       });
     }
 
-    // --- Navigation & Page Persistence Fix ---
+    // --- Navigation & Page Persistence ---
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
@@ -545,7 +606,6 @@
       }
     }
 
-    // On page load, restore last active page
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage);
@@ -558,11 +618,8 @@
       renderProducts(cat);
     }
 
-    function handleSearch(val) {
-      renderProducts();
-    }
+    function handleSearch(val) { renderProducts(); }
 
-    // --- Product Detail View ---
     function openProductDetail(id) {
       currentSelectedProduct = products.find(p => p.id === id);
       if(!currentSelectedProduct) return;
@@ -597,11 +654,8 @@
       if(!prod) return;
       let itemPrice = prod.price + resellerMargin;
       let existing = cart.find(item => item.id === id);
-      if(existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({ ...prod, finalPrice: itemPrice, qty: 1 });
-      }
+      if(existing) { existing.qty += 1; }
+      else { cart.push({ ...prod, finalPrice: itemPrice, qty: 1 }); }
       updateCartUI();
       alert(prod.title + " added to cart!");
     }
@@ -643,89 +697,97 @@
     function toggleCartDrawer(open) {
       const drawer = document.getElementById('cartDrawer');
       const backdrop = document.getElementById('cartBackdrop');
-      if(open) {
-        drawer.classList.add('open');
-        backdrop.style.display = 'block';
-      } else {
-        drawer.classList.remove('open');
-        backdrop.style.display = 'none';
-      }
+      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
+      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
     }
 
-    // --- Real Email OTP Login System ---
-    function sendEmailOtp() {
-      let email = document.getElementById('loginEmailInput').value.trim();
-      if(!email || !email.includes('@') || !email.includes('.')) {
-        alert('Please enter a valid email address.');
+    // --- Authentication Flow (Supabase Free Auth & Reset Password) ---
+    function switchAuthView(view) {
+      document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
+      document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
+      document.getElementById('authForgotView').style.display = view === 'forgot' ? 'block' : 'none';
+    }
+
+    async function handleSignup() {
+      let email = document.getElementById('signupEmail').value.trim();
+      let pass = document.getElementById('signupPass').value.trim();
+
+      if(!email || pass.length < 6) {
+        alert('Please enter a valid email and a password of at least 6 characters.');
         return;
       }
 
-      tempLoginEmail = email;
-      generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
-
-      // Send OTP via EmailJS to user's email
-      let templateParams = {
-        to_email: email,
-        from_name: "Kosh Studio",
-        message: `Your login verification OTP code is: ${generatedOtpCode}`
-      };
-
-      alert("Sending OTP to your email...");
-
-      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-        .then(function(response) {
-          document.getElementById('loginStep1').style.display = 'none';
-          document.getElementById('loginStep2').style.display = 'block';
-          document.getElementById('sentEmailDisplay').innerText = email;
-          alert("OTP sent successfully to your email inbox!");
-        }, function(error) {
-          alert("Failed to send OTP email. Please check EmailJS configuration.");
-        });
-    }
-
-    function verifyEmailOtp() {
-      let enteredOtp = document.getElementById('otpInput').value.trim();
-      if(enteredOtp === generatedOtpCode) {
-        loggedUser = tempLoginEmail;
-        localStorage.setItem('kosh_user_email', loggedUser);
-        checkLoginStatus();
-        alert('Login successful!');
-      } else {
-        alert('Incorrect OTP! Please check your email and enter the correct code.');
+      if(supabaseClient) {
+        const { data, error } = await supabaseClient.auth.signUp({ email, password: pass });
+        if(error) { alert('Error: ' + error.message); return; }
       }
-    }
 
-    function resetLoginStep() {
-      document.getElementById('loginStep2').style.display = 'none';
-      document.getElementById('loginStep1').style.display = 'block';
-      document.getElementById('otpInput').value = '';
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('kosh_user_email');
-      loggedUser = null;
+      currentUser = email;
+      localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      resetLoginStep();
+      alert('Account created successfully & logged in!');
+    }
+
+    async function handleLogin() {
+      let email = document.getElementById('loginEmail').value.trim();
+      let pass = document.getElementById('loginPass').value.trim();
+
+      if(!email || !pass) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
+      if(supabaseClient) {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+        if(error) { alert('Login Failed: ' + error.message); return; }
+      }
+
+      currentUser = email;
+      localStorage.setItem('kosh_logged_email', email);
+      checkLoginStatus();
+      alert('Login successful!');
+    }
+
+    async function handleForgotPassword() {
+      let email = document.getElementById('forgotEmail').value.trim();
+      if(!email) {
+        alert('Please enter your registered email address.');
+        return;
+      }
+
+      if(supabaseClient) {
+        const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email);
+        if(error) { alert('Error: ' + error.message); return; }
+      }
+
+      alert('Password reset link has been sent to your email (' + email + '). Check your inbox!');
+      switchAuthView('login');
+    }
+
+    async function handleLogout() {
+      if(supabaseClient) { await supabaseClient.auth.signOut(); }
+      localStorage.removeItem('kosh_logged_email');
+      currentUser = null;
+      checkLoginStatus();
+      switchAuthView('login');
     }
 
     function checkLoginStatus() {
-      if(loggedUser) {
-        document.getElementById('loginStep1').style.display = 'none';
-        document.getElementById('loginStep2').style.display = 'none';
+      if(currentUser) {
+        document.getElementById('authLoginView').style.display = 'none';
+        document.getElementById('authSignupView').style.display = 'none';
+        document.getElementById('authForgotView').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = loggedUser;
+        document.getElementById('displayUserEmail').innerText = currentUser;
       } else {
         document.getElementById('userDashboardSection').style.display = 'none';
-        document.getElementById('loginStep1').style.display = 'block';
+        switchAuthView('login');
       }
     }
 
-    // --- Checkout & EmailJS ---
+    // --- Checkout & Payment OTP Verification Flow ---
     function openCheckoutModal() {
-      if(cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-      }
+      if(cart.length === 0) { alert('Your cart is empty!'); return; }
       toggleCartDrawer(false);
       if(resellerMargin > 0) {
         let profit = resellerMargin * cart.reduce((s, i) => s + i.qty, 0);
@@ -737,56 +799,72 @@
       document.getElementById('checkoutModal').style.display = 'flex';
     }
 
-    function closeCheckoutModal() {
-      document.getElementById('checkoutModal').style.display = 'none';
-    }
+    function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
 
-    function finalizeOrder() {
+    function initiateCheckoutOtp() {
       const name = document.getElementById('chkName').value;
       const phone = document.getElementById('chkPhone').value;
       const address = document.getElementById('chkAddress').value;
+      const payMode = document.getElementById('chkPaymentMode').value;
 
-      if(!name || !phone || !address) {
-        alert('Please fill in all delivery details.');
+      if(!name || phone.length !== 10 || !address) {
+        alert('Please fill in all valid delivery details.');
         return;
       }
+
+      tempCheckoutData = { name, phone, address, payMode };
+      paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
+
+      document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
+      document.getElementById('checkoutModal').style.display = 'none';
+      document.getElementById('paymentOtpModal').style.display = 'flex';
+    }
+
+    function verifyAndFinalizeOrder() {
+      let enteredOtp = document.getElementById('enteredPaymentOtp').value.trim();
+      if(enteredOtp !== paymentOtpGenerated) {
+        alert('Incorrect Payment OTP! Please enter the correct code.');
+        return;
+      }
+
+      document.getElementById('paymentOtpModal').style.display = 'none';
 
       let summary = cart.map(i => `${i.title} (${i.qty} x ₹${i.finalPrice})`).join(', ');
       let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
 
       let newOrder = {
         id: Date.now(),
+        userEmail: currentUser || 'guest',
         date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        name,
-        phone,
-        address,
+        name: tempCheckoutData.name,
+        phone: tempCheckoutData.phone,
+        address: tempCheckoutData.address,
+        payMode: tempCheckoutData.payMode,
         summary,
         total,
-        status: 'Order Confirmed'
+        status: 'Order Confirmed & Paid'
       };
 
       ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
 
       var templateParams = {
-        from_name: name,
-        phone: phone,
-        address: address,
-        message: `Order Details: ${summary} | Total: ₹${total} | Reseller Margin: ₹${resellerMargin}`
+        from_name: tempCheckoutData.name,
+        phone: tempCheckoutData.phone,
+        address: tempCheckoutData.address,
+        message: `Order Details: ${summary} | Total: ₹${total} | Payment: ${tempCheckoutData.payMode} | Reseller Margin: ₹${resellerMargin}`
       };
 
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
         .then(function(response) {
-          alert("Order placed successfully! Email sent to store owner.");
+          alert("Payment verified & Order placed successfully! Email sent to store owner.");
           cart = [];
           updateCartUI();
-          closeCheckoutModal();
           navigateTo('orders');
         }, function(error) {
           alert("Order saved permanently, but email dispatch failed.");
           cart = [];
           updateCartUI();
-          closeCheckoutModal();
           navigateTo('orders');
         });
     }
@@ -807,8 +885,11 @@
               <span>${o.date}</span>
             </div>
             <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${o.summary}</div>
-            <div style="font-size:0.85rem; color:#555; margin-bottom:10px;">
+            <div style="font-size:0.85rem; color:#555; margin-bottom:6px;">
               <strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}
+            </div>
+            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:10px;">
+              <strong>Payment:</strong> ${o.payMode}
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px;">
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
@@ -821,12 +902,8 @@
     }
 
     // --- Reseller Modal & Settings ---
-    function openResellerModal() {
-      document.getElementById('resellerModal').style.display = 'flex';
-    }
-    function closeResellerModal() {
-      document.getElementById('resellerModal').style.display = 'none';
-    }
+    function openResellerModal() { document.getElementById('resellerModal').style.display = 'flex'; }
+    function closeResellerModal() { document.getElementById('resellerModal').style.display = 'none'; }
     function applyQuickReseller() {
       let val = parseInt(document.getElementById('quickMarginInput').value) || 0;
       resellerMargin = val;
@@ -840,7 +917,7 @@
       closeResellerModal();
     }
 
-    // --- Secret Admin Panel Trigger ---
+    // --- Secret Admin Panel Trigger (rohitku316 / Rohit@2006) ---
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) {
@@ -848,9 +925,7 @@
         document.getElementById('adminModal').style.display = 'flex';
       }
     }
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = 'none';
-    }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
     function verifyAdminPassword() {
       let userId = document.getElementById('admUserInput').value;
       let pass = document.getElementById('adminPassInput').value;
@@ -867,7 +942,7 @@
         } else {
           let h = '';
           ordersList.forEach(o => {
-            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
+            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} (${o.payMode}) <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
           });
           oArea.innerHTML = h;
         }
