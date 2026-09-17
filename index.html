@@ -1,209 +1,456 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kosh Studio | Luxury Lifestyle Accessories</title>
-    
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0d0d0d; color: #fff; }
-        
-        /* Navbar */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #111;
-            border-bottom: 1px solid #222;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .brand-logo { font-size: 20px; font-weight: bold; color: #d4af37; text-decoration: none; letter-spacing: 1px; }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a { color: #fff; text-decoration: none; font-size: 14px; transition: color 0.3s; }
-        .nav-links a:hover { color: #d4af37; }
-        .cart-btn { background: #d4af37; color: #000; border: none; padding: 6px 14px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kosh Studio | Luxury Lifestyle Accessories</title>
+  <meta name="google-site-verification" content="IiV0SCiMAAaHgnf24fdIInf1Qkuu0BC4aMAlH3iMY2g" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #f1f3f6;
+      --card-bg: #ffffff;
+      --text: #212121;
+      --muted: #878787;
+      --primary: #d4af37; /* Champagne Gold Theme for Kosh Studio */
+      --primary-dark: #b3922b;
+      --accent: #f43397;
+      --border: #e0e0e0;
+      --shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+      --success: #388e3c;
+    }
 
-        /* Container */
-        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-        .banner { text-align: center; padding: 40px 20px; background: #141414; border: 1px solid #222; border-radius: 8px; margin-bottom: 30px; }
-        .banner h1 { color: #d4af37; font-size: 28px; margin-bottom: 10px; }
-        .banner p { color: #888; font-size: 15px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+    input, textarea { -webkit-user-select: text; user-select: text; }
 
-        /* Products Grid */
-        .section-title { font-size: 20px; color: #d4af37; border-bottom: 2px solid #222; padding-bottom: 8px; margin-bottom: 20px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .product-card { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 15px; text-align: center; }
-        .product-card h3 { font-size: 18px; margin: 10px 0; color: #fff; }
-        .product-card p { color: #d4af37; font-weight: bold; margin-bottom: 15px; }
-        .add-to-cart-btn { background-color: #d4af37; color: #000; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.3s; }
-        .add-to-cart-btn:hover { background-color: #b3922b; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 70px;
+    }
 
-        /* Cart Section */
-        .cart-section { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 20px; margin-top: 30px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
-        .checkout-form { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-width: 400px; }
-        .checkout-form input, .checkout-form textarea { padding: 10px; background: #0d0d0d; border: 1px solid #333; color: #fff; border-radius: 4px; }
-        .checkout-btn { background-color: #28a745; color: #fff; border: none; padding: 12px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    .top-strip {
+      background: #111;
+      color: #d4af37;
+      text-align: center;
+      padding: 6px 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
 
-        /* Footer */
-        footer { text-align: center; padding: 25px; background-color: #111; border-top: 1px solid #222; margin-top: 50px; font-size: 13px; color: #aaa; }
-    </style>
+    header {
+      background: #ffffff;
+      color: var(--text);
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .brand-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #111;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .header-search {
+      flex-grow: 1;
+      max-width: 550px;
+      display: flex;
+      background: #f8f8f8;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .header-search input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: 2px;
+      background: var(--accent);
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #fff;
+    }
+
+    .categories-bar {
+      background: #ffffff;
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      scrollbar-width: none;
+    }
+
+    .categories-bar::-webkit-scrollbar { display: none; }
+
+    .cat-item {
+      flex: 0 0 auto;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #212121;
+      cursor: pointer;
+      padding-bottom: 2px;
+    }
+
+    .cat-item.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
+
+    .container {
+      max-width: 1200px;
+      margin: 12px auto;
+      padding: 0 10px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .products-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .badge-discount {
+      position: absolute;
+      top: 8px; left: 8px;
+      background: #388e3c; color: #fff;
+      font-size: 0.62rem; font-weight: 700;
+      padding: 2px 6px; border-radius: 2px; z-index: 2;
+    }
+
+    .product-img {
+      width: 100%;
+      padding-top: 110%;
+      position: relative;
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+
+    .product-img img {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .product-info {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .p-category { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
+    .p-title {
+      font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em;
+    }
+
+    .p-rating-row {
+      display: flex; align-items: center; gap: 4px; font-size: 0.7rem;
+      background: #388e3c; color: white; padding: 1px 6px; border-radius: 3px; width: fit-content; font-weight: 700; margin-bottom: 6px;
+    }
+
+    .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
+    .p-price { font-size: 1rem; font-weight: 700; color: #212121; }
+    .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
+
+    .btn-add-cart {
+      width: 100%; background: #fff; border: 1px solid #111; color: #111; padding: 8px;
+      border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .btn-add-cart:active { background: #f3f3f3; }
+
+    .app-page { display: none; }
+    .app-page.active { display: block; }
+
+    .page-header {
+      background: #fff; color: var(--text); padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
+    }
+
+    .back-btn { background: none; border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+    .page-content {
+      max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px;
+    }
+
+    .sticky-product-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--border);
+      padding: 10px 16px; display: none; gap: 12px; z-index: 90; box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+    }
+    .sticky-product-bar.active { display: grid; grid-template-columns: 1fr 1fr; }
+
+    .cart-drawer {
+      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 420px;
+      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.2s ease;
+      display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+    }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      z-index: 100; display: none; align-items: center; justify-content: center; padding: 10px;
+    }
+
+    .modal-box {
+      background: #fff; width: 100%; max-width: 520px; max-height: 92vh;
+      border-radius: 6px; overflow-y: auto; padding: 20px; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 14px;
+    }
+
+    .close-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); }
+
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; color: #212121; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.88rem; font-family: inherit; outline: none;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .btn-primary-solid {
+      width: 100%; background: #111; color: #fff; border: none; padding: 12px;
+      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+    }
+    .btn-primary-solid:active { background: #333; }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 56px; background: #fff;
+      border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 55;
+    }
+    .nav-tab {
+      display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 0.65rem; font-weight: 700; cursor: pointer; text-decoration: none;
+    }
+    .nav-tab.active { color: #111; }
+    .nav-tab svg { width: 20px; height: 20px; margin-bottom: 2px; }
+
+    footer { background: #111; color: #878787; padding: 24px 16px; font-size: 0.8rem; margin-top: 30px; text-align: center; }
+  </style>
 </head>
 <body>
 
-    <!-- Navbar -->
+  <div class="top-strip">⚡ 100% SECURE CHECKOUT | FREE EXPRESS DELIVERY ACROSS INDIA</div>
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="app-page active">
     <header>
-        <a href="index.html" class="brand-logo">Kosh Studio</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="#products">Collection</a>
-            <a href="#cart-section" onclick="scrollToCart()">Cart (<span id="cart-count">0</span>)</a>
-        </div>
+      <a class="brand-name" onclick="handleBrandTap()">Kosh Studio</a>
+      <div class="header-search">
+        <input type="text" id="searchInput" placeholder="Search luxury accessories..." oninput="handleSearch(this.value)">
+      </div>
+      <div class="header-icons">
+        <button class="icon-btn" onclick="navigateTo('profile')">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Profile</span>
+        </button>
+        <button class="icon-btn" onclick="toggleCart()">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          <span>Cart</span>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
     </header>
 
-    <div class="container">
-        <!-- Banner -->
-        <div class="banner">
-            <h1>Welcome to Kosh Studio</h1>
-            <p>Explore our exclusive collection of luxury accessories.</p>
-        </div>
-
-        <!-- Products -->
-        <div id="products">
-            <h2 class="section-title">Featured Collection</h2>
-            <div class="product-grid">
-                <div class="product-card">
-                    <h3>Luxury Leather Wallet</h3>
-                    <p>₹ 1,499</p>
-                    <button class="add-to-cart-btn" onclick="addToCart('Luxury Leather Wallet', 1499)">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <h3>Signature Metal Keychain</h3>
-                    <p>₹ 799</p>
-                    <button class="add-to-cart-btn" onclick="addToCart('Signature Metal Keychain', 799)">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <h3>Classic Chronograph Watch</h3>
-                    <p>₹ 3,999</p>
-                    <button class="add-to-cart-btn" onclick="addToCart('Classic Chronograph Watch', 3999)">Add to Cart</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cart & Checkout Section -->
-        <div class="cart-section" id="cart-section">
-            <h2 class="section-title">Your Shopping Cart</h2>
-            <div id="cart-items-list">
-                <p style="color: #666;">Your cart is empty.</p>
-            </div>
-            <h3 id="cart-total" style="margin-top: 15px; color: #d4af37;">Total: ₹ 0</h3>
-
-            <div class="checkout-form" id="checkout-form" style="display:none;">
-                <h3 style="color: #fff; font-size: 16px; margin-top: 10px;">Customer Details</h3>
-                <input type="text" id="cust-name" placeholder="Full Name" required>
-                <input type="text" id="cust-phone" placeholder="Phone Number" required>
-                <textarea id="cust-address" placeholder="Delivery Address" rows="3" required></textarea>
-                <button class="checkout-btn" onclick="placeOrder()">Place Order & Send Email</button>
-            </div>
-        </div>
+    <div class="categories-bar">
+      <div class="cat-item active" onclick="filterCategory('All')">All Accessories</div>
+      <div class="cat-item" onclick="filterCategory('Earrings')">Earrings</div>
+      <div class="cat-item" onclick="filterCategory('Necklaces')">Necklaces</div>
+      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
+      <div class="cat-item" onclick="filterCategory('Rings')">Rings</div>
+      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
+      <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
+      <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
+      <div class="cat-item" onclick="filterCategory('Hair')">Hair Accessories</div>
     </div>
 
-    <!-- Footer -->
+    <main class="container">
+      <div class="products-grid" id="productGrid"></div>
+    </main>
+
     <footer>
-        <p style="margin: 0 0 5px 0; font-weight: 500; color: #fff;">&copy; 2026 Kosh Studio. All rights reserved.</p>
-        <p style="font-size: 11px; color: #777; margin: 0;">This website, logo, and its content are protected under copyright laws. Unauthorized use is strictly prohibited.</p>
+      <p>Kosh Studio Luxury Store. Secured Payments via Razorpay. All rights reserved.</p>
     </footer>
+  </div>
 
-    <!-- E-commerce & EmailJS Logic -->
-    <script type="text/javascript">
-        (function() {
-            emailjs.init("YOUR_PUBLIC_KEY"); // Yahan apni EmailJS Public Key dalein
-        })();
+  <!-- PRODUCT PAGE -->
+  <div id="page-product" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;" id="headerPageTitle">Product Overview</span>
+    </div>
+    <div class="page-content" style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+      <div>
+        <img id="pPageImg" src="" alt="Product Image" style="width:100%; height:380px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
+        <div id="colorVariantsContainer" style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;"></div>
+      </div>
+      <div>
+        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
+        <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
+        <div id="pPageRating" class="p-rating-row" style="margin-bottom:10px;">★ 4.8</div>
+        <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:12px;">
+          <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
+          <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
+          <span id="pPageDiscount" style="font-size:0.85rem; color:#388e3c; font-weight:700;"></span>
+        </div>
 
-        let cart = [];
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
+          <button class="btn-primary-solid" style="background:#d4af37; color:#000;" onclick="addCurrentToPageCart()">Add to Cart</button>
+          <button class="btn-primary-solid" onclick="buyNowCurrentPage()">Buy Now</button>
+        </div>
 
-        function addToCart(name, price) {
-            cart.push({ name, price });
-            updateCartUI();
-            alert(name + " added to cart!");
-        }
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; margin-bottom:16px; line-height:1.6;"></p>
 
-        function updateCartUI() {
-            const cartList = document.getElementById('cart-items-list');
-            const cartCount = document.getElementById('cart-count');
-            const checkoutForm = document.getElementById('checkout-form');
-            const cartTotal = document.getElementById('cart-total');
+        <div style="background:#fff; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:16px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:6px; color:#111;">Product Specifications / Additional Info</h4>
+          <p id="pPageAddInfo" style="font-size:0.82rem; color:#444; line-height:1.5;"></p>
+        </div>
 
-            cartCount.innerText = cart.length;
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; margin-bottom:16px; font-size:0.8rem; font-weight:600;">
+          ⚠️ <strong>Return Policy:</strong> Replacement/Refund available only for wrong or damaged items. Continuous uncut unboxing video proof is compulsory.
+        </div>
 
-            if (cart.length === 0) {
-                cartList.innerHTML = '<p style="color: #666;">Your cart is empty.</p>';
-                cartTotal.innerText = 'Total: ₹ 0';
-                checkoutForm.style.display = 'none';
-                return;
-            }
+        <div style="background:#fff; border:1px solid var(--border); padding:14px; border-radius:4px; margin-bottom:20px;">
+          <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:8px; color:#111;">Customer Ratings & Reviews</h4>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <span style="background:var(--success); color:#fff; padding:2px 8px; border-radius:4px; font-weight:700; font-size:0.85rem;" id="pPageRatingNum">4.8 ★</span>
+            <span style="font-size:0.8rem; color:var(--muted);" id="pPageReviewCount">Based on verified customer reviews</span>
+          </div>
+          <p id="pPageFakeReview" style="font-size:0.85rem; font-style:italic; color:#333; background:#f9f9f9; padding:8px; border-left:3px solid #111; border-radius:2px;"></p>
+        </div>
 
-            let html = '';
-            let total = 0;
-            cart.forEach((item, index) => {
-                total += item.price;
-                html += `<div class="cart-item"><span>${item.name}</span><span>₹ ${item.price} <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; cursor:pointer; margin-left:10px;">❌</button></span></div>`;
-            });
+        <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:4px; margin-bottom:20px; font-size:0.85rem;">
+          <strong>Check Delivery & Pincode:</strong>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <input type="text" id="checkPin" placeholder="Enter 6-digit Pincode" maxlength="6" style="padding:8px 12px; border:1px solid var(--border); border-radius:2px; width:160px; font-size:0.85rem;" oninput="verifyLivePincode(this.value, 'pinResult')">
+            <button onclick="verifyLivePincode(document.getElementById('checkPin').value, 'pinResult')" style="background:#111; color:#fff; border:none; padding:8px 14px; border-radius:2px; cursor:pointer; font-weight:700;">Verify</button>
+          </div>
+          <div id="pinResult" style="margin-top:6px; font-weight:600; font-size:0.8rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            cartList.innerHTML = html;
-            cartTotal.innerText = `Total: ₹ ${total}`;
-            checkoutForm.style.display = 'flex';
-        }
+  <div class="sticky-product-bar" id="stickyProductBar">
+    <button class="btn-primary-solid" style="background:#d4af37; color:#000;" onclick="addCurrentToPageCart()">Add to Cart</button>
+    <button class="btn-primary-solid" onclick="buyNowCurrentPage()">Buy Now</button>
+  </div>
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
+  <!-- PROFILE PAGE -->
+  <div id="page-profile" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Profile</span>
+    </div>
+    <div class="page-content" id="profilePageContentArea" style="padding: 20px 0;"></div>
+  </div>
 
-        function scrollToCart() {
-            document.getElementById('cart-section').scrollIntoView({ behavior: 'smooth' });
-        }
+  <!-- ORDERS PAGE -->
+  <div id="page-orders" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders & Live Tracking</span>
+    </div>
+    <div class="page-content" id="ordersPageContentArea" style="padding: 20px 0;"></div>
+  </div>
 
-        function placeOrder() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
+  <!-- SUPPORT CHAT PAGE -->
+  <div id="page-chat" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('profile')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">Customer Support Chat</span>
+    </div>
+    <div class="page-content" style="padding: 20px 0; max-width: 600px;">
+      <div style="background:#fff; border:1px solid var(--border); border-radius:6px; height:450px; display:flex; flex-direction:column; padding:16px;">
+        <div style="background:#fdf8e2; color:#111; padding:10px; border-radius:4px; font-size:0.85rem; margin-bottom:12px; font-weight:600;">
+          👋 Welcome to Kosh Studio Support! Type your query regarding orders, shipping, or returns below.
+        </div>
+        <div id="chatMessagesBox" style="flex-grow:1; overflow-y:auto; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:12px; background:#fafafa; font-size:0.85rem;"></div>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="chatInputMsg" placeholder="Type your message here..." style="flex-grow:1; padding:10px 12px; border:1px solid var(--border); border-radius:4px; font-size:0.88rem;" onkeypress="if(event.key==='Enter') sendCustomerSupportMsg()">
+          <button onclick="sendCustomerSupportMsg()" class="btn-primary-solid" style="width:100px; padding:10px;">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            if (!name || !phone || !address) {
-                alert('Please fill in all customer details!');
-                return;
-            }
+  <!-- ADMIN PANEL FULL PAGE -->
+  <div id="page-admin" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back to Store</button>
+      <span style="font-weight:700; font-size:0.95rem;">Admin Control Panel</span>
+    </div>
+    <div class="page-content" style="padding: 20px 0; max-width: 800px;">
+      <div id="adminLoginBox" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); text-align:center; max-width:400px; margin:40px auto;">
+        <h3 style="margin-bottom:14px; color:#111;">Admin Secure Login</h3>
+        <input type="text" id="admUser" placeholder="Admin ID" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid var(--border); border-radius:4px;">
+        <input type="password" id="admPass" placeholder="Password" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid var(--border); border-radius:4px;">
+        <button onclick="verifyAdminLogin()" class="btn-primary-solid">Login</button>
+      </div>
+    </div>
+  </div>
 
-            let cartSummary = cart.map(item => `${item.name} (₹${item.price})`).join(', ');
-
-            var templateParams = {
-                from_name: name,
-                phone: phone,
-                address: address,
-                message: cartSummary
-            };
-
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-                .then(function(response) {
-                    alert("Order successfully placed & email sent to Kosh Studio!");
-                    cart = [];
-                    updateClerances();
-                }, function(error) {
-                    alert("Order saved locally, but email failed to send. Check EmailJS keys.");
-                });
-        }
-        
-        function updateClerances() {
-            cart = [];
-            updateCartUI();
-        }
-    </script>
 </body>
 </html>
