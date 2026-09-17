@@ -635,6 +635,11 @@
       navigateTo(savedPage);
       renderProducts();
       updateCartUI(); // Restore cart state on load
+
+      // Restore Cart Drawer state if it was open
+      if(localStorage.getItem('kosh_cart_open') === 'true') {
+        toggleCartDrawer(true);
+      }
     });
 
     function filterCategory(cat) {
@@ -749,8 +754,15 @@
     function toggleCartDrawer(open) {
       const drawer = document.getElementById('cartDrawer');
       const backdrop = document.getElementById('cartBackdrop');
-      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
-      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
+      if(open) { 
+        drawer.classList.add('open'); 
+        backdrop.style.display = 'block'; 
+        localStorage.setItem('kosh_cart_open', 'true');
+      } else { 
+        drawer.classList.remove('open'); 
+        backdrop.style.display = 'none'; 
+        localStorage.setItem('kosh_cart_open', 'false');
+      }
     }
 
     // --- Auto Pin Code Lookup (India Post API) ---
@@ -923,6 +935,7 @@
       // Clear Cart and update localStorage
       cart = [];
       localStorage.removeItem('kosh_cart');
+      localStorage.setItem('kosh_cart_open', 'false');
       updateCartUI();
 
       var templateParams = {
@@ -1028,7 +1041,7 @@
     function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
     function verifyAdminPassword() {
       let userId = document.getElementById('admUserInput').value;
-      let pass = document.getElementById('adminPassInput').value;
+      let pass = document.getElementById('admPassInput').value;
       
       if(userId === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
