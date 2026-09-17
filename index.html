@@ -9,136 +9,118 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <style>
-        /* Mobile-Optimized Dark Luxury Theme */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d0d0d;
+            background-color: #0c0c0c;
             color: #fff;
-            box-sizing: border-box;
         }
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 15px;
+        /* Center Luxury Header */
+        .header-center {
+            text-align: center;
+            padding: 30px 20px 15px 20px;
             background-color: #111;
             border-bottom: 1px solid #222;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .logo-container img {
-            height: 38px;
-            width: 38px;
+        .header-center img {
+            height: 75px;
+            width: 75px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1px solid #d4af37;
+            border: 2px solid #d4af37;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
-        .brand-name {
-            font-size: 16px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
+        .header-center h1 {
+            margin: 0;
+            font-size: 24px;
             color: #d4af37;
-            white-space: nowrap;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
-        .nav-links {
+        /* Navigation Menu */
+        .nav-menu {
             display: flex;
-            gap: 12px;
+            justify-content: center;
+            gap: 25px;
+            background-color: #161616;
+            padding: 12px;
+            border-bottom: 1px solid #222;
         }
-        .nav-links a {
-            color: #fff;
+        .nav-menu a {
+            color: #ddd;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
             transition: color 0.3s;
         }
-        .nav-links a:hover {
+        .nav-menu a:hover {
             color: #d4af37;
         }
         .container {
             max-width: 1200px;
-            margin: 20px auto;
+            margin: 25px auto;
             padding: 0 15px;
         }
-        .hero {
+        .store-banner {
             text-align: center;
-            padding: 40px 15px;
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('logo.png');
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border: 1px solid #222;
-        }
-        .hero h1 {
-            font-size: 26px;
-            color: #d4af37;
-            margin-bottom: 8px;
-        }
-        .hero p {
-            color: #ccc;
-            font-size: 14px;
-            margin: 0;
-        }
-        #products {
+            padding: 40px 20px;
             background: #141414;
-            padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid #222;
+            margin-bottom: 25px;
+        }
+        .store-banner h2 {
+            color: #d4af37;
+            margin-top: 0;
+            font-size: 22px;
+        }
+        .store-banner p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 0;
         }
         footer {
             text-align: center;
-            padding: 20px 15px;
+            padding: 25px 15px;
             background-color: #111;
-            color: #fff;
+            color: #aaa;
             border-top: 1px solid #222;
-            margin-top: 40px;
+            margin-top: 50px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navbar -->
-    <header class="navbar">
-        <div class="logo-container">
-            <img src="logo.png" alt="Kosh Studio Logo">
-            <span class="brand-name">Kosh Studio</span>
-        </div>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="#products">Collection</a>
-            <a href="#cart">Cart</a>
-        </nav>
-    </header>
-
-    <!-- Main Store Content -->
-    <div class="container">
-        <div class="hero">
-            <h1>Welcome to Kosh Studio</h1>
-            <p>Discover Luxury & Lifestyle Accessories</p>
-        </div>
-        
-        <section id="products">
-            <h2 style="color: #d4af37; border-bottom: 2px solid #222; padding-bottom: 10px; margin-top: 0; font-size: 20px;">Featured Collection</h2>
-            <p style="color: #888; font-size: 14px;">Aapke products yahan display honge...</p>
-        </section>
+    <!-- Center Luxury Header -->
+    <div class="header-center">
+        <img src="logo.png" alt="Kosh Studio Logo">
+        <h1>Kosh Studio</h1>
     </div>
 
-    <!-- Footer with Copyright & Legal Protection -->
+    <!-- Navigation Menu -->
+    <div class="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="#products">Collection</a>
+        <a href="#cart">Cart</a>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <div class="store-banner">
+            <h2>Luxury Lifestyle Accessories</h2>
+            <p>Aapke products yahan display honge...</p>
+        </div>
+    </div>
+
+    <!-- Footer with Copyright -->
     <footer>
-        <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">&copy; 2026 Kosh Studio. All rights reserved.</p>
-        <p style="font-size: 11px; color: #888; margin: 0;">This website, logo, and its content are protected under copyright laws. Unauthorized use or copying is strictly prohibited.</p>
+        <p style="margin: 0 0 5px 0; font-weight: 500; color: #fff;">&copy; 2026 Kosh Studio. All rights reserved.</p>
+        <p style="font-size: 11px; color: #777; margin: 0;">Protected under copyright laws. Unauthorized use or copying is strictly prohibited.</p>
     </footer>
 
-    <!-- EmailJS Script Integration -->
+    <!-- EmailJS Integration Script -->
     <script type="text/javascript">
         (function() {
             emailjs.init("YOUR_PUBLIC_KEY"); // Yahan apni EmailJS Public Key dalein
