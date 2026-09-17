@@ -216,7 +216,7 @@
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
-    /* Modal / Admin / Reseller */
+    /* Modal / Admin */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6);
       z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
@@ -246,7 +246,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ LUXURY ACCESSORIES | SECURE ACCOUNT & PAYMENT OTP | FREE SHIPPING</div>
+  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | FREE EXPRESS DELIVERY ACROSS INDIA</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -256,10 +256,6 @@
         <input type="text" id="searchInput" placeholder="Search luxury accessories..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
-        <button class="icon-btn" onclick="openResellerModal()">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 9V7a5 5 0 0 0-10 0v2a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2z"></path></svg>
-          <span>Resell</span>
-        </button>
         <button class="icon-btn" onclick="navigateTo('profile')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Profile</span>
@@ -282,15 +278,12 @@
     </div>
 
     <main class="container">
-      <div id="resellerBanner" style="background:#fff8e1; border:1px solid #ffe082; padding:10px 15px; border-radius:6px; margin-bottom:15px; display:none; font-size:0.85rem; font-weight:600; color:#b78103;">
-        🛍️ Reseller Mode Active: Added Margin <span id="activeMarginDisplay">₹0</span> per item. Share products & keep your profit!
-      </div>
       <div class="products-grid" id="productGrid"></div>
     </main>
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Powered for direct & reseller retail.</p>
+      <p style="margin-top:6px; color:#777;">Protected under copyright laws. 100% Prepaid Secure Store.</p>
     </footer>
   </div>
 
@@ -315,7 +308,10 @@
           <button class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <button class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600;">
+          ⚠️ <strong>Return & Replacement Policy:</strong> Valid only within 3 days of delivery. <strong>Continuous uncut unboxing video proof (from seal pack to open)</strong> is compulsory for any claims.
+        </div>
       </div>
     </div>
   </div>
@@ -396,8 +392,8 @@
 
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('orders')">
           <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Permanent Orders</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">View your cloud-synced order history</p>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Returns</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">Track orders & 3-day return eligibility</p>
           </div>
           <span style="font-size:1.2rem; color:var(--muted);">›</span>
         </div>
@@ -410,7 +406,7 @@
   <div id="page-orders" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('profile')">← Back to Profile</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders & Cloud History</span>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders & Tracking</span>
     </div>
     <div class="page-content">
       <div id="ordersPageList"></div>
@@ -430,7 +426,7 @@
         <span>Total Amount:</span>
         <span id="cartTotalPrice">₹0</span>
       </div>
-      <button class="btn-solid" onclick="openCheckoutModal()">Proceed to Checkout</button>
+      <button class="btn-solid" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
     </div>
   </div>
 
@@ -438,7 +434,7 @@
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Checkout</h3>
+        <h3 style="font-size:1.1rem;">Secure Prepaid Checkout</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       
@@ -480,14 +476,10 @@
       </div>
 
       <div class="form-group">
-        <label>Payment Mode</label>
-        <select id="chkPaymentMode" style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:4px; background:#fff; font-size:0.88rem;">
-          <option value="UPI / Online">UPI / Credit Card / Online (OTP Verified)</option>
-          <option value="COD">Cash on Delivery</option>
-        </select>
+        <label>Payment Mode (100% Prepaid)</label>
+        <input type="text" value="Online / UPI / Card (Prepaid Secure)" readonly style="background:#e8f5e9; color:var(--success); font-weight:700;">
       </div>
 
-      <div id="resellerOrderNote" style="font-size:0.8rem; color:#666; margin-bottom:10px; display:none;"></div>
       <button class="btn-solid" onclick="initiateCheckoutOtp()">Proceed & Verify Payment OTP</button>
     </div>
   </div>
@@ -496,31 +488,13 @@
   <div class="modal-overlay" id="paymentOtpModal">
     <div class="modal-box" style="max-width:380px; text-align:center;">
       <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment OTP Verification</h3>
-      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code sent to complete your order transaction.</p>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code sent to complete your prepaid transaction.</p>
       <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
       <div class="form-group" style="text-align:left;">
         <label>Enter 4-Digit OTP</label>
         <input type="text" id="enteredPaymentOtp" placeholder="Enter OTP code" maxlength="4">
       </div>
       <button class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
-    </div>
-  </div>
-
-  <!-- RESELLER QUICK MODAL -->
-  <div class="modal-overlay" id="resellerModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Kosh Studio Reseller Program</h3>
-        <button onclick="closeResellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <p style="font-size:0.88rem; color:#555; margin-bottom:14px; line-height:1.5;">
-        Want to start your own online business without inventory? Enter your desired profit margin below. Share product screenshots or links with your customers at your selling price, and keep your profit!
-      </p>
-      <div class="form-group">
-        <label>Set Margin per Product (₹)</label>
-        <input type="number" id="quickMarginInput" placeholder="e.g. 250">
-      </div>
-      <button class="btn-solid" onclick="applyQuickReseller()">Activate Reseller Mode</button>
     </div>
   </div>
 
@@ -574,7 +548,6 @@
     ];
 
     let cart = [];
-    let resellerMargin = 0;
     let currentSelectedProduct = null;
     let secretClickCount = 0;
     let tempCheckoutData = {};
@@ -598,7 +571,6 @@
       }
 
       finalFiltered.forEach(p => {
-        let displayPrice = p.price + resellerMargin;
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
@@ -609,8 +581,8 @@
             <span class="p-category">${p.category}</span>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
             <div class="p-price-row">
-              <span class="p-price">₹${displayPrice}</span>
-              <span class="p-mrp">₹${p.mrp + resellerMargin}</span>
+              <span class="p-price">₹${p.price}</span>
+              <span class="p-mrp">₹${p.mrp}</span>
             </div>
             <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
@@ -654,8 +626,8 @@
       document.getElementById('pPageImg').src = currentSelectedProduct.image;
       document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
       document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPagePrice').innerText = '₹' + (currentSelectedProduct.price + resellerMargin);
-      document.getElementById('pPageMrp').innerText = '₹' + (currentSelectedProduct.mrp + resellerMargin);
+      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
+      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
       document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
 
       navigateTo('product');
@@ -679,10 +651,9 @@
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod) return;
-      let itemPrice = prod.price + resellerMargin;
       let existing = cart.find(item => item.id === id);
       if(existing) { existing.qty += 1; }
-      else { cart.push({ ...prod, finalPrice: itemPrice, qty: 1 }); }
+      else { cart.push({ ...prod, finalPrice: prod.price, qty: 1 }); }
       updateCartUI();
       alert(prod.title + " added to cart!");
     }
@@ -836,13 +807,6 @@
     function openCheckoutModal() {
       if(cart.length === 0) { alert('Your cart is empty!'); return; }
       toggleCartDrawer(false);
-      if(resellerMargin > 0) {
-        let profit = resellerMargin * cart.reduce((s, i) => s + i.qty, 0);
-        document.getElementById('resellerOrderNote').style.display = 'block';
-        document.getElementById('resellerOrderNote').innerHTML = `💡 Reseller Note: Your total profit of <strong>₹${profit}</strong> is included in this order.`;
-      } else {
-        document.getElementById('resellerOrderNote').style.display = 'none';
-      }
       document.getElementById('checkoutModal').style.display = 'flex';
     }
 
@@ -856,7 +820,6 @@
       const city = document.getElementById('chkCity').value.trim();
       const district = document.getElementById('chkDistrict').value.trim();
       const state = document.getElementById('chkState').value.trim();
-      const payMode = document.getElementById('chkPaymentMode').value;
 
       if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district || !state) {
         alert('Please fill in all mandatory address and contact fields correctly.');
@@ -865,7 +828,7 @@
 
       let fullAddress = `${area}, City: ${city}, District: ${district}, State: ${state} - PIN: ${pincode}`;
 
-      tempCheckoutData = { name, phone, address: fullAddress, payMode };
+      tempCheckoutData = { name, phone, address: fullAddress };
       paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
 
       document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
@@ -887,15 +850,17 @@
 
       let newOrder = {
         id: Date.now(),
+        timestamp: Date.now(),
         userEmail: currentUser || 'guest',
         date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
         name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
-        payMode: tempCheckoutData.payMode,
+        payMode: '100% Prepaid',
         summary,
         total,
-        status: 'Order Confirmed & Paid'
+        status: 'Order Confirmed & Processing',
+        deliveredAt: null
       };
 
       ordersList.unshift(newOrder);
@@ -905,12 +870,12 @@
         from_name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
-        message: `Order Details: ${summary} | Total: ₹${total} | Payment: ${tempCheckoutData.payMode} | Reseller Margin: ₹${resellerMargin}`
+        message: `New Prepaid Order Received! Details: ${summary} | Total: ₹${total} | Payment: 100% Prepaid`
       };
 
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
         .then(function(response) {
-          alert("Payment verified & Order placed successfully! Email sent to store owner.");
+          alert("Prepaid order placed successfully! Email notification sent.");
           cart = [];
           updateCartUI();
           navigateTo('orders');
@@ -922,6 +887,28 @@
         });
     }
 
+    // --- Customer Delivery Confirmation & 3-Day Return Logic ---
+    function markAsDeliveredByCustomer(orderId) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.status = 'Delivered';
+        order.deliveredAt = Date.now();
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        
+        // Notify Store Owner that customer received the product
+        var templateParams = {
+          from_name: order.name,
+          phone: order.phone,
+          address: order.address,
+          message: `Delivery Confirmation: Customer has confirmed receiving Order #${order.id}!`
+        };
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams).catch(err => console.log(err));
+
+        alert("Delivery confirmed! Your 3-day return window starts now.");
+        renderOrdersPage();
+      }
+    }
+
     // --- Render My Orders Page ---
     function renderOrdersPage() {
       const area = document.getElementById('ordersPageList');
@@ -930,7 +917,29 @@
         return;
       }
       let html = '';
+      let now = Date.now();
+
       ordersList.forEach(o => {
+        let returnSectionHtml = '';
+        if (o.status === 'Delivered' && o.deliveredAt) {
+          let daysPassed = (now - o.deliveredAt) / (1000 * 60 * 60 * 24);
+          if (daysPassed <= 3) {
+            let daysLeft = Math.ceil(3 - daysPassed);
+            returnSectionHtml = `<div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">
+              📦 Eligible for Return/Replacement (${daysLeft} day(s) left). Note: Uncut unboxing video from seal pack is mandatory for return.
+              <button onclick="alert('Please share your unboxing video via support/email to process your return.')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">Request Return / Replacement</button>
+            </div>`;
+          } else {
+            returnSectionHtml = `<div style="background:#f1f3f6; color:var(--muted); padding:6px; border-radius:4px; font-size:0.75rem; margin-top:8px;">
+              🔒 Return window closed (3-day policy expired).
+            </div>`;
+          }
+        } else if (o.status === 'Order Confirmed & Processing') {
+          returnSectionHtml = `<div style="margin-top:8px;">
+            <button onclick="markAsDeliveredByCustomer(${o.id})" style="background:var(--accent); color:#000; border:none; padding:8px 14px; border-radius:4px; font-weight:700; cursor:pointer; font-size:0.8rem;">Click Here When You Receive Order</button>
+          </div>`;
+        }
+
         html += `
           <div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.8rem; color:var(--muted);">
@@ -941,33 +950,17 @@
             <div style="font-size:0.85rem; color:#555; margin-bottom:6px;">
               <strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}
             </div>
-            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:10px;">
-              <strong>Payment:</strong> ${o.payMode}
+            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;">
+              <strong>Payment:</strong> ${o.payMode} | <strong>Status:</strong> <span style="color:var(--success); font-weight:700;">${o.status}</span>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px;">
+            ${returnSectionHtml}
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px;">
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
-              <span style="background:#e8f5e9; color:var(--success); padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${o.status}</span>
             </div>
           </div>
         `;
       });
       area.innerHTML = html;
-    }
-
-    // --- Reseller Modal & Settings ---
-    function openResellerModal() { document.getElementById('resellerModal').style.display = 'flex'; }
-    function closeResellerModal() { document.getElementById('resellerModal').style.display = 'none'; }
-    function applyQuickReseller() {
-      let val = parseInt(document.getElementById('quickMarginInput').value) || 0;
-      resellerMargin = val;
-      if(resellerMargin > 0) {
-        document.getElementById('resellerBanner').style.display = 'block';
-        document.getElementById('activeMarginDisplay').innerText = '₹' + resellerMargin;
-      } else {
-        document.getElementById('resellerBanner').style.display = 'none';
-      }
-      renderProducts();
-      closeResellerModal();
     }
 
     // --- Secret Admin Panel Trigger (rohitku316 / Rohit@2006) ---
@@ -981,7 +974,7 @@
     function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
     function verifyAdminPassword() {
       let userId = document.getElementById('admUserInput').value;
-      let pass = document.getElementById('adminPassInput').value;
+      let pass = document.getElementById('admPassInput').value;
       
       if(userId === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
@@ -995,7 +988,7 @@
         } else {
           let h = '';
           ordersList.forEach(o => {
-            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} (${o.payMode}) <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
+            h += `<div><b>${o.name}</b> (${o.phone}) - ₹${o.total} [${o.status}] <br><small>${o.summary}</small></div><hr style="margin:4px 0;">`;
           });
           oArea.innerHTML = h;
         }
