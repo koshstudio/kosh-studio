@@ -317,30 +317,42 @@
     </div>
   </div>
 
-  <!-- PROFILE & LOGIN PAGE -->
+  <!-- PROFILE & SECURE EMAIL OTP LOGIN PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
       <span style="font-weight:700; font-size:0.95rem;">My Account</span>
     </div>
     <div class="page-content">
-      <!-- Login Box (Shown if not logged in) -->
-      <div id="loginSection" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center;">
-        <h3 style="margin-bottom:8px; font-size:1.2rem;">Login / Sign Up</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">Enter your phone number to access your account & orders.</p>
+      <!-- Step 1: Enter Email for OTP -->
+      <div id="loginStep1" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center;">
+        <h3 style="margin-bottom:8px; font-size:1.2rem;">Secure Email Login</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">Enter your email to receive a real verification OTP.</p>
         <div class="form-group" style="text-align:left;">
-          <label>Phone Number</label>
-          <input type="tel" id="loginPhoneInput" placeholder="Enter 10-digit mobile number" maxlength="10">
+          <label>Email Address</label>
+          <input type="email" id="loginEmailInput" placeholder="Enter your email address">
         </div>
-        <button class="btn-solid" onclick="handlePhoneLogin()">Continue with Phone</button>
+        <button class="btn-solid" onclick="sendEmailOtp()">Send Verification OTP</button>
       </div>
 
-      <!-- Dashboard Box (Shown after login) -->
+      <!-- Step 2: Enter OTP -->
+      <div id="loginStep2" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; text-align:center; display:none;">
+        <h3 style="margin-bottom:8px; font-size:1.2rem;">Enter OTP</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:16px;">OTP sent to <span id="sentEmailDisplay" style="font-weight:700; color:#111;"></span></p>
+        <div class="form-group" style="text-align:left;">
+          <label>4-Digit OTP</label>
+          <input type="text" id="otpInput" placeholder="Enter 4-digit code" maxlength="4">
+        </div>
+        <button class="btn-solid" onclick="verifyEmailOtp()">Verify & Login</button>
+        <button onclick="resetLoginStep()" style="background:none; border:none; color:var(--muted); margin-top:12px; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Change Email</button>
+      </div>
+
+      <!-- Dashboard Box (Shown after successful login) -->
       <div id="userDashboardSection" style="display:none;">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
           <div>
             <h3 style="font-size:1rem; margin-bottom:4px;">👤 Welcome, User</h3>
-            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserPhone">+91 XXXXXXXXXX</p>
+            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
           </div>
           <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
@@ -475,10 +487,12 @@
     let resellerMargin = 0;
     let currentSelectedProduct = null;
     let secretClickCount = 0;
+    let generatedOtpCode = "";
+    let tempLoginEmail = "";
 
     // Load Persistent Orders from localStorage
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let loggedUser = localStorage.getItem('kosh_user_phone') || null;
+    let loggedUser = localStorage.getItem('kosh_user_email') || null;
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
@@ -638,33 +652,71 @@
       }
     }
 
-    // --- Phone Number Login / Profile Handling ---
-    function handlePhoneLogin() {
-      let phone = document.getElementById('loginPhoneInput').value.trim();
-      if(phone.length !== 10 || isNaN(phone)) {
-        alert('Please enter a valid 10-digit mobile number.');
+    // --- Real Email OTP Login System ---
+    function sendEmailOtp() {
+      let email = document.getElementById('loginEmailInput').value.trim();
+      if(!email || !email.includes('@') || !email.includes('.')) {
+        alert('Please enter a valid email address.');
         return;
       }
-      loggedUser = phone;
-      localStorage.setItem('kosh_user_phone', phone);
-      checkLoginStatus();
-      alert('Login successful!');
+
+      tempLoginEmail = email;
+      generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+      // Send OTP via EmailJS to user's email
+      let templateParams = {
+        to_email: email,
+        from_name: "Kosh Studio",
+        message: `Your login verification OTP code is: ${generatedOtpCode}`
+      };
+
+      alert("Sending OTP to your email...");
+
+      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+        .then(function(response) {
+          document.getElementById('loginStep1').style.display = 'none';
+          document.getElementById('loginStep2').style.display = 'block';
+          document.getElementById('sentEmailDisplay').innerText = email;
+          alert("OTP sent successfully to your email inbox!");
+        }, function(error) {
+          alert("Failed to send OTP email. Please check EmailJS configuration.");
+        });
+    }
+
+    function verifyEmailOtp() {
+      let enteredOtp = document.getElementById('otpInput').value.trim();
+      if(enteredOtp === generatedOtpCode) {
+        loggedUser = tempLoginEmail;
+        localStorage.setItem('kosh_user_email', loggedUser);
+        checkLoginStatus();
+        alert('Login successful!');
+      } else {
+        alert('Incorrect OTP! Please check your email and enter the correct code.');
+      }
+    }
+
+    function resetLoginStep() {
+      document.getElementById('loginStep2').style.display = 'none';
+      document.getElementById('loginStep1').style.display = 'block';
+      document.getElementById('otpInput').value = '';
     }
 
     function handleLogout() {
-      localStorage.removeItem('kosh_user_phone');
+      localStorage.removeItem('kosh_user_email');
       loggedUser = null;
       checkLoginStatus();
+      resetLoginStep();
     }
 
     function checkLoginStatus() {
       if(loggedUser) {
-        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('loginStep1').style.display = 'none';
+        document.getElementById('loginStep2').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserPhone').innerText = '+91 ' + loggedUser;
+        document.getElementById('displayUserEmail').innerText = loggedUser;
       } else {
-        document.getElementById('loginSection').style.display = 'block';
         document.getElementById('userDashboardSection').style.display = 'none';
+        document.getElementById('loginStep1').style.display = 'block';
       }
     }
 
@@ -758,7 +810,7 @@
             <div style="font-size:0.85rem; color:#555; margin-bottom:10px;">
               <strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); pt:10px; padding-top:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px;">
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
               <span style="background:#e8f5e9; color:var(--success); padding:3px 8px; border-radius:4px; font-size:0.75rem; font-weight:700;">${o.status}</span>
             </div>
