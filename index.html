@@ -12,80 +12,83 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0c0c0c;
-            color: #fff;
+            background-color: #fafafa;
+            color: #333;
         }
-        /* Center Luxury Header */
-        .header-center {
-            text-align: center;
-            padding: 30px 20px 15px 20px;
-            background-color: #111;
-            border-bottom: 1px solid #222;
-        }
-        .header-center img {
-            height: 75px;
-            width: 75px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #d4af37;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-        }
-        .header-center h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #d4af37;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        /* Navigation Menu */
-        .nav-menu {
+        /* Simple & Clean Header */
+        header {
             display: flex;
-            justify-content: center;
-            gap: 25px;
-            background-color: #161616;
-            padding: 12px;
-            border-bottom: 1px solid #222;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .nav-menu a {
-            color: #ddd;
+        .brand-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #111;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .nav-links a {
+            color: #555;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: color 0.3s;
         }
-        .nav-menu a:hover {
-            color: #d4af37;
+        .nav-links a:hover {
+            color: #000;
         }
         .container {
-            max-width: 1200px;
-            margin: 25px auto;
-            padding: 0 15px;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
         }
-        .store-banner {
-            text-align: center;
-            padding: 40px 20px;
-            background: #141414;
-            border-radius: 10px;
-            border: 1px solid #222;
-            margin-bottom: 25px;
+        /* Product & Buy Section */
+        .shop-section {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
         }
-        .store-banner h2 {
-            color: #d4af37;
+        .shop-section h2 {
             margin-top: 0;
             font-size: 22px;
+            color: #111;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
         }
-        .store-banner p {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 0;
+        .buy-btn {
+            background-color: #111;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
+        .buy-btn:hover {
+            background-color: #333;
+        }
+        /* Simple Footer */
         footer {
             text-align: center;
-            padding: 25px 15px;
-            background-color: #111;
-            color: #aaa;
-            border-top: 1px solid #222;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
             margin-top: 50px;
             font-size: 13px;
         }
@@ -93,34 +96,38 @@
 </head>
 <body>
 
-    <!-- Center Luxury Header -->
-    <div class="header-center">
-        <img src="logo.png" alt="Kosh Studio Logo">
-        <h1>Kosh Studio</h1>
-    </div>
+    <!-- Simple Header -->
+    <header>
+        <a href="index.html" class="brand-title">Kosh Studio</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#products">Shop</a>
+            <a href="#cart">Cart</a>
+        </nav>
+    </header>
 
-    <!-- Navigation Menu -->
-    <div class="nav-menu">
-        <a href="index.html">Home</a>
-        <a href="#products">Collection</a>
-        <a href="#cart">Cart</a>
-    </div>
-
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <div class="container">
-        <div class="store-banner">
-            <h2>Luxury Lifestyle Accessories</h2>
-            <p>Aapke products yahan display honge...</p>
+        <div class="shop-section" id="products">
+            <h2>Our Collection</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Browse our products and buy easily below:</p>
+            
+            <!-- Sample Product Card / Buy Action -->
+            <div style="border: 1px solid #eee; padding: 20px; border-radius: 6px; max-width: 300px;">
+                <h3 style="margin-top:0; font-size: 18px;">Luxury Accessory</h3>
+                <p style="color: #888; font-size: 14px;">₹ 1,999</p>
+                <button class="buy-btn" onclick="alert('Checkout clicked!')">Buy Now</button>
+            </div>
         </div>
     </div>
 
-    <!-- Footer with Copyright -->
+    <!-- Simple Footer -->
     <footer>
-        <p style="margin: 0 0 5px 0; font-weight: 500; color: #fff;">&copy; 2026 Kosh Studio. All rights reserved.</p>
-        <p style="font-size: 11px; color: #777; margin: 0;">Protected under copyright laws. Unauthorized use or copying is strictly prohibited.</p>
+        <p style="margin: 0 0 5px 0;">&copy; 2026 Kosh Studio. All rights reserved.</p>
+        <p style="font-size: 11px; color: #888; margin: 0;">Protected under copyright laws.</p>
     </footer>
 
-    <!-- EmailJS Integration Script -->
+    <!-- EmailJS Order Notification Script -->
     <script type="text/javascript">
         (function() {
             emailjs.init("YOUR_PUBLIC_KEY"); // Yahan apni EmailJS Public Key dalein
