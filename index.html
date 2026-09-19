@@ -237,7 +237,7 @@
       z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
     }
     .modal-box {
-      background: #fff; width: 100%; max-width: 700px; border-radius: 6px; padding: 20px; position: relative;
+      background: #fff; width: 100%; max-width: 750px; border-radius: 6px; padding: 20px; position: relative;
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
@@ -268,14 +268,14 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | D9 CREATION BULK FULFILLMENT READY</div>
+  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | D9 & MULTI-SUPPLIER FULFILLMENT READY</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search luxury & D9 accessories..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search luxury & supplier accessories..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button class="icon-btn" onclick="navigateTo('profile')">
@@ -305,7 +305,7 @@
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Protected under copyright laws. D9 Creation Integrated Store.</p>
+      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Multi-Supplier & D9 Integrated Store.</p>
     </footer>
   </div>
 
@@ -322,7 +322,7 @@
       <div>
         <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
-        <div id="pPageSkuDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
+        <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -333,7 +333,7 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
         <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600;">
-          ⚠️ <strong>D9 Fulfillment Policy:</strong> Valid within 3 days of delivery. <strong>Uncut unboxing video (from seal pack to open)</strong> is compulsory for claims.
+          ⚠️ <strong>Fulfillment Policy:</strong> Valid within 3 days of delivery. <strong>Uncut unboxing video (from seal pack to open)</strong> is compulsory for claims.
         </div>
       </div>
     </div>
@@ -460,7 +460,7 @@
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width: 850px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin & D9 Fulfillment Panel</h3>
+        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin & Supplier Fulfillment Panel</h3>
         <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       
@@ -474,37 +474,38 @@
       <!-- Admin Dashboard (Multi-Tab) -->
       <div id="adminDashboardScreen" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h4 style="font-size:0.9rem; color:var(--success);">✅ D9 Integrated Admin Panel (rohitku316)</h4>
+          <h4 style="font-size:0.9rem; color:var(--success);">✅ Multi-Supplier Admin Panel (rohitku316)</h4>
           <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:700;">Logout</button>
         </div>
 
         <!-- Admin Tabs -->
         <div class="admin-tabs">
-          <button class="admin-tab-btn active" onclick="switchAdminTab('orders')">📦 Orders & D9 SKU</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('import')">📥 D9 Bulk CSV Import</button>
+          <button class="admin-tab-btn active" onclick="switchAdminTab('orders')">📦 Orders & SKU Mapping</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('import')">📥 Bulk CSV Import & Preview</button>
           <button class="admin-tab-btn" onclick="switchAdminTab('returns')">🔄 Returns & Stock</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Margin</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('products')">🛍️ Manage Products (Edit/Remove)</button>
         </div>
 
-        <!-- Tab 1: Orders & D9 Fulfillment -->
+        <!-- Tab 1: Orders & Fulfillment -->
         <div id="admTabOrders" class="admin-tab-content active">
           <div style="margin-bottom:10px;">
             <input type="text" id="adminSearchInput" placeholder="Search by Order ID, SKU, Product Name, Customer Name/Phone..." oninput="filterAdminOrders(this.value)" style="padding:8px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px; width:100%;">
           </div>
-          <h5 style="margin-bottom:8px; font-size:0.8rem; color:var(--muted);">Customer Orders with D9 SKU Mapping & Copy Order Details</h5>
+          <h5 style="margin-bottom:8px; font-size:0.8rem; color:var(--muted);">Customer Orders with Supplier & SKU Mapping + Copy Details</h5>
           <div id="admOrdersList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
         </div>
 
-        <!-- Tab 2: D9 Bulk CSV Import -->
+        <!-- Tab 2: Bulk CSV Import & Preview -->
         <div id="admTabImport" class="admin-tab-content">
           <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px; border-radius:6px; margin-bottom:12px; font-size:0.82rem; color:#e65100;">
-            <strong>📋 D9 CSV Import Instructions:</strong> Upload your CSV catalogue. Format required columns: <code>sku, title, category, price, mrp, image, desc, stock</code>. SKU will be used as the unique identifier to prevent duplicates.
+            <strong>📋 Bulk CSV Import Instructions:</strong> Upload your catalogue CSV. Required columns: <code>sku, title, category, supplier_name, price, mrp, supplier_cost, stock, image, desc</code>. SKU is used as a unique identifier.
           </div>
           <div class="form-group">
-            <label>Upload D9 CSV Catalogue File</label>
-            <input type="file" id="d9CsvFileInput" accept=".csv" style="padding:6px; background:#fff;">
+            <label>Upload Catalogue CSV File</label>
+            <input type="file" id="csvFileInput" accept=".csv" style="padding:6px; background:#fff;" onchange="previewCsvFile(this)">
           </div>
-          <button class="btn-solid" style="background:#d4af37; color:#000;" onclick="handleD9CsvImport()">Import D9 Products Bulk</button>
+          <div id="csvPreviewContainer" style="margin-top:10px; max-height:200px; overflow-y:auto; font-size:0.75rem;"></div>
+          <button class="btn-solid" id="confirmImportBtn" style="background:#d4af37; color:#000; margin-top:10px; display:none;" onclick="executeCsvImport()">Confirm & Import All Products</button>
           <div id="csvImportLog" style="margin-top:10px; font-size:0.8rem; font-weight:bold; color:var(--success);"></div>
         </div>
 
@@ -514,30 +515,33 @@
           <div id="admReturnsList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No return claims.</div>
         </div>
 
-        <!-- Tab 4: Products & Pricing Margin -->
+        <!-- Tab 4: Products & Pricing Margin (Edit & Remove) -->
         <div id="admTabProducts" class="admin-tab-content">
           <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border); margin-bottom:12px;">
-            <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">➕ Add Single D9 / Manual Product</h5>
+            <h5 id="productFormTitle" style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">➕ Add New Product</h5>
+            <input type="hidden" id="editProductIndex" value="-1">
             <div class="form-row">
               <div class="form-group"><input type="text" id="newProdTitle" placeholder="Product Title"></div>
-              <div class="form-group"><input type="text" id="newProdSku" placeholder="D9 SKU / Product ID"></div>
+              <div class="form-group"><input type="text" id="newProdSku" placeholder="SKU / Product ID"></div>
             </div>
             <div class="form-row">
-              <div class="form-group"><input type="text" id="newProdCategory" placeholder="Category"></div>
-              <div class="form-group"><input type="number" id="newProdSupplierCost" placeholder="D9 Supplier Cost (₹)"></div>
+              <div class="form-group"><input type="text" id="newProdCategory" placeholder="Category (e.g. Watches)"></div>
+              <div class="form-group"><input type="text" id="newProdSupplier" placeholder="Supplier Name (e.g. D9 Creation)"></div>
             </div>
             <div class="form-row">
+              <div class="form-group"><input type="number" id="newProdSupplierCost" placeholder="Supplier Cost (₹)"></div>
               <div class="form-group"><input type="number" id="newProdPrice" placeholder="Selling Price (₹)"></div>
-              <div class="form-group"><input type="number" id="newProdMrp" placeholder="MRP Price (₹)"></div>
             </div>
             <div class="form-row">
+              <div class="form-group"><input type="number" id="newProdMrp" placeholder="MRP Price (₹)"></div>
               <div class="form-group"><input type="number" id="newProdStock" placeholder="Stock Qty"></div>
-              <div class="form-group"><input type="text" id="newProdImage" placeholder="Image URL"></div>
             </div>
+            <div class="form-group"><input type="text" id="newProdImage" placeholder="Image URL"></div>
             <div class="form-group"><textarea id="newProdDesc" rows="2" placeholder="Description"></textarea></div>
-            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="addNewProductFromAdmin()">Add Product</button>
+            <button class="btn-solid" id="saveProductBtn" style="padding:8px; font-size:0.8rem;" onclick="saveProductFromAdmin()">Save Product</button>
+            <button id="cancelEditBtn" style="display:none; background:#777; color:#fff; border:none; padding:6px; margin-top:6px; width:100%; border-radius:4px; cursor:pointer;" onclick="resetProductForm()">Cancel Edit</button>
           </div>
-          <h5 style="margin-bottom:6px; font-size:0.85rem; color:var(--muted);">Store Products & SKU Mapping</h5>
+          <h5 style="margin-bottom:6px; font-size:0.85rem; color:var(--muted);">Store Products List (Edit or Remove)</h5>
           <div id="admProductsList" style="max-height:200px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;"></div>
         </div>
 
@@ -555,13 +559,13 @@
       emailjs.init("YOUR_PUBLIC_KEY");
     })();
 
-    // --- Default Products with D9 SKU Mapping ---
+    // --- Default Products with Multi-Supplier & SKU Mapping ---
     let defaultProducts = [
-      { id: 1, sku: "D9-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", price: 2999, mrp: 5999, supplierCost: 1400, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
-      { id: 2, sku: "D9-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", price: 1299, mrp: 2499, supplierCost: 500, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
-      { id: 3, sku: "D9-SGL-303", title: "Designer Gradient Sunglasses", category: "Sunglasses", price: 1499, mrp: 2999, supplierCost: 600, stock: 10, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60", desc: "UV400 protected stylish gradient sunglasses for daily luxury." },
-      { id: 4, sku: "D9-BRC-404", title: "Signature Gold-Plated Bracelet", category: "Bracelets", price: 999, mrp: 1999, supplierCost: 350, stock: 30, image: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=500&auto=format&fit=crop&q=60", desc: "Elegant gold-plated stainless steel fashion bracelet." },
-      { id: 5, sku: "D9-BAG-505", title: "Executive Leather Messenger Bag", category: "Bags", price: 3499, mrp: 6999, supplierCost: 1600, stock: 5, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
+      { id: 1, sku: "D9-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", supplier: "D9 Creation", supplierCost: 1400, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
+      { id: 2, sku: "D9-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", supplier: "D9 Creation", supplierCost: 500, price: 1299, mrp: 2499, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
+      { id: 3, sku: "SUP2-SGL-303", title: "Designer Gradient Sunglasses", category: "Sunglasses", supplier: "Supplier Alpha", supplierCost: 600, price: 1499, mrp: 2999, stock: 10, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60", desc: "UV400 protected stylish gradient sunglasses for daily luxury." },
+      { id: 4, sku: "D9-BRC-404", title: "Signature Gold-Plated Bracelet", category: "Bracelets", supplier: "D9 Creation", supplierCost: 350, price: 999, mrp: 1999, stock: 30, image: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=500&auto=format&fit=crop&q=60", desc: "Elegant gold-plated stainless steel fashion bracelet." },
+      { id: 5, sku: "SUP2-BAG-505", title: "Executive Leather Messenger Bag", category: "Bags", supplier: "Supplier Alpha", supplierCost: 1600, price: 3499, mrp: 6999, stock: 5, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
     ];
 
     let products = JSON.parse(localStorage.getItem('kosh_products')) || defaultProducts;
@@ -570,6 +574,7 @@
     let secretClickCount = 0;
     let tempCheckoutData = {};
     let paymentOtpGenerated = "";
+    let parsedCsvRows = [];
 
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -602,7 +607,7 @@
               ${stockBadge}
             </div>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${p.sku || 'N/A'}</div>
+            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${p.sku || 'N/A'} | Supplier: ${p.supplier || 'General'}</div>
             <div class="p-price-row">
               <span class="p-price">₹${p.price}</span>
               <span class="p-mrp">₹${p.mrp}</span>
@@ -654,7 +659,7 @@
       document.getElementById('pPageImg').src = currentSelectedProduct.image;
       document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
       document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageSkuDisplay').innerText = `D9 SKU: ${currentSelectedProduct.sku || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock (Verify with Supplier)'}`;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku || 'N/A'} | Supplier: ${currentSelectedProduct.supplier || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
       document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
       document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
       document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
@@ -664,10 +669,7 @@
 
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) {
-          alert("Product is currently out of stock with supplier.");
-          return;
-        }
+        if(currentSelectedProduct.stock <= 0) { alert("Product is out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         toggleCartDrawer(true);
       }
@@ -675,10 +677,7 @@
 
     function buyNowCurrentProduct() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) {
-          alert("Product is currently out of stock with supplier.");
-          return;
-        }
+        if(currentSelectedProduct.stock <= 0) { alert("Product is out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         openCheckoutModal();
       }
@@ -730,7 +729,7 @@
             <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
             <div style="flex-grow:1; padding-right:15px;">
               <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
-              <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${item.sku || 'N/A'}</div>
+              <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${item.sku || 'N/A'} | Supplier: ${item.supplier || 'General'}</div>
               <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:6px;">
                 <span style="font-size:1rem; font-weight:800; color:#111;">₹${item.finalPrice}</span>
                 <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${item.mrp}</span>
@@ -854,7 +853,7 @@
       }
     }
 
-    // --- Checkout & Payment OTP Flow ---
+    // --- Checkout & Payment Flow ---
     function openCheckoutModal() {
       if(cart.length === 0) { alert('Cart is empty!'); return; }
       toggleCartDrawer(false);
@@ -892,7 +891,7 @@
 
       document.getElementById('paymentOtpModal').style.display = 'none';
 
-      let summary = cart.map(i => `${i.title} [SKU: ${i.sku || 'N/A'}] (${i.qty} x ₹${i.finalPrice})`).join(', ');
+      let summary = cart.map(i => `${i.title} [SKU: ${i.sku || 'N/A'}, Supplier: ${i.supplier || 'General'}] (${i.qty} x ₹${i.finalPrice})`).join(', ');
       let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
 
       let newOrder = {
@@ -904,10 +903,10 @@
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
         payMode: '100% Prepaid',
-        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', qty: i.qty, price: i.finalPrice })),
+        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', supplier: i.supplier || 'General', qty: i.qty, price: i.finalPrice })),
         summary,
         total,
-        status: 'New Order (Verify D9 Stock)',
+        status: 'New Order (Verify Stock)',
         deliveredAt: null
       };
 
@@ -927,7 +926,7 @@
       };
 
       emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams).catch(() => {});
-      alert("Order placed successfully! Please check admin panel for D9 fulfillment details.");
+      alert("Order placed successfully! Check admin panel for supplier fulfillment details.");
       navigateTo('orders');
     }
 
@@ -984,7 +983,7 @@
       area.innerHTML = html;
     }
 
-    // --- Secret Admin Panel Functions & D9 Workflow ---
+    // --- Secret Admin Panel Functions ---
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) {
@@ -1041,7 +1040,6 @@
       loadAdminProducts();
     }
 
-    // Powerful Admin Search & Filter
     function filterAdminOrders(query) {
       let q = query.toLowerCase();
       let filtered = ordersList.filter(o => 
@@ -1059,8 +1057,8 @@
       let h = '';
       
       listToDisplay.forEach((o, index) => {
-        let skuText = o.items ? o.items.map(i => `${i.title} [SKU: ${i.sku}] (Qty: ${i.qty})`).join(', ') : o.summary;
-        let d9CopyString = `Kosh Studio Order: ${o.id}\nProduct & SKU Details: ${skuText}\nCustomer Name: ${o.name}\nPhone: ${o.phone}\nAddress: ${o.address}\nTotal Amount: ₹${o.total}`;
+        let skuText = o.items ? o.items.map(i => `${i.title} [SKU: ${i.sku}, Supplier: ${i.supplier}] (Qty: ${i.qty})`).join(', ') : o.summary;
+        let d9CopyString = `Kosh Studio Order: ${o.id}\nProduct & Supplier Details: ${skuText}\nCustomer Name: ${o.name}\nPhone: ${o.phone}\nAddress: ${o.address}\nTotal Amount: ₹${o.total}`;
 
         h += `
           <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px; font-size:0.8rem;">
@@ -1070,23 +1068,23 @@
             </div>
             <div style="color:#333; margin-bottom:6px;"><strong>Customer:</strong> ${o.name} (${o.phone})<br><strong>Address:</strong> ${o.address}</div>
             <div style="background:#fff; border:1px solid #ddd; padding:8px; border-radius:4px; margin-bottom:8px;">
-              <strong style="color:var(--accent);">📦 D9 Fulfillment Information:</strong><br>
+              <strong style="color:var(--accent);">📦 Fulfillment & Supplier Information:</strong><br>
               ${skuText}
             </div>
             <div style="margin-bottom:8px;">
               <strong>Status:</strong> <span style="color:var(--success); font-weight:bold;">${o.status}</span><br>
               <strong>Update Status:</strong> 
               <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; font-size:0.75rem; margin-top:4px;">
-                <option value="New Order (Verify D9 Stock)" ${o.status.includes('New Order')?'selected':''}>New Order (Verify Stock)</option>
-                <option value="D9 Order Placed" ${o.status==='D9 Order Placed'?'selected':''}>D9 Order Placed</option>
+                <option value="New Order (Verify Stock)" ${o.status.includes('New Order')?'selected':''}>New Order (Verify Stock)</option>
+                <option value="Order Placed with Supplier" ${o.status==='Order Placed with Supplier'?'selected':''}>Order Placed with Supplier</option>
                 <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
                 <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
                 <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
-                <option value="D9 Out of Stock (Cancelled)" ${o.status.includes('Out of Stock')?'selected':''}>D9 Out of Stock (Cancel & Refund)</option>
+                <option value="Out of Stock - Cancelled" ${o.status.includes('Out of Stock')?'selected':''}>Out of Stock (Cancel & Refund)</option>
               </select>
             </div>
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button onclick="navigator.clipboard.writeText(\`${d9CopyString}\`); alert('D9 Order Details copied successfully! Ready to place order on D9.');" style="background:#d4af37; color:#000; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.75rem;">📋 Copy D9 Order Details</button>
+              <button onclick="navigator.clipboard.writeText(\`${d9CopyString}\`); alert('Order Details copied successfully!');" style="background:#d4af37; color:#000; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.75rem;">📋 Copy Order Details</button>
               <button onclick="removeAdminOrder('${o.id}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">🗑️ Delete Record</button>
             </div>
           </div>
@@ -1100,7 +1098,7 @@
       if(order) {
         order.status = newStatus;
         if(newStatus.includes('Out of Stock')) {
-          order.status = 'D9 Out of Stock - Cancelled (Product currently out of stock)';
+          order.status = 'Out of Stock - Cancelled (Product is currently out of stock)';
         }
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         loadAdminOrders(ordersList);
@@ -1137,20 +1135,18 @@
       area.innerHTML = h;
     }
 
-    // --- Bulk CSV Import for D9 Catalogue ---
-    function handleD9CsvImport() {
-      let fileInput = document.getElementById('d9CsvFileInput');
-      let logDiv = document.getElementById('csvImportLog');
-      if(fileInput.files.length === 0) { alert('Please select a CSV file first.'); return; }
-
-      let file = fileInput.files[0];
+    // --- Bulk CSV Import & Preview System ---
+    function previewCsvFile(input) {
+      if(input.files.length === 0) return;
+      let file = input.files[0];
       let reader = new FileReader();
       reader.onload = function(e) {
         let text = e.target.result;
         let lines = text.split('\n');
-        let count = 0;
+        parsedCsvRows = [];
+        
+        let html = `<table style="width:100%; border-collapse:collapse; font-size:0.7rem;">tr style="background:#ddd;"><th style="border:1px solid #ccc; padding:4px;">SKU</th><th style="border:1px solid #ccc; padding:4px;">Title</th><th style="border:1px solid #ccc; padding:4px;">Supplier</th><th style="border:1px solid #ccc; padding:4px;">Price</th><th style="border:1px solid #ccc; padding:4px;">Stock</th></tr>`;
 
-        // Simple CSV parser assuming headers: sku, title, category, price, mrp, image, desc, stock
         for(let i = 1; i < lines.length; i++) {
           let line = lines[i].trim();
           if(!line) continue;
@@ -1159,33 +1155,46 @@
             let sku = cols[0].trim();
             let title = cols[1].trim();
             let category = cols[2].trim() || 'General';
-            let price = parseFloat(cols[3]) || 999;
-            let mrp = parseFloat(cols[4]) || 1999;
-            let image = cols[5].trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-            let desc = cols[6].trim() || 'D9 imported luxury item.';
+            let supplier = cols[3].trim() || 'D9 Creation';
+            let price = parseFloat(cols[4]) || 999;
+            let mrp = parseFloat(cols[5]) || 1999;
+            let supplierCost = parseFloat(cols[6]) || Math.round(price * 0.5);
             let stock = parseInt(cols[7]) || 10;
+            let image = cols[8] ? cols[8].trim() : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+            let desc = cols[9] ? cols[9].trim() : 'Luxury accessory item.';
 
-            // Check duplicate by SKU
-            let existingIndex = products.findIndex(p => p.sku === sku);
-            if(existingIndex >= 0) {
-              // Update existing
-              products[existingIndex] = { ...products[existingIndex], title, category, price, mrp, image, desc, stock };
-            } else {
-              // Add new
-              products.push({ id: Date.now() + i, sku, title, category, price, mrp, supplierCost: Math.round(price * 0.5), stock, image, desc });
-            }
-            count++;
+            parsedCsvRows.push({ sku, title, category, supplier, supplierCost, price, mrp, stock, image, desc });
+            html += `<tr><td style="border:1px solid #ccc; padding:4px;">${sku}</td><td style="border:1px solid #ccc; padding:4px;">${title}</td><td style="border:1px solid #ccc; padding:4px;">${supplier}</td><td style="border:1px solid #ccc; padding:4px;">₹${price}</td><td style="border:1px solid #ccc; padding:4px;">${stock}</td></tr>`;
           }
         }
-
-        localStorage.setItem('kosh_products', JSON.stringify(products));
-        renderProducts();
-        loadAdminProducts();
-        logDiv.innerText = `✅ Successfully imported/updated ${count} products from D9 CSV!`;
+        html += `</table>`;
+        document.getElementById('csvPreviewContainer').innerHTML = html;
+        document.getElementById('confirmImportBtn').style.display = 'block';
       };
       reader.readAsText(file);
     }
 
+    function executeCsvImport() {
+      if(parsedCsvRows.length === 0) { alert('No rows to import.'); return; }
+      let count = 0;
+      parsedCsvRows.forEach(row => {
+        let existingIndex = products.findIndex(p => p.sku === row.sku);
+        if(existingIndex >= 0) {
+          products[existingIndex] = { ...products[existingIndex], ...row };
+        } else {
+          products.push({ id: Date.now() + count, ...row });
+        }
+        count++;
+      });
+
+      localStorage.setItem('kosh_products', JSON.stringify(products));
+      renderProducts();
+      loadAdminProducts();
+      document.getElementById('csvImportLog.innerText') = `✅ Successfully imported/updated ${count} products!`;
+      alert(`Successfully imported ${count} products!`);
+    }
+
+    // --- Product Management (Edit & Remove) ---
     function loadAdminProducts() {
       let area = document.getElementById('admProductsList');
       if(products.length === 0) { area.innerHTML = 'No products found.'; return; }
@@ -1195,19 +1204,24 @@
           <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:0.8rem;">
             <div style="display:flex; align-items:center; gap:8px;">
               <img src="${p.image}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
-              <div><b>${p.title}</b><br><span style="color:var(--muted);">SKU: ${p.sku || 'N/A'} | ₹${p.price} | Stock: ${p.stock}</span></div>
+              <div><b>${p.title}</b><br><span style="color:var(--muted);">SKU: ${p.sku || 'N/A'} | Sup: ${p.supplier || 'Gen'} | ₹${p.price} | Stock: ${p.stock}</span></div>
             </div>
-            <button onclick="removeProductByAdmin(${index})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
+            <div style="display:flex; gap:4px;">
+              <button onclick="editProductByAdmin(${index})" style="background:#2196f3; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.7rem;">Edit</button>
+              <button onclick="removeProductByAdmin(${index})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.7rem;">Remove</button>
+            </div>
           </div>
         `;
       });
       area.innerHTML = h;
     }
 
-    function addNewProductFromAdmin() {
+    function saveProductFromAdmin() {
+      let editIdx = parseInt(document.getElementById('editProductIndex').value);
       let title = document.getElementById('newProdTitle').value.trim();
-      let sku = document.getElementById('newProdSku').value.trim() || ('D9-' + Math.floor(100 + Math.random() * 900));
+      let sku = document.getElementById('newProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
       let category = document.getElementById('newProdCategory').value.trim() || 'General';
+      let supplier = document.getElementById('newProdSupplier').value.trim() || 'D9 Creation';
       let supplierCost = parseFloat(document.getElementById('newProdSupplierCost').value) || 0;
       let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
       let mrp = parseFloat(document.getElementById('newProdMrp').value) || 0;
@@ -1217,21 +1231,64 @@
 
       if(!title || !price || !mrp) { alert('Fill Title, Price, and MRP.'); return; }
 
-      let existing = products.findIndex(p => p.sku === sku);
-      if(existing >= 0) {
-        products[existing] = { ...products[existing], title, category, supplierCost, price, mrp, stock, image, desc };
+      if(editIdx >= 0) {
+        // Update existing
+        products[editIdx] = { ...products[editIdx], title, sku, category, supplier, supplierCost, price, mrp, stock, image, desc };
+        alert('Product updated successfully!');
       } else {
-        products.push({ id: Date.now(), sku, title, category, supplierCost, price, mrp, stock, image, desc });
+        // Add new
+        products.push({ id: Date.now(), sku, title, category, supplier, supplierCost, price, mrp, stock, image, desc });
+        alert('Product added successfully!');
       }
 
       localStorage.setItem('kosh_products', JSON.stringify(products));
       renderProducts();
       loadAdminProducts();
-      alert('Product saved successfully with SKU mapping!');
+      resetProductForm();
+    }
+
+    function editProductByAdmin(index) {
+      let p = products[index];
+      document.getElementById('editProductIndex').value = index;
+      document.getElementById('newProdTitle').value = p.title;
+      document.getElementById('newProdSku').value = p.sku || '';
+      document.getElementById('newProdCategory').value = p.category || '';
+      document.getElementById('newProdSupplier').value = p.supplier || '';
+      document.getElementById('newProdSupplierCost').value = p.supplierCost || '';
+      document.getElementById('newProdPrice').value = p.price;
+      document.getElementById('newProdMrp').value = p.mrp;
+      document.getElementById('newProdStock').value = p.stock;
+      document.getElementById('newProdImage').value = p.image;
+      document.getElementById('newProdDesc').value = p.desc;
+
+      document.getElementById('productFormTitle').innerText = '✏️ Edit Product';
+      document.getElementById('saveProductBtn').innerText = 'Update Product';
+      document.getElementById('cancelEditBtn').style.display = 'block';
+      
+      // Scroll to form
+      document.getElementById('productFormTitle').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetProductForm() {
+      document.getElementById('editProductIndex').value = '-1';
+      document.getElementById('newProdTitle').value = '';
+      document.getElementById('newProdSku').value = '';
+      document.getElementById('newProdCategory').value = '';
+      document.getElementById('newProdSupplier').value = '';
+      document.getElementById('newProdSupplierCost').value = '';
+      document.getElementById('newProdPrice').value = '';
+      document.getElementById('newProdMrp').value = '';
+      document.getElementById('newProdStock').value = '';
+      document.getElementById('newProdImage').value = '';
+      document.getElementById('newProdDesc').value = '';
+
+      document.getElementById('productFormTitle').innerText = '➕ Add New Product';
+      document.getElementById('saveProductBtn').innerText = 'Add Product';
+      document.getElementById('cancelEditBtn').style.display = 'none';
     }
 
     function removeProductByAdmin(index) {
-      if(confirm('Remove this product?')) {
+      if(confirm('Are you sure you want to remove this product?')) {
         products.splice(index, 1);
         localStorage.setItem('kosh_products', JSON.stringify(products));
         renderProducts();
