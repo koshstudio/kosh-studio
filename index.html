@@ -284,7 +284,7 @@
   <div class="top-strip">⚡ 100% PREPAID SECURE MULTI-VENDOR MARKETPLACE PRO</div>
 
   <!-- HOME PAGE -->
-  <div id="page-home" class="app-page active">
+  <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
@@ -372,6 +372,10 @@
             🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
           </div>
         </div>
+
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
+          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
+        </div>
       </div>
     </div>
   </div>
@@ -380,7 +384,7 @@
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Account & Seller Portal</span>
+      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
@@ -408,120 +412,14 @@
           </div>
           <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
-      </div>
-    </div>
-  </div>
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
+          <div>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">Track orders, print invoices & returns</p>
+          </div>
+          <span style="font-size:1.2rem; color:var(--muted);">›</span>
+        </div>
 
-  <script>
-    // Navigation helper
-    function navigateTo(pageId) {
-      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + pageId).classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    function switchAuthView(view) {
-      if (view === 'signup') {
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('authSignupView').style.display = 'block';
-      } else {
-        document.getElementById('authSignupView').style.display = 'none';
-        document.getElementById('authLoginView').style.display = 'block';
-      }
-    }
-
-    // Strict Validation Login Function
-    function handleLogin() {
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPass').value.trim();
-
-      // 1. Email Format Check (@ aur .)
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('Kripya ek valid email address enter karein (Jaise: name@gmail.com)!');
-        return;
-      }
-
-      // 2. Password Length Check
-      if (password.length < 6) {
-        alert('Password kam se kam 6 characters ka hona chahiye!');
-        return;
-      }
-
-      // 3. Registered Users Verification
-      const savedUsers = JSON.parse(localStorage.getItem('kosh_users') || '[]');
-      const matchedUser = savedUsers.find(u => u.email === email && u.password === password);
-      const isAdmin = (email === 'admin@kosh.com' && password === 'admin123');
-
-      if (matchedUser || isAdmin) {
-        alert('Login successful!');
-        localStorage.setItem('kosh_logged_in', JSON.stringify(matchedUser || { email, role: 'admin' }));
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = email;
-      } else {
-        alert('Invalid email or password! Pehle Sign Up karein ya sahi details dalein.');
-      }
-    }
-
-    function handleSignup() {
-      const email = document.getElementById('signupEmail').value.trim();
-      const password = document.getElementById('signupPass').value.trim();
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('Kripya ek valid email address enter karein!');
-        return;
-      }
-      if (password.length < 6) {
-        alert('Password kam se kam 6 characters ka hona chahiye!');
-        return;
-      }
-
-      let savedUsers = JSON.parse(localStorage.getItem('kosh_users') || '[]');
-      if (savedUsers.some(u => u.email === email)) {
-        alert('Yeh email pehle se registered hai! Ab login karein.');
-        switchAuthView('login');
-        return;
-      }
-
-      savedUsers.push({ email, password });
-      localStorage.setItem('kosh_users', JSON.stringify(savedUsers));
-      alert('Account successfully create ho gaya! Ab aap login kar sakte hain.');
-      switchAuthView('login');
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('kosh_logged_in');
-      document.getElementById('userDashboardSection').style.display = 'none';
-      document.getElementById('authLoginView').style.display = 'block';
-      alert('Logged out successfully.');
-    }
-
-    function toggleCartDrawer(open) {
-      // Cart drawer handler stub
-    }
-
-    function filterCategory(cat) {
-      // Category filter stub
-    }
-
-    function triggerAdminSecret() {
-      alert('Kosh Studio Admin System Active.');
-    }
-
-    // Check existing login session on load
-    window.onload = function() {
-      const loggedIn = localStorage.getItem('kosh_logged_in');
-      if (loggedIn) {
-        try {
-          const user = JSON.parse(loggedIn);
-          document.getElementById('authLoginView').style.display = 'none';
-          document.getElementById('userDashboardSection').style.display = 'block';
-          document.getElementById('displayUserEmail').innerText = user.email;
-        } catch(e) {}
-      }
-    };
-  </script>
-</body>
-</html>
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
+          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
+          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding
