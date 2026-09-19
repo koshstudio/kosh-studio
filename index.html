@@ -261,6 +261,19 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
+    /* Summary Cards */
+    .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 768px) { .summary-cards-grid { grid-template-columns: 1fr; } }
+    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
+    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+
+    /* Timeline Tracker */
+    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
+    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
+    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
+    .timeline-step.active span { background: var(--success); }
+
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
     .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
@@ -409,7 +422,7 @@
     <div class="page-content" style="max-width:1000px;">
       <div class="dash-tabs" style="margin-top:10px;">
         <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
-        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
+        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders & Fulfillment</button>
         <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
       </div>
 
@@ -448,9 +461,9 @@
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
-      <!-- Tab 2: My Orders -->
+      <!-- Tab 2: My Orders & Fulfillment -->
       <div id="sellerTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Orders containing your products</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage & Pack Orders</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
       </div>
 
@@ -478,16 +491,32 @@
         <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
       </div>
 
+      <!-- Feature 4: Admin Summary Cards -->
+      <div class="summary-cards-grid">
+        <div class="summary-card">
+          <h4>Total Sales Revenue</h4>
+          <div class="val" id="admSummarySales">₹0</div>
+        </div>
+        <div class="summary-card">
+          <h4>Admin Commission Earned</h4>
+          <div class="val" id="admSummaryCommission">₹0</div>
+        </div>
+        <div class="summary-card">
+          <h4>Active Vendors</h4>
+          <div class="val" id="admSummaryVendors">0</div>
+        </div>
+      </div>
+
       <div class="dash-tabs">
-        <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management</button>
+        <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management & Payouts</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Admin Listing</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Commission Settings</button>
       </div>
 
-      <!-- Tab 1: Sellers Management -->
+      <!-- Tab 1: Sellers Management & Payout Tracker -->
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Vendors, Unique IDs & KYC</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Vendors, Payout Settlement & KYC</h5>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
       </div>
 
@@ -1006,6 +1035,7 @@
         bankName: verifiedBankDetails.bank,
         branch: verifiedBankDetails.branch,
         ifsc: verifiedBankDetails.ifsc,
+        payoutSettled: false,
         status: 'Pending'
       };
 
@@ -1096,22 +1126,35 @@
         pArea.innerHTML = h;
       }
 
+      // Feature 1: Seller Order Fulfillment & Tracking
       let totalSales = 0;
       let totalCommission = 0;
       let oHtml = '';
       ordersList.forEach(o => {
         let sellerItems = o.items.filter(i => i.sellerId === sellerId);
         if(sellerItems.length > 0) {
-          sellerItems.forEach(si => {
+          sellerItems.forEach((si, itemIdx) => {
             let itemTotal = si.price * si.qty;
             let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
             totalSales += itemTotal;
             totalCommission += commissionAmt;
             oHtml += `
-              <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px; font-size:0.85rem;">
+              <div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;">
                 <div><b>Order #${o.id}</b> - ${o.date}</div>
-                <div>Product: ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}</div>
-                <div>Status: <span style="color:var(--success); font-weight:bold;">${o.status}</span></div>
+                <div style="margin:6px 0;"><strong>Product:</strong> ${si.title} (Qty: ${si.qty}) | <strong>Total:</strong> ₹${itemTotal}</div>
+                <div style="margin-bottom:8px;"><strong>Customer:</strong> ${o.name} (${o.phone}), ${o.address}</div>
+                <div style="background:#fff; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                  <div style="margin-bottom:6px;"><strong>Fulfillment Status:</strong> <span style="color:var(--success); font-weight:bold;">${si.fulfillmentStatus || 'Processing'}</span></div>
+                  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.8rem; max-width:150px;">
+                      <option value="Processing" ${si.fulfillmentStatus==='Processing'?'selected':''}>Processing</option>
+                      <option value="Packed & Shipped" ${si.fulfillmentStatus==='Packed & Shipped'?'selected':''}>Packed & Shipped</option>
+                      <option value="Delivered" ${si.fulfillmentStatus==='Delivered'?'selected':''}>Delivered</option>
+                    </select>
+                    <input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="Tracking / Courier ID" value="${si.trackingId || ''}" style="padding:6px; font-size:0.8rem; max-width:180px;">
+                    <button onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:bold;">Update Fulfillment</button>
+                  </div>
+                </div>
               </div>
             `;
           });
@@ -1121,6 +1164,24 @@
       document.getElementById('sellerTotalSales').innerText = '₹' + totalSales;
       document.getElementById('sellerTotalCommission').innerText = '₹' + totalCommission;
       document.getElementById('sellerNetEarnings').innerText = '₹' + (totalSales - totalCommission);
+    }
+
+    function updateItemFulfillment(orderId, sku) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.items.forEach((item, idx) => {
+          if(item.sku === sku) {
+            let statusSel = document.getElementById(`fulfillStatus_${orderId}_${idx}`);
+            let trackInp = document.getElementById(`fulfillTracking_${orderId}_${idx}`);
+            if(statusSel) item.fulfillmentStatus = statusSel.value;
+            if(trackInp) item.trackingId = trackInp.value.trim();
+          }
+        });
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        alert('Fulfillment status & tracking updated successfully!');
+        let foundSeller = sellersList.find(s => s.email === currentUser);
+        if(foundSeller) loadSellerData(foundSeller.id);
+      }
     }
 
     function editSellerProduct(globalIdx) {
@@ -1233,7 +1294,7 @@
         name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
-        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice })),
+        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice, fulfillmentStatus: 'Processing', trackingId: '' })),
         subtotal,
         pgFee,
         total: grandTotal,
@@ -1263,6 +1324,7 @@
       }
     }
 
+    // Feature 3: Customer Visual Order Timeline
     function renderOrdersPage() {
       const area = document.getElementById('ordersPageList');
       if(ordersList.length === 0) {
@@ -1286,7 +1348,11 @@
           returnSectionHtml = `<div style="margin-top:8px;"><button onclick="markAsDeliveredByCustomer('${o.id}')" style="background:var(--accent); color:#000; border:none; padding:8px 14px; border-radius:4px; font-weight:700; cursor:pointer; font-size:0.8rem;">Click Here When You Receive Order</button></div>`;
         }
 
-        let itemsSummary = o.items.map(i => `${i.title} (x${i.qty})`).join(', ');
+        let itemsSummary = o.items.map(i => `${i.title} (x${i.qty}) [Status: ${i.fulfillmentStatus || 'Processing'}${i.trackingId ? ', Tracking: ' + i.trackingId : ''}]`).join('<br>');
+
+        // Timeline steps determination
+        let isDelivered = o.status === 'Delivered';
+        let isShipped = o.items.some(i => i.fulfillmentStatus === 'Packed & Shipped' || i.fulfillmentStatus === 'Delivered');
 
         html += `
           <div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
@@ -1295,8 +1361,15 @@
               <span>${o.date}</span>
             </div>
             <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${itemsSummary}</div>
-            <div style="font-size:0.85rem; color:#555; margin-bottom:6px;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
-            <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;"><strong>Status:</strong> <span style="color:var(--success); font-weight:700;">${o.status}</span></div>
+            
+            <!-- Visual Timeline Tracker -->
+            <div class="timeline">
+              <div class="timeline-step active"><span>✓</span>Order Placed</div>
+              <div class="timeline-step ${isShipped || isDelivered ? 'active' : ''}"><span>${isShipped || isDelivered ? '✓' : '2'}</span>Shipped</div>
+              <div class="timeline-step ${isDelivered ? 'active' : ''}"><span>${isDelivered ? '✓' : '3'}</span>Delivered</div>
+            </div>
+
+            <div style="font-size:0.85rem; color:#555; margin:8px 0;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
             ${returnSectionHtml}
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px; font-size:0.85rem;">
               <span>Subtotal: ₹${o.subtotal} | PG Fee (2%): ₹${o.pgFee}</span>
@@ -1342,12 +1415,26 @@
     }
 
     function loadAdminMasterData() {
-      // 1. Sellers List with Line-by-Line UI & Remove Button
+      // Feature 4: Admin Summary Cards calculation
+      let totalSalesRev = 0;
+      let totalCommEarned = 0;
+      ordersList.forEach(o => {
+        totalSalesRev += o.subtotal;
+        totalCommEarned += Math.round(o.subtotal * (globalCommission / 100));
+      });
+      let activeVendorsCount = sellersList.filter(s => s.status === 'Approved').length;
+
+      document.getElementById('admSummarySales').innerText = '₹' + totalSalesRev;
+      document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
+      document.getElementById('admSummaryVendors').innerText = activeVendorsCount;
+
+      // 1. Sellers List with Payout Tracker (Feature 2)
       let sArea = document.getElementById('admSellersList');
       if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
       else {
         let h = '';
         sellersList.forEach((s, idx) => {
+          let payoutStatusLabel = s.payoutSettled ? '<span style="color:var(--success); font-weight:bold;">Settled (Paid)</span>' : '<span style="color:orange; font-weight:bold;">Pending Payout</span>';
           h += `
             <div style="background:#fcfcfc; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem; line-height:1.6;">
               <div><strong>Seller Unique ID:</strong> <span style="color:var(--accent); font-weight:bold;">${s.uniqueId || 'KS-S100'}</span></div>
@@ -1358,10 +1445,12 @@
               <div><strong>Bank A/C:</strong> ${s.accountNo} | <strong>IFSC:</strong> ${s.ifsc}</div>
               <div><strong>Bank Name:</strong> ${s.bankName}, ${s.branch}</div>
               <div><strong>Status:</strong> <strong style="color:${s.status==='Approved'?'var(--success)':(s.status==='Blocked'?'red':'orange')}">${s.status}</strong></div>
+              <div><strong>Payout Status:</strong> ${payoutStatusLabel}</div>
               <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
                 <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Approve</button>
                 <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Suspend</button>
                 <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Block</button>
+                <button onclick="togglePayoutSettled(${idx})" style="background:#2196f3; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">${s.payoutSettled ? 'Mark Pending' : 'Mark Payout Settled'}</button>
                 <button onclick="removeSellerAccount(${idx})" style="background:#000; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Remove / Delete</button>
               </div>
             </div>
@@ -1389,10 +1478,12 @@
       else {
         let oHtml = '';
         ordersList.forEach(o => {
+          let itemsDesc = o.items.map(i => `${i.title} (Status: ${i.fulfillmentStatus || 'Processing'}${i.trackingId ? ', Tracking: ' + i.trackingId : ''})`).join('<br>');
           oHtml += `
             <div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.9rem;">
               <div><b>Order #${o.id}</b> - ${o.name} (${o.phone}) | Total: ₹${o.total}</div>
-              <div style="color:#555; margin:6px 0;">Status: <strong style="color:var(--success);">${o.status}</strong></div>
+              <div style="margin:6px 0; color:#444;">${itemsDesc}</div>
+              <div style="color:#555;">Status: <strong style="color:var(--success);">${o.status}</strong></div>
             </div>
           `;
         });
@@ -1407,6 +1498,14 @@
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       loadAdminMasterData();
       alert(`Seller status updated to ${newStatus}`);
+    }
+
+    // Feature 2: Payout Settlement Toggle
+    function togglePayoutSettled(idx) {
+      sellersList[idx].payoutSettled = !sellersList[idx].payoutSettled;
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      loadAdminMasterData();
+      alert(`Payout status updated successfully.`);
     }
 
     function removeSellerAccount(idx) {
