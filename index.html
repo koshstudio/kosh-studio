@@ -416,7 +416,7 @@
       <!-- Tab 1: My Products -->
       <div id="sellerTabProducts" class="dash-tab-content active">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product (Commission Automatically Added)</h5>
+          <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product</h5>
           <input type="hidden" id="sellerEditIndex" value="-1">
           <div class="form-row">
             <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
@@ -473,19 +473,38 @@
 
       <div class="dash-tabs">
         <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ All Products & Pricing</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Admin Listing</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Commission Settings</button>
       </div>
 
       <!-- Tab 1: Sellers Management -->
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Seller Approvals & KYC</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Vendors, Unique IDs & KYC</h5>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
       </div>
 
-      <!-- Tab 2: Products -->
+      <!-- Tab 2: Products & Admin Listing -->
       <div id="admTabProducts" class="dash-tab-content">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+          <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing (Dropshipping / Kosh Direct)</h5>
+          <input type="hidden" id="adminEditIndex" value="-1">
+          <div class="form-row">
+            <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
+            <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Watches / Wallets / etc."></div>
+            <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
+            <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
+          </div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="aProdImage" placeholder="Image URL"></div>
+          <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
+          <button class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
+        </div>
         <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Marketplace Products across Vendors</h5>
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
@@ -563,7 +582,7 @@
     </div>
   </div>
 
-  <!-- BECOME A SELLER REGISTRATION MODAL (WITH SECURE BANK & IFSC VERIFICATION) -->
+  <!-- BECOME A SELLER REGISTRATION MODAL -->
   <div class="modal-overlay" id="becomeSellerModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -852,12 +871,12 @@
 
         if(foundSeller) {
           if(foundSeller.status === 'Approved') {
-            titleEl.innerText = '🏪 Seller Account Active';
-            textEl.innerText = 'Status: Approved. Manage your dropshipping & products.';
+            titleEl.innerText = `🏪 Seller Account Active (ID: ${foundSeller.uniqueId})`;
+            textEl.innerText = `Login Email: ${foundSeller.email} | Status: Approved`;
             btnEl.innerText = 'Open Seller Dashboard';
             btnEl.style.background = '#2196f3';
           } else {
-            titleEl.innerText = '🏪 Seller Application Pending';
+            titleEl.innerText = `🏪 Seller Application (${foundSeller.uniqueId})`;
             textEl.innerText = `Status: ${foundSeller.status} (Waiting for Admin Approval)`;
             btnEl.innerText = 'Application Submitted';
             btnEl.style.background = '#888';
@@ -865,7 +884,7 @@
           }
         } else {
           titleEl.innerText = '🏪 Want to Sell on Kosh Studio?';
-          textEl.innerText = 'Register as a vendor & start dropshipping / selling your products.';
+          textEl.innerText = 'Register as a vendor & get your unique Seller ID.';
           btnEl.innerText = 'Register as Seller';
           btnEl.style.background = '#2196f3';
           btnEl.disabled = false;
@@ -951,10 +970,13 @@
         return;
       }
 
+      let uniqueShortId = 'KS-S' + Math.floor(100 + Math.random() * 900);
+
       let newSeller = {
         id: 'SEL-' + Math.floor(1000 + Math.random() * 9000),
+        uniqueId: uniqueShortId,
         name, email, phone, store,
-        accountNo: 'XXXXXX' + acc1.slice(-4), // Masked for security
+        accountNo: 'XXXXXX' + acc1.slice(-4),
         bankName: verifiedBankDetails.bank,
         branch: verifiedBankDetails.branch,
         ifsc: verifiedBankDetails.ifsc,
@@ -964,7 +986,7 @@
       sellersList.push(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeBecomeSellerModal();
-      alert('Seller application submitted successfully with verified bank details! Awaiting Admin Approval.');
+      alert(`Seller application submitted! Your Assigned Unique ID is ${uniqueShortId}. Awaiting Admin Approval.`);
       checkLoginStatus();
     }
 
@@ -972,7 +994,7 @@
     function loadSellerDashboardData() {
       let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
       if(!foundSeller) { alert('Your seller account is not approved yet.'); navigateTo('profile'); return; }
-      document.getElementById('sellerdashName').innerText = foundSeller.store;
+      document.getElementById('sellerdashName').innerText = `${foundSeller.store} (${foundSeller.uniqueId})`;
       loadSellerData(foundSeller.id);
     }
 
@@ -1013,7 +1035,7 @@
           id: Date.now(),
           sku, title, category,
           sellerId: foundSeller.id,
-          sellerName: foundSeller.store,
+          sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`,
           basePrice,
           price: finalPrice,
           mrp, stock, image, desc
@@ -1294,18 +1316,27 @@
     }
 
     function loadAdminMasterData() {
+      // 1. Sellers List with Line-by-Line UI & Remove Button
       let sArea = document.getElementById('admSellersList');
       if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
       else {
         let h = '';
         sellersList.forEach((s, idx) => {
           h += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
-              <div><b>${s.store}</b> (${s.name})<br><span style="color:var(--muted);">${s.email} | ${s.phone} | A/C: ${s.accountNo} | Bank: ${s.bankName}, ${s.branch} (${s.ifsc})</span><br>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
-              <div style="display:flex; gap:6px;">
-                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Approve</button>
-                <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Suspend</button>
-                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Block</button>
+            <div style="background:#fcfcfc; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem; line-height:1.6;">
+              <div><strong>Seller Unique ID:</strong> <span style="color:var(--accent); font-weight:bold;">${s.uniqueId || 'KS-S100'}</span></div>
+              <div><strong>Store Name:</strong> ${s.store}</div>
+              <div><strong>Owner Name:</strong> ${s.name}</div>
+              <div><strong>Email (Login):</strong> ${s.email}</div>
+              <div><strong>Phone:</strong> ${s.phone}</div>
+              <div><strong>Bank A/C:</strong> ${s.accountNo} | <strong>IFSC:</strong> ${s.ifsc}</div>
+              <div><strong>Bank Name:</strong> ${s.bankName}, ${s.branch}</div>
+              <div><strong>Status:</strong> <strong style="color:${s.status==='Approved'?'var(--success)':(s.status==='Blocked'?'red':'orange')}">${s.status}</strong></div>
+              <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Approve</button>
+                <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Suspend</button>
+                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Block</button>
+                <button onclick="removeSellerAccount(${idx})" style="background:#000; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Remove / Delete</button>
               </div>
             </div>
           `;
@@ -1313,6 +1344,7 @@
         sArea.innerHTML = h;
       }
 
+      // 2. Products List
       let pArea = document.getElementById('admProductsList');
       let pHtml = '';
       products.forEach((p, idx) => {
@@ -1325,6 +1357,7 @@
       });
       pArea.innerHTML = pHtml;
 
+      // 3. Orders List
       let oArea = document.getElementById('admOrdersList');
       if(ordersList.length === 0) { oArea.innerHTML = 'No orders.'; }
       else {
@@ -1350,6 +1383,15 @@
       alert(`Seller status updated to ${newStatus}`);
     }
 
+    function removeSellerAccount(idx) {
+      if(confirm('Are you sure you want to completely remove/delete this seller?')) {
+        sellersList.splice(idx, 1);
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        loadAdminMasterData();
+        alert('Seller account deleted successfully.');
+      }
+    }
+
     function adminRemoveProduct(idx) {
       if(confirm('Remove product?')) {
         products.splice(idx, 1);
@@ -1357,6 +1399,42 @@
         renderProducts();
         loadAdminMasterData();
       }
+    }
+
+    function saveAdminProduct() {
+      let title = document.getElementById('aProdTitle').value.trim();
+      let sku = document.getElementById('aProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
+      let category = document.getElementById('aProdCategory').value.trim() || 'General';
+      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
+      let stock = parseInt(document.getElementById('aProdStock').value) || 10;
+      let image = document.getElementById('aProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+      let desc = document.getElementById('aProdDesc').value.trim() || 'Kosh Direct item.';
+
+      if(!title || !price || !mrp) { alert('Fill Title, Price, and MRP.'); return; }
+
+      products.push({
+        id: Date.now(),
+        sku, title, category,
+        sellerId: 'admin',
+        sellerName: 'Kosh Direct (Admin)',
+        basePrice: price,
+        price, mrp, stock, image, desc
+      });
+
+      localStorage.setItem('kosh_products', JSON.stringify(products));
+      renderProducts();
+      loadAdminMasterData();
+      alert('Admin product listed successfully!');
+
+      document.getElementById('aProdTitle').value = '';
+      document.getElementById('aProdSku').value = '';
+      document.getElementById('aProdCategory').value = '';
+      document.getElementById('aProdPrice').value = '';
+      document.getElementById('aProdMrp').value = '';
+      document.getElementById('aProdStock').value = '';
+      document.getElementById('aProdImage').value = '';
+      document.getElementById('aProdDesc').value = '';
     }
 
     function saveGlobalCommission() {
