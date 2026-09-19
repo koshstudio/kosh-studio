@@ -303,6 +303,10 @@
       </div>
     </header>
 
+    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
+      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
+    </div>
+
     <div class="categories-bar" id="categoriesBar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
       <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
@@ -337,7 +341,6 @@
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
         
-        <!-- Safe Seller Info Card (Feature 1) -->
         <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
           🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
         </div>
@@ -356,7 +359,6 @@
           <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
           <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet.</div>
           
-          <!-- Verified Review Form (Feature 2) -->
           <div id="verifiedReviewBox" style="border-top:1px solid #eee; padding-top:12px; display:none;">
             <h5 style="font-size:0.85rem; margin-bottom:6px; color:var(--success);">✅ Write a Verified Review (Order Delivered)</h5>
             <div class="form-row">
@@ -460,9 +462,8 @@
         <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
       </div>
 
-      <!-- Tab 1: My Products, Bulk CSV & Catalog Sharing (Feature 3) -->
+      <!-- Tab 1: My Products, Bulk CSV & Catalog Sharing -->
       <div id="sellerTabProducts" class="dash-tab-content active">
-        <!-- Catalog Sharing Box -->
         <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
           <strong>🔗 Share Your Store Catalog:</strong> Send all your products together to your personal customers via WhatsApp.
           <button class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link on WhatsApp</button>
@@ -759,6 +760,7 @@
     let paymentOtpGenerated = "";
     let verifiedBankDetails = null;
     let parsedSellerCsvRows = [];
+    let activeSellerFilter = null;
 
     // --- Gallery Image Upload Helper ---
     function handleImageGalleryUpload(input, targetInputId) {
@@ -772,12 +774,31 @@
       }
     }
 
-    // --- Render Products ---
+    // --- Render Products with Catalog URL Support ---
     function renderProducts(filterCat = 'All') {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
-      const filtered = filterCat === 'All' ? products : products.filter(p => p.category === filterCat);
+      // Check URL params for seller catalog sharing
+      const urlParams = new URLSearchParams(window.location.search);
+      let sellerParam = urlParams.get('seller');
+      if(sellerParam) {
+        activeSellerFilter = sellerParam;
+      }
+
+      let filtered = products;
+      if(activeSellerFilter) {
+        filtered = filtered.filter(p => p.sellerId === activeSellerFilter || p.sellerName?.includes(activeSellerFilter));
+        document.getElementById('catalogStoreName').innerText = activeSellerFilter;
+        document.getElementById('catalogBanner').style.display = 'block';
+      } else {
+        document.getElementById('catalogBanner').style.display = 'none';
+      }
+
+      if(filterCat !== 'All') {
+        filtered = filtered.filter(p => p.category === filterCat);
+      }
+
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
       const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey));
 
@@ -810,6 +831,12 @@
         `;
         grid.appendChild(card);
       });
+    }
+
+    function clearCatalogFilter() {
+      activeSellerFilter = null;
+      window.history.replaceState({}, document.title, window.location.pathname);
+      renderProducts();
     }
 
     function navigateTo(pageId) {
@@ -853,7 +880,6 @@
       document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
       document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
       
-      // Feature 1: Safe Seller Info Display
       document.getElementById('pPageSellerName').innerText = currentSelectedProduct.sellerName || 'Kosh Direct (Admin)';
 
       document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
@@ -877,11 +903,9 @@
         return;
       }
 
-      // Check if user has a Delivered order containing this product
       let hasDelivered = ordersList.some(o => 
         o.userEmail === currentUser && 
-        o.status === 'Delivered' && 
-        o.items.some(i => i.sellerId === currentSelectedProduct.sellerId || true) // matches product context
+        o.status === 'Delivered'
       );
 
       if (hasDelivered) {
@@ -890,7 +914,7 @@
       } else {
         reviewBox.style.display = 'none';
         reviewMsg.style.display = 'block';
-        reviewMsg.innerText = "🔒 Only customers who have received (Delivered) this product can submit ratings & reviews.";
+        reviewMsg.innerText = "🔒 Only customers who have received (Delivered) an order can submit ratings & reviews.";
       }
     }
 
@@ -947,7 +971,7 @@
       }
     }
 
-    // --- Cart System (Updated with 3% Fee) ---
+    // --- Cart System ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { alert("Item is out of stock."); return; }
@@ -1291,14 +1315,8 @@
     function shareSellerCatalog() {
       let foundSeller = sellersList.find(s => s.email === currentUser);
       if(!foundSeller) return;
-      let myProds = products.filter(p => p.sellerId === foundSeller.id);
-      if(myProds.length === 0) { alert('You have no products listed to share.'); return; }
-
-      let text = `🛍️ *Check out our exclusive collection at ${foundSeller.store}!* (%23${foundSeller.uniqueId})%0A%0A`;
-      myProds.forEach((p, idx) => {
-        text += `${idx+1}. *${p.title}* - ₹${p.price} (MRP: ₹${p.mrp})%0A`;
-      });
-      text += `%0AOrder now securely on Kosh Studio!`;
+      let catalogUrl = window.location.origin + window.location.pathname + `?seller=${foundSeller.uniqueId}`;
+      let text = `🛍️ *Check out our exclusive store collection at ${foundSeller.store}!*%0ABrowse all products here:%0A${catalogUrl}`;
       let whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
       window.open(whatsappUrl, '_blank');
     }
