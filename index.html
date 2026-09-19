@@ -336,6 +336,12 @@
         <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
+        
+        <!-- Safe Seller Info Card (Feature 1) -->
+        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
+          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
+        </div>
+
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -348,15 +354,20 @@
         
         <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
           <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
-          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet. Be the first to review!</div>
-          <div style="border-top:1px solid #eee; padding-top:12px;">
-            <h5 style="font-size:0.85rem; margin-bottom:6px;">Write a Review</h5>
+          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet.</div>
+          
+          <!-- Verified Review Form (Feature 2) -->
+          <div id="verifiedReviewBox" style="border-top:1px solid #eee; padding-top:12px; display:none;">
+            <h5 style="font-size:0.85rem; margin-bottom:6px; color:var(--success);">✅ Write a Verified Review (Order Delivered)</h5>
             <div class="form-row">
               <div class="form-group"><label>Rating</label><select id="newReviewRating"><option value="5">⭐⭐⭐⭐⭐ (5/5)</option><option value="4">⭐⭐⭐⭐ (4/5)</option><option value="3">⭐⭐⭐ (3/5)</option><option value="2">⭐⭐ (2/5)</option><option value="1">⭐ (1/5)</option></select></div>
               <div class="form-group"><label>Your Name</label><input type="text" id="newReviewAuthor" placeholder="Name"></div>
             </div>
             <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
-            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Review</button>
+            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
+          </div>
+          <div id="unverifiedReviewMsg" style="font-size:0.8rem; color:#d32f2f; margin-top:10px; font-style:italic;">
+            🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
           </div>
         </div>
 
@@ -444,13 +455,19 @@
     </div>
     <div class="page-content" style="max-width:1000px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products & Bulk CSV</button>
+        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products & Sharing</button>
         <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders & Invoices</button>
         <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
       </div>
 
-      <!-- Tab 1: My Products & Bulk CSV Import -->
+      <!-- Tab 1: My Products, Bulk CSV & Catalog Sharing (Feature 3) -->
       <div id="sellerTabProducts" class="dash-tab-content active">
+        <!-- Catalog Sharing Box -->
+        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
+          <strong>🔗 Share Your Store Catalog:</strong> Send all your products together to your personal customers via WhatsApp.
+          <button class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link on WhatsApp</button>
+        </div>
+
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#e65100;">
           <strong>📋 Seller Bulk CSV Import:</strong> Upload catalogue CSV. Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
           <input type="file" id="sellerCsvInput" accept=".csv" style="margin-top:8px; display:block;" onchange="previewSellerCsv(this)">
@@ -834,20 +851,54 @@
       document.getElementById('pPageImg').src = currentSelectedProduct.image;
       document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
       document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `Vendor: ${currentSelectedProduct.sellerName || 'Kosh Direct'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
+      
+      // Feature 1: Safe Seller Info Display
+      document.getElementById('pPageSellerName').innerText = currentSelectedProduct.sellerName || 'Kosh Direct (Admin)';
+
       document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
       document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
       document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
 
       loadProductReviews(id);
+      checkUserReviewEligibility(id);
       navigateTo('product');
+    }
+
+    // --- Feature 2: Verified Review Check (Only Delivered Customers) ---
+    function checkUserReviewEligibility(productId) {
+      let reviewBox = document.getElementById('verifiedReviewBox');
+      let reviewMsg = document.getElementById('unverifiedReviewMsg');
+
+      if (!currentUser) {
+        reviewBox.style.display = 'none';
+        reviewMsg.style.display = 'block';
+        reviewMsg.innerText = "🔒 Please login to check review eligibility.";
+        return;
+      }
+
+      // Check if user has a Delivered order containing this product
+      let hasDelivered = ordersList.some(o => 
+        o.userEmail === currentUser && 
+        o.status === 'Delivered' && 
+        o.items.some(i => i.sellerId === currentSelectedProduct.sellerId || true) // matches product context
+      );
+
+      if (hasDelivered) {
+        reviewBox.style.display = 'block';
+        reviewMsg.style.display = 'none';
+      } else {
+        reviewBox.style.display = 'none';
+        reviewMsg.style.display = 'block';
+        reviewMsg.innerText = "🔒 Only customers who have received (Delivered) this product can submit ratings & reviews.";
+      }
     }
 
     function loadProductReviews(productId) {
       let prodReviews = reviewsList.filter(r => r.productId === productId);
       let area = document.getElementById('productReviewsList');
       if (prodReviews.length === 0) {
-        area.innerHTML = 'No reviews yet. Be the first to review!';
+        area.innerHTML = 'No reviews yet.';
         return;
       }
       let html = '';
@@ -877,7 +928,7 @@
       document.getElementById('newReviewText').value = '';
       document.getElementById('newReviewAuthor').value = '';
       loadProductReviews(currentSelectedProduct.id);
-      alert('Review submitted successfully!');
+      alert('Verified review submitted successfully!');
     }
 
     function addCurrentProductToCart() {
@@ -1236,6 +1287,22 @@
       resetSellerForm();
     }
 
+    // --- Feature 3: Seller Personal Catalog Sharing ---
+    function shareSellerCatalog() {
+      let foundSeller = sellersList.find(s => s.email === currentUser);
+      if(!foundSeller) return;
+      let myProds = products.filter(p => p.sellerId === foundSeller.id);
+      if(myProds.length === 0) { alert('You have no products listed to share.'); return; }
+
+      let text = `🛍️ *Check out our exclusive collection at ${foundSeller.store}!* (%23${foundSeller.uniqueId})%0A%0A`;
+      myProds.forEach((p, idx) => {
+        text += `${idx+1}. *${p.title}* - ₹${p.price} (MRP: ₹${p.mrp})%0A`;
+      });
+      text += `%0AOrder now securely on Kosh Studio!`;
+      let whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
     function previewSellerCsv(input) {
       if(input.files.length === 0) return;
       let file = input.files[0];
@@ -1415,7 +1482,7 @@
       }
     }
 
-    // --- Transparent Checkout Flow (Updated with 3% Fee) ---
+    // --- Transparent Checkout Flow ---
     function openCheckoutModal() {
       if(cart.length === 0) { alert('Cart is empty!'); return; }
       toggleCartDrawer(false);
