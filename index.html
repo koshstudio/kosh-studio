@@ -396,11 +396,12 @@
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
       </div>
 
+      <!-- Secure Signup with Smart Email Filter (No OTP Limits) -->
       <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
         <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="Enter valid email (e.g. name@gmail.com)"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
         <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button class="btn-solid" onclick="handleSignup()">Sign Up</button>
+        <button class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
       </div>
 
@@ -1047,20 +1048,31 @@
       }
     }
 
-    // --- Strict Authentication & Fake Email Blocking ---
+    // --- Smart Email Validation & Garbage Filter (No OTP Limits) ---
     function switchAuthView(view) {
       document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
       document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
     }
 
-    // Strict Email Validation Helper
     function isValidEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(email)) return false;
-      // Block common fake/garbage domains or test strings
-      const fakeDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com'];
-      let domain = email.split('@')[1].toLowerCase();
-      if (fakeDomains.includes(domain)) return false;
+
+      let parts = email.split('@');
+      let localPart = parts[0].toLowerCase();
+      let domain = parts[1].toLowerCase();
+
+      // Block fake/dummy domains
+      const blockedDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com', 'mail.com'];
+      if (blockedDomains.includes(domain)) return false;
+
+      // Block random keyboard smashing / garbage text (jaise hshshwjsn)
+      const vowels = /[aeiou]/i;
+      if (!vowels.test(localPart) && localPart.length > 5) return false;
+
+      let uniqueChars = new Set(localPart).size;
+      if (localPart.length > 6 && uniqueChars < 4) return false; 
+
       return true;
     }
 
@@ -1076,12 +1088,12 @@
         alert('Password must be at least 6 characters long.');
         return;
       }
+
       if (!isValidEmail(email)) {
-        alert('❌ Invalid or fake email address detected! Please enter a real active email ID (e.g. gmail.com, yahoo.com).');
+        alert('❌ Invalid or fake email address detected! Please enter a real working email ID (e.g. yourname@gmail.com).');
         return;
       }
 
-      // Check if user already exists
       let existingUser = registeredUsers.find(u => u.email === email);
       if (existingUser) {
         alert('An account with this email already exists! Please Login.');
@@ -1089,14 +1101,13 @@
         return;
       }
 
-      // Save user to registered users database
       registeredUsers.push({ email, pass });
       localStorage.setItem('kosh_registered_users', JSON.stringify(registeredUsers));
 
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      alert('✅ Account created and verified successfully!');
+      alert('✅ Account created successfully!');
     }
 
     async function handleLogin() {
@@ -1108,7 +1119,6 @@
         return;
       }
 
-      // Verify if user is registered in the database
       let foundUser = registeredUsers.find(u => u.email === email && u.pass === pass);
       if (!foundUser) {
         alert('❌ Login Failed! Invalid email or password, or account does not exist. Please Sign Up first.');
