@@ -241,13 +241,6 @@
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    /* Spacious Admin / Seller Dashboard Modal */
-    .dashboard-modal-box {
-      background: #fff; width: 95%; max-width: 960px; height: 90vh; border-radius: 8px; padding: 24px; position: relative;
-      display: flex; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
-    }
-    .dashboard-body-area { flex-grow: 1; overflow-y: auto; padding-right: 6px; margin-top: 15px; }
-
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select {
@@ -346,7 +339,7 @@
     </div>
   </div>
 
-  <!-- PROFILE & AUTHENTICATION & BECOME A SELLER PAGE -->
+  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -360,8 +353,6 @@
         <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
         <button class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
-        <hr style="margin:20px 0; border:0; border-top:1px solid var(--border);">
-        <button onclick="openBecomeSellerModal()" style="background:#2196f3; color:#fff; border:none; padding:10px; width:100%; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.85rem;">🏪 Want to Sell on Kosh Studio? Register as Seller</button>
       </div>
 
       <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
@@ -387,10 +378,12 @@
           </div>
           <span style="font-size:1.2rem; color:var(--muted);">›</span>
         </div>
-        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:15px; border-radius:6px; border:1px solid #bbdefb; text-align:center; display:none;">
-          <h4 style="font-size:0.95rem; color:#0d47a1; margin-bottom:6px;">🏪 Seller Account Active</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:10px;" id="sellerStatusText">Status: Approved</p>
-          <button class="btn-solid" style="background:#2196f3;" onclick="openSellerDashboard()">Open Seller Dashboard</button>
+        
+        <!-- Persistent Become a Seller / Portal Box -->
+        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
+          <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
+          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start dropshipping / selling your products.</p>
+          <button class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
         </div>
       </div>
     </div>
@@ -404,6 +397,113 @@
     </div>
     <div class="page-content">
       <div id="ordersPageList"></div>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
+  <div id="page-seller-dashboard" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</span>
+    </div>
+    <div class="page-content" style="max-width:1000px;">
+      <div class="dash-tabs" style="margin-top:10px;">
+        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
+        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
+        <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
+      </div>
+
+      <!-- Tab 1: My Products -->
+      <div id="sellerTabProducts" class="dash-tab-content active">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+          <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product (Commission Automatically Added)</h5>
+          <input type="hidden" id="sellerEditIndex" value="-1">
+          <div class="form-row">
+            <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
+            <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Watches / Wallets / etc."></div>
+            <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+            <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
+          </div>
+          <div style="background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.85rem; font-weight:bold; margin-bottom:12px;" id="previewListingPriceText">
+            ℹ️ Final Listing Price for Customer = Base Price + Admin Commission
+          </div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
+          <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
+          <button class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
+        </div>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Your Listed Products</h5>
+        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
+      </div>
+
+      <!-- Tab 2: My Orders -->
+      <div id="sellerTabOrders" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Orders containing your products</h5>
+        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
+      </div>
+
+      <!-- Tab 3: Earnings -->
+      <div id="sellerTabEarnings" class="dash-tab-content">
+        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
+          <h4 style="margin-bottom:12px; font-size:1.1rem;">💰 Earnings Summary</h4>
+          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Total Sales Revenue:</strong> <span id="sellerTotalSales">₹0</span></p>
+          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Marketplace Commission Deducted:</strong> <span id="sellerTotalCommission">₹0</span></p>
+          <p style="font-size:1.1rem; color:var(--success); font-weight:bold; margin-top:12px;">Net Payable Payout: <span id="sellerNetEarnings">₹0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE (rohitku316 / Rohit@2006) -->
+  <div id="page-admin-dashboard" class="app-page">
+    <div class="page-header" style="background:#111; color:#fff;">
+      <button class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
+      <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
+    </div>
+    <div class="page-content" style="max-width:1100px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#fff; padding:12px; border:1px solid var(--border); border-radius:6px;">
+        <h4 style="font-size:0.95rem; color:var(--success);">✅ Logged in as Master Admin</h4>
+        <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
+      </div>
+
+      <div class="dash-tabs">
+        <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ All Products & Pricing</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Commission Settings</button>
+      </div>
+
+      <!-- Tab 1: Sellers Management -->
+      <div id="admTabSellers" class="dash-tab-content active">
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Seller Approvals & KYC</h5>
+        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
+      </div>
+
+      <!-- Tab 2: Products -->
+      <div id="admTabProducts" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Marketplace Products across Vendors</h5>
+        <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
+      </div>
+
+      <!-- Tab 3: Orders -->
+      <div id="admTabOrders" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Customer Orders</h5>
+        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
+      </div>
+
+      <!-- Tab 4: Commission Settings -->
+      <div id="admTabSettings" class="dash-tab-content">
+        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px; max-width:500px;">
+          <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
+          <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
+          <button class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -425,7 +525,7 @@
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL WITH TRANSPARENT FEE BREAKDOWN -->
+  <!-- CHECKOUT MODAL -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -471,7 +571,7 @@
         <button onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
-      <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com"></div>
+      <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com" readonly style="background:#f1f3f6;"></div>
       <div class="form-group"><label>Mobile Number</label><input type="tel" id="sellerRegPhone" placeholder="10-digit mobile number" maxlength="10"></div>
       <div class="form-group"><label>Business / Store Name</label><input type="text" id="sellerRegStore" placeholder="Store name"></div>
       <div class="form-group"><label>Bank Account Number & IFSC (For Payouts)</label><input type="text" id="sellerRegBank" placeholder="A/C No, IFSC Code"></div>
@@ -479,126 +579,22 @@
     </div>
   </div>
 
-  <!-- SELLER DASHBOARD MODAL -->
-  <div class="modal-overlay" id="sellerDashboardModal">
-    <div class="dashboard-modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px;">
-        <h3 style="font-size:1.2rem; color:var(--primary);">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</h3>
-        <button onclick="closeSellerDashboard()" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">✕</button>
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-box" style="max-width:380px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+        <h3 style="font-size:1.1rem;">🔒 Admin Master Login</h3>
+        <button onclick="closeAdminLoginModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
-      <div class="dash-tabs" style="margin-top:12px;">
-        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
-        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
-        <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
-      </div>
-      <div class="dashboard-body-area">
-        <!-- Tab 1: My Products -->
-        <div id="sellerTabProducts" class="dash-tab-content active">
-          <div style="background:#f9f9f9; padding:15px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-            <h5 id="sellerFormTitle" style="margin-bottom:10px; font-size:0.95rem;">➕ Add New Product (Commission Automatically Added)</h5>
-            <input type="hidden" id="sellerEditIndex" value="-1">
-            <div class="form-row">
-              <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
-              <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Watches / Wallets / etc."></div>
-              <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-              <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
-            </div>
-            <div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; font-weight:bold; margin-bottom:10px;" id="previewListingPriceText">
-              ℹ️ Final Listing Price for Customer = Base Price + Admin Commission
-            </div>
-            <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
-            <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="2" placeholder="Description"></textarea></div>
-            <button class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:10px;" onclick="saveSellerProduct()">Save Product</button>
-          </div>
-          <h5 style="margin-bottom:8px; font-size:0.9rem; color:var(--muted);">Your Listed Products</h5>
-          <div id="sellerProductsList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
-        </div>
-        <!-- Tab 2: My Orders -->
-        <div id="sellerTabOrders" class="dash-tab-content">
-          <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">Orders containing your products</h5>
-          <div id="sellerOrdersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;">No orders yet.</div>
-        </div>
-        <!-- Tab 3: Earnings -->
-        <div id="sellerTabEarnings" class="dash-tab-content">
-          <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px;">
-            <h4 style="margin-bottom:10px;">💰 Earnings Summary</h4>
-            <p style="font-size:0.9rem; margin-bottom:6px;"><strong>Total Sales Revenue:</strong> <span id="sellerTotalSales">₹0</span></p>
-            <p style="font-size:0.9rem; margin-bottom:6px;"><strong>Marketplace Commission Deducted:</strong> <span id="sellerTotalCommission">₹0</span></p>
-            <p style="font-size:1rem; color:var(--success); font-weight:bold; margin-top:10px;">Net Payable Payout: <span id="sellerNetEarnings">₹0</span></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECRET ADMIN DASHBOARD MODAL (rohitku316 / Rohit@2006) -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="dashboard-modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px;">
-        <h3 style="font-size:1.2rem; color:var(--primary);">🔒 Admin Master Dashboard</h3>
-        <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">✕</button>
-      </div>
-      
-      <!-- Admin Login -->
-      <div id="adminLoginScreen" style="max-width: 400px; margin: 60px auto; width: 100%;">
-        <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
-        <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
-        <button class="btn-solid" onclick="verifyAdminPassword()" style="margin-top: 10px;">Login to Admin</button>
-      </div>
-
-      <!-- Admin Dashboard Content -->
-      <div id="adminDashboardScreen" style="display:none; flex-direction:column; flex-grow:1; overflow:hidden;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin: 12px 0;">
-          <h4 style="font-size:1rem; color:var(--success);">✅ Master Admin (rohitku316)</h4>
-          <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout</button>
-        </div>
-
-        <div class="dash-tabs">
-          <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management</button>
-          <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ All Products & Pricing</button>
-          <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders</button>
-          <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Commission Settings</button>
-        </div>
-
-        <div class="dashboard-body-area">
-          <!-- Tab 1: Sellers Management -->
-          <div id="admTabSellers" class="dash-tab-content active">
-            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">Manage Seller Approvals & KYC</h5>
-            <div id="admSellersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;">No sellers registered.</div>
-          </div>
-          <!-- Tab 2: Products -->
-          <div id="admTabProducts" class="dash-tab-content">
-            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">All Marketplace Products across Vendors</h5>
-            <div id="admProductsList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
-          </div>
-          <!-- Tab 3: Orders -->
-          <div id="admTabOrders" class="dash-tab-content">
-            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">All Customer Orders</h5>
-            <div id="admOrdersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
-          </div>
-          <!-- Tab 4: Commission Settings -->
-          <div id="admTabSettings" class="dash-tab-content">
-            <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px; max-width:450px;">
-              <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
-              <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
-              <button class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
+      <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
+      <button class="btn-solid" onclick="verifyAdminPassword()" style="margin-top:10px;">Login to Master Admin</button>
     </div>
   </div>
 
   <script>
     // --- State & Storage ---
-    let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10; // Default 10%
+    let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
     let defaultProducts = [
       { id: 1, sku: "MKT-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 2700, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch." },
@@ -666,6 +662,10 @@
         checkLoginStatus();
       } else if(pageId === 'orders') {
         renderOrdersPage();
+      } else if(pageId === 'seller-dashboard') {
+        loadSellerDashboardData();
+      } else if(pageId === 'admin-dashboard') {
+        loadAdminMasterData();
       }
     }
 
@@ -715,7 +715,7 @@
       }
     }
 
-    // --- Cart System & Transparent Fee Calculation ---
+    // --- Cart System ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { alert("Item is out of stock."); return; }
@@ -765,7 +765,7 @@
         container.appendChild(div);
       });
 
-      let pgFee = Math.round(totalProdPrice * 0.02); // 2% Payment Gateway Fee
+      let pgFee = Math.round(totalProdPrice * 0.02);
       let grandTotal = totalProdPrice + pgFee;
 
       document.getElementById('cartItemCountText').innerText = totalItems;
@@ -832,21 +832,31 @@
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
 
-        // Check if user is a registered seller
+        // Check if user is registered seller
         let foundSeller = sellersList.find(s => s.email === currentUser);
-        let portalBox = document.getElementById('sellerPortalLinkBox');
-        let statusText = document.getElementById('sellerStatusText');
+        let titleEl = document.getElementById('portalBoxTitle');
+        let textEl = document.getElementById('sellerStatusText');
+        let btnEl = document.getElementById('portalActionBtn');
+
         if(foundSeller) {
-          portalBox.style.display = 'block';
-          statusText.innerText = `Status: ${foundSeller.status}`;
-          if(foundSeller.status !== 'Approved') {
-            portalBox.querySelector('button').style.display = 'none';
-            statusText.innerText = `Status: ${foundSeller.status} (Waiting for Admin Approval)`;
+          if(foundSeller.status === 'Approved') {
+            titleEl.innerText = '🏪 Seller Account Active';
+            textEl.innerText = 'Status: Approved. Manage your dropshipping & products.';
+            btnEl.innerText = 'Open Seller Dashboard';
+            btnEl.style.background = '#2196f3';
           } else {
-            portalBox.querySelector('button').style.display = 'block';
+            titleEl.innerText = '🏪 Seller Application Pending';
+            textEl.innerText = `Status: ${foundSeller.status} (Waiting for Admin Approval)`;
+            btnEl.innerText = 'Application Submitted';
+            btnEl.style.background = '#888';
+            btnEl.disabled = true;
           }
         } else {
-          portalBox.style.display = 'none';
+          titleEl.innerText = '🏪 Want to Sell on Kosh Studio?';
+          textEl.innerText = 'Register as a vendor & start dropshipping / selling your products.';
+          btnEl.innerText = 'Register as Seller';
+          btnEl.style.background = '#2196f3';
+          btnEl.disabled = false;
         }
       } else {
         document.getElementById('userDashboardSection').style.display = 'none';
@@ -854,11 +864,18 @@
       }
     }
 
-    function openBecomeSellerModal() {
-      if(!currentUser) { alert('Please login or sign up first before applying as a seller.'); navigateTo('profile'); return; }
-      document.getElementById('sellerRegEmail').value = currentUser;
-      document.getElementById('becomeSellerModal').style.display = 'flex';
+    function handlePortalAction() {
+      let foundSeller = sellersList.find(s => s.email === currentUser);
+      if(foundSeller) {
+        if(foundSeller.status === 'Approved') {
+          navigateTo('seller-dashboard');
+        }
+      } else {
+        document.getElementById('sellerRegEmail').value = currentUser;
+        document.getElementById('becomeSellerModal').style.display = 'flex';
+      }
     }
+
     function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
 
     function submitSellerApplication() {
@@ -886,19 +903,17 @@
       checkLoginStatus();
     }
 
-    // --- Seller Dashboard & Product Management with Commission Add ---
-    function openSellerDashboard() {
+    // --- Seller Dashboard & Product Management ---
+    function loadSellerDashboardData() {
       let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
-      if(!foundSeller) { alert('Your seller account is not approved yet.'); return; }
+      if(!foundSeller) { alert('Your seller account is not approved yet.'); navigateTo('profile'); return; }
       document.getElementById('sellerdashName').innerText = foundSeller.store;
-      document.getElementById('sellerDashboardModal').style.display = 'flex';
       loadSellerData(foundSeller.id);
     }
-    function closeSellerDashboard() { document.getElementById('sellerDashboardModal').style.display = 'none'; }
 
     function switchSellerTab(tab) {
-      document.querySelectorAll('#sellerDashboardModal .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#sellerDashboardModal .dash-tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-seller-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
       event.target.classList.add('active');
       document.getElementById('sellerTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
     }
@@ -923,7 +938,6 @@
 
       if(!title || !basePrice || !mrp) { alert('Fill Title, Base Price, and MRP.'); return; }
 
-      // Automatically calculate listing price with admin commission
       let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
 
       if(editIdx >= 0) {
@@ -949,7 +963,6 @@
     }
 
     function loadSellerData(sellerId) {
-      // Products list
       let myProducts = products.filter(p => p.sellerId === sellerId);
       let pArea = document.getElementById('sellerProductsList');
       if(myProducts.length === 0) { pArea.innerHTML = 'No products listed yet.'; }
@@ -958,11 +971,11 @@
         myProducts.forEach((p, idx) => {
           let globalIdx = products.findIndex(item => item.id === p.id);
           h += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
               <div><b>${p.title}</b><br><span style="color:var(--muted);">Base: ₹${p.basePrice} | Customer Price: ₹${p.price} | Stock: ${p.stock}</span></div>
-              <div style="display:flex; gap:6px;">
-                <button onclick="editSellerProduct(${globalIdx})" style="background:#2196f3; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Edit</button>
-                <button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
+              <div style="display:flex; gap:8px;">
+                <button onclick="editSellerProduct(${globalIdx})" style="background:#2196f3; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Edit</button>
+                <button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Remove</button>
               </div>
             </div>
           `;
@@ -970,7 +983,6 @@
         pArea.innerHTML = h;
       }
 
-      // Orders & Earnings
       let totalSales = 0;
       let totalCommission = 0;
       let oHtml = '';
@@ -983,7 +995,7 @@
             totalSales += itemTotal;
             totalCommission += commissionAmt;
             oHtml += `
-              <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
+              <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px; font-size:0.85rem;">
                 <div><b>Order #${o.id}</b> - ${o.date}</div>
                 <div>Product: ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}</div>
                 <div>Status: <span style="color:var(--success); font-weight:bold;">${o.status}</span></div>
@@ -1011,6 +1023,7 @@
       document.getElementById('sProdDesc').value = p.desc;
       document.getElementById('sellerFormTitle').innerText = '✏️ Edit Product';
       document.getElementById('sellerSaveProdBtn').innerText = 'Update Product';
+      document.getElementById('sellerFormTitle').scrollIntoView({ behavior: 'smooth' });
     }
 
     function resetSellerForm() {
@@ -1182,38 +1195,35 @@
       area.innerHTML = html;
     }
 
-    // --- Secret Admin Master Dashboard (rohitku316 / Rohit@2006) ---
+    // --- Full-Screen Master Admin Dashboard (rohitku316 / Rohit@2006) ---
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) {
         secretClickCount = 0;
-        document.getElementById('adminModal').style.display = 'flex';
+        document.getElementById('adminLoginModal').style.display = 'flex';
       }
     }
-    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
 
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
       if(uid === 'rohitku316' && pass === 'Rohit@2006') {
-        document.getElementById('adminLoginScreen').style.display = 'none';
-        document.getElementById('adminDashboardScreen').style.display = 'flex';
-        loadAdminMasterData();
+        closeAdminLoginModal();
+        navigateTo('admin-dashboard');
       } else {
         alert('Incorrect Admin ID or Password!');
       }
     }
 
     function adminLogout() {
-      document.getElementById('adminLoginScreen').style.display = 'block';
-      document.getElementById('adminDashboardScreen').style.display = 'none';
-      document.getElementById('admUserInput').value = '';
-      document.getElementById('admPassInput').value = '';
+      navigateTo('home');
+      alert('Logged out from Admin Dashboard.');
     }
 
     function switchAdminTab(tab) {
-      document.querySelectorAll('#adminModal .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#adminModal .dash-tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
       event.target.classList.add('active');
       document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
     }
@@ -1226,12 +1236,12 @@
         let h = '';
         sellersList.forEach((s, idx) => {
           h += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
               <div><b>${s.store}</b> (${s.name})<br><span style="color:var(--muted);">${s.email} | ${s.phone} | Bank: ${s.bank}</span><br>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
-              <div style="display:flex; gap:4px;">
-                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Approve</button>
-                <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Suspend</button>
-                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#ff5252; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Block</button>
+              <div style="display:flex; gap:6px;">
+                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Approve</button>
+                <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Suspend</button>
+                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Block</button>
               </div>
             </div>
           `;
@@ -1244,9 +1254,9 @@
       let pHtml = '';
       products.forEach((p, idx) => {
         pHtml += `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
             <div><b>${p.title}</b><br><span style="color:var(--muted);">Vendor: ${p.sellerName || 'Kosh Direct'} | Price: ₹${p.price} | Stock: ${p.stock}</span></div>
-            <button onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
+            <button onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Remove</button>
           </div>
         `;
       });
@@ -1259,9 +1269,9 @@
         let oHtml = '';
         ordersList.forEach(o => {
           oHtml += `
-            <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:10px; font-size:0.85rem;">
+            <div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.9rem;">
               <div><b>Order #${o.id}</b> - ${o.name} (${o.phone}) | Total: ₹${o.total}</div>
-              <div style="color:#555; margin:4px 0;">Status: <strong style="color:var(--success);">${o.status}</strong></div>
+              <div style="color:#555; margin:6px 0;">Status: <strong style="color:var(--success);">${o.status}</strong></div>
             </div>
           `;
         });
