@@ -563,19 +563,31 @@
     </div>
   </div>
 
-  <!-- BECOME A SELLER REGISTRATION MODAL -->
+  <!-- BECOME A SELLER REGISTRATION MODAL (WITH SECURE BANK & IFSC VERIFICATION) -->
   <div class="modal-overlay" id="becomeSellerModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">🏪 Seller Registration / KYC</h3>
+        <h3 style="font-size:1.1rem;">🏪 Secure Seller Registration & Bank KYC</h3>
         <button onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
       <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com" readonly style="background:#f1f3f6;"></div>
       <div class="form-group"><label>Mobile Number</label><input type="tel" id="sellerRegPhone" placeholder="10-digit mobile number" maxlength="10"></div>
       <div class="form-group"><label>Business / Store Name</label><input type="text" id="sellerRegStore" placeholder="Store name"></div>
-      <div class="form-group"><label>Bank Account Number & IFSC (For Payouts)</label><input type="text" id="sellerRegBank" placeholder="A/C No, IFSC Code"></div>
-      <button class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Application for Approval</button>
+      
+      <div class="form-group">
+        <label>IFSC Code</label>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="sellerRegIfsc" placeholder="e.g. SBIN0001234" maxlength="11" style="text-transform:uppercase;">
+          <button type="button" onclick="verifyIfscCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer; white-space:nowrap;">Verify IFSC</button>
+        </div>
+      </div>
+      <div id="ifscResultBox" style="font-size:0.75rem; color:var(--success); margin-bottom:8px; font-weight:bold; display:none;"></div>
+
+      <div class="form-group"><label>Bank Account Number</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
+      <div class="form-group"><label>Confirm Bank Account Number</label><input type="text" id="sellerRegAcc2" placeholder="Re-enter Account Number"></div>
+      
+      <button class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
     </div>
   </div>
 
@@ -611,6 +623,7 @@
     let secretClickCount = 0;
     let tempCheckoutData = {};
     let paymentOtpGenerated = "";
+    let verifiedBankDetails = null;
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
@@ -832,7 +845,6 @@
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
 
-        // Check if user is registered seller
         let foundSeller = sellersList.find(s => s.email === currentUser);
         let titleEl = document.getElementById('portalBoxTitle');
         let textEl = document.getElementById('sellerStatusText');
@@ -872,34 +884,87 @@
         }
       } else {
         document.getElementById('sellerRegEmail').value = currentUser;
+        verifiedBankDetails = null;
+        document.getElementById('ifscResultBox').style.display = 'none';
         document.getElementById('becomeSellerModal').style.display = 'flex';
       }
     }
 
     function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
 
+    // --- IFSC Auto Lookup API ---
+    async function verifyIfscCode() {
+      let ifsc = document.getElementById('sellerRegIfsc').value.trim().toUpperCase();
+      let resultBox = document.getElementById('ifscResultBox');
+      if(ifsc.length !== 11) {
+        alert('Please enter a valid 11-digit IFSC code.');
+        return;
+      }
+      resultBox.style.display = 'block';
+      resultBox.style.color = '#555';
+      resultBox.innerText = 'Verifying IFSC code...';
+
+      try {
+        let res = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
+        if(res.ok) {
+          let data = await res.json();
+          verifiedBankDetails = {
+            ifsc: data.IFSC,
+            bank: data.BANK,
+            branch: data.BRANCH,
+            city: data.CITY,
+            state: data.STATE
+          };
+          resultBox.style.color = 'var(--success)';
+          resultBox.innerHTML = `✅ <strong>Bank Verified:</strong> ${data.BANK}, ${data.BRANCH} (${data.CITY})`;
+        } else {
+          verifiedBankDetails = null;
+          resultBox.style.color = 'red';
+          resultBox.innerText = '❌ Invalid IFSC Code. Please check.';
+        }
+      } catch(e) {
+        verifiedBankDetails = null;
+        resultBox.style.color = 'red';
+        resultBox.innerText = '❌ Network error verifying IFSC.';
+      }
+    }
+
     function submitSellerApplication() {
       let name = document.getElementById('sellerRegName').value.trim();
       let email = document.getElementById('sellerRegEmail').value.trim();
       let phone = document.getElementById('sellerRegPhone').value.trim();
       let store = document.getElementById('sellerRegStore').value.trim();
-      let bank = document.getElementById('sellerRegBank').value.trim();
+      let acc1 = document.getElementById('sellerRegAcc1').value.trim();
+      let acc2 = document.getElementById('sellerRegAcc2').value.trim();
+      let ifsc = document.getElementById('sellerRegIfsc').value.trim();
 
-      if(!name || !email || phone.length !== 10 || !store || !bank) {
-        alert('Please fill in all seller details correctly.');
+      if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) {
+        alert('Please fill in all seller details.');
+        return;
+      }
+      if(acc1 !== acc2) {
+        alert('Bank Account numbers do not match!');
+        return;
+      }
+      if(!verifiedBankDetails || verifiedBankDetails.ifsc !== ifsc.toUpperCase()) {
+        alert('Please verify your IFSC code first using the "Verify IFSC" button.');
         return;
       }
 
       let newSeller = {
         id: 'SEL-' + Math.floor(1000 + Math.random() * 9000),
-        name, email, phone, store, bank,
+        name, email, phone, store,
+        accountNo: 'XXXXXX' + acc1.slice(-4), // Masked for security
+        bankName: verifiedBankDetails.bank,
+        branch: verifiedBankDetails.branch,
+        ifsc: verifiedBankDetails.ifsc,
         status: 'Pending'
       };
 
       sellersList.push(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeBecomeSellerModal();
-      alert('Seller application submitted successfully! Awaiting Admin Approval.');
+      alert('Seller application submitted successfully with verified bank details! Awaiting Admin Approval.');
       checkLoginStatus();
     }
 
@@ -1229,7 +1294,6 @@
     }
 
     function loadAdminMasterData() {
-      // 1. Sellers List
       let sArea = document.getElementById('admSellersList');
       if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
       else {
@@ -1237,7 +1301,7 @@
         sellersList.forEach((s, idx) => {
           h += `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
-              <div><b>${s.store}</b> (${s.name})<br><span style="color:var(--muted);">${s.email} | ${s.phone} | Bank: ${s.bank}</span><br>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
+              <div><b>${s.store}</b> (${s.name})<br><span style="color:var(--muted);">${s.email} | ${s.phone} | A/C: ${s.accountNo} | Bank: ${s.bankName}, ${s.branch} (${s.ifsc})</span><br>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
               <div style="display:flex; gap:6px;">
                 <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Approve</button>
                 <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Suspend</button>
@@ -1249,7 +1313,6 @@
         sArea.innerHTML = h;
       }
 
-      // 2. Products List
       let pArea = document.getElementById('admProductsList');
       let pHtml = '';
       products.forEach((p, idx) => {
@@ -1262,7 +1325,6 @@
       });
       pArea.innerHTML = pHtml;
 
-      // 3. Orders List
       let oArea = document.getElementById('admOrdersList');
       if(ordersList.length === 0) { oArea.innerHTML = 'No orders.'; }
       else {
