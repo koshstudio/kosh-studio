@@ -23,6 +23,7 @@
       --border: #e0e0e0;
       --shadow: 0 2px 8px rgba(0,0,0,0.06);
       --success: #388e3c;
+      --danger: #d32f2f;
     }
 
     * { 
@@ -97,7 +98,7 @@
     .header-icons {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .icon-btn {
@@ -113,7 +114,7 @@
       font-weight: 600;
     }
 
-    .cart-badge {
+    .badge-count {
       position: absolute;
       top: -4px;
       right: 2px;
@@ -127,6 +128,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    /* Flash Sale Banner */
+    .flash-banner {
+      background: linear-gradient(135deg, #111, #333);
+      color: #fff;
+      padding: 14px 20px;
+      margin: 12px 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+    .flash-timer {
+      background: var(--accent);
+      color: #000;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 800;
+      font-size: 0.85rem;
     }
 
     .categories-bar {
@@ -187,6 +209,23 @@
     }
     .product-img img {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255,255,255,0.85);
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      z-index: 5;
     }
 
     .product-info {
@@ -291,6 +330,11 @@
         <input type="text" id="searchInput" placeholder="Search marketplace products..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
+        <button class="icon-btn" onclick="navigateTo('wishlist')">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <span>Wishlist</span>
+          <span class="badge-count" id="wishlistCount">0</span>
+        </button>
         <button class="icon-btn" onclick="navigateTo('profile')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Account</span>
@@ -298,13 +342,22 @@
         <button class="icon-btn" onclick="toggleCartDrawer(true)">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span>Cart</span>
-          <span class="cart-badge" id="cartCount">0</span>
+          <span class="badge-count" id="cartCount">0</span>
         </button>
       </div>
     </header>
 
     <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
       🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
+    </div>
+
+    <!-- Flash Sale Banner -->
+    <div class="flash-banner">
+      <div>
+        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Flash Sale Live!</h4>
+        <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH10</strong> for extra 10% OFF</p>
+      </div>
+      <div class="flash-timer" id="flashTimer">05:42:18</div>
     </div>
 
     <div class="categories-bar" id="categoriesBar">
@@ -324,6 +377,17 @@
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
       <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
     </footer>
+  </div>
+
+  <!-- WISHLIST PAGE -->
+  <div id="page-wishlist" class="app-page">
+    <div class="page-header">
+      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
+    </div>
+    <div class="page-content">
+      <div class="products-grid" id="wishlistGrid"></div>
+    </div>
   </div>
 
   <!-- PRODUCT DETAILS PAGE -->
@@ -355,6 +419,12 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
         
+        <!-- Related / Similar Products Section -->
+        <div style="margin-top:30px;">
+          <h4 style="font-size:1rem; margin-bottom:12px; font-weight:bold;">🔗 Related Products</h4>
+          <div class="products-grid" id="relatedProductsGrid"></div>
+        </div>
+
         <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
           <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
           <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet.</div>
@@ -623,7 +693,7 @@
     </div>
   </div>
 
-  <!-- CUSTOM BRANDED ALERT MODAL (Replaces Browser Domain Alerts) -->
+  <!-- CUSTOM BRANDED ALERT MODAL -->
   <div class="modal-overlay" id="customAlertModal">
     <div class="modal-box" style="max-width:360px; text-align:center; padding:24px;">
       <div id="customAlertIcon" style="font-size:2rem; margin-bottom:8px;">📢</div>
@@ -650,7 +720,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER -->
+  <!-- CART DRAWER WITH DISCOUNT COUPONS -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
@@ -658,9 +728,18 @@
       <button onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+    
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
+      <!-- Discount Coupon Box -->
+      <div style="margin-bottom:12px; display:flex; gap:6px;">
+        <input type="text" id="couponInput" placeholder="Enter Coupon (e.g. KOSH10)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
+        <button onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
+      </div>
+      <div id="couponMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:bold;"></div>
+
       <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555; color:var(--success);" id="discountRow" style="display:none;"><span>Discount Applied</span><span id="summaryDiscount">- ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Payment Gateway Fee (+3%)</span><span id="summaryPgFee">+ ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
       <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
@@ -748,7 +827,7 @@
   </div>
 
   <script>
-    // --- Custom Branded Alert Helper (Replaces ugly browser alerts) ---
+    // --- Custom Branded Alert Helper ---
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
@@ -773,6 +852,7 @@
     let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     let registeredUsers = JSON.parse(localStorage.getItem('kosh_registered_users')) || [];
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -783,6 +863,22 @@
     let verifiedBankDetails = null;
     let parsedSellerCsvRows = [];
     let activeSellerFilter = null;
+    let appliedDiscountPercent = 0;
+
+    // Flash Sale Timer Countdown
+    function startFlashTimer() {
+      let timerEl = document.getElementById('flashTimer');
+      if(!timerEl) return;
+      let totalSeconds = 5 * 3600 + 42 * 60 + 18;
+      setInterval(() => {
+        if(totalSeconds > 0) totalSeconds--;
+        let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        let s = (totalSeconds % 60).toString().padStart(2, '0');
+        timerEl.innerText = `${h}:${m}:${s}`;
+      }, 1000);
+    }
+    window.addEventListener('DOMContentLoaded', startFlashTimer);
 
     // --- Gallery Image Upload Helper ---
     function handleImageGalleryUpload(input, targetInputId) {
@@ -796,7 +892,7 @@
       }
     }
 
-    // --- Render Products with Catalog URL Support ---
+    // --- Render Products with Catalog URL & Wishlist Support ---
     function renderProducts(filterCat = 'All') {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
@@ -829,10 +925,12 @@
       }
 
       finalFiltered.forEach(p => {
+        let isWishlisted = wishlist.some(item => item.id === p.id);
         let stockBadge = p.stock > 0 ? `<span style="font-size:0.65rem; color:var(--success); font-weight:700;">● In Stock</span>` : `<span style="font-size:0.65rem; color:red; font-weight:700;">● Out of Stock</span>`;
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
+          <button class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
           <div class="product-img" onclick="openProductDetail(${p.id})">
             <img src="${p.image}" alt="${p.title}">
           </div>
@@ -848,6 +946,54 @@
               <span class="p-mrp">₹${p.mrp}</span>
             </div>
             <button class="btn-add-cart" onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      updateWishlistUI();
+    }
+
+    // --- Wishlist Management ---
+    function toggleWishlist(id) {
+      let prod = products.find(p => p.id === id);
+      if(!prod) return;
+      let idx = wishlist.findIndex(item => item.id === id);
+      if(idx >= 0) {
+        wishlist.splice(idx, 1);
+        showAlert("Removed from Wishlist", "Wishlist", false);
+      } else {
+        wishlist.push(prod);
+        showAlert("Added to Wishlist successfully!", "Wishlist", true);
+      }
+      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
+      renderProducts();
+      if(document.getElementById('page-wishlist').classList.contains('active')) {
+        renderWishlistPage();
+      }
+    }
+
+    function updateWishlistUI() {
+      document.getElementById('wishlistCount').innerText = wishlist.length;
+    }
+
+    function renderWishlistPage() {
+      const grid = document.getElementById('wishlistGrid');
+      grid.innerHTML = '';
+      if(wishlist.length === 0) {
+        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--muted); padding:30px;">Your wishlist is empty.</p>';
+        return;
+      }
+      wishlist.forEach(p => {
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <button class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+          <div class="product-info">
+            <span class="p-category">${p.category}</span>
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
+            <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
@@ -870,6 +1016,8 @@
         checkLoginStatus();
       } else if(pageId === 'orders') {
         renderOrdersPage();
+      } else if(pageId === 'wishlist') {
+        renderWishlistPage();
       } else if(pageId === 'seller-dashboard') {
         loadSellerDashboardData();
       } else if(pageId === 'admin-dashboard') {
@@ -907,9 +1055,34 @@
       document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
       document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
 
+      // Render Related Products (Same category)
+      renderRelatedProducts(currentSelectedProduct);
+
       loadProductReviews(id);
       checkUserReviewEligibility(id);
       navigateTo('product');
+    }
+
+    function renderRelatedProducts(currentProd) {
+      const grid = document.getElementById('relatedProductsGrid');
+      grid.innerHTML = '';
+      let related = products.filter(p => p.category === currentProd.category && p.id !== currentProd.id).slice(0, 4);
+      if(related.length === 0) {
+        grid.innerHTML = '<p style="font-size:0.8rem; color:var(--muted);">No related products found.</p>';
+        return;
+      }
+      related.forEach(p => {
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+          <div class="product-info">
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
     }
 
     function checkUserReviewEligibility(productId) {
@@ -923,10 +1096,7 @@
         return;
       }
 
-      let hasDelivered = ordersList.some(o => 
-        o.userEmail === currentUser && 
-        o.status === 'Delivered'
-      );
+      let hasDelivered = ordersList.some(o => o.userEmail === currentUser && o.status === 'Delivered');
 
       if (hasDelivered) {
         reviewBox.style.display = 'block';
@@ -991,7 +1161,7 @@
       }
     }
 
-    // --- Cart System ---
+    // --- Cart System & Coupons ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
@@ -1002,6 +1172,25 @@
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
       showAlert(prod.title + " added to cart!", 'Cart', true);
+    }
+
+    function applyCouponCode() {
+      let code = document.getElementById('couponInput').value.trim().toUpperCase();
+      let msg = document.getElementById('couponMsg');
+      if(code === 'KOSH10') {
+        appliedDiscountPercent = 10;
+        msg.style.color = 'var(--success)';
+        msg.innerText = '✅ Coupon "KOSH10" applied successfully (10% OFF)!';
+      } else if(code === 'KOSH20') {
+        appliedDiscountPercent = 20;
+        msg.style.color = 'var(--success)';
+        msg.innerText = '✅ Coupon "KOSH20" applied successfully (20% OFF)!';
+      } else {
+        appliedDiscountPercent = 0;
+        msg.style.color = 'var(--danger)';
+        msg.innerText = '❌ Invalid or expired coupon code.';
+      }
+      updateCartUI();
     }
 
     function updateCartUI() {
@@ -1041,8 +1230,17 @@
         container.appendChild(div);
       });
 
-      let pgFee = Math.round(totalProdPrice * 0.03);
-      let grandTotal = totalProdPrice + pgFee;
+      let discountAmt = Math.round(totalProdPrice * (appliedDiscountPercent / 100));
+      let discountedSubtotal = totalProdPrice - discountAmt;
+      let pgFee = Math.round(discountedSubtotal * 0.03);
+      let grandTotal = discountedSubtotal + pgFee;
+
+      if(appliedDiscountPercent > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt;
+      } else {
+        document.getElementById('discountRow').style.display = 'none';
+      }
 
       document.getElementById('cartItemCountText').innerText = totalItems;
       document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalProdPrice;
@@ -1577,10 +1775,12 @@
       if(cart.length === 0) { showAlert('Cart is empty!'); return; }
       toggleCartDrawer(false);
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let pgFee = Math.round(subtotal * 0.03);
-      let finalTotal = subtotal + pgFee;
+      let discountAmt = Math.round(subtotal * (appliedDiscountPercent / 100));
+      let discountedSubtotal = subtotal - discountAmt;
+      let pgFee = Math.round(discountedSubtotal * 0.03);
+      let finalTotal = discountedSubtotal + pgFee;
 
-      document.getElementById('chkSubtotalVal').innerText = '₹' + subtotal;
+      document.getElementById('chkSubtotalVal').innerText = '₹' + discountedSubtotal;
       document.getElementById('chkPgFeeVal').innerText = '+ ₹' + pgFee;
       document.getElementById('chkFinalTotalVal').innerText = '₹' + finalTotal;
       document.getElementById('checkoutModal').style.display = 'flex';
@@ -1632,8 +1832,10 @@
       document.getElementById('paymentOtpModal').style.display = 'none';
 
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let pgFee = Math.round(subtotal * 0.03);
-      let grandTotal = subtotal + pgFee;
+      let discountAmt = Math.round(subtotal * (appliedDiscountPercent / 100));
+      let discountedSubtotal = subtotal - discountAmt;
+      let pgFee = Math.round(discountedSubtotal * 0.03);
+      let grandTotal = discountedSubtotal + pgFee;
 
       let newOrder = {
         id: "KS" + Math.floor(10000 + Math.random() * 90000),
@@ -1644,7 +1846,7 @@
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
         items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice, fulfillmentStatus: 'Processing', trackingId: '', returnRequested: false, returnProof: '' })),
-        subtotal,
+        subtotal: discountedSubtotal,
         pgFee,
         total: grandTotal,
         status: 'New Order',
