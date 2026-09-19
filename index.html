@@ -856,7 +856,7 @@
     let registeredUsers = JSON.parse(localStorage.getItem('kosh_registered_users')) || [];
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
-    let currentSelectedProduct = null;
+    let currentSelectedProduct = JSON.parse(localStorage.getItem('kosh_selected_product')) || null;
     let secretClickCount = 0;
     let tempCheckoutData = {};
     let paymentOtpGenerated = "";
@@ -1027,6 +1027,12 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
+      
+      // If refreshed on product page, restore product details safely
+      if(savedPage === 'product' && currentSelectedProduct) {
+        populateProductDetails(currentSelectedProduct);
+      }
+
       navigateTo(savedPage);
       renderProducts();
       updateCartUI();
@@ -1044,23 +1050,26 @@
       currentSelectedProduct = products.find(p => p.id === id);
       if(!currentSelectedProduct) return;
 
-      document.getElementById('pPageImg').src = currentSelectedProduct.image;
-      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
-      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
-      
-      document.getElementById('pPageSellerName').innerText = currentSelectedProduct.sellerName || 'Kosh Direct (Admin)';
-
-      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
-      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
-      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
-
-      // Render Related Products (Same category)
-      renderRelatedProducts(currentSelectedProduct);
-
-      loadProductReviews(id);
-      checkUserReviewEligibility(id);
+      localStorage.setItem('kosh_selected_product', JSON.stringify(currentSelectedProduct));
+      populateProductDetails(currentSelectedProduct);
       navigateTo('product');
+    }
+
+    function populateProductDetails(p) {
+      document.getElementById('pPageImg').src = p.image;
+      document.getElementById('pPageCategory').innerText = p.category;
+      document.getElementById('pPageTitle').innerText = p.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku || 'N/A'} | Stock: ${p.stock > 0 ? p.stock + ' Available' : 'Out of Stock'}`;
+      
+      document.getElementById('pPageSellerName').innerText = p.sellerName || 'Kosh Direct (Admin)';
+
+      document.getElementById('pPagePrice').innerText = '₹' + p.price;
+      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
+      document.getElementById('pPageDesc').innerText = p.desc;
+
+      renderRelatedProducts(p);
+      loadProductReviews(p.id);
+      checkUserReviewEligibility(p.id);
     }
 
     function renderRelatedProducts(currentProd) {
