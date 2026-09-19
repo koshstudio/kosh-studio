@@ -320,7 +320,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% PREPAID SECURE MULTI-VENDOR MARKETPLACE PRO (CASHFREE SECURED)</div>
+  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO (CASHFREE SECURED)</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -1240,7 +1240,7 @@
 
       let discountAmt = Math.round(totalProdPrice * (appliedDiscountPercent / 100));
       let discountedSubtotal = totalProdPrice - discountAmt;
-      let pgFee = Math.round(discountedSubtotal * 0.02); // Cashfree approx 2%
+      let pgFee = Math.round(discountedSubtotal * 0.02);
       let grandTotal = discountedSubtotal + pgFee;
 
       if(appliedDiscountPercent > 0) {
@@ -1798,7 +1798,7 @@
     async function lookupPincode(pin) {
       if(pin.length === 6) {
         try {
-          let res = await fetch(`https://ifsc.razorpay.com/${pin}`); // Note: Using reliable standard API lookup
+          let res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
           let data = await res.json();
           if(data[0].Status === "Success") {
             let info = data[0].PostOffice[0];
