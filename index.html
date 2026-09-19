@@ -8,10 +8,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Supabase SDK & EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
   <style>
     :root {
       --bg: #f8f9fa;
@@ -19,28 +15,13 @@
       --text: #212121;
       --muted: #878787;
       --primary: #111111;
-      --accent: #d4af37; /* Champagne Gold */
+      --accent: #d4af37;
       --border: #e0e0e0;
       --shadow: 0 2px 8px rgba(0,0,0,0.06);
       --success: #388e3c;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      -webkit-tap-highlight-color: transparent;
-      -webkit-user-select: none; 
-      -webkit-touch-callout: none;
-      user-select: none; 
-    }
-
-    input, textarea, select { 
-      -webkit-user-select: text; 
-      user-select: text; 
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
     .top-strip {
@@ -50,7 +31,6 @@
       padding: 6px 12px;
       font-size: 0.72rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
     header {
@@ -71,7 +51,6 @@
       font-weight: 800;
       letter-spacing: 1px;
       color: var(--primary);
-      text-decoration: none;
       cursor: pointer;
     }
 
@@ -104,7 +83,6 @@
       background: none;
       border: none;
       cursor: pointer;
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -129,38 +107,8 @@
       justify-content: center;
     }
 
-    .categories-bar {
-      background: #ffffff;
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
-    .categories-bar::-webkit-scrollbar { display: none; }
-
-    .cat-item {
-      flex: 0 0 auto;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #555;
-      cursor: pointer;
-      padding-bottom: 2px;
-    }
-    .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
-
-    .container {
-      max-width: 1200px;
-      margin: 16px auto;
-      padding: 0 10px;
-    }
-
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+    .container { max-width: 1200px; margin: 16px auto; padding: 0 10px; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
     @media (min-width: 768px) {
       .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -173,253 +121,203 @@
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      position: relative;
-      transition: transform 0.2s;
-    }
-    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-
-    .product-img {
-      width: 100%;
-      padding-top: 100%;
-      position: relative;
-      background: #f9f9f9;
-      cursor: pointer;
-    }
-    .product-img img {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
     }
 
-    .product-info {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
+    .product-img { width: 100%; padding-top: 100%; position: relative; background: #f9f9f9; }
+    .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
 
-    .p-category { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
-    .p-title {
-      font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em;
-    }
-
-    .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
-    .p-price { font-size: 1rem; font-weight: 700; color: #111; }
-    .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
+    .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
+    .p-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+    .p-price { font-size: 1rem; font-weight: 700; color: #111; margin-bottom: 8px; }
 
     .btn-add-cart {
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px;
       border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-add-cart:hover { background: #333; }
 
-    /* Pages */
     .app-page { display: none; }
     .app-page.active { display: block; }
-
-    .page-header {
-      background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
-    }
-    .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
-    .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
-
-    /* Cart Slide Drawer */
-    .cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px;
-      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
-      display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-    }
-    .cart-drawer.open { transform: translateX(0); }
-    .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
-
-    /* Modals */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
-    }
-    .modal-box {
-      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+    .page-header { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); }
+    .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; }
+    .page-content { max-width: 500px; margin: 20px auto; padding: 0 16px; }
 
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none;
-    }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-group input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; }
 
     .btn-solid {
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
       border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-solid:hover { background: #333; }
-
-    /* Dashboard Tabs */
-    .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
-    .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
-    .dash-tab-btn.active { background: var(--primary); color: #fff; }
-    .dash-tab-content { display: none; }
-    .dash-tab-content.active { display: block; }
-
-    /* Summary Cards */
-    .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-    @media (max-width: 768px) { .summary-cards-grid { grid-template-columns: 1fr; } }
-    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
-    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
-
-    /* Timeline Tracker */
-    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
-    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
-    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
-    .timeline-step.active span { background: var(--success); }
-
-    footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
-    .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
     .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% PREPAID SECURE MULTI-VENDOR MARKETPLACE PRO</div>
+  <div class="top-strip">⚡ KOSH STUDIO MARKETPLACE PRO</div>
 
   <!-- HOME PAGE -->
-  <div id="page-home" class="app-page">
+  <div id="page-home" class="app-page active">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search marketplace products..." oninput="handleSearch(this.value)">
+        <input type="text" placeholder="Search products..." id="searchInput" oninput="filterProducts(this.value)">
       </div>
       <div class="header-icons">
         <button class="icon-btn" onclick="navigateTo('profile')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Account</span>
-        </button>
-        <button class="icon-btn" onclick="toggleCartDrawer(true)">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-          <span>Cart</span>
-          <span class="cart-badge" id="cartCount">0</span>
         </button>
       </div>
     </header>
 
-    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
-      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
-    </div>
-
-    <div class="categories-bar" id="categoriesBar">
-      <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Wallets')">Wallets</div>
-      <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
-      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
-      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
-    </div>
-
     <main class="container">
-      <div class="products-grid" id="productGrid"></div>
+      <div class="products-grid" id="productGrid">
+        <!-- Sample Product -->
+        <div class="product-card">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30" alt="Watch"></div>
+          <div class="product-info">
+            <div class="p-title">Luxury Classic Watch</div>
+            <div class="p-price">₹1,499</div>
+            <button class="btn-add-cart" onclick="alert('Added to cart!')">Add to Cart</button>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="https://images.unsplash.com/photo-1627123424574-724758594e93" alt="Wallet"></div>
+            <div class="product-info">
+            <div class="p-title">Leather Executive Wallet</div>
+            <div class="p-price">₹799</div>
+            <button class="btn-add-cart" onclick="alert('Added to cart!')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
     </main>
-
-    <footer>
-      <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
-    </footer>
   </div>
 
-  <!-- PRODUCT DETAILS PAGE -->
-  <div id="page-product" class="app-page">
-    <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
-    </div>
-    <div class="page-content" style="display:grid; grid-template-columns: 1fr; gap:20px;">
-      <div>
-        <img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
-      </div>
-      <div>
-        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
-        <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
-        <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
-        
-        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
-          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
-        </div>
-
-        <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
-          <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
-          <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
-          <button class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
-          <button class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
-        </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
-        
-        <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
-          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
-          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet.</div>
-          
-          <div id="verifiedReviewBox" style="border-top:1px solid #eee; padding-top:12px; display:none;">
-            <h5 style="font-size:0.85rem; margin-bottom:6px; color:var(--success);">✅ Write a Verified Review (Order Delivered)</h5>
-            <div class="form-row">
-              <div class="form-group"><label>Rating</label><select id="newReviewRating"><option value="5">⭐⭐⭐⭐⭐ (5/5)</option><option value="4">⭐⭐⭐⭐ (4/5)</option><option value="3">⭐⭐⭐ (3/5)</option><option value="2">⭐⭐ (2/5)</option><option value="1">⭐ (1/5)</option></select></div>
-              <div class="form-group"><label>Your Name</label><input type="text" id="newReviewAuthor" placeholder="Name"></div>
-            </div>
-            <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
-            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
-          </div>
-          <div id="unverifiedReviewMsg" style="font-size:0.8rem; color:#d32f2f; margin-top:10px; font-style:italic;">
-            🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
-          </div>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
-          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
+  <!-- PROFILE & AUTHENTICATION PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
+      <span style="font-weight:700;">Customer Account</span>
     </div>
     <div class="page-content">
-      <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access account or seller dashboard</p>
-        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <button class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+      <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:16px; text-align:center;">Login</h3>
+        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="name@gmail.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="******"></div>
+        <button class="btn-solid" onclick="handleLogin()">Login</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New user? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
       </div>
 
-      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button class="btn-solid" onclick="handleSignup()">Sign Up</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
+      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); display:none;">
+        <h3 style="margin-bottom:16px; text-align:center;">Sign Up</h3>
+        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="name@gmail.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
+        <button class="btn-solid" onclick="handleSignup()">Register</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
       </div>
 
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
-            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
-          </div>
-          <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
-        </div>
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
-          <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">Track orders, print invoices & returns</p>
-          </div>
-          <span style="font-size:1.2rem; color:var(--muted);">›</span>
-        </div>
+      <div id="userDashboardSection" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); display:none; text-align:center;">
+        <h3>👤 Welcome!</h3>
+        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
+        <button class="btn-solid" style="background:#ff5252;" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
 
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
-          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
-          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding
+  <script>
+    function navigateTo(pageId) {
+      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function switchAuthView(view) {
+      if (view === 'signup') {
+        document.getElementById('authLoginView').style.display = 'none';
+        document.getElementById('authSignupView').style.display = 'block';
+      } else {
+        document.getElementById('authSignupView').style.display = 'none';
+        document.getElementById('authLoginView').style.display = 'block';
+      }
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPass').value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Kripya ek valid email address enter karein (Jaise: name@gmail.com)!');
+        return;
+      }
+      if (password.length < 6) {
+        alert('Password kam se kam 6 characters ka hona chahiye!');
+        return;
+      }
+
+      const savedUsers = JSON.parse(localStorage.getItem('kosh_users') || '[]');
+      const matchedUser = savedUsers.find(u => u.email === email && u.password === password);
+      const isAdmin = (email === 'admin@kosh.com' && password === 'admin123');
+
+      if (matchedUser || isAdmin) {
+        alert('Login successful!');
+        localStorage.setItem('kosh_logged_in', JSON.stringify(matchedUser || { email }));
+        showDashboard(email);
+      } else {
+        alert('Invalid email or password! Pehle Sign Up karein.');
+      }
+    }
+
+    function handleSignup() {
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPass').value.trim();
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Kripya ek valid email enter karein!');
+        return;
+      }
+      if (password.length < 6) {
+        alert('Password kam se kam 6 characters ka hona chahiye!');
+        return;
+      }
+
+      let savedUsers = JSON.parse(localStorage.getItem('kosh_users') || '[]');
+      if (savedUsers.some(u => u.email === email)) {
+        alert('Yeh email pehle se registered hai! Ab login karein.');
+        switchAuthView('login');
+        return;
+      }
+
+      savedUsers.push({ email, password });
+      localStorage.setItem('kosh_users', JSON.stringify(savedUsers));
+      alert('Account ban gaya! Ab login karein.');
+      switchAuthView('login');
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('kosh_logged_in');
+      document.getElementById('userDashboardSection').style.display = 'none';
+      document.getElementById('authLoginView').style.display = 'block';
+      alert('Logged out successfully.');
+    }
+
+    function showDashboard(email) {
+      document.getElementById('authLoginView').style.display = 'none';
+      document.getElementById('authSignupView').style.display = 'none';
+      document.getElementById('userDashboardSection').style.display = 'block';
+      document.getElementById('displayUserEmail').innerText = email;
+    }
+
+    window.onload = function() {
+      const loggedIn = localStorage.getItem('kosh_logged_in');
+      if (loggedIn) {
+        try {
+          const user = JSON.parse(loggedIn);
+          showDashboard(user.email);
+        } catch(e) {}
+      }
+    };
+  </script>
+</body>
+</html>
