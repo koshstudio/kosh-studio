@@ -633,7 +633,7 @@
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
       <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Payment Gateway Fee (+2%)</span><span id="summaryPgFee">+ ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Payment Gateway Fee (+3%)</span><span id="summaryPgFee">+ ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
       <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
       <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Transparent Checkout</button>
@@ -649,7 +649,7 @@
       </div>
       <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Payment Gateway Fee (2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Payment Gateway Fee (3%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
         <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
       </div>
       <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
@@ -896,7 +896,7 @@
       }
     }
 
-    // --- Cart System ---
+    // --- Cart System (Updated with 3% Fee) ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { alert("Item is out of stock."); return; }
@@ -946,7 +946,7 @@
         container.appendChild(div);
       });
 
-      let pgFee = Math.round(totalProdPrice * 0.02);
+      let pgFee = Math.round(totalProdPrice * 0.03);
       let grandTotal = totalProdPrice + pgFee;
 
       document.getElementById('cartItemCountText').innerText = totalItems;
@@ -1415,12 +1415,12 @@
       }
     }
 
-    // --- Transparent Checkout Flow ---
+    // --- Transparent Checkout Flow (Updated with 3% Fee) ---
     function openCheckoutModal() {
       if(cart.length === 0) { alert('Cart is empty!'); return; }
       toggleCartDrawer(false);
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let pgFee = Math.round(subtotal * 0.02);
+      let pgFee = Math.round(subtotal * 0.03);
       let finalTotal = subtotal + pgFee;
 
       document.getElementById('chkSubtotalVal').innerText = '₹' + subtotal;
@@ -1475,7 +1475,7 @@
       document.getElementById('paymentOtpModal').style.display = 'none';
 
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let pgFee = Math.round(subtotal * 0.02);
+      let pgFee = Math.round(subtotal * 0.03);
       let grandTotal = subtotal + pgFee;
 
       let newOrder = {
@@ -1551,7 +1551,7 @@
           <tr><th>Item</th><th>SKU</th><th>Qty</th><th>Price</th></tr>
           ${o.items.map(i => `<tr><td>${i.title}</td><td>${i.sku}</td><td>${i.qty}</td><td>₹${i.price * i.qty}</td></tr>`).join('')}
         </table>
-        <p style="margin-top:15px;"><strong>Subtotal:</strong> ₹${o.subtotal}<br><strong>PG Fee (2%):</strong> ₹${o.pgFee}<br><strong>Grand Total:</strong> ₹${o.total}</p>
+        <p style="margin-top:15px;"><strong>Subtotal:</strong> ₹${o.subtotal}<br><strong>PG Fee (3%):</strong> ₹${o.pgFee}<br><strong>Grand Total:</strong> ₹${o.total}</p>
         <script>window.print();<\/script>
         </body></html>
       `);
@@ -1609,7 +1609,7 @@
             <div style="font-size:0.85rem; color:#555; margin:8px 0;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
             ${returnSectionHtml}
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px; font-size:0.85rem;">
-              <span>Subtotal: ₹${o.subtotal} | PG Fee (2%): ₹${o.pgFee}</span>
+              <span>Subtotal: ₹${o.subtotal} | PG Fee (3%): ₹${o.pgFee}</span>
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
             </div>
           </div>
@@ -1767,7 +1767,6 @@
       document.getElementById('globalCommissionInput').value = globalCommission;
     }
 
-    // --- Admin Edit Seller Functions ---
     function openAdminEditSellerModal(idx) {
       let s = sellersList[idx];
       document.getElementById('admEditSellerIdx').value = idx;
@@ -1890,4 +1889,4 @@
     }
   </script>
 </body>
-</
+</html>
