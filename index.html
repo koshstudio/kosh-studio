@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kosh Studio | Luxury Lifestyle & Accessories</title>
+  <title>Kosh Studio | Multi-Vendor Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -231,22 +231,29 @@
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
-    /* Modal / Admin */
+    /* Modals */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.6);
       z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
     }
     .modal-box {
-      background: #fff; width: 100%; max-width: 750px; border-radius: 6px; padding: 20px; position: relative;
+      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; margin-bottom: 3px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.88rem; outline: none;
+    /* Spacious Admin / Seller Dashboard Modal */
+    .dashboard-modal-box {
+      background: #fff; width: 95%; max-width: 960px; height: 90vh; border-radius: 8px; padding: 24px; position: relative;
+      display: flex; flex-direction: column; box-shadow: 0 15px 40px rgba(0,0,0,0.3); overflow: hidden;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .dashboard-body-area { flex-grow: 1; overflow-y: auto; padding-right: 6px; margin-top: 15px; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     .btn-solid {
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
@@ -254,12 +261,12 @@
     }
     .btn-solid:hover { background: #333; }
 
-    /* Admin Tabs Styling */
-    .admin-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
-    .admin-tab-btn { background: #f1f3f6; border: none; padding: 8px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; border-radius: 4px 4px 0 0; white-space: nowrap; }
-    .admin-tab-btn.active { background: var(--primary); color: #fff; }
-    .admin-tab-content { display: none; }
-    .admin-tab-content.active { display: block; }
+    /* Dashboard Tabs */
+    .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
+    .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
+    .dash-tab-btn.active { background: var(--primary); color: #fff; }
+    .dash-tab-content { display: none; }
+    .dash-tab-content.active { display: block; }
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
@@ -268,19 +275,19 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | LINK SCRAPER & MULTI-SUPPLIER READY</div>
+  <div class="top-strip">⚡ 100% PREPAID SECURE MULTI-VENDOR MARKETPLACE</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search luxury & supplier accessories..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search marketplace products..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button class="icon-btn" onclick="navigateTo('profile')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-          <span>Profile</span>
+          <span>Account</span>
         </button>
         <button class="icon-btn" onclick="toggleCartDrawer(true)">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
@@ -305,7 +312,7 @@
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Multi-Supplier Link Scraper Store.</p>
+      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace System.</p>
     </footer>
   </div>
 
@@ -333,60 +340,57 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
         <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600;">
-          ⚠️ <strong>Fulfillment Policy:</strong> Valid within 3 days of delivery. <strong>Uncut unboxing video (from seal pack to open)</strong> is compulsory for claims.
+          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PROFILE & AUTHENTICATION PAGE -->
+  <!-- PROFILE & AUTHENTICATION & BECOME A SELLER PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Account & Orders</span>
+      <span style="font-weight:700; font-size:0.95rem;">Customer Account & Seller Portal</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login to Your Account</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access permanent order history & tracking</p>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access account or seller dashboard</p>
         <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
         <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <div style="text-align:right; margin-bottom:12px;"><span class="auth-link" style="font-size:0.78rem;" onclick="switchAuthView('forgot')">Forgot Password?</span></div>
-        <button class="btn-solid" onclick="handleLogin()">Login</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Don't have an account? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+        <button class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+        <hr style="margin:20px 0; border:0; border-top:1px solid var(--border);">
+        <button onclick="openBecomeSellerModal()" style="background:#2196f3; color:#fff; border:none; padding:10px; width:100%; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.85rem;">🏪 Want to Sell on Kosh Studio? Register as Seller</button>
       </div>
 
       <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create New Account</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Secure cloud sync for all your orders</p>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
         <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="At least 6 characters"></div>
+        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
         <button class="btn-solid" onclick="handleSignup()">Sign Up</button>
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
       </div>
 
-      <div id="authForgotView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Reset Password</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">We will send a secure password reset link.</p>
-        <div class="form-group"><label>Registered Email</label><input type="email" id="forgotEmail" placeholder="Enter your email"></div>
-        <button class="btn-solid" onclick="handleForgotPassword()">Send Reset Link</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Remembered password? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
-      </div>
-
-      <div id="userDashboardSection" style="display:none;">
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Welcome Back!</h3>
+            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
             <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
           </div>
           <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center;" onclick="navigateTo('orders')">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
           <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Returns</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">Track orders & 3-day return eligibility</p>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">Track orders & 3-day returns</p>
           </div>
           <span style="font-size:1.2rem; color:var(--muted);">›</span>
+        </div>
+        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:15px; border-radius:6px; border:1px solid #bbdefb; text-align:center; display:none;">
+          <h4 style="font-size:0.95rem; color:#0d47a1; margin-bottom:6px;">🏪 Seller Account Active</h4>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:10px;" id="sellerStatusText">Status: Approved</p>
+          <button class="btn-solid" style="background:#2196f3;" onclick="openSellerDashboard()">Open Seller Dashboard</button>
         </div>
       </div>
     </div>
@@ -395,7 +399,7 @@
   <!-- MY ORDERS PAGE -->
   <div id="page-orders" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('profile')">← Back to Profile</button>
+      <button class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
       <span style="font-weight:700; font-size:0.95rem;">My Orders & Tracking</span>
     </div>
     <div class="page-content">
@@ -413,35 +417,38 @@
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
       <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Product Price</span><span id="summaryProductPrice">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:var(--success); font-weight:600;"><span>Total Discounts</span><span id="summaryTotalDiscount">- ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span><span style="text-decoration:line-through; color:var(--muted); margin-right:4px;">₹49</span> Free</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Order Total</span><span id="cartTotalPrice">₹0</span></div>
-      <div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; text-align:center; font-size:0.8rem; font-weight:700; margin-bottom:12px;" id="discountBadgeText">🎉 Yay! Your total discount is ₹0</div>
-      <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Continue to Checkout</button>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Payment Gateway Fee (+2%)</span><span id="summaryPgFee">+ ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
+      <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Transparent Checkout</button>
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL -->
+  <!-- CHECKOUT MODAL WITH TRANSPARENT FEE BREAKDOWN -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Prepaid Checkout</h3>
+        <h3 style="font-size:1.1rem;">Secure Transparent Checkout</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
-      <div class="form-group"><label>Customer Full Name (Required)</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
-      <div class="form-group"><label>Phone Number (Required)</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required></div>
-      <div class="form-group"><label>House No. / Building / Area / Street (Required)</label><input type="text" id="chkArea" placeholder="e.g. Near Main Market, Flat 204" required></div>
+      <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Payment Gateway Fee (2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
+        <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
+      </div>
+      <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required></div>
+      <div class="form-group"><label>House No. / Street / Area</label><input type="text" id="chkArea" placeholder="Area / Address" required></div>
       <div class="form-row">
-        <div class="form-group"><label>6-Digit PIN Code (Auto-Fill)</label><input type="text" id="chkPincode" placeholder="e.g. 110001" maxlength="6" oninput="lookupPincode(this.value)" required></div>
-        <div class="form-group"><label>City / Post Office</label><input type="text" id="chkCity" placeholder="City name" required></div>
+        <div class="form-group"><label>6-Digit PIN Code</label><input type="text" id="chkPincode" placeholder="PIN code" maxlength="6" oninput="lookupPincode(this.value)" required></div>
+        <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City" required></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>District</label><input type="text" id="chkDistrict" placeholder="Auto-selected district" readonly style="background:#f1f3f6;" required></div>
-        <div class="form-group"><label>State</label><input type="text" id="chkState" placeholder="Auto-selected state" readonly style="background:#f1f3f6;" required></div>
+        <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
+        <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
       </div>
-      <div class="form-group"><label>Payment Mode (100% Prepaid)</label><input type="text" value="Online / UPI / Card (Prepaid Secure)" readonly style="background:#e8f5e9; color:var(--success); font-weight:700;"></div>
-      <button class="btn-solid" onclick="initiateCheckoutOtp()">Proceed & Verify Payment OTP</button>
+      <button class="btn-solid" onclick="initiateCheckoutOtp()" style="margin-top:10px;">Verify Payment & Place Order</button>
     </div>
   </div>
 
@@ -449,135 +456,140 @@
   <div class="modal-overlay" id="paymentOtpModal">
     <div class="modal-box" style="max-width:380px; text-align:center;">
       <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment OTP Verification</h3>
-      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code sent to complete transaction.</p>
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
       <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
-      <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP code" maxlength="4"></div>
+      <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
       <button class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
     </div>
   </div>
 
-  <!-- SECRET ADMIN PANEL MODAL (rohitku316 / Rohit@2006) -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-box" style="max-width: 850px;">
+  <!-- BECOME A SELLER REGISTRATION MODAL -->
+  <div class="modal-overlay" id="becomeSellerModal">
+    <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin & Link Scraper Panel</h3>
-        <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        <h3 style="font-size:1.1rem;">🏪 Seller Registration / KYC</h3>
+        <button onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
+      <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com"></div>
+      <div class="form-group"><label>Mobile Number</label><input type="tel" id="sellerRegPhone" placeholder="10-digit mobile number" maxlength="10"></div>
+      <div class="form-group"><label>Business / Store Name</label><input type="text" id="sellerRegStore" placeholder="Store name"></div>
+      <div class="form-group"><label>Bank Account Number & IFSC (For Payouts)</label><input type="text" id="sellerRegBank" placeholder="A/C No, IFSC Code"></div>
+      <button class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Application for Approval</button>
+    </div>
+  </div>
+
+  <!-- SELLER DASHBOARD MODAL -->
+  <div class="modal-overlay" id="sellerDashboardModal">
+    <div class="dashboard-modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px;">
+        <h3 style="font-size:1.2rem; color:var(--primary);">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</h3>
+        <button onclick="closeSellerDashboard()" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="dash-tabs" style="margin-top:12px;">
+        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
+        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
+        <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
+      </div>
+      <div class="dashboard-body-area">
+        <!-- Tab 1: My Products -->
+        <div id="sellerTabProducts" class="dash-tab-content active">
+          <div style="background:#f9f9f9; padding:15px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+            <h5 id="sellerFormTitle" style="margin-bottom:10px; font-size:0.95rem;">➕ Add New Product (Commission Automatically Added)</h5>
+            <input type="hidden" id="sellerEditIndex" value="-1">
+            <div class="form-row">
+              <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
+              <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Watches / Wallets / etc."></div>
+              <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+              <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
+            </div>
+            <div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; font-weight:bold; margin-bottom:10px;" id="previewListingPriceText">
+              ℹ️ Final Listing Price for Customer = Base Price + Admin Commission
+            </div>
+            <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
+            <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="2" placeholder="Description"></textarea></div>
+            <button class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:10px;" onclick="saveSellerProduct()">Save Product</button>
+          </div>
+          <h5 style="margin-bottom:8px; font-size:0.9rem; color:var(--muted);">Your Listed Products</h5>
+          <div id="sellerProductsList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
+        </div>
+        <!-- Tab 2: My Orders -->
+        <div id="sellerTabOrders" class="dash-tab-content">
+          <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">Orders containing your products</h5>
+          <div id="sellerOrdersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;">No orders yet.</div>
+        </div>
+        <!-- Tab 3: Earnings -->
+        <div id="sellerTabEarnings" class="dash-tab-content">
+          <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px;">
+            <h4 style="margin-bottom:10px;">💰 Earnings Summary</h4>
+            <p style="font-size:0.9rem; margin-bottom:6px;"><strong>Total Sales Revenue:</strong> <span id="sellerTotalSales">₹0</span></p>
+            <p style="font-size:0.9rem; margin-bottom:6px;"><strong>Marketplace Commission Deducted:</strong> <span id="sellerTotalCommission">₹0</span></p>
+            <p style="font-size:1rem; color:var(--success); font-weight:bold; margin-top:10px;">Net Payable Payout: <span id="sellerNetEarnings">₹0</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECRET ADMIN DASHBOARD MODAL (rohitku316 / Rohit@2006) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="dashboard-modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px;">
+        <h3 style="font-size:1.2rem; color:var(--primary);">🔒 Admin Master Dashboard</h3>
+        <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.4rem; cursor:pointer;">✕</button>
       </div>
       
       <!-- Admin Login -->
-      <div id="adminLoginScreen">
-        <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Enter admin user ID"></div>
-        <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Enter password"></div>
-        <button class="btn-solid" onclick="verifyAdminPassword()">Login to Dashboard</button>
+      <div id="adminLoginScreen" style="max-width: 400px; margin: 60px auto; width: 100%;">
+        <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
+        <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
+        <button class="btn-solid" onclick="verifyAdminPassword()" style="margin-top: 10px;">Login to Admin</button>
       </div>
 
-      <!-- Admin Dashboard (Multi-Tab) -->
-      <div id="adminDashboardScreen" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h4 style="font-size:0.9rem; color:var(--success);">✅ Link Scraper & Multi-Supplier Panel (rohitku316)</h4>
-          <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:700;">Logout</button>
+      <!-- Admin Dashboard Content -->
+      <div id="adminDashboardScreen" style="display:none; flex-direction:column; flex-grow:1; overflow:hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin: 12px 0;">
+          <h4 style="font-size:1rem; color:var(--success);">✅ Master Admin (rohitku316)</h4>
+          <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout</button>
         </div>
 
-        <!-- Admin Tabs -->
-        <div class="admin-tabs">
-          <button class="admin-tab-btn active" onclick="switchAdminTab('orders')">📦 Orders & SKU Mapping</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('linkscraper')">🔗 Import by Product Link</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('import')">📥 Bulk CSV Import</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('returns')">🔄 Returns & Stock</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('products')">🛍️ Manage Products (Edit/Remove)</button>
+        <div class="dash-tabs">
+          <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers Management</button>
+          <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ All Products & Pricing</button>
+          <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders</button>
+          <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Commission Settings</button>
         </div>
 
-        <!-- Tab 1: Orders & Fulfillment -->
-        <div id="admTabOrders" class="admin-tab-content active">
-          <div style="margin-bottom:10px;">
-            <input type="text" id="adminSearchInput" placeholder="Search by Order ID, SKU, Product Name, Customer Name/Phone..." oninput="filterAdminOrders(this.value)" style="padding:8px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px; width:100%;">
+        <div class="dashboard-body-area">
+          <!-- Tab 1: Sellers Management -->
+          <div id="admTabSellers" class="dash-tab-content active">
+            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">Manage Seller Approvals & KYC</h5>
+            <div id="admSellersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;">No sellers registered.</div>
           </div>
-          <h5 style="margin-bottom:8px; font-size:0.8rem; color:var(--muted);">Customer Orders with Supplier & SKU Mapping + Copy Details</h5>
-          <div id="admOrdersList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
-        </div>
-
-        <!-- Tab 2: Import by Product Link (Auto-Fetch Scraper) -->
-        <div id="admTabLinkScraper" class="admin-tab-content">
-          <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:12px; border-radius:6px; margin-bottom:12px; font-size:0.82rem; color:#0d47a1;">
-            <strong>🔗 Product Link Scraper:</strong> Paste any public supplier product link below. The system will attempt to fetch and autofill the details using a CORS proxy. If blocked by site security, you can fill/edit details manually.
+          <!-- Tab 2: Products -->
+          <div id="admTabProducts" class="dash-tab-content">
+            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">All Marketplace Products across Vendors</h5>
+            <div id="admProductsList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
           </div>
-          <div class="form-group">
-            <label>Supplier Product URL</label>
-            <input type="text" id="quickProductUrl" placeholder="https://supplier-website.com/product-page">
+          <!-- Tab 3: Orders -->
+          <div id="admTabOrders" class="dash-tab-content">
+            <h5 style="margin-bottom:10px; font-size:0.9rem; color:var(--muted);">All Customer Orders</h5>
+            <div id="admOrdersList" style="border:1px solid var(--border); padding:10px; border-radius:6px; background:#fff;"></div>
           </div>
-          <button class="btn-solid" style="background:#2196f3; color:#fff; margin-bottom:12px;" onclick="fetchProductFromUrl()">Fetch & Auto-Fill Form</button>
-          
-          <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border);">
-            <h5 id="scrapedFormTitle" style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">📝 Review & Save Scraped Product</h5>
-            <div class="form-row">
-              <div class="form-group"><input type="text" id="scrapeTitle" placeholder="Product Title"></div>
-              <div class="form-group"><input type="text" id="scrapeSku" placeholder="SKU / Product ID"></div>
+          <!-- Tab 4: Commission Settings -->
+          <div id="admTabSettings" class="dash-tab-content">
+            <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px; max-width:450px;">
+              <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
+              <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
+              <button class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
             </div>
-            <div class="form-row">
-              <div class="form-group"><input type="text" id="scrapeCategory" placeholder="Category (e.g. Watches)"></div>
-              <div class="form-group"><input type="text" id="scrapeSupplier" placeholder="Supplier Name"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><input type="number" id="scrapePrice" placeholder="Selling Price (₹)"></div>
-              <div class="form-group"><input type="number" id="scrapeMrp" placeholder="MRP Price (₹)"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><input type="number" id="scrapeStock" placeholder="Stock Qty"></div>
-              <div class="form-group"><input type="text" id="scrapeImage" placeholder="Image URL"></div>
-            </div>
-            <div class="form-group"><textarea id="scrapeDesc" rows="2" placeholder="Description"></textarea></div>
-            <button class="btn-solid" onclick="saveScrapedProduct()">Save Scraped Product to Store</button>
           </div>
-        </div>
-
-        <!-- Tab 3: Bulk CSV Import -->
-        <div id="admTabImport" class="admin-tab-content">
-          <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px; border-radius:6px; margin-bottom:12px; font-size:0.82rem; color:#e65100;">
-            <strong>📋 Bulk CSV Import Instructions:</strong> Upload your catalogue CSV. Required columns: <code>sku, title, category, supplier_name, price, mrp, supplier_cost, stock, image, desc</code>.
-          </div>
-          <div class="form-group">
-            <label>Upload Catalogue CSV File</label>
-            <input type="file" id="csvFileInput" accept=".csv" style="padding:6px; background:#fff;" onchange="previewCsvFile(this)">
-          </div>
-          <div id="csvPreviewContainer" style="margin-top:10px; max-height:200px; overflow-y:auto; font-size:0.75rem;"></div>
-          <button class="btn-solid" id="confirmImportBtn" style="background:#d4af37; color:#000; margin-top:10px; display:none;" onclick="executeCsvImport()">Confirm & Import All Products</button>
-          <div id="csvImportLog" style="margin-top:10px; font-size:0.8rem; font-weight:bold; color:var(--success);"></div>
-        </div>
-
-        <!-- Tab 4: Returns & Stock Check -->
-        <div id="admTabReturns" class="admin-tab-content">
-          <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">Delivered Orders & 3-Day Return Status</h5>
-          <div id="admReturnsList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No return claims.</div>
-        </div>
-
-        <!-- Tab 5: Products & Pricing Margin (Edit & Remove) -->
-        <div id="admTabProducts" class="admin-tab-content">
-          <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border); margin-bottom:12px;">
-            <h5 id="productFormTitle" style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">➕ Add New Product</h5>
-            <input type="hidden" id="editProductIndex" value="-1">
-            <div class="form-row">
-              <div class="form-group"><input type="text" id="newProdTitle" placeholder="Product Title"></div>
-              <div class="form-group"><input type="text" id="newProdSku" placeholder="SKU / Product ID"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><input type="text" id="newProdCategory" placeholder="Category (e.g. Watches)"></div>
-              <div class="form-group"><input type="text" id="newProdSupplier" placeholder="Supplier Name"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><input type="number" id="newProdSupplierCost" placeholder="Supplier Cost (₹)"></div>
-              <div class="form-group"><input type="number" id="newProdPrice" placeholder="Selling Price (₹)"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><input type="number" id="newProdMrp" placeholder="MRP Price (₹)"></div>
-              <div class="form-group"><input type="number" id="newProdStock" placeholder="Stock Qty"></div>
-            </div>
-            <div class="form-group"><input type="text" id="newProdImage" placeholder="Image URL"></div>
-            <div class="form-group"><textarea id="newProdDesc" rows="2" placeholder="Description"></textarea></div>
-            <button class="btn-solid" id="saveProductBtn" style="padding:8px; font-size:0.8rem;" onclick="saveProductFromAdmin()">Save Product</button>
-            <button id="cancelEditBtn" style="display:none; background:#777; color:#fff; border:none; padding:6px; margin-top:6px; width:100%; border-radius:4px; cursor:pointer;" onclick="resetProductForm()">Cancel Edit</button>
-          </div>
-          <h5 style="margin-bottom:6px; font-size:0.85rem; color:var(--muted);">Store Products List (Edit or Remove)</h5>
-          <div id="admProductsList" style="max-height:200px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;"></div>
         </div>
 
       </div>
@@ -585,34 +597,24 @@
   </div>
 
   <script>
-    // --- Initialize Supabase & EmailJS ---
-    const SUPABASE_URL = "YOUR_SUPABASE_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-    const supabaseClient = (SUPABASE_URL !== "YOUR_SUPABASE_URL") ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+    // --- State & Storage ---
+    let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10; // Default 10%
 
-    (function() {
-      emailjs.init("YOUR_PUBLIC_KEY");
-    })();
-
-    // --- Default Products ---
     let defaultProducts = [
-      { id: 1, sku: "D9-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", supplier: "D9 Creation", supplierCost: 1400, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
-      { id: 2, sku: "D9-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", supplier: "D9 Creation", supplierCost: 500, price: 1299, mrp: 2499, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
-      { id: 3, sku: "SUP2-SGL-303", title: "Designer Gradient Sunglasses", category: "Sunglasses", supplier: "Supplier Alpha", supplierCost: 600, price: 1499, mrp: 2999, stock: 10, image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=60", desc: "UV400 protected stylish gradient sunglasses for daily luxury." },
-      { id: 4, sku: "D9-BRC-404", title: "Signature Gold-Plated Bracelet", category: "Bracelets", supplier: "D9 Creation", supplierCost: 350, price: 999, mrp: 1999, stock: 30, image: "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=500&auto=format&fit=crop&q=60", desc: "Elegant gold-plated stainless steel fashion bracelet." },
-      { id: 5, sku: "SUP2-BAG-505", title: "Executive Leather Messenger Bag", category: "Bags", supplier: "Supplier Alpha", supplierCost: 1600, price: 3499, mrp: 6999, stock: 5, image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&auto=format&fit=crop&q=60", desc: "Spacious premium leather bag designed for professionals." }
+      { id: 1, sku: "MKT-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 2700, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch." },
+      { id: 2, sku: "MKT-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1150, price: 1299, mrp: 2499, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet." }
     ];
 
     let products = JSON.parse(localStorage.getItem('kosh_products')) || defaultProducts;
+    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
+    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
+    
+    let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let currentSelectedProduct = null;
     let secretClickCount = 0;
     let tempCheckoutData = {};
     let paymentOtpGenerated = "";
-    let parsedCsvRows = [];
-
-    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let currentUser = localStorage.getItem('kosh_logged_email') || null;
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
@@ -642,7 +644,7 @@
               ${stockBadge}
             </div>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${p.sku || 'N/A'} | Supplier: ${p.supplier || 'General'}</div>
+            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${p.sellerName || 'Kosh Direct'}</div>
             <div class="p-price-row">
               <span class="p-price">₹${p.price}</span>
               <span class="p-mrp">₹${p.mrp}</span>
@@ -654,7 +656,6 @@
       });
     }
 
-    // --- Navigation & Page Persistence ---
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
@@ -673,10 +674,6 @@
       navigateTo(savedPage);
       renderProducts();
       updateCartUI();
-
-      if(localStorage.getItem('kosh_cart_open') === 'true') {
-        toggleCartDrawer(true);
-      }
     });
 
     function filterCategory(cat) {
@@ -694,7 +691,7 @@
       document.getElementById('pPageImg').src = currentSelectedProduct.image;
       document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
       document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku || 'N/A'} | Supplier: ${currentSelectedProduct.supplier || 'N/A'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
+      document.getElementById('pPageMetaDisplay').innerText = `Vendor: ${currentSelectedProduct.sellerName || 'Kosh Direct'} | Stock: ${currentSelectedProduct.stock > 0 ? currentSelectedProduct.stock + ' Available' : 'Out of Stock'}`;
       document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
       document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
       document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
@@ -718,7 +715,7 @@
       }
     }
 
-    // --- Cart System ---
+    // --- Cart System & Transparent Fee Calculation ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { alert("Item is out of stock."); return; }
@@ -745,16 +742,11 @@
 
       priceDetailsBox.style.display = 'block';
       let totalProdPrice = 0;
-      let totalMrpPrice = 0;
       let totalItems = 0;
 
       cart.forEach((item, index) => {
         totalProdPrice += (item.finalPrice * item.qty);
-        totalMrpPrice += (item.mrp * item.qty);
         totalItems += item.qty;
-
-        let discountAmt = item.mrp - item.finalPrice;
-        let discountPercent = Math.round((discountAmt / item.mrp) * 100);
 
         let div = document.createElement('div');
         div.style.cssText = "background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;";
@@ -764,12 +756,8 @@
             <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
             <div style="flex-grow:1; padding-right:15px;">
               <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
-              <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">SKU: ${item.sku || 'N/A'} | Supplier: ${item.supplier || 'General'}</div>
-              <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:6px;">
-                <span style="font-size:1rem; font-weight:800; color:#111;">₹${item.finalPrice}</span>
-                <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${item.mrp}</span>
-                <span style="font-size:0.75rem; color:var(--success); font-weight:700;">${discountPercent}% Off</span>
-              </div>
+              <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
+              <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
               <div style="font-size:0.75rem; color:var(--muted);">Qty: ${item.qty}</div>
             </div>
           </div>
@@ -777,12 +765,13 @@
         container.appendChild(div);
       });
 
-      let totalDiscountAmt = totalMrpPrice - totalProdPrice;
+      let pgFee = Math.round(totalProdPrice * 0.02); // 2% Payment Gateway Fee
+      let grandTotal = totalProdPrice + pgFee;
+
       document.getElementById('cartItemCountText').innerText = totalItems;
-      document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalMrpPrice;
-      document.getElementById('summaryTotalDiscount').innerText = '- ₹' + totalDiscountAmt;
-      document.getElementById('cartTotalPrice').innerText = '₹' + totalProdPrice;
-      document.getElementById('discountBadgeText').innerText = `🎉 Yay! Your total discount is ₹${totalDiscountAmt}`;
+      document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalProdPrice;
+      document.getElementById('summaryPgFee').innerText = '+ ₹' + pgFee;
+      document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
     }
 
     function removeFromCart(index) {
@@ -797,78 +786,39 @@
       if(open) { 
         drawer.classList.add('open'); 
         backdrop.style.display = 'block'; 
-        localStorage.setItem('kosh_cart_open', 'true');
       } else { 
         drawer.classList.remove('open'); 
         backdrop.style.display = 'none'; 
-        localStorage.setItem('kosh_cart_open', 'false');
       }
     }
 
-    // --- Auto Pin Code Lookup ---
-    async function lookupPincode(pin) {
-      if(pin.length === 6) {
-        try {
-          let response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-          let data = await response.json();
-          if(data[0].Status === "Success") {
-            let details = data[0].PostOffice[0];
-            document.getElementById('chkCity').value = details.Name || details.Block || '';
-            document.getElementById('chkDistrict').value = details.District || '';
-            document.getElementById('chkState').value = details.State || '';
-          }
-        } catch(err) { console.error(err); }
-      }
-    }
-
-    // --- Authentication Flow ---
+    // --- Authentication & Seller Registration ---
     function switchAuthView(view) {
       document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
       document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
-      document.getElementById('authForgotView').style.display = view === 'forgot' ? 'block' : 'none';
     }
 
     async function handleSignup() {
       let email = document.getElementById('signupEmail').value.trim();
       let pass = document.getElementById('signupPass').value.trim();
       if(!email || pass.length < 6) { alert('Enter valid email & 6+ char password.'); return; }
-      if(supabaseClient) {
-        const { error } = await supabaseClient.auth.signUp({ email, password: pass });
-        if(error) { alert('Error: ' + error.message); return; }
-      }
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      alert('Account created successfully!');
+      alert('Customer account created!');
     }
 
     async function handleLogin() {
       let email = document.getElementById('loginEmail').value.trim();
       let pass = document.getElementById('loginPass').value.trim();
       if(!email || !pass) { alert('Enter email and password.'); return; }
-      if(supabaseClient) {
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
-        if(error) { alert('Login Failed: ' + error.message); return; }
-      }
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
       alert('Login successful!');
     }
 
-    async function handleForgotPassword() {
-      let email = document.getElementById('forgotEmail').value.trim();
-      if(!email) { alert('Enter registered email.'); return; }
-      if(supabaseClient) {
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-        if(error) { alert('Error: ' + error.message); return; }
-      }
-      alert('Password reset link sent to ' + email);
-      switchAuthView('login');
-    }
-
-    async function handleLogout() {
-      if(supabaseClient) { await supabaseClient.auth.signOut(); }
+    function handleLogout() {
       localStorage.removeItem('kosh_logged_email');
       currentUser = null;
       checkLoginStatus();
@@ -879,35 +829,254 @@
       if(currentUser) {
         document.getElementById('authLoginView').style.display = 'none';
         document.getElementById('authSignupView').style.display = 'none';
-        document.getElementById('authForgotView').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
+
+        // Check if user is a registered seller
+        let foundSeller = sellersList.find(s => s.email === currentUser);
+        let portalBox = document.getElementById('sellerPortalLinkBox');
+        let statusText = document.getElementById('sellerStatusText');
+        if(foundSeller) {
+          portalBox.style.display = 'block';
+          statusText.innerText = `Status: ${foundSeller.status}`;
+          if(foundSeller.status !== 'Approved') {
+            portalBox.querySelector('button').style.display = 'none';
+            statusText.innerText = `Status: ${foundSeller.status} (Waiting for Admin Approval)`;
+          } else {
+            portalBox.querySelector('button').style.display = 'block';
+          }
+        } else {
+          portalBox.style.display = 'none';
+        }
       } else {
         document.getElementById('userDashboardSection').style.display = 'none';
         switchAuthView('login');
       }
     }
 
-    // --- Checkout & Payment Flow ---
+    function openBecomeSellerModal() {
+      if(!currentUser) { alert('Please login or sign up first before applying as a seller.'); navigateTo('profile'); return; }
+      document.getElementById('sellerRegEmail').value = currentUser;
+      document.getElementById('becomeSellerModal').style.display = 'flex';
+    }
+    function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
+
+    function submitSellerApplication() {
+      let name = document.getElementById('sellerRegName').value.trim();
+      let email = document.getElementById('sellerRegEmail').value.trim();
+      let phone = document.getElementById('sellerRegPhone').value.trim();
+      let store = document.getElementById('sellerRegStore').value.trim();
+      let bank = document.getElementById('sellerRegBank').value.trim();
+
+      if(!name || !email || phone.length !== 10 || !store || !bank) {
+        alert('Please fill in all seller details correctly.');
+        return;
+      }
+
+      let newSeller = {
+        id: 'SEL-' + Math.floor(1000 + Math.random() * 9000),
+        name, email, phone, store, bank,
+        status: 'Pending'
+      };
+
+      sellersList.push(newSeller);
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      closeBecomeSellerModal();
+      alert('Seller application submitted successfully! Awaiting Admin Approval.');
+      checkLoginStatus();
+    }
+
+    // --- Seller Dashboard & Product Management with Commission Add ---
+    function openSellerDashboard() {
+      let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
+      if(!foundSeller) { alert('Your seller account is not approved yet.'); return; }
+      document.getElementById('sellerdashName').innerText = foundSeller.store;
+      document.getElementById('sellerDashboardModal').style.display = 'flex';
+      loadSellerData(foundSeller.id);
+    }
+    function closeSellerDashboard() { document.getElementById('sellerDashboardModal').style.display = 'none'; }
+
+    function switchSellerTab(tab) {
+      document.querySelectorAll('#sellerDashboardModal .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#sellerDashboardModal .dash-tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('sellerTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    }
+
+    function calculatePreviewListingPrice() {
+      let base = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
+      let final = Math.round(base + (base * globalCommission / 100));
+      document.getElementById('previewListingPriceText').innerText = `ℹ️ Admin Commission (${globalCommission}%): ₹${Math.round(base * globalCommission / 100)} | Final Customer Price: ₹${final}`;
+    }
+
+    function saveSellerProduct() {
+      let foundSeller = sellersList.find(s => s.email === currentUser);
+      let editIdx = parseInt(document.getElementById('sellerEditIndex').value);
+      let title = document.getElementById('sProdTitle').value.trim();
+      let sku = document.getElementById('sProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
+      let category = document.getElementById('sProdCategory').value.trim() || 'General';
+      let basePrice = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('sProdMrp').value) || 0;
+      let stock = parseInt(document.getElementById('sProdStock').value) || 10;
+      let image = document.getElementById('sProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+      let desc = document.getElementById('sProdDesc').value.trim() || 'Vendor product.';
+
+      if(!title || !basePrice || !mrp) { alert('Fill Title, Base Price, and MRP.'); return; }
+
+      // Automatically calculate listing price with admin commission
+      let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
+
+      if(editIdx >= 0) {
+        products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
+        alert('Product updated successfully!');
+      } else {
+        products.push({
+          id: Date.now(),
+          sku, title, category,
+          sellerId: foundSeller.id,
+          sellerName: foundSeller.store,
+          basePrice,
+          price: finalPrice,
+          mrp, stock, image, desc
+        });
+        alert('Product added successfully with automatic commission calculation!');
+      }
+
+      localStorage.setItem('kosh_products', JSON.stringify(products));
+      renderProducts();
+      loadSellerData(foundSeller.id);
+      resetSellerForm();
+    }
+
+    function loadSellerData(sellerId) {
+      // Products list
+      let myProducts = products.filter(p => p.sellerId === sellerId);
+      let pArea = document.getElementById('sellerProductsList');
+      if(myProducts.length === 0) { pArea.innerHTML = 'No products listed yet.'; }
+      else {
+        let h = '';
+        myProducts.forEach((p, idx) => {
+          let globalIdx = products.findIndex(item => item.id === p.id);
+          h += `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+              <div><b>${p.title}</b><br><span style="color:var(--muted);">Base: ₹${p.basePrice} | Customer Price: ₹${p.price} | Stock: ${p.stock}</span></div>
+              <div style="display:flex; gap:6px;">
+                <button onclick="editSellerProduct(${globalIdx})" style="background:#2196f3; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Edit</button>
+                <button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
+              </div>
+            </div>
+          `;
+        });
+        pArea.innerHTML = h;
+      }
+
+      // Orders & Earnings
+      let totalSales = 0;
+      let totalCommission = 0;
+      let oHtml = '';
+      ordersList.forEach(o => {
+        let sellerItems = o.items.filter(i => i.sellerId === sellerId);
+        if(sellerItems.length > 0) {
+          sellerItems.forEach(si => {
+            let itemTotal = si.price * si.qty;
+            let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
+            totalSales += itemTotal;
+            totalCommission += commissionAmt;
+            oHtml += `
+              <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
+                <div><b>Order #${o.id}</b> - ${o.date}</div>
+                <div>Product: ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}</div>
+                <div>Status: <span style="color:var(--success); font-weight:bold;">${o.status}</span></div>
+              </div>
+            `;
+          });
+        }
+      });
+      document.getElementById('sellerOrdersList').innerHTML = oHtml || 'No orders for your products yet.';
+      document.getElementById('sellerTotalSales').innerText = '₹' + totalSales;
+      document.getElementById('sellerTotalCommission').innerText = '₹' + totalCommission;
+      document.getElementById('sellerNetEarnings').innerText = '₹' + (totalSales - totalCommission);
+    }
+
+    function editSellerProduct(globalIdx) {
+      let p = products[globalIdx];
+      document.getElementById('sellerEditIndex').value = globalIdx;
+      document.getElementById('sProdTitle').value = p.title;
+      document.getElementById('sProdSku').value = p.sku || '';
+      document.getElementById('sProdCategory').value = p.category || '';
+      document.getElementById('sProdBasePrice').value = p.basePrice || p.price;
+      document.getElementById('sProdMrp').value = p.mrp;
+      document.getElementById('sProdStock').value = p.stock;
+      document.getElementById('sProdImage').value = p.image;
+      document.getElementById('sProdDesc').value = p.desc;
+      document.getElementById('sellerFormTitle').innerText = '✏️ Edit Product';
+      document.getElementById('sellerSaveProdBtn').innerText = 'Update Product';
+    }
+
+    function resetSellerForm() {
+      document.getElementById('sellerEditIndex').value = '-1';
+      document.getElementById('sProdTitle').value = '';
+      document.getElementById('sProdSku').value = '';
+      document.getElementById('sProdCategory').value = '';
+      document.getElementById('sProdBasePrice').value = '';
+      document.getElementById('sProdMrp').value = '';
+      document.getElementById('sProdStock').value = '';
+      document.getElementById('sProdImage').value = '';
+      document.getElementById('sProdDesc').value = '';
+      document.getElementById('sellerFormTitle').innerText = '➕ Add New Product';
+      document.getElementById('sellerSaveProdBtn').innerText = 'Save Product';
+    }
+
+    function removeSellerProduct(globalIdx, sellerId) {
+      if(confirm('Remove this product?')) {
+        products.splice(globalIdx, 1);
+        localStorage.setItem('kosh_products', JSON.stringify(products));
+        renderProducts();
+        loadSellerData(sellerId);
+      }
+    }
+
+    // --- Transparent Checkout Flow ---
     function openCheckoutModal() {
       if(cart.length === 0) { alert('Cart is empty!'); return; }
       toggleCartDrawer(false);
+      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+      let pgFee = Math.round(subtotal * 0.02);
+      let finalTotal = subtotal + pgFee;
+
+      document.getElementById('chkSubtotalVal').innerText = '₹' + subtotal;
+      document.getElementById('chkPgFeeVal').innerText = '+ ₹' + pgFee;
+      document.getElementById('chkFinalTotalVal').innerText = '₹' + finalTotal;
       document.getElementById('checkoutModal').style.display = 'flex';
     }
-
     function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
 
-    function initiateCheckoutOtp() {
-      const name = document.getElementById('chkName').value.trim();
-      const phone = document.getElementById('chkPhone').value.trim();
-      const area = document.getElementById('chkArea').value.trim();
-      const pincode = document.getElementById('chkPincode').value.trim();
-      const city = document.getElementById('chkCity').value.trim();
-      const district = document.getElementById('chkDistrict').value.trim();
-      const state = document.getElementById('chkState').value.trim();
+    async function lookupPincode(pin) {
+      if(pin.length === 6) {
+        try {
+          let res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+          let data = await res.json();
+          if(data[0].Status === "Success") {
+            let info = data[0].PostOffice[0];
+            document.getElementById('chkCity').value = info.Name || '';
+            document.getElementById('chkDistrict').value = info.District || '';
+            document.getElementById('chkState').value = info.State || '';
+          }
+        } catch(e){}
+      }
+    }
 
-      if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district || !state) {
-        alert('Please fill in all mandatory details correctly.');
+    function initiateCheckoutOtp() {
+      let name = document.getElementById('chkName').value.trim();
+      let phone = document.getElementById('chkPhone').value.trim();
+      let area = document.getElementById('chkArea').value.trim();
+      let pincode = document.getElementById('chkPincode').value.trim();
+      let city = document.getElementById('chkCity').value.trim();
+      let district = document.getElementById('chkDistrict').value.trim();
+      let state = document.getElementById('chkState').value.trim();
+
+      if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district) {
+        alert('Please fill in all delivery details correctly.');
         return;
       }
 
@@ -921,13 +1090,14 @@
     }
 
     function verifyAndFinalizeOrder() {
-      let enteredOtp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(enteredOtp !== paymentOtpGenerated) { alert('Incorrect Payment OTP!'); return; }
+      let otp = document.getElementById('enteredPaymentOtp').value.trim();
+      if(otp !== paymentOtpGenerated) { alert('Incorrect Payment OTP!'); return; }
 
       document.getElementById('paymentOtpModal').style.display = 'none';
 
-      let summary = cart.map(i => `${i.title} [SKU: ${i.sku || 'N/A'}, Supplier: ${i.supplier || 'General'}] (${i.qty} x ₹${i.finalPrice})`).join(', ');
-      let total = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
+      let pgFee = Math.round(subtotal * 0.02);
+      let grandTotal = subtotal + pgFee;
 
       let newOrder = {
         id: "KS" + Math.floor(10000 + Math.random() * 90000),
@@ -937,11 +1107,11 @@
         name: tempCheckoutData.name,
         phone: tempCheckoutData.phone,
         address: tempCheckoutData.address,
-        payMode: '100% Prepaid',
-        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', supplier: i.supplier || 'General', qty: i.qty, price: i.finalPrice })),
-        summary,
-        total,
-        status: 'New Order (Verify Stock)',
+        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice })),
+        subtotal,
+        pgFee,
+        total: grandTotal,
+        status: 'New Order',
         deliveredAt: null
       };
 
@@ -950,26 +1120,17 @@
 
       cart = [];
       localStorage.removeItem('kosh_cart');
-      localStorage.setItem('kosh_cart_open', 'false');
       updateCartUI();
 
-      var templateParams = {
-        from_name: tempCheckoutData.name,
-        phone: tempCheckoutData.phone,
-        address: tempCheckoutData.address,
-        message: `New Prepaid Order Received! Details: ${summary} | Total: ₹${total}`
-      };
-
-      emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams).catch(() => {});
-      alert("Order placed successfully! Check admin panel for supplier fulfillment details.");
+      alert("Order placed successfully with transparent PG fee breakdown!");
       navigateTo('orders');
     }
 
     function markAsDeliveredByCustomer(orderId) {
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.status = 'Delivered';
-        order.deliveredAt = Date.now();
+      let o = ordersList.find(x => x.id === orderId);
+      if(o) {
+        o.status = 'Delivered';
+        o.deliveredAt = Date.now();
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         alert("Delivery confirmed! 3-day return window started.");
         renderOrdersPage();
@@ -991,13 +1152,15 @@
           let daysPassed = (now - o.deliveredAt) / (1000 * 60 * 60 * 24);
           if (daysPassed <= 3) {
             let daysLeft = Math.ceil(3 - daysPassed);
-            returnSectionHtml = `<div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">📦 Eligible for Return (${daysLeft} day(s) left). Uncut unboxing video required.<button onclick="alert('Please share your unboxing video via support email to process return.')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Request Return / Replacement</button></div>`;
+            returnSectionHtml = `<div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">📦 Eligible for Return (${daysLeft} day(s) left).<button onclick="alert('Please share unboxing video via support email.')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Request Return</button></div>`;
           } else {
-            returnSectionHtml = `<div style="background:#f1f3f6; color:var(--muted); padding:6px; border-radius:4px; font-size:0.75rem; margin-top:8px;">🔒 Return window closed (3 days expired).</div>`;
+            returnSectionHtml = `<div style="background:#f1f3f6; color:var(--muted); padding:6px; border-radius:4px; font-size:0.75rem; margin-top:8px;">🔒 Return window closed.</div>`;
           }
-        } else if (o.status.includes('New Order') || o.status.includes('Processing')) {
+        } else if (o.status === 'New Order') {
           returnSectionHtml = `<div style="margin-top:8px;"><button onclick="markAsDeliveredByCustomer('${o.id}')" style="background:var(--accent); color:#000; border:none; padding:8px 14px; border-radius:4px; font-weight:700; cursor:pointer; font-size:0.8rem;">Click Here When You Receive Order</button></div>`;
         }
+
+        let itemsSummary = o.items.map(i => `${i.title} (x${i.qty})`).join(', ');
 
         html += `
           <div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
@@ -1005,11 +1168,12 @@
               <span>Order ID: #${o.id}</span>
               <span>${o.date}</span>
             </div>
-            <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${o.summary}</div>
+            <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${itemsSummary}</div>
             <div style="font-size:0.85rem; color:#555; margin-bottom:6px;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
             <div style="font-size:0.82rem; color:var(--muted); margin-bottom:6px;"><strong>Status:</strong> <span style="color:var(--success); font-weight:700;">${o.status}</span></div>
             ${returnSectionHtml}
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px; font-size:0.85rem;">
+              <span>Subtotal: ₹${o.subtotal} | PG Fee (2%): ₹${o.pgFee}</span>
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
             </div>
           </div>
@@ -1018,7 +1182,7 @@
       area.innerHTML = html;
     }
 
-    // --- Secret Admin Panel Functions ---
+    // --- Secret Admin Master Dashboard (rohitku316 / Rohit@2006) ---
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) {
@@ -1029,12 +1193,12 @@
     function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
 
     function verifyAdminPassword() {
-      let userId = document.getElementById('admUserInput').value.trim();
+      let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(userId === 'rohitku316' && pass === 'Rohit@2006') {
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginScreen').style.display = 'none';
-        document.getElementById('adminDashboardScreen').style.display = 'block';
-        loadAdminData();
+        document.getElementById('adminDashboardScreen').style.display = 'flex';
+        loadAdminMasterData();
       } else {
         alert('Incorrect Admin ID or Password!');
       }
@@ -1048,344 +1212,87 @@
     }
 
     function switchAdminTab(tab) {
-      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
-      
-      if(tab === 'orders') {
-        event.target.classList.add('active');
-        document.getElementById('admTabOrders').classList.add('active');
-        loadAdminOrders(ordersList);
-      } else if(tab === 'linkscraper') {
-        event.target.classList.add('active');
-        document.getElementById('admTabLinkScraper').classList.add('active');
-      } else if(tab === 'import') {
-        event.target.classList.add('active');
-        document.getElementById('admTabImport').classList.add('active');
-      } else if(tab === 'returns') {
-        event.target.classList.add('active');
-        document.getElementById('admTabReturns').classList.add('active');
-        loadAdminReturns();
-      } else if(tab === 'products') {
-        event.target.classList.add('active');
-        document.getElementById('admTabProducts').classList.add('active');
-        loadAdminProducts();
+      document.querySelectorAll('#adminModal .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#adminModal .dash-tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    }
+
+    function loadAdminMasterData() {
+      // 1. Sellers List
+      let sArea = document.getElementById('admSellersList');
+      if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
+      else {
+        let h = '';
+        sellersList.forEach((s, idx) => {
+          h += `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+              <div><b>${s.store}</b> (${s.name})<br><span style="color:var(--muted);">${s.email} | ${s.phone} | Bank: ${s.bank}</span><br>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
+              <div style="display:flex; gap:4px;">
+                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Approve</button>
+                <button onclick="updateSellerStatus(${idx}, 'Suspended')" style="background:#ff9800; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Suspend</button>
+                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#ff5252; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Block</button>
+              </div>
+            </div>
+          `;
+        });
+        sArea.innerHTML = h;
       }
-    }
 
-    function loadAdminData() {
-      loadAdminOrders(ordersList);
-      loadAdminReturns();
-      loadAdminProducts();
-    }
-
-    function filterAdminOrders(query) {
-      let q = query.toLowerCase();
-      let filtered = ordersList.filter(o => 
-        o.id.toLowerCase().includes(q) ||
-        o.name.toLowerCase().includes(q) ||
-        o.phone.toLowerCase().includes(q) ||
-        o.summary.toLowerCase().includes(q)
-      );
-      loadAdminOrders(filtered);
-    }
-
-    function loadAdminOrders(listToDisplay) {
-      let area = document.getElementById('admOrdersList');
-      if(listToDisplay.length === 0) { area.innerHTML = 'No matching orders found.'; return; }
-      let h = '';
-      
-      listToDisplay.forEach((o, index) => {
-        let skuText = o.items ? o.items.map(i => `${i.title} [SKU: ${i.sku}, Supplier: ${i.supplier}] (Qty: ${i.qty})`).join(', ') : o.summary;
-        let d9CopyString = `Kosh Studio Order: ${o.id}\nProduct & Supplier Details: ${skuText}\nCustomer Name: ${o.name}\nPhone: ${o.phone}\nAddress: ${o.address}\nTotal Amount: ₹${o.total}`;
-
-        h += `
-          <div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px; font-size:0.8rem;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-              <b>Order ID: #${o.id}</b>
-              <span style="color:var(--muted);">${o.date}</span>
-            </div>
-            <div style="color:#333; margin-bottom:6px;"><strong>Customer:</strong> ${o.name} (${o.phone})<br><strong>Address:</strong> ${o.address}</div>
-            <div style="background:#fff; border:1px solid #ddd; padding:8px; border-radius:4px; margin-bottom:8px;">
-              <strong style="color:var(--accent);">📦 Fulfillment & Supplier Information:</strong><br>
-              ${skuText}
-            </div>
-            <div style="margin-bottom:8px;">
-              <strong>Status:</strong> <span style="color:var(--success); font-weight:bold;">${o.status}</span><br>
-              <strong>Update Status:</strong> 
-              <select onchange="updateOrderStatus('${o.id}', this.value)" style="padding:4px; font-size:0.75rem; margin-top:4px;">
-                <option value="New Order (Verify Stock)" ${o.status.includes('New Order')?'selected':''}>New Order (Verify Stock)</option>
-                <option value="Order Placed with Supplier" ${o.status==='Order Placed with Supplier'?'selected':''}>Order Placed with Supplier</option>
-                <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
-                <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-                <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
-                <option value="Out of Stock - Cancelled" ${o.status.includes('Out of Stock')?'selected':''}>Out of Stock (Cancel & Refund)</option>
-              </select>
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button onclick="navigator.clipboard.writeText(\`${d9CopyString}\`); alert('Order Details copied successfully!');" style="background:#d4af37; color:#000; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.75rem;">📋 Copy Order Details</button>
-              <button onclick="removeAdminOrder('${o.id}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">🗑️ Delete Record</button>
-            </div>
+      // 2. Products List
+      let pArea = document.getElementById('admProductsList');
+      let pHtml = '';
+      products.forEach((p, idx) => {
+        pHtml += `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+            <div><b>${p.title}</b><br><span style="color:var(--muted);">Vendor: ${p.sellerName || 'Kosh Direct'} | Price: ₹${p.price} | Stock: ${p.stock}</span></div>
+            <button onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:5px 10px; border-radius:3px; cursor:pointer; font-size:0.75rem;">Remove</button>
           </div>
         `;
       });
-      area.innerHTML = h;
-    }
+      pArea.innerHTML = pHtml;
 
-    function updateOrderStatus(orderId, newStatus) {
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.status = newStatus;
-        if(newStatus.includes('Out of Stock')) {
-          order.status = 'Out of Stock - Cancelled (Product is currently out of stock)';
-        }
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        loadAdminOrders(ordersList);
-        alert("Order status updated successfully!");
-      }
-    }
-
-    function removeAdminOrder(orderId) {
-      if(confirm('Are you sure you want to delete this order record?')) {
-        ordersList = ordersList.filter(o => o.id !== orderId);
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        loadAdminOrders(ordersList);
-        loadAdminReturns();
-      }
-    }
-
-    function loadAdminReturns() {
-      let area = document.getElementById('admReturnsList');
-      let deliveredOrders = ordersList.filter(o => o.status === 'Delivered');
-      if(deliveredOrders.length === 0) { area.innerHTML = 'No delivered orders for return check.'; return; }
-      let h = '';
-      let now = Date.now();
-      deliveredOrders.forEach(o => {
-        let daysPassed = (now - o.deliveredAt) / (1000 * 60 * 60 * 24);
-        let eligible = daysPassed <= 3;
-        h += `
-          <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.8rem;">
-            <div><b>Order #${o.id}</b> - ${o.name} (${o.phone})</div>
-            <div style="color:#555; margin:4px 0;">${o.summary}</div>
-            <div>Return Status: <span style="font-weight:bold; color:${eligible ? 'var(--success)' : 'red'};">${eligible ? 'Eligible for Return (Within 3 Days)' : 'Expired (Over 3 Days)'}</span></div>
-          </div>
-        `;
-      });
-      area.innerHTML = h;
-    }
-
-    // --- Link Scraper Auto-Fetch Function ---
-    async function fetchProductFromUrl() {
-      let url = document.getElementById('quickProductUrl').value.trim();
-      if(!url) { alert('Please enter a valid product URL.'); return; }
-      alert('Attempting to fetch product details via public proxy...');
-      try {
-        let proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        let response = await fetch(proxyUrl);
-        let data = await response.json();
-        if(data.contents) {
-          let parser = new DOMParser();
-          let doc = parser.parseFromString(data.contents, 'text/html');
-          
-          let title = doc.querySelector('meta[property="og:title"]')?.content || doc.querySelector('title')?.innerText || '';
-          let image = doc.querySelector('meta[property="og:image"]')?.content || '';
-          let desc = doc.querySelector('meta[property="og:description"]')?.content || '';
-
-          document.getElementById('scrapeTitle').value = title;
-          document.getElementById('scrapeImage').value = image;
-          document.getElementById('scrapeDesc').value = desc;
-          document.getElementById('scrapeSku').value = 'LINK-' + Math.floor(1000 + Math.random() * 9000);
-          document.getElementById('scrapeCategory').value = 'General';
-          document.getElementById('scrapeSupplier').value = 'External Link';
-          document.getElementById('scrapePrice').value = '999';
-          document.getElementById('scrapeMrp').value = '1999';
-          document.getElementById('scrapeStock').value = '10';
-
-          alert('Data fetched successfully! Review and click save.');
-        } else {
-          alert('Could not parse page content.');
-        }
-      } catch(err) {
-        console.error(err);
-        alert('Blocked by target site security/CORS. Please fill details manually.');
-      }
-    }
-
-    function saveScrapedProduct() {
-      let title = document.getElementById('scrapeTitle').value.trim();
-      let sku = document.getElementById('scrapeSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
-      let category = document.getElementById('scrapeCategory').value.trim() || 'General';
-      let supplier = document.getElementById('scrapeSupplier').value.trim() || 'External Link';
-      let price = parseFloat(document.getElementById('scrapePrice').value) || 999;
-      let mrp = parseFloat(document.getElementById('scrapeMrp').value) || 1999;
-      let stock = parseInt(document.getElementById('scrapeStock').value) || 10;
-      let image = document.getElementById('scrapeImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('scrapeDesc').value.trim() || 'Imported item.';
-
-      if(!title) { alert('Product title is required.'); return; }
-
-      products.push({ id: Date.now(), sku, title, category, supplier, supplierCost: Math.round(price * 0.5), price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products', JSON.stringify(products));
-      renderProducts();
-      loadAdminProducts();
-      alert('Scraped product saved successfully to store!');
-    }
-
-    // --- Bulk CSV Import ---
-    function previewCsvFile(input) {
-      if(input.files.length === 0) return;
-      let file = input.files[0];
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let text = e.target.result;
-        let lines = text.split('\n');
-        parsedCsvRows = [];
-        
-        let html = `<table style="width:100%; border-collapse:collapse; font-size:0.7rem;"><tr style="background:#ddd;"><th style="border:1px solid #ccc; padding:4px;">SKU</th><th style="border:1px solid #ccc; padding:4px;">Title</th><th style="border:1px solid #ccc; padding:4px;">Supplier</th><th style="border:1px solid #ccc; padding:4px;">Price</th><th style="border:1px solid #ccc; padding:4px;">Stock</th></tr>`;
-
-        for(let i = 1; i < lines.length; i++) {
-          let line = lines[i].trim();
-          if(!line) continue;
-          let cols = line.split(',');
-          if(cols.length >= 7) {
-            let sku = cols[0].trim();
-            let title = cols[1].trim();
-            let category = cols[2].trim() || 'General';
-            let supplier = cols[3].trim() || 'D9 Creation';
-            let price = parseFloat(cols[4]) || 999;
-            let mrp = parseFloat(cols[5]) || 1999;
-            let supplierCost = parseFloat(cols[6]) || Math.round(price * 0.5);
-            let stock = parseInt(cols[7]) || 10;
-            let image = cols[8] ? cols[8].trim() : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-            let desc = cols[9] ? cols[9].trim() : 'Luxury accessory item.';
-
-            parsedCsvRows.push({ sku, title, category, supplier, supplierCost, price, mrp, stock, image, desc });
-            html += `<tr><td style="border:1px solid #ccc; padding:4px;">${sku}</td><td style="border:1px solid #ccc; padding:4px;">${title}</td><td style="border:1px solid #ccc; padding:4px;">${supplier}</td><td style="border:1px solid #ccc; padding:4px;">₹${price}</td><td style="border:1px solid #ccc; padding:4px;">${stock}</td></tr>`;
-          }
-        }
-        html += `</table>`;
-        document.getElementById('csvPreviewContainer').innerHTML = html;
-        document.getElementById('confirmImportBtn').style.display = 'block';
-      };
-      reader.readAsText(file);
-    }
-
-    function executeCsvImport() {
-      if(parsedCsvRows.length === 0) { alert('No rows to import.'); return; }
-      let count = 0;
-      parsedCsvRows.forEach(row => {
-        let existingIndex = products.findIndex(p => p.sku === row.sku);
-        if(existingIndex >= 0) {
-          products[existingIndex] = { ...products[existingIndex], ...row };
-        } else {
-          products.push({ id: Date.now() + count, ...row });
-        }
-        count++;
-      });
-
-      localStorage.setItem('kosh_products', JSON.stringify(products));
-      renderProducts();
-      loadAdminProducts();
-      document.getElementById('csvImportLog').innerText = `✅ Successfully imported/updated ${count} products!`;
-      alert(`Successfully imported ${count} products!`);
-    }
-
-    // --- Product Management (Edit & Remove) ---
-    function loadAdminProducts() {
-      let area = document.getElementById('admProductsList');
-      if(products.length === 0) { area.innerHTML = 'No products found.'; return; }
-      let h = '';
-      products.forEach((p, index) => {
-        h += `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #eee; font-size:0.8rem;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="${p.image}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
-              <div><b>${p.title}</b><br><span style="color:var(--muted);">SKU: ${p.sku || 'N/A'} | Sup: ${p.supplier || 'Gen'} | ₹${p.price} | Stock: ${p.stock}</span></div>
+      // 3. Orders List
+      let oArea = document.getElementById('admOrdersList');
+      if(ordersList.length === 0) { oArea.innerHTML = 'No orders.'; }
+      else {
+        let oHtml = '';
+        ordersList.forEach(o => {
+          oHtml += `
+            <div style="background:#f9f9f9; border:1px solid var(--border); padding:10px; border-radius:4px; margin-bottom:10px; font-size:0.85rem;">
+              <div><b>Order #${o.id}</b> - ${o.name} (${o.phone}) | Total: ₹${o.total}</div>
+              <div style="color:#555; margin:4px 0;">Status: <strong style="color:var(--success);">${o.status}</strong></div>
             </div>
-            <div style="display:flex; gap:4px;">
-              <button onclick="editProductByAdmin(${index})" style="background:#2196f3; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.7rem;">Edit</button>
-              <button onclick="removeProductByAdmin(${index})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.7rem;">Remove</button>
-            </div>
-          </div>
-        `;
-      });
-      area.innerHTML = h;
-    }
-
-    function saveProductFromAdmin() {
-      let editIdx = parseInt(document.getElementById('editProductIndex').value);
-      let title = document.getElementById('newProdTitle').value.trim();
-      let sku = document.getElementById('newProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
-      let category = document.getElementById('newProdCategory').value.trim() || 'General';
-      let supplier = document.getElementById('newProdSupplier').value.trim() || 'D9 Creation';
-      let supplierCost = parseFloat(document.getElementById('newProdSupplierCost').value) || 0;
-      let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('newProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('newProdStock').value) || 10;
-      let image = document.getElementById('newProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('newProdDesc').value.trim() || 'Luxury item.';
-
-      if(!title || !price || !mrp) { alert('Fill Title, Price, and MRP.'); return; }
-
-      if(editIdx >= 0) {
-        products[editIdx] = { ...products[editIdx], title, sku, category, supplier, supplierCost, price, mrp, stock, image, desc };
-        alert('Product updated successfully!');
-      } else {
-        products.push({ id: Date.now(), sku, title, category, supplier, supplierCost, price, mrp, stock, image, desc });
-        alert('Product added successfully!');
+          `;
+        });
+        oArea.innerHTML = oHtml;
       }
 
-      localStorage.setItem('kosh_products', JSON.stringify(products));
-      renderProducts();
-      loadAdminProducts();
-      resetProductForm();
+      document.getElementById('globalCommissionInput').value = globalCommission;
     }
 
-    function editProductByAdmin(index) {
-      let p = products[index];
-      document.getElementById('editProductIndex').value = index;
-      document.getElementById('newProdTitle').value = p.title;
-      document.getElementById('newProdSku').value = p.sku || '';
-      document.getElementById('newProdCategory').value = p.category || '';
-      document.getElementById('newProdSupplier').value = p.supplier || '';
-      document.getElementById('newProdSupplierCost').value = p.supplierCost || '';
-      document.getElementById('newProdPrice').value = p.price;
-      document.getElementById('newProdMrp').value = p.mrp;
-      document.getElementById('newProdStock').value = p.stock;
-      document.getElementById('newProdImage').value = p.image;
-      document.getElementById('newProdDesc').value = p.desc;
-
-      document.getElementById('productFormTitle').innerText = '✏️ Edit Product';
-      document.getElementById('saveProductBtn').innerText = 'Update Product';
-      document.getElementById('cancelEditBtn').style.display = 'block';
-      
-      document.getElementById('productFormTitle').scrollIntoView({ behavior: 'smooth' });
+    function updateSellerStatus(idx, newStatus) {
+      sellersList[idx].status = newStatus;
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      loadAdminMasterData();
+      alert(`Seller status updated to ${newStatus}`);
     }
 
-    function resetProductForm() {
-      document.getElementById('editProductIndex').value = '-1';
-      document.getElementById('newProdTitle').value = '';
-      document.getElementById('newProdSku').value = '';
-      document.getElementById('newProdCategory').value = '';
-      document.getElementById('newProdSupplier').value = '';
-      document.getElementById('newProdSupplierCost').value = '';
-      document.getElementById('newProdPrice').value = '';
-      document.getElementById('newProdMrp').value = '';
-      document.getElementById('newProdStock').value = '';
-      document.getElementById('newProdImage').value = '';
-      document.getElementById('newProdDesc').value = '';
-
-      document.getElementById('productFormTitle').innerText = '➕ Add New Product';
-      document.getElementById('saveProductBtn').innerText = 'Add Product';
-      document.getElementById('cancelEditBtn').style.display = 'none';
-    }
-
-    function removeProductByAdmin(index) {
-      if(confirm('Are you sure you want to remove this product?')) {
-        products.splice(index, 1);
+    function adminRemoveProduct(idx) {
+      if(confirm('Remove product?')) {
+        products.splice(idx, 1);
         localStorage.setItem('kosh_products', JSON.stringify(products));
         renderProducts();
-        loadAdminProducts();
+        loadAdminMasterData();
       }
+    }
+
+    function saveGlobalCommission() {
+      let val = parseFloat(document.getElementById('globalCommissionInput').value);
+      if(isNaN(val) || val < 0) { alert('Enter valid percentage.'); return; }
+      globalCommission = val;
+      localStorage.setItem('kosh_commission', globalCommission);
+      alert('Global commission updated to ' + globalCommission + '%');
     }
   </script>
 </body>
