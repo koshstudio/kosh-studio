@@ -268,7 +268,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | D9 & MULTI-SUPPLIER FULFILLMENT READY</div>
+  <div class="top-strip">⚡ 100% PREPAID SECURE STORE | LINK SCRAPER & MULTI-SUPPLIER READY</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -305,7 +305,7 @@
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Multi-Supplier & D9 Integrated Store.</p>
+      <p style="margin-top:6px; color:#777;">Protected under copyright laws. Multi-Supplier Link Scraper Store.</p>
     </footer>
   </div>
 
@@ -460,7 +460,7 @@
   <div class="modal-overlay" id="adminModal">
     <div class="modal-box" style="max-width: 850px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin & Supplier Fulfillment Panel</h3>
+        <h3 style="font-size:1.1rem; color:var(--primary);">🔒 Secret Admin & Link Scraper Panel</h3>
         <button onclick="closeAdminModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       
@@ -474,14 +474,15 @@
       <!-- Admin Dashboard (Multi-Tab) -->
       <div id="adminDashboardScreen" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-          <h4 style="font-size:0.9rem; color:var(--success);">✅ Multi-Supplier Admin Panel (rohitku316)</h4>
+          <h4 style="font-size:0.9rem; color:var(--success);">✅ Link Scraper & Multi-Supplier Panel (rohitku316)</h4>
           <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:700;">Logout</button>
         </div>
 
         <!-- Admin Tabs -->
         <div class="admin-tabs">
           <button class="admin-tab-btn active" onclick="switchAdminTab('orders')">📦 Orders & SKU Mapping</button>
-          <button class="admin-tab-btn" onclick="switchAdminTab('import')">📥 Bulk CSV Import & Preview</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('linkscraper')">🔗 Import by Product Link</button>
+          <button class="admin-tab-btn" onclick="switchAdminTab('import')">📥 Bulk CSV Import</button>
           <button class="admin-tab-btn" onclick="switchAdminTab('returns')">🔄 Returns & Stock</button>
           <button class="admin-tab-btn" onclick="switchAdminTab('products')">🛍️ Manage Products (Edit/Remove)</button>
         </div>
@@ -495,10 +496,44 @@
           <div id="admOrdersList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No orders yet.</div>
         </div>
 
-        <!-- Tab 2: Bulk CSV Import & Preview -->
+        <!-- Tab 2: Import by Product Link (Auto-Fetch Scraper) -->
+        <div id="admTabLinkScraper" class="admin-tab-content">
+          <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:12px; border-radius:6px; margin-bottom:12px; font-size:0.82rem; color:#0d47a1;">
+            <strong>🔗 Product Link Scraper:</strong> Paste any public supplier product link below. The system will attempt to fetch and autofill the details using a CORS proxy. If blocked by site security, you can fill/edit details manually.
+          </div>
+          <div class="form-group">
+            <label>Supplier Product URL</label>
+            <input type="text" id="quickProductUrl" placeholder="https://supplier-website.com/product-page">
+          </div>
+          <button class="btn-solid" style="background:#2196f3; color:#fff; margin-bottom:12px;" onclick="fetchProductFromUrl()">Fetch & Auto-Fill Form</button>
+          
+          <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border);">
+            <h5 id="scrapedFormTitle" style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">📝 Review & Save Scraped Product</h5>
+            <div class="form-row">
+              <div class="form-group"><input type="text" id="scrapeTitle" placeholder="Product Title"></div>
+              <div class="form-group"><input type="text" id="scrapeSku" placeholder="SKU / Product ID"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><input type="text" id="scrapeCategory" placeholder="Category (e.g. Watches)"></div>
+              <div class="form-group"><input type="text" id="scrapeSupplier" placeholder="Supplier Name"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><input type="number" id="scrapePrice" placeholder="Selling Price (₹)"></div>
+              <div class="form-group"><input type="number" id="scrapeMrp" placeholder="MRP Price (₹)"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><input type="number" id="scrapeStock" placeholder="Stock Qty"></div>
+              <div class="form-group"><input type="text" id="scrapeImage" placeholder="Image URL"></div>
+            </div>
+            <div class="form-group"><textarea id="scrapeDesc" rows="2" placeholder="Description"></textarea></div>
+            <button class="btn-solid" onclick="saveScrapedProduct()">Save Scraped Product to Store</button>
+          </div>
+        </div>
+
+        <!-- Tab 3: Bulk CSV Import -->
         <div id="admTabImport" class="admin-tab-content">
           <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px; border-radius:6px; margin-bottom:12px; font-size:0.82rem; color:#e65100;">
-            <strong>📋 Bulk CSV Import Instructions:</strong> Upload your catalogue CSV. Required columns: <code>sku, title, category, supplier_name, price, mrp, supplier_cost, stock, image, desc</code>. SKU is used as a unique identifier.
+            <strong>📋 Bulk CSV Import Instructions:</strong> Upload your catalogue CSV. Required columns: <code>sku, title, category, supplier_name, price, mrp, supplier_cost, stock, image, desc</code>.
           </div>
           <div class="form-group">
             <label>Upload Catalogue CSV File</label>
@@ -509,13 +544,13 @@
           <div id="csvImportLog" style="margin-top:10px; font-size:0.8rem; font-weight:bold; color:var(--success);"></div>
         </div>
 
-        <!-- Tab 3: Returns & Stock Check -->
+        <!-- Tab 4: Returns & Stock Check -->
         <div id="admTabReturns" class="admin-tab-content">
           <h5 style="margin-bottom:8px; font-size:0.85rem; color:var(--muted);">Delivered Orders & 3-Day Return Status</h5>
           <div id="admReturnsList" style="max-height:350px; overflow-y:auto; border:1px solid var(--border); padding:8px; border-radius:4px; background:#fff;">No return claims.</div>
         </div>
 
-        <!-- Tab 4: Products & Pricing Margin (Edit & Remove) -->
+        <!-- Tab 5: Products & Pricing Margin (Edit & Remove) -->
         <div id="admTabProducts" class="admin-tab-content">
           <div style="background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid var(--border); margin-bottom:12px;">
             <h5 id="productFormTitle" style="margin-bottom:8px; font-size:0.85rem; color:var(--primary);">➕ Add New Product</h5>
@@ -526,7 +561,7 @@
             </div>
             <div class="form-row">
               <div class="form-group"><input type="text" id="newProdCategory" placeholder="Category (e.g. Watches)"></div>
-              <div class="form-group"><input type="text" id="newProdSupplier" placeholder="Supplier Name (e.g. D9 Creation)"></div>
+              <div class="form-group"><input type="text" id="newProdSupplier" placeholder="Supplier Name"></div>
             </div>
             <div class="form-row">
               <div class="form-group"><input type="number" id="newProdSupplierCost" placeholder="Supplier Cost (₹)"></div>
@@ -559,7 +594,7 @@
       emailjs.init("YOUR_PUBLIC_KEY");
     })();
 
-    // --- Default Products with Multi-Supplier & SKU Mapping ---
+    // --- Default Products ---
     let defaultProducts = [
       { id: 1, sku: "D9-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", supplier: "D9 Creation", supplierCost: 1400, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch with genuine leather strap." },
       { id: 2, sku: "D9-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", supplier: "D9 Creation", supplierCost: 500, price: 1299, mrp: 2499, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet with RFID blocking technology." },
@@ -1020,6 +1055,9 @@
         event.target.classList.add('active');
         document.getElementById('admTabOrders').classList.add('active');
         loadAdminOrders(ordersList);
+      } else if(tab === 'linkscraper') {
+        event.target.classList.add('active');
+        document.getElementById('admTabLinkScraper').classList.add('active');
       } else if(tab === 'import') {
         event.target.classList.add('active');
         document.getElementById('admTabImport').classList.add('active');
@@ -1135,7 +1173,64 @@
       area.innerHTML = h;
     }
 
-    // --- Bulk CSV Import & Preview System ---
+    // --- Link Scraper Auto-Fetch Function ---
+    async function fetchProductFromUrl() {
+      let url = document.getElementById('quickProductUrl').value.trim();
+      if(!url) { alert('Please enter a valid product URL.'); return; }
+      alert('Attempting to fetch product details via public proxy...');
+      try {
+        let proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        let response = await fetch(proxyUrl);
+        let data = await response.json();
+        if(data.contents) {
+          let parser = new DOMParser();
+          let doc = parser.parseFromString(data.contents, 'text/html');
+          
+          let title = doc.querySelector('meta[property="og:title"]')?.content || doc.querySelector('title')?.innerText || '';
+          let image = doc.querySelector('meta[property="og:image"]')?.content || '';
+          let desc = doc.querySelector('meta[property="og:description"]')?.content || '';
+
+          document.getElementById('scrapeTitle').value = title;
+          document.getElementById('scrapeImage').value = image;
+          document.getElementById('scrapeDesc').value = desc;
+          document.getElementById('scrapeSku').value = 'LINK-' + Math.floor(1000 + Math.random() * 9000);
+          document.getElementById('scrapeCategory').value = 'General';
+          document.getElementById('scrapeSupplier').value = 'External Link';
+          document.getElementById('scrapePrice').value = '999';
+          document.getElementById('scrapeMrp').value = '1999';
+          document.getElementById('scrapeStock').value = '10';
+
+          alert('Data fetched successfully! Review and click save.');
+        } else {
+          alert('Could not parse page content.');
+        }
+      } catch(err) {
+        console.error(err);
+        alert('Blocked by target site security/CORS. Please fill details manually.');
+      }
+    }
+
+    function saveScrapedProduct() {
+      let title = document.getElementById('scrapeTitle').value.trim();
+      let sku = document.getElementById('scrapeSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
+      let category = document.getElementById('scrapeCategory').value.trim() || 'General';
+      let supplier = document.getElementById('scrapeSupplier').value.trim() || 'External Link';
+      let price = parseFloat(document.getElementById('scrapePrice').value) || 999;
+      let mrp = parseFloat(document.getElementById('scrapeMrp').value) || 1999;
+      let stock = parseInt(document.getElementById('scrapeStock').value) || 10;
+      let image = document.getElementById('scrapeImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
+      let desc = document.getElementById('scrapeDesc').value.trim() || 'Imported item.';
+
+      if(!title) { alert('Product title is required.'); return; }
+
+      products.push({ id: Date.now(), sku, title, category, supplier, supplierCost: Math.round(price * 0.5), price, mrp, stock, image, desc });
+      localStorage.setItem('kosh_products', JSON.stringify(products));
+      renderProducts();
+      loadAdminProducts();
+      alert('Scraped product saved successfully to store!');
+    }
+
+    // --- Bulk CSV Import ---
     function previewCsvFile(input) {
       if(input.files.length === 0) return;
       let file = input.files[0];
@@ -1145,7 +1240,7 @@
         let lines = text.split('\n');
         parsedCsvRows = [];
         
-        let html = `<table style="width:100%; border-collapse:collapse; font-size:0.7rem;">tr style="background:#ddd;"><th style="border:1px solid #ccc; padding:4px;">SKU</th><th style="border:1px solid #ccc; padding:4px;">Title</th><th style="border:1px solid #ccc; padding:4px;">Supplier</th><th style="border:1px solid #ccc; padding:4px;">Price</th><th style="border:1px solid #ccc; padding:4px;">Stock</th></tr>`;
+        let html = `<table style="width:100%; border-collapse:collapse; font-size:0.7rem;"><tr style="background:#ddd;"><th style="border:1px solid #ccc; padding:4px;">SKU</th><th style="border:1px solid #ccc; padding:4px;">Title</th><th style="border:1px solid #ccc; padding:4px;">Supplier</th><th style="border:1px solid #ccc; padding:4px;">Price</th><th style="border:1px solid #ccc; padding:4px;">Stock</th></tr>`;
 
         for(let i = 1; i < lines.length; i++) {
           let line = lines[i].trim();
@@ -1190,7 +1285,7 @@
       localStorage.setItem('kosh_products', JSON.stringify(products));
       renderProducts();
       loadAdminProducts();
-      document.getElementById('csvImportLog.innerText') = `✅ Successfully imported/updated ${count} products!`;
+      document.getElementById('csvImportLog').innerText = `✅ Successfully imported/updated ${count} products!`;
       alert(`Successfully imported ${count} products!`);
     }
 
@@ -1232,11 +1327,9 @@
       if(!title || !price || !mrp) { alert('Fill Title, Price, and MRP.'); return; }
 
       if(editIdx >= 0) {
-        // Update existing
         products[editIdx] = { ...products[editIdx], title, sku, category, supplier, supplierCost, price, mrp, stock, image, desc };
         alert('Product updated successfully!');
       } else {
-        // Add new
         products.push({ id: Date.now(), sku, title, category, supplier, supplierCost, price, mrp, stock, image, desc });
         alert('Product added successfully!');
       }
@@ -1265,7 +1358,6 @@
       document.getElementById('saveProductBtn').innerText = 'Update Product';
       document.getElementById('cancelEditBtn').style.display = 'block';
       
-      // Scroll to form
       document.getElementById('productFormTitle').scrollIntoView({ behavior: 'smooth' });
     }
 
