@@ -322,7 +322,7 @@
     </footer>
   </div>
 
-  <!-- PRODUCT DETAILS PAGE WITH RATINGS & REVIEWS -->
+  <!-- PRODUCT DETAILS PAGE -->
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -346,7 +346,6 @@
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
         
-        <!-- Customer Reviews Section -->
         <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
           <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
           <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">No reviews yet. Be the first to review!</div>
@@ -408,17 +407,15 @@
           <span style="font-size:1.2rem; color:var(--muted);">›</span>
         </div>
 
-        <!-- Support & Dispute Ticket Section (Feature 5) -->
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
           <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
-          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
+          <p style="font-size:0.8-rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
           <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject (e.g. Order #1234 issue)"></div>
           <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe your issue..."></textarea></div>
           <button class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
           <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
         </div>
         
-        <!-- Persistent Become a Seller / Portal Box -->
         <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
           <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
           <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start dropshipping / selling your products.</p>
@@ -452,7 +449,7 @@
         <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
       </div>
 
-      <!-- Tab 1: My Products & Bulk CSV Import (Feature 2) -->
+      <!-- Tab 1: My Products & Bulk CSV Import -->
       <div id="sellerTabProducts" class="dash-tab-content active">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#e65100;">
           <strong>📋 Seller Bulk CSV Import:</strong> Upload catalogue CSV. Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
@@ -664,7 +661,7 @@
     </div>
   </div>
 
-  <!-- BECOME A SELLER REGISTRATION MODAL -->
+  <!-- BECOME A SELLER REGISTRATION MODAL WITH STRICT ACCOUNT VALIDATION -->
   <div class="modal-overlay" id="becomeSellerModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -685,7 +682,7 @@
       </div>
       <div id="ifscResultBox" style="font-size:0.75rem; color:var(--success); margin-bottom:8px; font-weight:bold; display:none;"></div>
 
-      <div class="form-group"><label>Bank Account Number</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
+      <div class="form-group"><label>Bank Account Number (9 to 18 digits)</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
       <div class="form-group"><label>Confirm Bank Account Number</label><input type="text" id="sellerRegAcc2" placeholder="Re-enter Account Number"></div>
       
       <button class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
@@ -829,7 +826,6 @@
       navigateTo('product');
     }
 
-    // --- Feature 1: Customer Ratings & Reviews ---
     function loadProductReviews(productId) {
       let prodReviews = reviewsList.filter(r => r.productId === productId);
       let area = document.getElementById('productReviewsList');
@@ -1086,6 +1082,7 @@
       }
     }
 
+    // --- Strict Account Validation ---
     function submitSellerApplication() {
       let name = document.getElementById('sellerRegName').value.trim();
       let email = document.getElementById('sellerRegEmail').value.trim();
@@ -1097,6 +1094,10 @@
 
       if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) {
         alert('Please fill in all seller details.');
+        return;
+      }
+      if(acc1.length < 9 || acc1.length > 18 || isNaN(acc1)) {
+        alert('Please enter a valid Bank Account Number (must be between 9 and 18 digits).');
         return;
       }
       if(acc1 !== acc2) {
@@ -1129,7 +1130,6 @@
       checkLoginStatus();
     }
 
-    // --- Feature 5: Support & Dispute Tickets ---
     function submitCustomerTicket() {
       let subject = document.getElementById('custTicketSubject').value.trim();
       let msg = document.getElementById('custTicketMsg').value.trim();
@@ -1220,7 +1220,6 @@
       resetSellerForm();
     }
 
-    // --- Feature 2: Seller Bulk CSV Import ---
     function previewSellerCsv(input) {
       if(input.files.length === 0) return;
       let file = input.files[0];
@@ -1283,7 +1282,6 @@
         let h = '';
         myProducts.forEach((p, idx) => {
           let globalIdx = products.findIndex(item => item.id === p.id);
-          // Feature 3: Low Stock Alert Badge
           let stockWarning = p.stock <= 5 ? `<span style="background:#ffebee; color:#c62828; padding:2px 6px; border-radius:3px; font-weight:bold; font-size:0.7rem;">⚠️ Low Stock Alert (<5)</span>` : '';
           h += `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
@@ -1521,7 +1519,6 @@
       }
     }
 
-    // --- Feature 4: Printable Invoices & Packing Slips ---
     function printOrderInvoice(orderId) {
       let o = ordersList.find(x => x.id === orderId);
       if(!o) return;
@@ -1651,7 +1648,6 @@
       document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
       document.getElementById('admSummaryVendors').innerText = activeVendorsCount;
 
-      // 1. Sellers List with Total Sold Products & Net Payable Calculator
       let sArea = document.getElementById('admSellersList');
       if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
       else {
@@ -1698,7 +1694,6 @@
         sArea.innerHTML = h;
       }
 
-      // 2. Products List
       let pArea = document.getElementById('admProductsList');
       let pHtml = '';
       products.forEach((p, idx) => {
@@ -1711,7 +1706,6 @@
       });
       pArea.innerHTML = pHtml;
 
-      // 3. Orders List with Return Proofs visible to Admin
       let oArea = document.getElementById('admOrdersList');
       if(ordersList.length === 0) { oArea.innerHTML = 'No orders.'; }
       else {
@@ -1736,7 +1730,6 @@
         oArea.innerHTML = oHtml;
       }
 
-      // 4. Support Tickets List
       let tArea = document.getElementById('admTicketsList');
       if (ticketsList.length === 0) { tArea.innerHTML = 'No support tickets.'; }
       else {
