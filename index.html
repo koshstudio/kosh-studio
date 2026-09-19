@@ -396,7 +396,6 @@
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
       </div>
 
-      <!-- Secure Signup with Smart Email Filter (No OTP Limits) -->
       <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
         <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
         <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
@@ -624,6 +623,16 @@
     </div>
   </div>
 
+  <!-- CUSTOM BRANDED ALERT MODAL (Replaces Browser Domain Alerts) -->
+  <div class="modal-overlay" id="customAlertModal">
+    <div class="modal-box" style="max-width:360px; text-align:center; padding:24px;">
+      <div id="customAlertIcon" style="font-size:2rem; margin-bottom:8px;">📢</div>
+      <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700; color:var(--primary);">Kosh Studio Notice</h3>
+      <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px; line-height:1.5;"></p>
+      <button class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
+    </div>
+  </div>
+
   <!-- ADMIN EDIT SELLER MODAL -->
   <div class="modal-overlay" id="adminEditSellerModal">
     <div class="modal-box">
@@ -739,6 +748,17 @@
   </div>
 
   <script>
+    // --- Custom Branded Alert Helper (Replaces ugly browser alerts) ---
+    function showAlert(message, title = "Kosh Studio", isSuccess = false) {
+      document.getElementById('customAlertTitle').innerText = title;
+      document.getElementById('customAlertMsg').innerText = message;
+      document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
+      document.getElementById('customAlertModal').style.display = 'flex';
+    }
+    function closeCustomAlert() {
+      document.getElementById('customAlertModal').style.display = 'none';
+    }
+
     // --- State & Storage ---
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
@@ -770,7 +790,7 @@
         let reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById(targetInputId).value = e.target.result;
-          alert('Image loaded successfully from gallery!');
+          showAlert('Image loaded successfully from gallery!', 'Success', true);
         };
         reader.readAsDataURL(input.files[0]);
       }
@@ -939,7 +959,7 @@
       let rating = document.getElementById('newReviewRating').value;
       let comment = document.getElementById('newReviewText').value.trim();
 
-      if (!comment) { alert('Please enter review comment.'); return; }
+      if (!comment) { showAlert('Please enter review comment.'); return; }
 
       reviewsList.push({
         productId: currentSelectedProduct.id,
@@ -952,12 +972,12 @@
       document.getElementById('newReviewText').value = '';
       document.getElementById('newReviewAuthor').value = '';
       loadProductReviews(currentSelectedProduct.id);
-      alert('Verified review submitted successfully!');
+      showAlert('Verified review submitted successfully!', 'Success', true);
     }
 
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { alert("Product is out of stock."); return; }
+        if(currentSelectedProduct.stock <= 0) { showAlert("Product is out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         toggleCartDrawer(true);
       }
@@ -965,7 +985,7 @@
 
     function buyNowCurrentProduct() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { alert("Product is out of stock."); return; }
+        if(currentSelectedProduct.stock <= 0) { showAlert("Product is out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         openCheckoutModal();
       }
@@ -974,14 +994,14 @@
     // --- Cart System ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
-      if(!prod || prod.stock <= 0) { alert("Item is out of stock."); return; }
+      if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
       let existing = cart.find(item => item.id === id);
       if(existing) { existing.qty += 1; }
       else { cart.push({ ...prod, finalPrice: prod.price, qty: 1 }); }
       
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
-      alert(prod.title + " added to cart!");
+      showAlert(prod.title + " added to cart!", 'Cart', true);
     }
 
     function updateCartUI() {
@@ -1048,7 +1068,7 @@
       }
     }
 
-    // --- Smart Email Validation & Garbage Filter (No OTP Limits) ---
+    // --- Smart Email Validation & Garbage Filter ---
     function switchAuthView(view) {
       document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
       document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
@@ -1062,11 +1082,9 @@
       let localPart = parts[0].toLowerCase();
       let domain = parts[1].toLowerCase();
 
-      // Block fake/dummy domains
       const blockedDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com', 'mail.com'];
       if (blockedDomains.includes(domain)) return false;
 
-      // Block random keyboard smashing / garbage text (jaise hshshwjsn)
       const vowels = /[aeiou]/i;
       if (!vowels.test(localPart) && localPart.length > 5) return false;
 
@@ -1081,22 +1099,22 @@
       let pass = document.getElementById('signupPass').value.trim();
 
       if (!email || !pass) {
-        alert('Please enter both email and password.');
+        showAlert('Please enter both email and password.');
         return;
       }
       if (pass.length < 6) {
-        alert('Password must be at least 6 characters long.');
+        showAlert('Password must be at least 6 characters long.');
         return;
       }
 
       if (!isValidEmail(email)) {
-        alert('❌ Invalid or fake email address detected! Please enter a real working email ID (e.g. yourname@gmail.com).');
+        showAlert('❌ Invalid or fake email address detected! Please enter a real working email ID (e.g. yourname@gmail.com).');
         return;
       }
 
       let existingUser = registeredUsers.find(u => u.email === email);
       if (existingUser) {
-        alert('An account with this email already exists! Please Login.');
+        showAlert('An account with this email already exists! Please Login.');
         switchAuthView('login');
         return;
       }
@@ -1107,7 +1125,7 @@
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      alert('✅ Account created successfully!');
+      showAlert('✅ Account created successfully!', 'Success', true);
     }
 
     async function handleLogin() {
@@ -1115,20 +1133,20 @@
       let pass = document.getElementById('loginPass').value.trim();
 
       if (!email || !pass) {
-        alert('Please enter email and password.');
+        showAlert('Please enter email and password.');
         return;
       }
 
       let foundUser = registeredUsers.find(u => u.email === email && u.pass === pass);
       if (!foundUser) {
-        alert('❌ Login Failed! Invalid email or password, or account does not exist. Please Sign Up first.');
+        showAlert('❌ Login Failed! Invalid email or password, or account does not exist. Please Sign Up first.');
         return;
       }
 
       currentUser = email;
       localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus();
-      alert('Login successful!');
+      showAlert('Login successful!', 'Success', true);
     }
 
     function handleLogout() {
@@ -1198,7 +1216,7 @@
       let ifsc = document.getElementById('sellerRegIfsc').value.trim().toUpperCase();
       let resultBox = document.getElementById('ifscResultBox');
       if(ifsc.length !== 11) {
-        alert('Please enter a valid 11-digit IFSC code.');
+        showAlert('Please enter a valid 11-digit IFSC code.');
         return;
       }
       resultBox.style.display = 'block';
@@ -1240,19 +1258,19 @@
       let ifsc = document.getElementById('sellerRegIfsc').value.trim();
 
       if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) {
-        alert('Please fill in all seller details.');
+        showAlert('Please fill in all seller details.');
         return;
       }
       if(acc1.length < 9 || acc1.length > 18 || isNaN(acc1)) {
-        alert('Please enter a valid Bank Account Number (must be between 9 and 18 digits).');
+        showAlert('Please enter a valid Bank Account Number (must be between 9 and 18 digits).');
         return;
       }
       if(acc1 !== acc2) {
-        alert('Bank Account numbers do not match!');
+        showAlert('Bank Account numbers do not match!');
         return;
       }
       if(!verifiedBankDetails || verifiedBankDetails.ifsc !== ifsc.toUpperCase()) {
-        alert('Please verify your IFSC code first using the "Verify IFSC" button.');
+        showAlert('Please verify your IFSC code first using the "Verify IFSC" button.');
         return;
       }
 
@@ -1273,14 +1291,14 @@
       sellersList.push(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeBecomeSellerModal();
-      alert(`Seller application submitted! Your Assigned Unique ID is ${uniqueShortId}. Awaiting Admin Approval.`);
+      showAlert(`Seller application submitted! Your Assigned Unique ID is ${uniqueShortId}. Awaiting Admin Approval.`, 'Success', true);
       checkLoginStatus();
     }
 
     function submitCustomerTicket() {
       let subject = document.getElementById('custTicketSubject').value.trim();
       let msg = document.getElementById('custTicketMsg').value.trim();
-      if(!subject || !msg) { alert('Please enter subject and message.'); return; }
+      if(!subject || !msg) { showAlert('Please enter subject and message.'); return; }
 
       ticketsList.push({
         id: 'TCK-' + Math.floor(1000 + Math.random() * 9000),
@@ -1293,7 +1311,7 @@
       localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
       document.getElementById('custTicketSubject').value = '';
       document.getElementById('custTicketMsg').value = '';
-      alert('Support ticket raised successfully!');
+      showAlert('Support ticket raised successfully!', 'Success', true);
       loadCustomerTickets();
     }
 
@@ -1311,7 +1329,7 @@
     // --- Seller Dashboard & Product Management ---
     function loadSellerDashboardData() {
       let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
-      if(!foundSeller) { alert('Your seller account is not approved yet.'); navigateTo('profile'); return; }
+      if(!foundSeller) { showAlert('Your seller account is not approved yet.'); navigateTo('profile'); return; }
       document.getElementById('sellerdashName').innerText = `${foundSeller.store} (${foundSeller.uniqueId})`;
       loadSellerData(foundSeller.id);
     }
@@ -1341,13 +1359,13 @@
       let image = document.getElementById('sProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
       let desc = document.getElementById('sProdDesc').value.trim() || 'Vendor product.';
 
-      if(!title || !basePrice || !mrp) { alert('Fill Title, Base Price, and MRP.'); return; }
+      if(!title || !basePrice || !mrp) { showAlert('Fill Title, Base Price, and MRP.'); return; }
 
       let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
 
       if(editIdx >= 0) {
         products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
-        alert('Product updated successfully!');
+        showAlert('Product updated successfully!', 'Success', true);
       } else {
         products.push({
           id: Date.now(),
@@ -1358,7 +1376,7 @@
           price: finalPrice,
           mrp, stock, image, desc
         });
-        alert('Product added successfully with automatic commission calculation!');
+        showAlert('Product added successfully with automatic commission calculation!', 'Success', true);
       }
 
       localStorage.setItem('kosh_products', JSON.stringify(products));
@@ -1402,7 +1420,7 @@
         }
         if(parsedSellerCsvRows.length > 0) {
           document.getElementById('sellerConfirmCsvBtn').style.display = 'block';
-          alert(`CSV Parsed successfully! ${parsedSellerCsvRows.length} products ready to import.`);
+          showAlert(`CSV Parsed successfully! ${parsedSellerCsvRows.length} products ready to import.`, 'CSV Ready', true);
         }
       };
       reader.readAsText(file);
@@ -1427,7 +1445,7 @@
       renderProducts();
       loadSellerData(foundSeller.id);
       document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
-      alert(`Successfully imported ${count} products via CSV!`);
+      showAlert(`Successfully imported ${count} products via CSV!`, 'Success', true);
     }
 
     function loadSellerData(sellerId) {
@@ -1510,7 +1528,7 @@
           }
         });
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        alert('Fulfillment status & tracking updated successfully!');
+        showAlert('Fulfillment status & tracking updated successfully!', 'Success', true);
         let foundSeller = sellersList.find(s => s.email === currentUser);
         if(foundSeller) loadSellerData(foundSeller.id);
       }
@@ -1556,7 +1574,7 @@
     }
 
     function openCheckoutModal() {
-      if(cart.length === 0) { alert('Cart is empty!'); return; }
+      if(cart.length === 0) { showAlert('Cart is empty!'); return; }
       toggleCartDrawer(false);
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
       let pgFee = Math.round(subtotal * 0.03);
@@ -1594,7 +1612,7 @@
       let state = document.getElementById('chkState').value.trim();
 
       if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district) {
-        alert('Please fill in all delivery details correctly.');
+        showAlert('Please fill in all delivery details correctly.');
         return;
       }
 
@@ -1609,7 +1627,7 @@
 
     function verifyAndFinalizeOrder() {
       let otp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(otp !== paymentOtpGenerated) { alert('Incorrect Payment OTP!'); return; }
+      if(otp !== paymentOtpGenerated) { showAlert('Incorrect Payment OTP!'); return; }
 
       document.getElementById('paymentOtpModal').style.display = 'none';
 
@@ -1640,7 +1658,7 @@
       localStorage.removeItem('kosh_cart');
       updateCartUI();
 
-      alert("Order placed successfully with transparent PG fee breakdown!");
+      showAlert("Order placed successfully with transparent PG fee breakdown!", "Order Placed", true);
       navigateTo('orders');
     }
 
@@ -1650,7 +1668,7 @@
         o.status = 'Delivered';
         o.deliveredAt = Date.now();
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        alert("Delivery confirmed! 3-day return window started.");
+        showAlert("Delivery confirmed! 3-day return window started.", "Success", true);
         renderOrdersPage();
       }
     }
@@ -1658,7 +1676,7 @@
     function requestCustomerReturn(orderId) {
       let videoProof = prompt("Please enter your Unboxing Video Link (Google Drive, YouTube or Video URL) required for return verification:");
       if (!videoProof) {
-        alert("Return request cancelled because video proof link was not provided.");
+        showAlert("Return request cancelled because video proof link was not provided.");
         return;
       }
 
@@ -1669,7 +1687,7 @@
           item.returnProof = videoProof;
         });
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        alert("Return request with unboxing video proof submitted successfully! Sent to Seller and Admin.");
+        showAlert("Return request with unboxing video proof submitted successfully! Sent to Seller and Admin.", "Success", true);
         renderOrdersPage();
       }
     }
@@ -1774,13 +1792,13 @@
         closeAdminLoginModal();
         navigateTo('admin-dashboard');
       } else {
-        alert('Incorrect Admin ID or Password!');
+        showAlert('Incorrect Admin ID or Password!');
       }
     }
 
     function adminLogout() {
       navigateTo('home');
-      alert('Logged out from Admin Dashboard.');
+      showAlert('Logged out from Admin Dashboard.');
     }
 
     function switchAdminTab(tab) {
@@ -1929,7 +1947,7 @@
       let phone = document.getElementById('admEditPhone').value.trim();
 
       if (!store || !name || !email || phone.length !== 10) {
-        alert('Please fill valid details. Phone must be 10 digits.');
+        showAlert('Please fill valid details. Phone must be 10 digits.');
         return;
       }
 
@@ -1941,28 +1959,28 @@
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeAdminEditSellerModal();
       loadAdminMasterData();
-      alert('Seller details updated successfully by Admin!');
+      showAlert('Seller details updated successfully by Admin!', 'Success', true);
     }
 
     function resolveTicket(idx) {
       ticketsList[idx].status = 'Resolved';
       localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
       loadAdminMasterData();
-      alert('Ticket marked as resolved.');
+      showAlert('Ticket marked as resolved.', 'Success', true);
     }
 
     function updateSellerStatus(idx, newStatus) {
       sellersList[idx].status = newStatus;
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       loadAdminMasterData();
-      alert(`Seller status updated to ${newStatus}`);
+      showAlert(`Seller status updated to ${newStatus}`, 'Success', true);
     }
 
     function togglePayoutSettled(idx) {
       sellersList[idx].payoutSettled = !sellersList[idx].payoutSettled;
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       loadAdminMasterData();
-      alert(`Payout status updated successfully.`);
+      showAlert(`Payout status updated successfully.`, 'Success', true);
     }
 
     function removeSellerAccount(idx) {
@@ -1970,7 +1988,7 @@
         sellersList.splice(idx, 1);
         localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
         loadAdminMasterData();
-        alert('Seller account deleted successfully.');
+        showAlert('Seller account deleted successfully.', 'Success', true);
       }
     }
 
@@ -1993,7 +2011,7 @@
       let image = document.getElementById('aProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
       let desc = document.getElementById('aProdDesc').value.trim() || 'Kosh Direct item.';
 
-      if(!title || !price || !mrp) { alert('Fill Title, Price, and MRP.'); return; }
+      if(!title || !price || !mrp) { showAlert('Fill Title, Price, and MRP.'); return; }
 
       products.push({
         id: Date.now(),
@@ -2007,7 +2025,7 @@
       localStorage.setItem('kosh_products', JSON.stringify(products));
       renderProducts();
       loadAdminMasterData();
-      alert('Admin product listed successfully!');
+      showAlert('Admin product listed successfully!', 'Success', true);
 
       document.getElementById('aProdTitle').value = '';
       document.getElementById('aProdSku').value = '';
@@ -2021,10 +2039,10 @@
 
     function saveGlobalCommission() {
       let val = parseFloat(document.getElementById('globalCommissionInput').value);
-      if(isNaN(val) || val < 0) { alert('Enter valid percentage.'); return; }
+      if(isNaN(val) || val < 0) { showAlert('Enter valid percentage.'); return; }
       globalCommission = val;
       localStorage.setItem('kosh_commission', globalCommission);
-      alert('Global commission updated to ' + globalCommission + '%');
+      showAlert('Global commission updated to ' + globalCommission + '%', 'Success', true);
     }
   </script>
 </body>
