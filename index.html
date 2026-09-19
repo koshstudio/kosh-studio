@@ -433,7 +433,14 @@
           <div style="background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.85rem; font-weight:bold; margin-bottom:12px;" id="previewListingPriceText">
             ℹ️ Final Listing Price for Customer = Base Price + Admin Commission
           </div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
+          <div class="form-group">
+            <label>Image URL (or Select from Gallery)</label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="sProdImage" placeholder="Paste Image URL">
+              <input type="file" id="sProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'sProdImage')">
+              <button type="button" onclick="document.getElementById('sProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:0 14px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem; white-space:nowrap;">📁 Gallery</button>
+            </div>
+          </div>
           <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
           <button class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
         </div>
@@ -501,7 +508,14 @@
             <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
             <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
           </div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="aProdImage" placeholder="Image URL"></div>
+          <div class="form-group">
+            <label>Image URL (or Select from Gallery)</label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="aProdImage" placeholder="Paste Image URL">
+              <input type="file" id="aProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'aProdImage')">
+              <button type="button" onclick="document.getElementById('aProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:0 14px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem; white-space:nowrap;">📁 Gallery</button>
+            </div>
+          </div>
           <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
           <button class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
         </div>
@@ -643,6 +657,18 @@
     let tempCheckoutData = {};
     let paymentOtpGenerated = "";
     let verifiedBankDetails = null;
+
+    // --- Gallery Image Upload Helper ---
+    function handleImageGalleryUpload(input, targetInputId) {
+      if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById(targetInputId).value = e.target.result;
+          alert('Image loaded successfully from gallery!');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
 
     // --- Render Products ---
     function renderProducts(filterCat = 'All') {
