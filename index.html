@@ -238,7 +238,7 @@
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
           <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder</h4>
-          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to populate Supabase with 1,000+ unique items across 11 categories with duplicate protection.</p>
+          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to populate Supabase with 1,000+ unique items across 11 categories safely.</p>
           <button type="button" class="btn-solid" onclick="seedKoshProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Products</button>
           <div id="seedProgressText" style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:#333;"></div>
         </div>
@@ -315,7 +315,6 @@
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
-      document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
       document.getElementById('customAlertModal').style.display = 'flex';
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
@@ -478,7 +477,7 @@
       if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    // 🚀 Safe Seeder using small chunks with upsert
+    // 🚀 Ultra-Safe Seeder with 25-item batch size and small delay to eliminate network fetch errors
     async function seedKoshProducts() {
       const categories = [
         { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
@@ -538,15 +537,15 @@
 
       const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
 
-      if(progressEl) progressEl.innerText = "Inserting products into Supabase...";
+      if(progressEl) progressEl.innerText = "Seeding into Supabase (safe slow batches)...";
 
-      const batchSize = 50; // Smaller batch size to prevent network timeout
+      const batchSize = 25; // 25 items per batch to avoid network timeout on mobile
       let inserted = 0;
       let failed = 0;
 
       for (let i = 0; i < uniqueProducts.length; i += batchSize) {
         const batch = uniqueProducts.slice(i, i + batchSize);
-        const { error } = await supabaseClient.from("products").upsert(batch, { onConflict: 'sku', ignoreDuplicates: true });
+        let { error } = await supabaseClient.from("products").upsert(batch, { onConflict: 'sku', ignoreDuplicates: true });
         
         if (error) {
           console.error("Batch failed:", error);
@@ -555,6 +554,9 @@
           inserted += batch.length;
         }
         if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, uniqueProducts.length)} / ${uniqueProducts.length}`;
+        
+        // Small delay to prevent network throttling
+        await new Promise(resolve => setTimeout(resolve, 150));
       }
 
       showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nProcessed: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
@@ -594,13 +596,14 @@
 
           progressEl.innerText = `Processing ${rows.length} products in batches...`;
           let addedCount = 0;
-          let batchSize = 50;
+          let batchSize = 25;
 
           for(let i = 0; i < rows.length; i += batchSize) {
             let chunk = rows.slice(i, i + batchSize);
             let { error } = await supabaseClient.from('products').upsert(chunk, { onConflict: 'sku', ignoreDuplicates: true });
             if(!error) { addedCount += chunk.length; }
             progressEl.innerText = `Importing... Progress: ${Math.min(i + batchSize, rows.length)} / ${rows.length}`;
+            await new Promise(resolve => setTimeout(resolve, 150));
           }
 
           progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished Successfully! Processed: ${addedCount} items.</span>`;
