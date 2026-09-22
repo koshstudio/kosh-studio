@@ -267,16 +267,19 @@
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
-    .form-group { margin-bottom: 12px; }
+    .form-group { margin-bottom: 14px; display: block; width: 100%; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none;
+      width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+    @media (min-width: 600px) {
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    }
 
     .btn-solid {
-      width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px;
-      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
+      width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px;
+      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; z-index: 10; position: relative;
     }
     .btn-solid:hover { background: #333; }
 
@@ -617,7 +620,7 @@
         <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Admin Listing</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders & Invoices</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Support Tickets</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings & Supabase</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings & Gateways</button>
       </div>
 
       <!-- Tab 1: Sellers, Sales & Payout Tracker -->
@@ -670,22 +673,53 @@
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
       </div>
 
-      <!-- Tab 5: Settings & Supabase Cloud Setup (PLACED AT TOP) -->
+      <!-- Tab 5: Settings, Gateways & Supabase (Vertical Layout) -->
       <div id="admTabSettings" class="dash-tab-content">
+        
+        <!-- Payment Gateway Switcher (No Code Needed) -->
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select your active payment gateway and configure credentials without touching code.</p>
+          
+          <div class="form-group">
+            <label>Select Active Payment Gateway</label>
+            <select id="gatewaySelect" onchange="toggleGatewayFields()">
+              <option value="Cashfree">Cashfree</option>
+              <option value="Razorpay">Razorpay</option>
+              <option value="UPI">Direct UPI QR / Collect</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="gwField1Group">
+            <label id="gwField1Label">Cashfree App ID / Key</label>
+            <input type="text" id="gwMerchantKey" placeholder="Enter Key or App ID">
+          </div>
+
+          <div class="form-group" id="gwField2Group">
+            <label id="gwField2Label">Cashfree Secret Key / UPI ID</label>
+            <input type="text" id="gwMerchantSecret" placeholder="Enter Secret or UPI ID (e.g. merchant@okhdfcbank)">
+          </div>
+
+          <button class="btn-solid" onclick="savePaymentGatewayConfig()" style="background:#ff9800; color:#fff; margin-top:6px;">Save Payment Configuration</button>
+        </div>
+
+        <!-- Supabase Cloud Setup -->
         <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Setup</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter your Supabase credentials here to sync products & orders to the cloud.</p>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter Supabase credentials to sync products & orders to the cloud.</p>
           <div class="form-group"><label>Supabase Project URL</label><input type="text" id="sbUrlInput" placeholder="https://xyz.supabase.co"></div>
           <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" id="sbKeyInput" placeholder="sb_publishable_..." autocomplete="off"></div>
           <button class="btn-solid" onclick="saveSupabaseConfig()" style="background:#2196f3; margin-top:6px;">Connect & Sync Supabase</button>
         </div>
 
+        <!-- Global Commission -->
         <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
           <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
           <button class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
         </div>
 
+        <!-- Reset Data -->
         <div style="background:#ffebee; border:1px solid #ffcdd2; padding:24px; border-radius:6px; max-width:500px;">
           <h4 style="margin-bottom:12px; color:#c62828;">⚠️ Reset Dashboard Data & Revenue</h4>
           <p style="font-size:0.82rem; color:#555; margin-bottom:14px;">This will clear all orders, reset total revenue to zero, and clear customer support tickets.</p>
@@ -732,7 +766,6 @@
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <!-- Flat ₹20 Coupon Box -->
       <div style="margin-bottom:12px; display:flex; gap:6px;">
         <input type="text" id="couponInput" placeholder="Enter Coupon (KOSH20)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
         <button onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
@@ -753,7 +786,7 @@
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Online Checkout</h3>
+        <h3 id="checkoutTitle" style="font-size:1.1rem;">Secure Online Checkout</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
@@ -772,14 +805,17 @@
         <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
         <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
       </div>
-      <button class="btn-solid" onclick="initiateCheckoutOtp()" style="margin-top:10px;">Pay & Place Order</button>
+      <div id="upiExtraInfo" style="display:none; background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.82rem; margin-bottom:12px; font-weight:bold;">
+        📲 Direct UPI Mode Active: Payment request will be sent to your UPI ID.
+      </div>
+      <button class="btn-solid" onclick="initiateCheckoutFlow()" style="margin-top:10px;">Pay & Place Order</button>
     </div>
   </div>
 
   <!-- PAYMENT OTP MODAL -->
   <div class="modal-overlay" id="paymentOtpModal">
     <div class="modal-box" style="max-width:380px; text-align:center;">
-      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment OTP Verification</h3>
+      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment Verification</h3>
       <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
       <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
       <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
@@ -837,10 +873,12 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
+    // --- Supabase & Payment Gateway Config ---
     let sbUrl = localStorage.getItem('kosh_sb_url') || '';
     let sbKey = localStorage.getItem('kosh_sb_key') || '';
     let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
 
+    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
     let uniqueDefaultProducts = [
@@ -931,18 +969,13 @@
     }
 
     function renderProducts(filterCat = null) {
-      if(filterCat !== null) {
-        activeCategoryFilter = filterCat;
-      }
-      
+      if(filterCat !== null) activeCategoryFilter = filterCat;
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
       const urlParams = new URLSearchParams(window.location.search);
       let sellerParam = urlParams.get('seller');
-      if(sellerParam) {
-        activeSellerFilter = sellerParam;
-      }
+      if(sellerParam) activeSellerFilter = sellerParam;
 
       let filtered = products;
       if(activeSellerFilter) {
@@ -1007,14 +1040,10 @@
       }
       localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
       renderProducts();
-      if(document.getElementById('page-wishlist').classList.contains('active')) {
-        renderWishlistPage();
-      }
+      if(document.getElementById('page-wishlist').classList.contains('active')) renderWishlistPage();
     }
 
-    function updateWishlistUI() {
-      document.getElementById('wishlistCount').innerText = wishlist.length;
-    }
+    function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; }
 
     function renderWishlistPage() {
       const grid = document.getElementById('wishlistGrid');
@@ -1052,24 +1081,16 @@
       localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
 
-      if(pageId === 'profile') {
-        checkLoginStatus();
-      } else if(pageId === 'orders') {
-        renderOrdersPage();
-      } else if(pageId === 'wishlist') {
-        renderWishlistPage();
-      } else if(pageId === 'seller-dashboard') {
-        loadSellerDashboardData();
-      } else if(pageId === 'admin-dashboard') {
-        loadAdminMasterData();
-      }
+      if(pageId === 'profile') checkLoginStatus();
+      else if(pageId === 'orders') renderOrdersPage();
+      else if(pageId === 'wishlist') renderWishlistPage();
+      else if(pageId === 'seller-dashboard') loadSellerDashboardData();
+      else if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
-      if(savedPage === 'product' && currentSelectedProduct) {
-        populateProductDetails(currentSelectedProduct);
-      }
+      if(savedPage === 'product' && currentSelectedProduct) populateProductDetails(currentSelectedProduct);
       navigateTo(savedPage);
       renderProducts(activeCategoryFilter);
       updateCartUI();
@@ -1077,11 +1098,8 @@
 
     function filterCategory(cat) {
       document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) {
-          i.classList.add('active');
-        } else {
-          i.classList.remove('active');
-        }
+        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
+        else i.classList.remove('active');
       });
       renderProducts(cat);
     }
@@ -1105,7 +1123,6 @@
       document.getElementById('pPagePrice').innerText = '₹' + p.price;
       document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
       document.getElementById('pPageDesc').innerText = p.desc;
-
       renderRelatedProducts(p);
       loadProductReviews(p.id);
       checkUserReviewEligibility(p.id);
@@ -1115,10 +1132,7 @@
       const grid = document.getElementById('relatedProductsGrid');
       grid.innerHTML = '';
       let related = products.filter(p => p.category === currentProd.category && p.id !== currentProd.id).slice(0, 4);
-      if(related.length === 0) {
-        grid.innerHTML = '<p style="font-size:0.8rem; color:var(--muted);">No related products found.</p>';
-        return;
-      }
+      if(related.length === 0) { grid.innerHTML = '<p style="font-size:0.8rem; color:var(--muted);">No related products found.</p>'; return; }
       related.forEach(p => {
         let card = document.createElement('div');
         card.className = 'product-card';
@@ -1136,33 +1150,16 @@
     function checkUserReviewEligibility(productId) {
       let reviewBox = document.getElementById('verifiedReviewBox');
       let reviewMsg = document.getElementById('unverifiedReviewMsg');
-
-      if (!currentUser) {
-        reviewBox.style.display = 'none';
-        reviewMsg.style.display = 'block';
-        reviewMsg.innerText = "🔒 Please login to check review eligibility.";
-        return;
-      }
-
+      if (!currentUser) { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Please login."; return; }
       let hasDelivered = ordersList.some(o => o.userEmail === currentUser && o.status === 'Delivered');
-
-      if (hasDelivered) {
-        reviewBox.style.display = 'block';
-        reviewMsg.style.display = 'none';
-      } else {
-        reviewBox.style.display = 'none';
-        reviewMsg.style.display = 'block';
-        reviewMsg.innerText = "🔒 Only customers who have received (Delivered) an order can submit ratings & reviews.";
-      }
+      if (hasDelivered) { reviewBox.style.display = 'block'; reviewMsg.style.display = 'none'; }
+      else { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Only delivered orders can be reviewed."; }
     }
 
     function loadProductReviews(productId) {
       let prodReviews = reviewsList.filter(r => r.productId === productId);
       let area = document.getElementById('productReviewsList');
-      if (prodReviews.length === 0) {
-        area.innerHTML = '⭐⭐⭐⭐⭐ (4.8/5) Based on 124 Verified Customer Reviews<br><p style="color:#555; margin-top:6px;">"Great quality products, delivered on time!" - Verified Buyer</p>';
-        return;
-      }
+      if (prodReviews.length === 0) { area.innerHTML = '⭐⭐⭐⭐⭐ (4.8/5) Based on 124 Verified Customer Reviews'; return; }
       let html = '⭐⭐⭐⭐⭐ (4.8/5) Trusted by Thousands of Customers<br>';
       prodReviews.forEach(r => {
         let stars = '⭐'.repeat(parseInt(r.rating) || 5);
@@ -1176,24 +1173,17 @@
       let author = document.getElementById('newReviewAuthor').value.trim() || currentUser || 'Anonymous';
       let rating = document.getElementById('newReviewRating').value;
       let comment = document.getElementById('newReviewText').value.trim();
-
       if (!comment) { showAlert('Please enter review comment.'); return; }
-
-      reviewsList.push({
-        productId: currentSelectedProduct.id,
-        author, rating, comment,
-        date: new Date().toLocaleDateString()
-      });
+      reviewsList.push({ productId: currentSelectedProduct.id, author, rating, comment, date: new Date().toLocaleDateString() });
       localStorage.setItem('kosh_reviews_v4', JSON.stringify(reviewsList));
       document.getElementById('newReviewText').value = '';
-      document.getElementById('newReviewAuthor').value = '';
       loadProductReviews(currentSelectedProduct.id);
-      showAlert('Verified review submitted successfully!', 'Success', true);
+      showAlert('Review submitted successfully!', 'Success', true);
     }
 
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Product is out of stock."); return; }
+        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         toggleCartDrawer(true);
       }
@@ -1201,7 +1191,7 @@
 
     function buyNowCurrentProduct() {
       if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Product is out of stock."); return; }
+        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
         addToCart(currentSelectedProduct.id);
         openCheckoutModal();
       }
@@ -1211,31 +1201,18 @@
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
       let existing = cart.find(item => item.id === id);
-      if(existing) { 
-        existing.qty += 1; 
-      } else { 
-        cart.push({ ...prod, finalPrice: prod.price, qty: 1 }); 
-      }
-      
+      if(existing) existing.qty += 1;
+      else cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
       showAlert(prod.title + " added to cart!", 'Cart', true);
     }
 
-    function increaseCartQty(index) {
-      cart[index].qty += 1;
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-    }
-
+    function increaseCartQty(index) { cart[index].qty += 1; localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
     function decreaseCartQty(index) {
-      if(cart[index].qty > 1) {
-        cart[index].qty -= 1;
-      } else {
-        cart.splice(index, 1);
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
+      if(cart[index].qty > 1) cart[index].qty -= 1;
+      else cart.splice(index, 1);
+      localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI();
     }
 
     function applyCouponCode() {
@@ -1244,11 +1221,11 @@
       if(code === 'KOSH20') {
         appliedDiscountAmount = 20;
         msg.style.color = 'var(--success)';
-        msg.innerText = '✅ Coupon "KOSH20" applied successfully (Flat ₹20 OFF)!';
+        msg.innerText = '✅ Coupon "KOSH20" applied (Flat ₹20 OFF)!';
       } else {
         appliedDiscountAmount = 0;
         msg.style.color = 'var(--danger)';
-        msg.innerText = '❌ Invalid or expired coupon code.';
+        msg.innerText = '❌ Invalid coupon code.';
       }
       updateCartUI();
     }
@@ -1258,54 +1235,38 @@
       const container = document.getElementById('cartItemsContainer');
       const priceDetailsBox = document.getElementById('cartPriceDetailsBox');
       container.innerHTML = '';
-
-      if(cart.length === 0) {
-        container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>';
-        priceDetailsBox.style.display = 'none';
-        return;
-      }
-
+      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>'; priceDetailsBox.style.display = 'none'; return; }
       priceDetailsBox.style.display = 'block';
-      let totalProdPrice = 0;
-      let totalItems = 0;
-
+      let totalProdPrice = 0, totalItems = 0;
       cart.forEach((item, index) => {
         totalProdPrice += (item.finalPrice * item.qty);
         totalItems += item.qty;
-
-        let div = document.createElement('div');
-        div.style.cssText = "background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;";
-        div.innerHTML = `
-          <button onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
-          <div style="display:flex; gap:12px;">
-            <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-            <div style="flex-grow:1; padding-right:15px;">
-              <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
-              <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
-              <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
-              
-              <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                <button onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
-                <button onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+        container.innerHTML += `
+          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;">
+            <button onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
+            <div style="display:flex; gap:12px;">
+              <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
+              <div style="flex-grow:1; padding-right:15px;">
+                <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
+                <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
+                <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
+                <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                  <button onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+                  <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
+                  <button onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+                </div>
               </div>
             </div>
           </div>
         `;
-        container.appendChild(div);
       });
-
       let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
       let discountedSubtotal = Math.max(0, totalProdPrice - discountAmt);
       let pgFee = Math.round(discountedSubtotal * 0.02);
       let grandTotal = discountedSubtotal + pgFee;
 
-      if(appliedDiscountAmount > 0) {
-        document.getElementById('discountRow').style.display = 'flex';
-        document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt;
-      } else {
-        document.getElementById('discountRow').style.display = 'none';
-      }
+      if(appliedDiscountAmount > 0) { document.getElementById('discountRow').style.display = 'flex'; document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt; }
+      else { document.getElementById('discountRow').style.display = 'none'; }
 
       document.getElementById('cartItemCountText').innerText = totalItems;
       document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalProdPrice;
@@ -1313,22 +1274,12 @@
       document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
     }
 
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-    }
-
+    function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
     function toggleCartDrawer(open) {
       const drawer = document.getElementById('cartDrawer');
       const backdrop = document.getElementById('cartBackdrop');
-      if(open) { 
-        drawer.classList.add('open'); 
-        backdrop.style.display = 'block'; 
-      } else { 
-        drawer.classList.remove('open'); 
-        backdrop.style.display = 'none'; 
-      }
+      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
+      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
     }
 
     function switchAuthView(view) {
@@ -1340,11 +1291,9 @@
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(email)) return false;
       let parts = email.split('@');
-      let localPart = parts[0].toLowerCase();
       let domain = parts[1].toLowerCase();
       const blockedDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com', 'mail.com'];
-      if (blockedDomains.includes(domain)) return false;
-      return true;
+      return !blockedDomains.includes(domain);
     }
 
     async function handleSignup() {
@@ -1353,45 +1302,24 @@
       if (!email || !pass) { showAlert('Please enter email and password.'); return; }
       if (pass.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
       if (!isValidEmail(email)) { showAlert('Please enter a valid working email ID.'); return; }
-
-      let existingUser = registeredUsers.find(u => u.email === email);
-      if (existingUser) {
-        showAlert('An account with this email already exists! Please Login.');
-        switchAuthView('login');
-        return;
-      }
+      if (registeredUsers.some(u => u.email === email)) { showAlert('Account already exists! Please Login.'); switchAuthView('login'); return; }
 
       registeredUsers.push({ email, pass });
       localStorage.setItem('kosh_registered_users', JSON.stringify(registeredUsers));
-      currentUser = email;
-      localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus();
-      showAlert('✅ Account created successfully!', 'Success', true);
+      currentUser = email; localStorage.setItem('kosh_logged_email', email);
+      checkLoginStatus(); showAlert('✅ Account created successfully!', 'Success', true);
     }
 
     async function handleLogin() {
       let email = document.getElementById('loginEmail').value.trim().toLowerCase();
       let pass = document.getElementById('loginPass').value.trim();
-      if (!email || !pass) { showAlert('Please enter email and password.'); return; }
-
       let foundUser = registeredUsers.find(u => u.email === email && u.pass === pass);
-      if (!foundUser) {
-        showAlert('❌ Login Failed! Invalid email or password.');
-        return;
-      }
-
-      currentUser = email;
-      localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus();
-      showAlert('Login successful!', 'Success', true);
+      if (!foundUser) { showAlert('❌ Invalid email or password.'); return; }
+      currentUser = email; localStorage.setItem('kosh_logged_email', email);
+      checkLoginStatus(); showAlert('Login successful!', 'Success', true);
     }
 
-    function handleLogout() {
-      localStorage.removeItem('kosh_logged_email');
-      currentUser = null;
-      checkLoginStatus();
-      switchAuthView('login');
-    }
+    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; checkLoginStatus(); switchAuthView('login'); }
 
     function checkLoginStatus() {
       if(currentUser) {
@@ -1399,50 +1327,22 @@
         document.getElementById('authSignupView').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
-
         let foundSeller = sellersList.find(s => s.email === currentUser);
         let titleEl = document.getElementById('portalBoxTitle');
         let textEl = document.getElementById('sellerStatusText');
         let btnEl = document.getElementById('portalActionBtn');
-
         if(foundSeller) {
-          if(foundSeller.status === 'Approved') {
-            titleEl.innerText = `🏪 Seller Account Active (ID: ${foundSeller.uniqueId})`;
-            textEl.innerText = `Login Email: ${foundSeller.email} | Status: Approved`;
-            btnEl.innerText = 'Open Seller Dashboard';
-            btnEl.style.background = '#2196f3';
-          } else {
-            titleEl.innerText = `🏪 Seller Application (${foundSeller.uniqueId})`;
-            textEl.innerText = `Status: ${foundSeller.status} (Waiting for Admin Approval)`;
-            btnEl.innerText = 'Application Submitted';
-            btnEl.style.background = '#888';
-            btnEl.disabled = true;
-          }
-        } else {
-          titleEl.innerText = '🏪 Want to Sell on Kosh Studio?';
-          textEl.innerText = 'Register as a vendor & get your unique Seller ID.';
-          btnEl.innerText = 'Register as Seller';
-          btnEl.style.background = '#2196f3';
-          btnEl.disabled = false;
-        }
-
+          if(foundSeller.status === 'Approved') { titleEl.innerText = `🏪 Seller Active (${foundSeller.uniqueId})`; textEl.innerText = `Approved`; btnEl.innerText = 'Open Seller Dashboard'; btnEl.style.background = '#2196f3'; }
+          else { titleEl.innerText = `🏪 Seller Application (${foundSeller.uniqueId})`; textEl.innerText = `Status: ${foundSeller.status}`; btnEl.innerText = 'Pending Approval'; btnEl.style.background = '#888'; btnEl.disabled = true; }
+        } else { titleEl.innerText = '🏪 Want to Sell on Kosh Studio?'; textEl.innerText = 'Register as a vendor.'; btnEl.innerText = 'Register as Seller'; btnEl.style.background = '#2196f3'; btnEl.disabled = false; }
         loadCustomerTickets();
-      } else {
-        document.getElementById('userDashboardSection').style.display = 'none';
-        switchAuthView('login');
-      }
+      } else { document.getElementById('userDashboardSection').style.display = 'none'; switchAuthView('login'); }
     }
 
     function handlePortalAction() {
       let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(foundSeller) {
-        if(foundSeller.status === 'Approved') navigateTo('seller-dashboard');
-      } else {
-        document.getElementById('sellerRegEmail').value = currentUser;
-        verifiedBankDetails = null;
-        document.getElementById('ifscResultBox').style.display = 'none';
-        document.getElementById('becomeSellerModal').style.display = 'flex';
-      }
+      if(foundSeller && foundSeller.status === 'Approved') navigateTo('seller-dashboard');
+      else { document.getElementById('sellerRegEmail').value = currentUser; verifiedBankDetails = null; document.getElementById('ifscResultBox').style.display = 'none'; document.getElementById('becomeSellerModal').style.display = 'flex'; }
     }
 
     function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
@@ -1451,24 +1351,16 @@
       let ifsc = document.getElementById('sellerRegIfsc').value.trim().toUpperCase();
       let resultBox = document.getElementById('ifscResultBox');
       if(ifsc.length !== 11) { showAlert('Enter valid 11-digit IFSC.'); return; }
-      resultBox.style.display = 'block';
-      resultBox.innerText = 'Verifying IFSC...';
+      resultBox.style.display = 'block'; resultBox.innerText = 'Verifying IFSC...';
       try {
         let res = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
         if(res.ok) {
           let data = await res.json();
-          verifiedBankDetails = { ifsc: data.IFSC, bank: data.BANK, branch: data.BRANCH, city: data.CITY };
+          verifiedBankDetails = { ifsc: data.IFSC, bank: data.BANK, branch: data.BRANCH };
           resultBox.style.color = 'var(--success)';
           resultBox.innerHTML = `✅ <strong>Bank Verified:</strong> ${data.BANK}, ${data.BRANCH}`;
-        } else {
-          verifiedBankDetails = null;
-          resultBox.style.color = 'red';
-          resultBox.innerText = '❌ Invalid IFSC Code.';
-        }
-      } catch(e) {
-        resultBox.style.color = 'red';
-        resultBox.innerText = '❌ Network error verifying IFSC.';
-      }
+        } else { verifiedBankDetails = null; resultBox.style.color = 'red'; resultBox.innerText = '❌ Invalid IFSC.'; }
+      } catch(e) { resultBox.style.color = 'red'; resultBox.innerText = '❌ Error verifying IFSC.'; }
     }
 
     function submitSellerApplication() {
@@ -1479,30 +1371,15 @@
       let acc1 = document.getElementById('sellerRegAcc1').value.trim();
       let acc2 = document.getElementById('sellerRegAcc2').value.trim();
       let ifsc = document.getElementById('sellerRegIfsc').value.trim();
-
-      if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) {
-        showAlert('Please fill in all seller details.'); return;
-      }
-      if(acc1 !== acc2) { showAlert('Bank Account numbers do not match!'); return; }
-      if(!verifiedBankDetails || verifiedBankDetails.ifsc !== ifsc.toUpperCase()) {
-        showAlert('Please verify your IFSC code first.'); return;
-      }
+      if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) { showAlert('Fill all details.'); return; }
+      if(acc1 !== acc2) { showAlert('Account numbers do not match!'); return; }
+      if(!verifiedBankDetails) { showAlert('Verify IFSC first.'); return; }
 
       let uniqueShortId = 'KS-S' + Math.floor(100 + Math.random() * 900);
-      sellersList.push({
-        id: 'SEL-' + Math.floor(1000 + Math.random() * 9000),
-        uniqueId: uniqueShortId,
-        name, email, phone, store,
-        accountNo: 'XXXXXX' + acc1.slice(-4),
-        bankName: verifiedBankDetails.bank,
-        branch: verifiedBankDetails.branch,
-        ifsc: verifiedBankDetails.ifsc,
-        payoutSettled: false,
-        status: 'Pending'
-      });
+      sellersList.push({ id: 'SEL-' + Math.floor(1000 + Math.random() * 9000), uniqueId: uniqueShortId, name, email, phone, store, accountNo: 'XXXXXX' + acc1.slice(-4), bankName: verifiedBankDetails.bank, branch: verifiedBankDetails.branch, ifsc: verifiedBankDetails.ifsc, payoutSettled: false, status: 'Pending' });
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeBecomeSellerModal();
-      showAlert(`Application submitted! ID: ${uniqueShortId}. Awaiting Admin Approval.`, 'Success', true);
+      showAlert(`Application submitted! ID: ${uniqueShortId}.`, 'Success', true);
       checkLoginStatus();
     }
 
@@ -1510,32 +1387,24 @@
       let subject = document.getElementById('custTicketSubject').value.trim();
       let msg = document.getElementById('custTicketMsg').value.trim();
       if(!subject || !msg) { showAlert('Enter subject and message.'); return; }
-
-      ticketsList.push({
-        id: 'TCK-' + Math.floor(1000 + Math.random() * 9000),
-        userEmail: currentUser, subject, message: msg, status: 'Open', date: new Date().toLocaleDateString()
-      });
+      ticketsList.push({ id: 'TCK-' + Math.floor(1000 + Math.random() * 9000), userEmail: currentUser, subject, message: msg, status: 'Open', date: new Date().toLocaleDateString() });
       localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      document.getElementById('custTicketSubject').value = '';
-      document.getElementById('custTicketMsg').value = '';
-      showAlert('Support ticket raised!', 'Success', true);
-      loadCustomerTickets();
+      document.getElementById('custTicketSubject').value = ''; document.getElementById('custTicketMsg').value = '';
+      showAlert('Ticket raised!', 'Success', true); loadCustomerTickets();
     }
 
     function loadCustomerTickets() {
       let myTickets = ticketsList.filter(t => t.userEmail === currentUser);
       let area = document.getElementById('customerTicketsList');
-      if (myTickets.length === 0) { area.innerHTML = 'No support tickets raised.'; return; }
+      if (myTickets.length === 0) { area.innerHTML = 'No support tickets.'; return; }
       let h = '';
-      myTickets.forEach(t => {
-        h += `<div style="background:#f9f9f9; padding:8px; border:1px solid #ddd; border-radius:4px; margin-top:6px;"><strong>[${t.id}] ${t.subject}</strong><br>${t.message}<br>Status: <span style="color:${t.status==='Resolved'?'var(--success)':'orange'}; font-weight:bold;">${t.status}</span></div>`;
-      });
+      myTickets.forEach(t => { h += `<div style="background:#f9f9f9; padding:8px; border:1px solid #ddd; border-radius:4px; margin-top:6px;"><strong>[${t.id}] ${t.subject}</strong><br>${t.message}<br>Status: ${t.status}</div>`; });
       area.innerHTML = h;
     }
 
     function loadSellerDashboardData() {
       let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
-      if(!foundSeller) { showAlert('Your seller account is not approved yet.'); navigateTo('profile'); return; }
+      if(!foundSeller) { showAlert('Seller account pending approval.'); navigateTo('profile'); return; }
       document.getElementById('sellerdashName').innerText = `${foundSeller.store} (${foundSeller.uniqueId})`;
       loadSellerData(foundSeller.id);
     }
@@ -1568,29 +1437,19 @@
       if(!title || !basePrice || !mrp) { showAlert('Fill Title, Base Price and MRP.'); return; }
       let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
 
-      if(editIdx >= 0) {
-        products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
-        showAlert('Product updated successfully!', 'Success', true);
-      } else {
-        products.push({
-          id: Date.now(), sku, title, category,
-          sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`,
-          basePrice, price: finalPrice, mrp, stock, image, desc
-        });
-        showAlert('Product added successfully!', 'Success', true);
-      }
+      if(editIdx >= 0) products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
+      else products.push({ id: Date.now(), sku, title, category, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, basePrice, price: finalPrice, mrp, stock, image, desc });
+
       localStorage.setItem('kosh_products_v4', JSON.stringify(products));
-      renderProducts();
-      loadSellerData(foundSeller.id);
-      resetSellerForm();
+      renderProducts(); loadSellerData(foundSeller.id); resetSellerForm();
+      showAlert('Product saved successfully!', 'Success', true);
     }
 
     function shareSellerCatalog() {
       let foundSeller = sellersList.find(s => s.email === currentUser);
       if(!foundSeller) return;
       let catalogUrl = window.location.origin + window.location.pathname + `?seller=${foundSeller.uniqueId}`;
-      let text = `🛍️ *Check out our exclusive store collection at ${foundSeller.store}!*%0ABrowse all products here:%0A${catalogUrl}`;
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+      window.open(`https://api.whatsapp.com/send?text=Check out our store collection:%0A${catalogUrl}`, '_blank');
     }
 
     function previewSellerCsv(input) {
@@ -1602,18 +1461,10 @@
         for(let i = 1; i < lines.length; i++) {
           let cols = lines[i].trim().split(',');
           if(cols.length >= 6) {
-            parsedSellerCsvRows.push({
-              sku: cols[0].trim(), title: cols[1].trim(), category: cols[2].trim() || 'General',
-              basePrice: parseFloat(cols[3]) || 500, mrp: parseFloat(cols[4]) || 999,
-              stock: parseInt(cols[5]) || 10, image: cols[6]?.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-              desc: cols[7]?.trim() || 'CSV Item'
-            });
+            parsedSellerCsvRows.push({ sku: cols[0].trim(), title: cols[1].trim(), category: cols[2].trim() || 'General', basePrice: parseFloat(cols[3]) || 500, mrp: parseFloat(cols[4]) || 999, stock: parseInt(cols[5]) || 10, image: cols[6]?.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500', desc: 'CSV Item' });
           }
         }
-        if(parsedSellerCsvRows.length > 0) {
-          document.getElementById('sellerConfirmCsvBtn').style.display = 'block';
-          showAlert(`${parsedSellerCsvRows.length} products ready to import.`, 'CSV Ready', true);
-        }
+        if(parsedSellerCsvRows.length > 0) { document.getElementById('sellerConfirmCsvBtn').style.display = 'block'; showAlert(`${parsedSellerCsvRows.length} products ready to import.`, 'CSV Ready', true); }
       };
       reader.readAsText(input.files[0]);
     }
@@ -1626,8 +1477,7 @@
         products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})` });
       });
       localStorage.setItem('kosh_products_v4', JSON.stringify(products));
-      renderProducts();
-      loadSellerData(foundSeller.id);
+      renderProducts(); loadSellerData(foundSeller.id);
       document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
       showAlert('CSV Imported successfully!', 'Success', true);
     }
@@ -1635,24 +1485,15 @@
     function loadSellerData(sellerId) {
       let myProducts = products.filter(p => p.sellerId === sellerId);
       let pArea = document.getElementById('sellerProductsList');
-      if(myProducts.length === 0) { pArea.innerHTML = 'No products listed yet.'; }
+      if(myProducts.length === 0) pArea.innerHTML = 'No products listed.';
       else {
         let h = '';
         myProducts.forEach((p) => {
           let globalIdx = products.findIndex(item => item.id === p.id);
-          h += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
-              <div><b>${p.title}</b><br><span style="color:var(--muted);">Base: ₹${p.basePrice} | Price: ₹${p.price} | Stock: ${p.stock}</span></div>
-              <div style="display:flex; gap:8px;">
-                <button onclick="editSellerProduct(${globalIdx})" style="background:#2196f3; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Edit</button>
-                <button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Remove</button>
-              </div>
-            </div>
-          `;
+          h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;"><div><b>${p.title}</b><br><span style="color:var(--muted);">Price: ₹${p.price} | Stock: ${p.stock}</span></div><button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">Remove</button></div>`;
         });
         pArea.innerHTML = h;
       }
-
       let totalSales = 0, totalCommission = 0, oHtml = '';
       ordersList.forEach(o => {
         let sellerItems = o.items.filter(i => i.sellerId === sellerId);
@@ -1660,70 +1501,15 @@
           sellerItems.forEach((si, itemIdx) => {
             let itemTotal = si.price * si.qty;
             let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
-            totalSales += itemTotal;
-            totalCommission += commissionAmt;
-            
-            let returnProofDisplay = si.returnRequested ? `<div style="background:#ffebee; color:#c62828; padding:8px; border-radius:4px; margin-top:6px;">⚠️ Return Claimed! <a href="${si.returnProof}" target="_blank" style="color:#d32f2f; font-weight:bold;">View Proof</a></div>` : '';
-
-            oHtml += `
-              <div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;">
-                <div style="display:flex; justify-content:space-between;">
-                  <b>Order #${o.id}</b> - ${o.date}
-                  <div>
-                    <button onclick="printOrderInvoice('${o.id}')" style="background:#4caf50; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem; font-weight:bold; margin-right:4px;">🖨️ Invoice</button>
-                    <button onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem; font-weight:bold;">🗑️ Delete</button>
-                  </div>
-                </div>
-                <div style="margin:6px 0;"><strong>Product:</strong> ${si.title} (Qty: ${si.qty}) | <strong>Total:</strong> ₹${itemTotal}</div>
-                <div style="margin-bottom:8px;"><strong>Customer:</strong> ${o.name} (${o.phone}), ${o.address}</div>
-                ${returnProofDisplay}
-                <div style="background:#fff; padding:10px; border:1px solid #ddd; border-radius:4px;">
-                  <div style="margin-bottom:6px;">Status: <span style="color:var(--success); font-weight:bold;">${si.fulfillmentStatus || 'Processing'}</span> | Courier: <strong>${si.courierName || 'Not Set'}</strong> | AWB: <strong>${si.trackingId || 'Not Set'}</strong></div>
-                  
-                  <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:6px;">
-                    <select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.78rem; max-width:130px;">
-                      <option value="Processing" ${si.fulfillmentStatus==='Processing'?'selected':''}>Processing</option>
-                      <option value="Packed & Shipped" ${si.fulfillmentStatus==='Packed & Shipped'?'selected':''}>Packed & Shipped</option>
-                      <option value="Delivered" ${si.fulfillmentStatus==='Delivered'?'selected':''}>Delivered</option>
-                    </select>
-                    <input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier (e.g. DTDC)" value="${si.courierName || ''}" style="padding:6px; font-size:0.78rem; max-width:130px;">
-                    <input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB / Tracking" value="${si.trackingId || ''}" style="padding:6px; font-size:0.78rem; max-width:140px;">
-                    <button onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:bold;">Save Tracking</button>
-                  </div>
-
-                  <!-- Custom Popup Message to Customer -->
-                  <div style="margin-top:10px; border-top:1px dashed #eee; padding-top:8px;">
-                    <label style="font-size:0.75rem; font-weight:bold; color:#555;">💬 Send Popup Message to Customer:</label>
-                    <div style="display:flex; gap:6px; margin-top:4px;">
-                      <input type="text" id="customMsgInput_${o.id}" placeholder="Type message here..." value="${o.customPopupMsg || ''}" style="padding:6px; font-size:0.78rem; flex-grow:1;">
-                      <button onclick="sendCustomerCustomPopup('${o.id}')" style="background:#9c27b0; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.78rem; cursor:pointer; font-weight:bold; white-space:nowrap;">Send Popup</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
+            totalSales += itemTotal; totalCommission += commissionAmt;
+            oHtml += `<div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"><b>Order #${o.id}</b> - ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}<br>Customer: ${o.name} (${o.phone}), ${o.address}<br><div style="display:flex; gap:6px; margin-top:8px;"><select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.75rem;"><option value="Processing">Processing</option><option value="Packed & Shipped">Shipped</option><option value="Delivered">Delivered</option></select><input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${si.courierName||''}" style="padding:6px; font-size:0.75rem; max-width:100px;"><input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${si.trackingId||''}" style="padding:6px; font-size:0.75rem; max-width:110px;"><button onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Save</button></div></div>`;
           });
         }
       });
-      document.getElementById('sellerOrdersList').innerHTML = oHtml || 'No orders yet.';
+      document.getElementById('sellerOrdersList').innerHTML = oHtml || 'No orders.';
       document.getElementById('sellerTotalSales').innerText = '₹' + totalSales;
       document.getElementById('sellerTotalCommission').innerText = '₹' + totalCommission;
       document.getElementById('sellerNetEarnings').innerText = '₹' + (totalSales - totalCommission);
-    }
-
-    function sendCustomerCustomPopup(orderId) {
-      let msgInput = document.getElementById(`customMsgInput_${orderId}`);
-      let msgText = msgInput ? msgInput.value.trim() : '';
-      if(!msgText) { showAlert('Please enter message text.'); return; }
-
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.customPopupMsg = msgText;
-        order.popupShown = false;
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert('Custom popup message queued for customer!', 'Success', true);
-        loadAdminMasterData();
-      }
     }
 
     function updateItemFulfillment(orderId, sku) {
@@ -1740,8 +1526,7 @@
           }
         });
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert('Tracking details saved successfully!', 'Success', true);
-        loadAdminMasterData();
+        showAlert('Tracking updated!', 'Success', true);
       }
     }
 
@@ -1749,39 +1534,15 @@
       let p = products[globalIdx];
       document.getElementById('sellerEditIndex').value = globalIdx;
       document.getElementById('sProdTitle').value = p.title;
-      document.getElementById('sProdSku').value = p.sku || '';
-      document.getElementById('sProdCategory').value = p.category || '';
       document.getElementById('sProdBasePrice').value = p.basePrice || p.price;
       document.getElementById('sProdMrp').value = p.mrp;
       document.getElementById('sProdStock').value = p.stock;
       document.getElementById('sProdImage').value = p.image;
       document.getElementById('sProdDesc').value = p.desc;
-      document.getElementById('sellerFormTitle').innerText = '✏️ Edit Product';
-      document.getElementById('sellerSaveProdBtn').innerText = 'Update Product';
-      document.getElementById('sellerFormTitle').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function resetSellerForm() {
-      document.getElementById('sellerEditIndex').value = '-1';
-      document.getElementById('sProdTitle').value = '';
-      document.getElementById('sProdSku').value = '';
-      document.getElementById('sProdCategory').value = '';
-      document.getElementById('sProdBasePrice').value = '';
-      document.getElementById('sProdMrp').value = '';
-      document.getElementById('sProdStock').value = '';
-      document.getElementById('sProdImage').value = '';
-      document.getElementById('sProdDesc').value = '';
-      document.getElementById('sellerFormTitle').innerText = '➕ Add New Product';
-      document.getElementById('sellerSaveProdBtn').innerText = 'Save Product';
     }
 
     function removeSellerProduct(globalIdx, sellerId) {
-      if(confirm('Remove this product?')) {
-        products.splice(globalIdx, 1);
-        localStorage.setItem('kosh_products_v4', JSON.stringify(products));
-        renderProducts();
-        loadSellerData(sellerId);
-      }
+      if(confirm('Remove product?')) { products.splice(globalIdx, 1); localStorage.setItem('kosh_products_v4', JSON.stringify(products)); renderProducts(); loadSellerData(sellerId); }
     }
 
     function openCheckoutModal() {
@@ -1796,6 +1557,15 @@
       document.getElementById('chkSubtotalVal').innerText = '₹' + discountedSubtotal;
       document.getElementById('chkPgFeeVal').innerText = '+ ₹' + pgFee;
       document.getElementById('chkFinalTotalVal').innerText = '₹' + finalTotal;
+      
+      let gateway = paymentConfig.gateway || 'Cashfree';
+      document.getElementById('checkoutTitle').innerText = `Secure Checkout (${gateway})`;
+      if(gateway === 'UPI') {
+        document.getElementById('upiExtraInfo').style.display = 'block';
+      } else {
+        document.getElementById('upiExtraInfo').style.display = 'none';
+      }
+
       document.getElementById('checkoutModal').style.display = 'flex';
     }
     function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
@@ -1815,23 +1585,19 @@
       }
     }
 
-    function initiateCheckoutOtp() {
+    function initiateCheckoutFlow() {
       let name = document.getElementById('chkName').value.trim();
       let phone = document.getElementById('chkPhone').value.trim();
       let area = document.getElementById('chkArea').value.trim();
       let pincode = document.getElementById('chkPincode').value.trim();
-      let city = document.getElementById('chkCity').value.trim();
       let district = document.getElementById('chkDistrict').value.trim();
-      let state = document.getElementById('chkState').value.trim();
 
       if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district) {
-        showAlert('Please fill delivery details correctly.'); return;
+        showAlert('Please fill in all delivery details correctly.'); return;
       }
 
-      let fullAddress = `${area}, City: ${city}, District: ${district}, State: ${state} - PIN: ${pincode}`;
-      tempCheckoutData = { name, phone, address: fullAddress };
+      tempCheckoutData = { name, phone, address: `${area}, PIN: ${pincode}, ${district}` };
       paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
-
       document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
       document.getElementById('checkoutModal').style.display = 'none';
       document.getElementById('paymentOtpModal').style.display = 'flex';
@@ -1839,8 +1605,7 @@
 
     function verifyAndFinalizeOrder() {
       let otp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(otp !== paymentOtpGenerated) { showAlert('Incorrect Payment OTP!'); return; }
-
+      if(otp !== paymentOtpGenerated) { showAlert('Incorrect OTP!'); return; }
       document.getElementById('paymentOtpModal').style.display = 'none';
 
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
@@ -1851,87 +1616,81 @@
 
       let newOrder = {
         id: "KS" + Math.floor(10000 + Math.random() * 90000),
-        timestamp: Date.now(),
-        userEmail: currentUser || 'guest',
+        timestamp: Date.now(), userEmail: currentUser || 'guest',
         date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        name: tempCheckoutData.name,
-        phone: tempCheckoutData.phone,
-        address: tempCheckoutData.address,
+        name: tempCheckoutData.name, phone: tempCheckoutData.phone, address: tempCheckoutData.address,
         items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice, fulfillmentStatus: 'Processing', courierName: '', trackingId: '', returnRequested: false, returnProof: '' })),
-        subtotal: discountedSubtotal, pgFee, total: grandTotal, status: 'New Order', deliveredAt: null,
-        customPopupMsg: "", popupShown: false
+        subtotal: discountedSubtotal, pgFee, total: grandTotal, status: 'New Order', deliveredAt: null, customPopupMsg: "", popupShown: false
       };
 
       ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      if(supabaseClient) { supabaseClient.from('orders').insert([newOrder]).then(); }
 
-      if(supabaseClient) {
-        supabaseClient.from('orders').insert([newOrder]).then(({error}) => {
-          if(error) console.error("Supabase sync error:", error);
-        });
-      }
-
-      cart = [];
-      localStorage.removeItem('kosh_cart');
-      updateCartUI();
-
-      showAlert("Order placed successfully via Secure Gateway!", "Order Placed", true);
+      cart = []; localStorage.removeItem('kosh_cart'); updateCartUI();
+      showAlert("Order placed successfully!", "Order Placed", true);
       navigateTo('orders');
     }
 
     function markAsDeliveredByCustomer(orderId) {
       let o = ordersList.find(x => x.id === orderId);
-      if(o) {
-        o.status = 'Delivered';
-        o.deliveredAt = Date.now();
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert("Delivery confirmed! 3-day return window started.", "Success", true);
-        renderOrdersPage();
-      }
+      if(o) { o.status = 'Delivered'; o.deliveredAt = Date.now(); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Delivery confirmed!", "Success", true); renderOrdersPage(); }
     }
 
     function requestCustomerReturn(orderId) {
-      let videoProof = prompt("Please enter your Unboxing Video Link (Google Drive, YouTube or Video URL):");
-      if (!videoProof) { showAlert('Return request cancelled.'); return; }
-      let order = ordersList.find(o => o.id === orderId);
-      if (order) {
-        order.items.forEach(item => { item.returnRequested = true; item.returnProof = videoProof; });
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert("Return request with video proof submitted!", "Success", true);
-        renderOrdersPage();
-      }
+      let videoProof = prompt("Enter Unboxing Video Link:");
+      if (!videoProof) return;
+      let o = ordersList.find(x => x.id === orderId);
+      if(o) { o.items.forEach(i => { i.returnRequested = true; i.returnProof = videoProof; }); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Return requested!", "Success", true); renderOrdersPage(); }
     }
 
     function deleteSingleOrder(orderId) {
-      if(confirm('Delete this order?')) {
+      if(confirm('Delete order?')) {
         let idx = ordersList.findIndex(o => o.id === orderId);
-        if(idx >= 0) {
-          ordersList.splice(idx, 1);
-          localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-          showAlert('Order deleted successfully!', 'Success', true);
-          loadAdminMasterData();
-          let foundSeller = sellersList.find(s => s.email === currentUser);
-          if(foundSeller) loadSellerData(foundSeller.id);
-        }
+        if(idx >= 0) { ordersList.splice(idx, 1); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert('Order deleted!', 'Success', true); loadAdminMasterData(); }
       }
     }
 
     function resetAllDashboardData() {
-      if(confirm('⚠️ WARNING: Clear all orders, tickets and reset revenue to zero?')) {
+      if(confirm('⚠️ Reset all orders and revenue?')) {
         ordersList = []; ticketsList = [];
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-        loadAdminMasterData();
-        showAlert('All orders and revenue successfully reset to zero!', 'Success', true);
+        loadAdminMasterData(); showAlert('Data reset to zero!', 'Success', true);
       }
+    }
+
+    // --- No-Code Payment Gateway Manager Script ---
+    function toggleGatewayFields() {
+      let gw = document.getElementById('gatewaySelect').value;
+      let lbl1 = document.getElementById('gwField1Label');
+      let lbl2 = document.getElementById('gwField2Label');
+      if(gw === 'Cashfree') {
+        lbl1.innerText = 'Cashfree App ID / Key';
+        lbl2.innerText = 'Cashfree Secret Key';
+      } else if(gw === 'Razorpay') {
+        lbl1.innerText = 'Razorpay Key ID';
+        lbl2.innerText = 'Razorpay Key Secret';
+      } else if(gw === 'UPI') {
+        lbl1.innerText = 'Merchant UPI ID (e.g. store@okhdfc)';
+        lbl2.innerText = 'Merchant Display Name';
+      }
+    }
+
+    function savePaymentGatewayConfig() {
+      let gw = document.getElementById('gatewaySelect').value;
+      let key = document.getElementById('gwMerchantKey').value.trim();
+      let secret = document.getElementById('gwMerchantSecret').value.trim();
+      paymentConfig = { gateway: gw, key, secret };
+      localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+      showAlert(`Payment gateway updated to ${gw} successfully!`, 'Success', true);
     }
 
     function saveSupabaseConfig() {
       let url = document.getElementById('sbUrlInput').value.trim();
       let key = document.getElementById('sbKeyInput').value.trim();
-      if(!url || !key) { showAlert('Please enter both Supabase URL and Key.'); return; }
-      localStorage.setItem('kosh_sb_url', url);
-      localStorage.setItem('kosh_sb_key', key);
+      if(!url || !key) { showAlert('Enter URL and Key.'); return; }
+      localStorage.setItem('kosh_sb_url', url); localStorage.setItem('kosh_sb_key', key);
       supabaseClient = window.supabase.createClient(url, key);
       showAlert('Supabase connected successfully!', 'Success', true);
     }
@@ -1940,99 +1699,36 @@
       let o = ordersList.find(x => x.id === orderId);
       if(!o) return;
       let win = window.open('', '_blank');
-      win.document.write(`
-        <html><head><title>Invoice #${o.id}</title>
-        <style>body{font-family:sans-serif; padding:20px;} h2{margin-bottom:5px;} table{width:100%; border-collapse:collapse; margin-top:15px;} th, td{border:1px solid #ddd; padding:8px; text-align:left; font-size:0.9rem;} th{background:#f1f3f6;}</style>
-        </head><body>
-        <h2>KOSH STUDIO - TAX INVOICE</h2>
-        <p>Order ID: #${o.id} | Date: ${o.date}</p>
-        <hr>
-        <p><strong>Customer:</strong> ${o.name} (${o.phone})<br><strong>Address:</strong> ${o.address}</p>
-        <table>
-          <tr><th>Item</th><th>SKU</th><th>Qty</th><th>Price</th></tr>
-          ${o.items.map(i => `<tr><td>${i.title}</td><td>${i.sku}</td><td>${i.qty}</td><td>₹${i.price * i.qty}</td></tr>`).join('')}
-        </table>
-        <p style="margin-top:15px;"><strong>Subtotal:</strong> ₹${o.subtotal}<br><strong>Gateway Fee (~2%):</strong> ₹${o.pgFee}<br><strong>Grand Total:</strong> ₹${o.total}</p>
-        <script>window.print();<\/script>
-        </body></html>
-      `);
+      win.document.write(`<html><head><title>Invoice #${o.id}</title></head><body style="font-family:sans-serif; padding:20px;"><h2>INVOICE #${o.id}</h2><p>Customer: ${o.name} (${o.phone})<br>Address: ${o.address}</p><hr><h3>Total: ₹${o.total}</h3><script>window.print();<\/script></body></html>`);
       win.document.close();
     }
 
     function renderOrdersPage() {
       const area = document.getElementById('ordersPageList');
-      if(ordersList.length === 0) {
-        area.innerHTML = '<div style="background:#fff; padding:30px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders placed yet.</div>';
-        return;
-      }
-      let html = '', now = Date.now();
+      if(ordersList.length === 0) { area.innerHTML = '<div style="background:#fff; padding:30px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders.</div>'; return; }
+      let html = '';
       ordersList.forEach(o => {
-        let returnSectionHtml = '', hasReturnReq = o.items.some(i => i.returnRequested);
-        if (o.status === 'Delivered' && o.deliveredAt) {
-          let daysPassed = (now - o.deliveredAt) / (1000 * 60 * 60 * 24);
-          if (daysPassed <= 3) {
-            let daysLeft = Math.ceil(3 - daysPassed);
-            if(hasReturnReq) {
-              returnSectionHtml = `<div style="background:#fff3e0; color:#e65100; padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">⏳ Return Request Pending Review.</div>`;
-            } else {
-              returnSectionHtml = `<div style="background:#e8f5e9; color:var(--success); padding:8px; border-radius:4px; font-size:0.8rem; margin-top:8px; font-weight:600;">📦 Eligible for Return (${daysLeft} day(s) left).<button onclick="requestCustomerReturn('${o.id}')" style="margin-top:6px; display:block; background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Request Return</button></div>`;
-            }
-          }
-        } else if (o.status === 'New Order') {
-          returnSectionHtml = `<div style="margin-top:8px;"><button onclick="markAsDeliveredByCustomer('${o.id}')" style="background:var(--accent); color:#000; border:none; padding:8px 14px; border-radius:4px; font-weight:700; cursor:pointer; font-size:0.8rem;">Click Here When You Receive Order</button></div>`;
-        }
-
-        let itemsSummary = o.items.map(i => `${i.title} (x${i.qty}) - Courier: ${i.courierName||'N/A'} | AWB: ${i.trackingId||'N/A'}`).join(', ');
-        let isDelivered = o.status === 'Delivered';
         let isShipped = o.items.some(i => i.fulfillmentStatus === 'Packed & Shipped' || i.fulfillmentStatus === 'Delivered');
-        let customNotice = o.customPopupMsg ? `<div style="background:#e3f2fd; color:#0d47a1; padding:8px; border-radius:4px; font-size:0.8rem; margin-top:6px; font-weight:bold;">📢 Store Notice: ${o.customPopupMsg}</div>` : '';
-
-        html += `
-          <div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.8rem; color:var(--muted);">
-              <span>Order ID: #${o.id}</span>
-              <button onclick="printOrderInvoice('${o.id}')" style="background:#4caf50; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem; font-weight:bold;">🖨️ Print Invoice</button>
-            </div>
-            <div style="font-size:0.9rem; font-weight:600; margin-bottom:6px;">${itemsSummary}</div>
-            ${customNotice}
-            <div class="timeline">
-              <div class="timeline-step active"><span>✓</span>Order Placed</div>
-              <div class="timeline-step ${isShipped || isDelivered ? 'active' : ''}"><span>${isShipped || isDelivered ? '✓' : '2'}</span>Shipped</div>
-              <div class="timeline-step ${isDelivered ? 'active' : ''}"><span>${isDelivered ? '✓' : '3'}</span>Delivered</div>
-            </div>
-            <div style="font-size:0.85rem; color:#555; margin:8px 0;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
-            ${returnSectionHtml}
-            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px; font-size:0.85rem;">
-              <span>Subtotal: ₹${o.subtotal} | Gateway Fee (~2%): ₹${o.pgFee}</span>
-              <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
-            </div>
-          </div>
-        `;
+        let isDel = o.status === 'Delivered';
+        html += `<div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;"><b>Order #${o.id}</b> - ₹${o.total}<br>${o.items.map(i=>i.title).join(', ')}<br><div class="timeline"><div class="timeline-step active"><span>✓</span>Placed</div><div class="timeline-step ${isShipped||isDel?'active':''}"><span>2</span>Shipped</div><div class="timeline-step ${isDel?'active':''}"><span>3</span>Delivered</div></div>${o.status==='New Order'?`<button onclick="markAsDeliveredByCustomer('${o.id}')" style="margin-top:8px; background:var(--accent); color:#000; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Confirm Delivery</button>`:''}</div>`;
       });
       area.innerHTML = html;
     }
 
     function triggerAdminSecret() {
       secretClickCount++;
-      if(secretClickCount >= 5) {
-        secretClickCount = 0;
-        document.getElementById('adminLoginModal').style.display = 'flex';
-      }
+      if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
     }
     function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
 
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
-        closeAdminLoginModal();
-        navigateTo('admin-dashboard');
-      } else {
-        showAlert('Incorrect Admin ID or Password!');
-      }
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') { closeAdminLoginModal(); navigateTo('admin-dashboard'); }
+      else showAlert('Incorrect Admin ID or Password!');
     }
 
-    function adminLogout() { navigateTo('home'); showAlert('Logged out from Admin.'); }
+    function adminLogout() { navigateTo('home'); showAlert('Logged out.'); }
 
     function switchAdminTab(tab) {
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
@@ -2043,208 +1739,33 @@
 
     function loadAdminMasterData() {
       let totalSalesRev = 0, totalCommEarned = 0;
-      ordersList.forEach(o => {
-        totalSalesRev += o.subtotal;
-        totalCommEarned += Math.round(o.subtotal * (globalCommission / 100));
-      });
+      ordersList.forEach(o => { totalSalesRev += o.subtotal; totalCommEarned += Math.round(o.subtotal * (globalCommission / 100)); });
       document.getElementById('admSummarySales').innerText = '₹' + totalSalesRev;
       document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
       document.getElementById('admSummaryVendors').innerText = sellersList.filter(s => s.status === 'Approved').length;
 
       let sArea = document.getElementById('admSellersList');
-      if(sellersList.length === 0) { sArea.innerHTML = 'No sellers registered.'; }
-      else {
-        let h = '';
-        sellersList.forEach((s, idx) => {
-          h += `
-            <div style="background:#fcfcfc; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;">
-              <div><strong>Store:</strong> ${s.store} (${s.uniqueId}) | <strong>Owner:</strong> ${s.name} (${s.phone})</div>
-              <div><strong>Bank A/C:</strong> ${s.accountNo} | <strong>IFSC:</strong> ${s.ifsc} (${s.bankName})</div>
-              <div>Status: <strong style="color:${s.status==='Approved'?'var(--success)':'orange'}">${s.status}</strong></div>
-              <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
-                <button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Approve</button>
-                <button onclick="updateSellerStatus(${idx}, 'Blocked')" style="background:#d32f2f; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Block</button>
-                <button onclick="removeSellerAccount(${idx})" style="background:#000; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Delete</button>
-              </div>
-            </div>
-          `;
-        });
-        sArea.innerHTML = h;
-      }
+      sArea.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map((s, idx) => `<div style="background:#fcfcfc; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:8px;"><strong>${s.store}</strong> (${s.uniqueId}) - ${s.status}<br><button onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:4px; cursor:pointer;">Approve</button></div>`).join('');
 
-      let pArea = document.getElementById('admProductsList'), pHtml = '';
-      products.forEach((p, idx) => {
-        pHtml += `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;">
-            <div><b>${p.title}</b><br><span style="color:var(--muted);">Vendor: ${p.sellerName || 'Kosh Direct'} | Price: ₹${p.price}</span></div>
-            <button onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Remove</button>
-          </div>
-        `;
-      });
-      pArea.innerHTML = pHtml;
+      let pArea = document.getElementById('admProductsList');
+      pArea.innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${p.title}</b> (₹${p.price})</span><button onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Remove</button></div>`).join('');
 
       let oArea = document.getElementById('admOrdersList');
-      if(ordersList.length === 0) { oArea.innerHTML = 'No orders.'; }
-      else {
-        let oHtml = '';
-        ordersList.forEach(o => {
-          let itemsDesc = o.items.map((i, itemIdx) => `
-            <div style="border-bottom:1px dashed #ddd; padding-bottom:6px; margin-bottom:6px;">
-              <b>${i.title}</b> (Qty: ${i.qty})<br>
-              Status: <span style="color:var(--success); font-weight:bold;">${i.fulfillmentStatus || 'Processing'}</span> | Courier: <strong>${i.courierName || 'Not Set'}</strong> | AWB: <strong>${i.trackingId || 'Not Set'}</strong><br>
-              <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-top:4px;">
-                <select id="admFulfillStatus_${o.id}_${itemIdx}" style="padding:4px; font-size:0.75rem;">
-                  <option value="Processing" ${i.fulfillmentStatus==='Processing'?'selected':''}>Processing</option>
-                  <option value="Packed & Shipped" ${i.fulfillmentStatus==='Packed & Shipped'?'selected':''}>Packed & Shipped</option>
-                  <option value="Delivered" ${i.fulfillmentStatus==='Delivered'?'selected':''}>Delivered</option>
-                </select>
-                <input type="text" id="admFulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${i.courierName || ''}" style="padding:4px; font-size:0.75rem; max-width:100px;">
-                <input type="text" id="admFulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${i.trackingId || ''}" style="padding:4px; font-size:0.75rem; max-width:110px;">
-                <button onclick="adminUpdateItemFulfillment('${o.id}', '${i.sku}')" style="background:var(--primary); color:#fff; border:none; padding:4px 8px; border-radius:3px; font-size:0.75rem; cursor:pointer;">Update</button>
-              </div>
-            </div>
-          `).join('');
+      oArea.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px;"><b>Order #${o.id}</b> - ${o.name} (₹${o.total})<br><button onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:6px; cursor:pointer;">Delete Order</button></div>`).join('');
 
-          oHtml += `
-            <div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.9rem;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <b>Order #${o.id}</b> - ${o.name} (${o.phone}) | Total: ₹${o.total}
-                <div>
-                  <button onclick="printOrderInvoice('${o.id}')" style="background:#4caf50; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem; margin-right:4px;">🖨️ Invoice</button>
-                  <button onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:3px; cursor:pointer; font-size:0.75rem;">🗑️ Delete</button>
-                </div>
-              </div>
-              <div style="margin:6px 0; color:#444;">${itemsDesc}</div>
-              <div style="margin-top:10px; border-top:1px dashed #eee; padding-top:8px;">
-                <label style="font-size:0.75rem; font-weight:bold; color:#555;">💬 Send Popup Message to Customer:</label>
-                <div style="display:flex; gap:6px; margin-top:4px;">
-                  <input type="text" id="customMsgInput_${o.id}" placeholder="Type message..." value="${o.customPopupMsg || ''}" style="padding:6px; font-size:0.78rem; flex-grow:1;">
-                  <button onclick="sendCustomerCustomPopup('${o.id}')" style="background:#9c27b0; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.78rem; cursor:pointer;">Send Popup</button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        oArea.innerHTML = oHtml;
-      }
-
-      let tArea = document.getElementById('admTicketsList');
-      if (ticketsList.length === 0) { tArea.innerHTML = 'No support tickets.'; }
-      else {
-        let tHtml = '';
-        ticketsList.forEach((t, idx) => {
-          tHtml += `<div style="background:#fff; border:1px solid #ddd; padding:10px; border-radius:4px; margin-bottom:8px; font-size:0.85rem;"><strong>[${t.id}]</strong> ${t.subject}<br>${t.message}<br><button onclick="resolveTicket(${idx})" style="background:var(--success); color:#fff; border:none; padding:4px 8px; border-radius:3px; margin-top:4px; cursor:pointer;">Mark Resolved</button></div>`;
-        });
-        tArea.innerHTML = tHtml;
-      }
       document.getElementById('globalCommissionInput').value = globalCommission;
       if(sbUrl) document.getElementById('sbUrlInput').value = sbUrl;
       if(sbKey) document.getElementById('sbKeyInput').value = sbKey;
+      
+      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
+      document.getElementById('gwMerchantKey').value = paymentConfig.key || '';
+      document.getElementById('gwMerchantSecret').value = paymentConfig.secret || '';
+      toggleGatewayFields();
     }
 
-    function adminUpdateItemFulfillment(orderId, sku) {
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.items.forEach((item, idx) => {
-          if(item.sku === sku) {
-            let statusSel = document.getElementById(`admFulfillStatus_${orderId}_${idx}`);
-            let courierInp = document.getElementById(`admFulfillCourier_${orderId}_${idx}`);
-            let trackInp = document.getElementById(`admFulfillTracking_${orderId}_${idx}`);
-            if(statusSel) item.fulfillmentStatus = statusSel.value;
-            if(courierInp) item.courierName = courierInp.value.trim();
-            if(trackInp) item.trackingId = trackInp.value.trim();
-          }
-        });
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert('Tracking updated successfully!', 'Success', true);
-        loadAdminMasterData();
-      }
-    }
-
-    function openAdminEditSellerModal(idx) {
-      let s = sellersList[idx];
-      document.getElementById('admEditSellerIdx').value = idx;
-      document.getElementById('admEditUniqueId').value = s.uniqueId;
-      document.getElementById('admEditStore').value = s.store;
-      document.getElementById('admEditName').value = s.name;
-      document.getElementById('admEditEmail').value = s.email;
-      document.getElementById('admEditPhone').value = s.phone;
-      document.getElementById('adminEditSellerModal').style.display = 'flex';
-    }
-
-    function closeAdminEditSellerModal() { document.getElementById('adminEditSellerModal').style.display = 'none'; }
-
-    function saveAdminEditedSeller() {
-      let idx = parseInt(document.getElementById('admEditSellerIdx').value);
-      let store = document.getElementById('admEditStore').value.trim();
-      let name = document.getElementById('admEditName').value.trim();
-      let email = document.getElementById('admEditEmail').value.trim();
-      let phone = document.getElementById('admEditPhone'.value || '').trim();
-      if (!store || !name || !email) { showAlert('Fill valid details.'); return; }
-      sellersList[idx].store = store; sellersList[idx].name = name; sellersList[idx].email = email;
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      closeAdminEditSellerModal();
-      loadAdminMasterData();
-      showAlert('Seller updated!', 'Success', true);
-    }
-
-    function resolveTicket(idx) {
-      ticketsList[idx].status = 'Resolved';
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      loadAdminMasterData();
-      showAlert('Ticket resolved.', 'Success', true);
-    }
-
-    function updateSellerStatus(idx, newStatus) {
-      sellersList[idx].status = newStatus;
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      loadAdminMasterData();
-      showAlert(`Seller status: ${newStatus}`, 'Success', true);
-    }
-
-    function removeSellerAccount(idx) {
-      if(confirm('Delete this seller?')) {
-        sellersList.splice(idx, 1);
-        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-        loadAdminManagerData();
-        showAlert('Seller deleted.', 'Success', true);
-      }
-    }
-
-    function adminRemoveProduct(idx) {
-      if(confirm('Remove product?')) {
-        products.splice(idx, 1);
-        localStorage.setItem('kosh_products_v4', JSON.stringify(products));
-        renderProducts();
-        loadAdminMasterData();
-      }
-    }
-
-    function saveAdminProduct() {
-      let title = document.getElementById('aProdTitle').value.trim();
-      let sku = document.getElementById('aProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
-      let category = document.getElementById('aProdCategory').value.trim() || 'General';
-      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('aProdStock').value) || 10;
-      let image = document.getElementById('aProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('aProdDesc').value.trim() || 'Admin product.';
-
-      if(!title || !price || !mrp) { showAlert('Fill Title, Price and MRP.'); return; }
-      products.push({ id: Date.now(), sku, title, category, sellerId: 'admin', sellerName: 'Kosh Direct (Admin)', basePrice: price, price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v4', JSON.stringify(products));
-      renderProducts();
-      loadAdminMasterData();
-      showAlert('Product listed successfully!', 'Success', true);
-    }
-
-    function saveGlobalCommission() {
-      let val = parseFloat(document.getElementById('globalCommissionInput').value);
-      if(isNaN(val) || val < 0) { showAlert('Enter valid percentage.'); return; }
-      globalCommission = val;
-      localStorage.setItem('kosh_commission', globalCommission);
-      showAlert('Commission updated to ' + globalCommission + '%', 'Success', true);
-    }
+    function updateSellerStatus(idx, st) { sellersList[idx].status = st; localStorage.setItem('kosh_sellers', JSON.stringify(sellersList)); loadAdminMasterData(); showAlert('Status updated.', 'Success', true); }
+    function adminRemoveProduct(idx) { products.splice(idx, 1); localStorage.setItem('kosh_products_v4', JSON.stringify(products)); renderProducts(); loadAdminMasterData(); showAlert('Removed.', 'Success', true); }
+    function saveGlobalCommission() { let v = parseFloat(document.getElementById('globalCommissionInput').value); if(!isNaN(v)) { globalCommission = v; localStorage.setItem('kosh_commission', v); showAlert('Saved.', 'Success', true); } }
   </script>
 </body>
 </html>
