@@ -244,12 +244,12 @@
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700;">Customer Account</span>
+      <span style="font-weight:700;">Customer & Seller Account</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login</h3>
-        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Email"></div>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
+        <div class="form-group"><label>Email or Mobile Number</label><input type="text" id="loginEmail" placeholder="Email or Mobile"></div>
         <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
         <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
       </div>
@@ -261,15 +261,49 @@
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
 
+        <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#2e7d32;">📝 Seller KYC & Bank Verification</h4>
+          <p style="font-size:0.8rem; color:#555;">Complete your PAN & bank verification to receive payouts.</p>
+        </div>
+
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('support')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support & Grievances</h4>
           <p style="font-size:0.8rem; color:var(--muted);">Raise a grievance ticket or chat with support.</p>
         </div>
 
-        <div style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-reg')">
+        <div id="joinSellerCard" style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-reg')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:#0d47a1;">🏪 Join as Seller</h4>
           <p style="font-size:0.8rem; color:#555;">Register your store and start selling products.</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELLER KYC & BANK VERIFICATION PAGE -->
+  <div id="page-seller-kyc" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700;">📝 Seller KYC & Bank Verification</span>
+    </div>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">PAN & Bank Account Details</h3>
+        
+        <div class="form-group"><label>PAN Card Full Name (Must match Bank & Seller Name) *</label><input type="text" id="kycPanName" placeholder="Name as on PAN Card" required></div>
+        <div class="form-group"><label>PAN Card Number *</label><input type="text" id="kycPanNumber" placeholder="ABCDE1234F" maxlength="10" required></div>
+        <div class="form-group"><label>Bank Account Number *</label><input type="text" id="kycAccountNum" placeholder="Account Number" required></div>
+        <div class="form-group">
+          <label>IFSC Code (Auto-fetches Bank Details) *</label>
+          <input type="text" id="kycIfsc" maxlength="11" placeholder="SBIN000XXXX" oninput="this.value = this.value.toUpperCase(); lookupIfsc(this.value);" required>
+        </div>
+        <div class="form-group"><label>Bank Name (Auto-fetched)</label><input type="text" id="kycBankName" placeholder="Bank Name" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>Branch Name (Auto-fetched)</label><input type="text" id="kycBranchName" placeholder="Branch Name" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+
+        <div id="kycLockedNotice" style="display:none; background:#fff3e0; border:1px solid #ffe0b2; padding:10px; border-radius:4px; font-size:0.8rem; color:#e65100; margin-bottom:12px;">
+          🔒 Your KYC details are verified and locked. Only Admin can edit them upon request.
+        </div>
+
+        <button type="button" id="kycSubmitBtn" class="btn-solid" style="background:var(--success); padding:14px;" onclick="submitSellerKyc()">Submit KYC & Bank Details</button>
       </div>
     </div>
   </div>
@@ -376,13 +410,13 @@
         
         <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Full Name" required></div>
         <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name" required></div>
-        <div class="form-group"><label>Mobile Number (Strictly 10 Digits) *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" required></div>
+        <div class="form-group"><label>Mobile Number (Seller ID) *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" required></div>
         <div class="form-group"><label>Email Address *</label><input type="email" id="selEmail" placeholder="Email Address" required></div>
         <div class="form-group"><label>Address *</label><input type="text" id="selAddress" placeholder="Street Address" required></div>
         
-        <div class="form-group"><label>Pin Code (Auto-Detects City & State) *</label><input type="text" id="selPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupSellerPincode(this.value);" required></div>
-        <div class="form-group"><label>City (Auto-fetched)</label><input type="text" id="selCity" placeholder="City" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
-        <div class="form-group"><label>State (Auto-fetched)</label><input type="text" id="selState" placeholder="State" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>Pin Code *</label><input type="text" id="selPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupSellerPincode(this.value);" required></div>
+        <div class="form-group"><label>City</label><input type="text" id="selCity" placeholder="City" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>State</label><input type="text" id="selState" placeholder="State" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
 
         <div class="form-group">
           <label>Product Category *</label>
@@ -418,7 +452,7 @@
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers & KYC</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
@@ -426,7 +460,10 @@
       </div>
 
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers Management</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers & KYC Management</h5>
+        <div class="form-group" style="margin-bottom:15px;">
+          <input type="text" id="adminSellerSearchInput" placeholder="Search seller by ID (e.g. SEL-12345) or Phone..." oninput="renderAdminSellersList(this.value)">
+        </div>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
       </div>
 
@@ -499,6 +536,25 @@
           <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ADMIN SELLER CORRECTION MODAL -->
+  <div class="modal-overlay" id="adminSellerEditModal">
+    <div class="modal-box" style="text-align:left; max-width:450px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 id="admEditModalTitle" style="font-size:1.1rem;">✏️ Edit Seller KYC</h3>
+        <button type="button" onclick="document.getElementById('adminSellerEditModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <input type="hidden" id="editSellerId">
+      <div class="form-group"><label>Store Name</label><input type="text" id="editStoreName"></div>
+      <div class="form-group"><label>PAN Name</label><input type="text" id="editPanName"></div>
+      <div class="form-group"><label>PAN Number</label><input type="text" id="editPanNumber"></div>
+      <div class="form-group"><label>Bank Account Number</label><input type="text" id="editAccountNum"></div>
+      <div class="form-group"><label>IFSC Code</label><input type="text" id="editIfsc" oninput="this.value = this.value.toUpperCase(); lookupAdminEditIfsc(this.value);"></div>
+      <div class="form-group"><label>Bank Name</label><input type="text" id="editBankName" readonly style="background:#f1f3f6;"></div>
+      <div class="form-group"><label>Branch Name</label><input type="text" id="editBranchName" readonly style="background:#f1f3f6;"></div>
+      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="saveAdminEditedSeller()">Save Correction</button>
     </div>
   </div>
 
@@ -614,6 +670,7 @@
       checkLoginStatus();
       loadPaymentSettingsToUI();
       renderCustomerTickets();
+      loadSellerKycData();
       
       let savedProdId = localStorage.getItem('kosh_selected_prod_id');
       if(savedProdId) {
@@ -694,6 +751,35 @@
       } else {
         document.getElementById('selCity').value = '';
         document.getElementById('selState').value = '';
+      }
+    }
+
+    function lookupIfsc(ifsc) {
+      if(ifsc.length === 11) {
+        fetch('https://ifsc.razorpay.com/' + ifsc)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.BANK) {
+              document.getElementById('kycBankName').value = data.BANK;
+              document.getElementById('kycBranchName').value = data.BRANCH;
+            }
+          }).catch(err => console.log(err));
+      } else {
+        document.getElementById('kycBankName').value = '';
+        document.getElementById('kycBranchName').value = '';
+      }
+    }
+
+    function lookupAdminEditIfsc(ifsc) {
+      if(ifsc.length === 11) {
+        fetch('https://ifsc.razorpay.com/' + ifsc)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.BANK) {
+              document.getElementById('editBankName').value = data.BANK;
+              document.getElementById('editBranchName').value = data.BRANCH;
+            }
+          }).catch(err => console.log(err));
       }
     }
 
@@ -971,29 +1057,156 @@
       }
 
       let newSeller = {
-        uniqueId: 'SEL-' + Date.now().toString().slice(-5),
-        fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, status: 'Active'
+        uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
+        fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, password: pass,
+        approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false,
+        panName: '', panNumber: '', accountNum: '', ifsc: '', bankName: '', branchName: ''
       };
 
       sellersList.unshift(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
 
-      document.getElementById('selFullName').value = '';
-      document.getElementById('selStoreName').value = '';
-      document.getElementById('selPhone').value = '';
-      document.getElementById('selEmail').value = '';
-      document.getElementById('selAddress').value = '';
-      document.getElementById('selPincode').value = '';
-      document.getElementById('selCity').value = '';
-      document.getElementById('selState').value = '';
-      document.getElementById('selPickupAddress').value = '';
-      document.getElementById('selUpiId').value = '';
-      document.getElementById('selPassword').value = '';
-      document.getElementById('selConfirmPassword').value = '';
-      document.getElementById('selTerms').checked = false;
-
-      showAlert("Seller registration successful! Aapka store register ho gaya hai.", "Success", true);
+      showAlert(`Registration successful! Your Seller ID is ${newSeller.uniqueId}. Please login using your mobile number.`, "Success", true);
       navigateTo('profile');
+    }
+
+    function loadSellerKycData() {
+      let kycCard = document.getElementById('sellerKycCard');
+      let joinCard = document.getElementById('joinSellerCard');
+      if(!kycCard || !joinCard) return;
+
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        joinCard.style.display = 'none';
+        if(seller.approvalStatus === 'Approved') {
+          kycCard.style.display = 'block';
+          if(seller.kycLocked) {
+            document.getElementById('kycPanName').value = seller.panName;
+            document.getElementById('kycPanNumber').value = seller.panNumber;
+            document.getElementById('kycAccountNum').value = seller.accountNum;
+            document.getElementById('kycIfsc').value = seller.ifsc;
+            document.getElementById('kycBankName').value = seller.bankName;
+            document.getElementById('kycBranchName').value = seller.branchName;
+
+            document.getElementById('kycPanName').readOnly = true;
+            document.getElementById('kycPanNumber').readOnly = true;
+            document.getElementById('kycAccountNum').readOnly = true;
+            document.getElementById('kycIfsc').readOnly = true;
+            document.getElementById('kycLockedNotice').style.display = 'block';
+            document.getElementById('kycSubmitBtn').style.display = 'none';
+          }
+        } else {
+          kycCard.style.display = 'none';
+        }
+      } else {
+        kycCard.style.display = 'none';
+        joinCard.style.display = 'block';
+      }
+    }
+
+    function submitSellerKyc() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(!seller) return;
+
+      let panName = document.getElementById('kycPanName').value.trim();
+      let panNumber = document.getElementById('kycPanNumber').value.trim();
+      let accountNum = document.getElementById('kycAccountNum').value.trim();
+      let ifsc = document.getElementById('kycIfsc').value.trim();
+      let bankName = document.getElementById('kycBankName').value.trim();
+      let branchName = document.getElementById('kycBranchName').value.trim();
+
+      if(!panName || !panNumber || !accountNum || !ifsc || !bankName) {
+        showAlert("Kripya sabhi KYC details sahi se bharein.");
+        return;
+      }
+
+      seller.panName = panName;
+      seller.panNumber = panNumber;
+      seller.accountNum = accountNum;
+      seller.ifsc = ifsc;
+      seller.bankName = bankName;
+      seller.branchName = branchName;
+      seller.kycStatus = 'Submitted & Locked';
+      seller.kycLocked = true;
+
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      loadSellerKycData();
+      showAlert("KYC & Bank details successfully submitted and locked!", "Success", true);
+    }
+
+    function renderAdminSellersList(query = '') {
+      let container = document.getElementById('admSellersList');
+      if(!container) return;
+
+      let filtered = sellersList;
+      if(query.trim()) {
+        let q = query.trim().toLowerCase();
+        filtered = sellersList.filter(s => s.uniqueId.toLowerCase().includes(q) || s.phone.toLowerCase().includes(q) || s.storeName.toLowerCase().includes(q));
+      }
+
+      if(filtered.length === 0) {
+        container.innerHTML = 'No sellers found.';
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => `
+        <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem; background:${s.approvalStatus === 'Approved' ? '#f1f8e9' : '#fff3e0'}; border-radius:6px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <b>Store:</b> ${s.storeName} (${s.uniqueId})
+            <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${s.approvalStatus === 'Approved' ? '#388e3c' : '#ff9800'}; color:#fff; font-weight:bold;">${s.approvalStatus}</span>
+          </div>
+          <div><b>Owner:</b> ${s.fullName} | <b>Phone:</b> ${s.phone} | <b>Email:</b> ${s.email}</div>
+          <div><b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}</div>
+          <div><b>PAN Name:</b> ${s.panName || 'N/A'} | <b>PAN No:</b> ${s.panNumber || 'N/A'}</div>
+          <div><b>Bank A/C:</b> ${s.accountNum || 'N/A'} | <b>IFSC:</b> ${s.ifsc || 'N/A'} (${s.bankName || ''})</div>
+          <div style="margin-top:8px; display:flex; gap:8px;">
+            ${s.approvalStatus !== 'Approved' ? `<button type="button" onclick="approveSeller('${s.uniqueId}')" style="background:#388e3c; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Approve Seller</button>` : ''}
+            <button type="button" onclick="openAdminEditSeller('${s.uniqueId}')" style="background:#2196f3; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Edit / Correct KYC</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function approveSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(s) {
+        s.approvalStatus = 'Approved';
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        renderAdminSellersList();
+        showAlert(`Seller ${s.storeName} approved successfully!`, "Success", true);
+      }
+    }
+
+    function openAdminEditSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(!s) return;
+      document.getElementById('editSellerId').value = s.uniqueId;
+      document.getElementById('editStoreName').value = s.storeName;
+      document.getElementById('editPanName').value = s.panName;
+      document.getElementById('editPanNumber').value = s.panNumber;
+      document.getElementById('editAccountNum').value = s.accountNum;
+      document.getElementById('editIfsc').value = s.ifsc;
+      document.getElementById('editBankName').value = s.bankName;
+      document.getElementById('editBranchName').value = s.branchName;
+      document.getElementById('adminSellerEditModal').style.display = 'flex';
+    }
+
+    function saveAdminEditedSeller() {
+      let uid = document.getElementById('editSellerId').value;
+      let s = sellersList.find(item => item.uniqueId === uid);
+      if(!s) return;
+      s.storeName = document.getElementById('editStoreName').value.trim();
+      s.panName = document.getElementById('editPanName').value.trim();
+      s.panNumber = document.getElementById('editPanNumber').value.trim();
+      s.accountNum = document.getElementById('editAccountNum').value.trim();
+      s.ifsc = document.getElementById('editIfsc').value.trim();
+      s.bankName = document.getElementById('editBankName').value.trim();
+      s.branchName = document.getElementById('editBranchName').value.trim();
+
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      document.getElementById('adminSellerEditModal').style.display = 'none';
+      renderAdminSellersList();
+      showAlert("Seller details successfully updated by Admin!", "Success", true);
     }
 
     function renderProducts(filterCat = null) {
@@ -1083,6 +1296,7 @@
       
       if(pageId === 'wishlist') renderWishlist();
       if(pageId === 'support') renderCustomerTickets();
+      if(pageId === 'seller-kyc') loadSellerKycData();
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) {
           document.getElementById('adminLoginModal').style.display = 'flex';
@@ -1290,15 +1504,7 @@
     }
 
     function loadAdminMasterData() {
-      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `
-        <div style="padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-          <b>Store:</b> ${s.storeName} (${s.uniqueId})<br>
-          <b>Owner:</b> ${s.fullName} | <b>Phone:</b> ${s.phone} | <b>Email:</b> ${s.email}<br>
-          <b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}<br>
-          <b>UPI ID:</b> ${s.upi}
-        </div>
-      `).join('');
-
+      renderAdminSellersList();
       document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
           <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
@@ -1361,11 +1567,28 @@
     }
 
     function handleLogin() { 
-      currentUser = document.getElementById('loginEmail').value; 
-      localStorage.setItem('kosh_logged_email', currentUser); 
-      checkLoginStatus();
-      showAlert('Login successful!', 'Success', true); 
-      navigateTo('home'); 
+      let val = document.getElementById('loginEmail').value.trim();
+      let pass = document.getElementById('loginPass').value.trim();
+      
+      let seller = sellersList.find(s => (s.phone === val || s.email === val) && s.password === pass);
+      if(seller) {
+        currentUser = seller.phone;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        showAlert('Seller Login successful!', 'Success', true);
+        navigateTo('home');
+        return;
+      }
+
+      if(val) {
+        currentUser = val;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        showAlert('Login successful!', 'Success', true);
+        navigateTo('home');
+      } else {
+        showAlert('Kripya email ya mobile number bharein.');
+      }
     }
 
     function handleLogout() { 
@@ -1381,6 +1604,7 @@
         document.getElementById('authLoginView').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
+        loadSellerKycData();
       } else { 
         document.getElementById('userDashboardSection').style.display = 'none'; 
         document.getElementById('authLoginView').style.display = 'block'; 
