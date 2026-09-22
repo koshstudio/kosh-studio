@@ -35,8 +35,6 @@
     
     .header-icons { display: flex; align-items: center; gap: 10px; }
     .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.68rem; color: var(--text); font-weight: 600; padding: 4px; }
-    
-    /* Professional Badge on top of text */
     .badge-count { position: absolute; top: -2px; right: 2px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; }
 
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
@@ -74,12 +72,12 @@
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px; }
-    .modal-box { background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .modal-box { background: #fff; width: 100%; max-width: 400px; border-radius: 10px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; }
 
-    .form-group { margin-bottom: 14px; display: block; width: 100%; }
+    .form-group { margin-bottom: 14px; display: block; width: 100%; text-align: left; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff; }
-    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
     .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
     .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
@@ -264,12 +262,26 @@
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- COLOURFUL CUSTOM ALERT MODAL -->
   <div class="modal-overlay" id="customAlertModal">
-    <div class="modal-box" style="max-width:360px; text-align:center;">
-      <h3 id="customAlertTitle" style="margin-bottom:8px;">Notice</h3>
-      <p id="customAlertMsg" style="margin-bottom:20px;"></p>
-      <button type="button" class="btn-solid" onclick="closeCustomAlert()">OK</button>
+    <div class="modal-box">
+      <div style="width:50px; height:50px; background:linear-gradient(135deg, var(--accent), #ff9800); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto; font-size:1.4rem;">✨</div>
+      <h3 id="customAlertTitle" style="margin-bottom:6px; font-size:1.1rem; color:var(--primary);">Kosh Studio</h3>
+      <p id="customAlertMsg" style="margin-bottom:20px; font-size:0.88rem; color:#555; line-height:1.5;"></p>
+      <button type="button" class="btn-solid" onclick="closeCustomAlert()" style="background:var(--primary);">OK</button>
+    </div>
+  </div>
+
+  <!-- COLOURFUL CUSTOM CONFIRM MODAL -->
+  <div class="modal-overlay" id="customConfirmModal">
+    <div class="modal-box">
+      <div style="width:50px; height:50px; background:linear-gradient(135deg, #ff5252, #d32f2f); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 12px auto; font-size:1.4rem; color:#fff;">⚠️</div>
+      <h3 id="customConfirmTitle" style="margin-bottom:6px; font-size:1.1rem; color:var(--primary);">Confirmation</h3>
+      <p id="customConfirmMsg" style="margin-bottom:20px; font-size:0.88rem; color:#555; line-height:1.5;"></p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn-solid" style="background:#888;" onclick="resolveConfirm(false)">Cancel</button>
+        <button type="button" class="btn-solid" style="background:var(--danger);" onclick="resolveConfirm(true)">Confirm</button>
+      </div>
     </div>
   </div>
 
@@ -280,371 +292,4 @@
       <h3 style="font-size:1rem; font-weight:700;">YOUR SHOPPING CART</h3>
       <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
-    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
-    <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; color:var(--muted);"><span>Subtotal</span><span id="cartSubtotalPrice">₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">FREE Delivery</span></div>
-      <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to secure checkout...')">Proceed to Checkout</button>
-    </div>
-  </div>
-
-  <!-- ADMIN LOGIN MODAL -->
-  <div class="modal-overlay" id="adminLoginModal">
-    <div class="modal-box" style="max-width:380px;">
-      <h3 style="margin-bottom:14px;">🔒 Admin Master Login</h3>
-      <div class="form-group"><label>Admin ID</label><input type="text" id="admUserInput" placeholder="ID"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
-      <button type="button" class="btn-solid" onclick="verifyAdminPassword()">Login</button>
-    </div>
-  </div>
-
-  <script>
-    function showAlert(message, title = "Kosh Studio", isSuccess = false) {
-      document.getElementById('customAlertTitle').innerText = title;
-      document.getElementById('customAlertMsg').innerText = message;
-      document.getElementById('customAlertModal').style.display = 'flex';
-    }
-    function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
-
-    let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
-    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
-    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
-    let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
-    let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
-    
-    let currentUser = localStorage.getItem('kosh_logged_email') || null;
-    let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
-
-    let currentSelectedProduct = null;
-    let secretClickCount = 0;
-    
-    let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
-    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
-
-    window.addEventListener('DOMContentLoaded', () => {
-      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
-      navigateTo(savedPage, false);
-      
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(activeCategoryFilter) || (activeCategoryFilter === 'All' && i.innerText.includes('All'))) {
-          i.classList.add('active');
-        } else {
-          i.classList.remove('active');
-        }
-      });
-
-      renderProducts();
-      updateCartUI();
-      checkLoginStatus();
-    });
-
-    function renderProducts(filterCat = null) {
-      if(filterCat !== null) {
-        activeCategoryFilter = filterCat;
-        localStorage.setItem('kosh_active_cat', filterCat);
-      }
-      
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '';
-      
-      let filtered = products;
-      if(activeCategoryFilter !== 'All') {
-        filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
-      }
-
-      const searchKey = document.getElementById('searchInput').value.toLowerCase();
-      if(searchKey) {
-        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
-      }
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">No products in store. Please log into Admin panel (tap footer 5 times) to add custom products.</p>';
-        return;
-      }
-
-      filtered.forEach(p => {
-        let isWishlisted = wishlist.some(item => item.id === p.id);
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      document.getElementById('wishlistCount').innerText = wishlist.length;
-    }
-
-    function toggleWishlist(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let idx = wishlist.findIndex(item => item.id === id);
-      if(idx >= 0) { wishlist.splice(idx, 1); showAlert("Removed from Wishlist", "Wishlist", false); }
-      else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
-      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
-      renderProducts();
-    }
-
-    function navigateTo(pageId, save = true) {
-      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + pageId).classList.add('active');
-      if(save) localStorage.setItem('kosh_active_page', pageId);
-      window.scrollTo(0, 0);
-      
-      if(pageId === 'admin-dashboard') {
-        if(!isAdminLoggedIn) {
-          document.getElementById('adminLoginModal').style.display = 'flex';
-          return;
-        }
-        loadAdminMasterData();
-        switchAdminTab(activeAdminTab, false);
-      }
-    }
-
-    function filterCategory(cat) {
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
-        else i.classList.remove('active');
-      });
-      renderProducts(cat);
-    }
-
-    function handleSearch(val) { renderProducts(); }
-
-    function openProductDetail(id) {
-      currentSelectedProduct = products.find(item => item.id === id);
-      if(!currentSelectedProduct) return;
-      document.getElementById('pPageImg').src = currentSelectedProduct.image;
-      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
-      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku}`;
-      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
-      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
-      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
-      navigateTo('product');
-    }
-
-    function addCurrentProductToCart() {
-      if(!currentSelectedProduct) return;
-      addToCart(currentSelectedProduct.id);
-    }
-
-    function addToCart(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let existing = cart.find(item => item.id === id);
-      if(existing) {
-        existing.qty = (existing.qty || 1) + 1;
-        existing.finalPrice = existing.price * existing.qty;
-      } else {
-        cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-      showAlert(prod.title + " added to cart!", 'Cart', true);
-    }
-
-    function changeCartQty(id, delta) {
-      let item = cart.find(i => i.id === id);
-      if(!item) return;
-      item.qty += delta;
-      if(item.qty <= 0) {
-        cart = cart.filter(i => i.id !== id);
-      } else {
-        item.finalPrice = item.price * item.qty;
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
-      const container = document.getElementById('cartItemsContainer');
-      const priceBox = document.getElementById('cartPriceDetailsBox');
-      container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Cart is empty.</p>'; priceBox.style.display = 'none'; return; }
-      priceBox.style.display = 'block';
-      let subtotal = 0;
-      cart.forEach(item => {
-        subtotal += item.finalPrice;
-        container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px; align-items:center;">
-            <img src="${item.image}" style="width:65px; height:65px; object-fit:cover; border-radius:4px;">
-            <div style="flex-grow:1;">
-              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
-              <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">₹${item.finalPrice}</div>
-              <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                <button type="button" onclick="changeCartQty(${item.id}, -1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                <span style="font-size:0.85rem; font-weight:bold;">${item.qty || 1}</span>
-                <button type="button" onclick="changeCartQty(${item.id}, 1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
-              </div>
-            </div>
-          </div>`;
-      });
-      document.getElementById('cartSubtotalPrice').innerText = '₹' + subtotal;
-      document.getElementById('cartTotalPrice').innerText = '₹' + subtotal;
-    }
-
-    function toggleCartDrawer(open) {
-      document.getElementById('cartDrawer').classList.toggle('open', open);
-      document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
-    }
-
-    function clearAllProductsCompletely() {
-      if(confirm("Kya aap saare products ko permanent delete karna chahte hain?")) {
-        products = [];
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        renderProducts();
-        loadAdminMasterData();
-        showAlert("Saare products delete ho gaye hain!", "Success", true);
-      }
-    }
-
-    function addNewCustomProduct() {
-      let title = document.getElementById('newProdTitle').value.trim();
-      let category = document.getElementById('newProdCategory').value;
-      let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('newProdMrp').value) || price * 1.5;
-      let desc = document.getElementById('newProdDesc').value.trim();
-      let fileInput = document.getElementById('newProdFile');
-
-      if(!title || !price) {
-        showAlert("Kripya Product Title aur Price bharein.");
-        return;
-      }
-
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          saveProductWithImage(title, category, price, mrp, e.target.result, desc);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveProductWithImage(title, category, price, mrp, "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc);
-      }
-    }
-
-    function saveProductWithImage(title, category, price, mrp, image, desc) {
-      let newId = Date.now();
-      products.unshift({
-        id: newId,
-        sku: `KOSH-${newId.toString().slice(-5)}`,
-        title,
-        category,
-        price,
-        mrp,
-        stock: 50,
-        image,
-        desc: desc || "Premium quality product from Kosh Studio."
-      });
-
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-      renderProducts();
-      loadAdminMasterData();
-      
-      document.getElementById('newProdTitle').value = '';
-      document.getElementById('newProdPrice').value = '';
-      document.getElementById('newProdMrp').value = '';
-      document.getElementById('newProdFile').value = '';
-      document.getElementById('newProdDesc').value = '';
-
-      showAlert("Naya product gallery image ke sath add ho gaya hai!", "Success", true);
-    }
-
-    function triggerAdminSecret() {
-      secretClickCount++;
-      if(secretClickCount >= 5) { 
-        secretClickCount = 0; 
-        if(isAdminLoggedIn) {
-          navigateTo('admin-dashboard');
-        } else {
-          document.getElementById('adminLoginModal').style.display = 'flex'; 
-        }
-      }
-    }
-
-    function verifyAdminPassword() {
-      let uid = document.getElementById('admUserInput').value.trim();
-      let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
-        isAdminLoggedIn = true;
-        localStorage.setItem('kosh_is_admin', 'true');
-        document.getElementById('adminLoginModal').style.display = 'none';
-        navigateTo('admin-dashboard');
-      } else { showAlert('Incorrect Admin ID or Password!'); }
-    }
-
-    function switchAdminTab(tab, save = true) {
-      if(save) {
-        activeAdminTab = tab;
-        localStorage.setItem('kosh_admin_tab', tab);
-      }
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
-        if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
-      });
-      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if(contentEl) contentEl.classList.add('active');
-    }
-
-    function loadAdminMasterData() {
-      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div>${s.store}</div>`).join('');
-      document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
-          <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
-        </div>
-      `).join('');
-      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : '';
-      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : '';
-    }
-
-    function deleteAdminProduct(id) {
-      if(confirm("Kya aap is product ko delete karna chahte hain?")) {
-        products = products.filter(p => p.id !== id);
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        renderProducts();
-        loadAdminMasterData();
-        showAlert("Product delete ho gaya hai!", "Success", true);
-      }
-    }
-
-    function handleLogin() { 
-      currentUser = document.getElementById('loginEmail').value; 
-      localStorage.setItem('kosh_logged_email', currentUser); 
-      checkLoginStatus();
-      showAlert('Login successful!', 'Success', true); 
-      navigateTo('home'); 
-    }
-
-    function handleLogout() { 
-      localStorage.removeItem('kosh_logged_email'); 
-      currentUser = null; 
-      checkLoginStatus();
-      showAlert('Logged out successfully.', 'Notice', false);
-      navigateTo('home'); 
-    }
-
-    function checkLoginStatus() {
-      if(currentUser) {
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = currentUser;
-      } else { 
-        document.getElementById('userDashboardSection').style.display = 'none'; 
-        document.getElementById('authLoginView').style.display = 'block'; 
-      }
-    }
-  </script>
-</body>
-</html>
+    <div id="cartItemsContai
