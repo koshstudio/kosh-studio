@@ -32,7 +32,6 @@
       user-select: none; 
     }
 
-    /* Allow text selection only in input fields and textareas */
     input, textarea, select {
       -webkit-user-select: text;
       user-select: text;
@@ -268,7 +267,6 @@
           <button type="button" id="tabSignupBtn" class="dash-tab-btn" onclick="switchAuthTab('signup')" style="flex:1;">Sign Up</button>
         </div>
 
-        <!-- Login Form -->
         <div id="loginFormView">
           <h3 style="margin-bottom:12px; font-size:1.1rem; text-align:center;">Customer / Seller Login</h3>
           <div class="form-group"><label>Email or Mobile Number</label><input type="text" id="loginEmail" placeholder="Email or Mobile"></div>
@@ -276,7 +274,6 @@
           <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
         </div>
 
-        <!-- Sign Up Form -->
         <div id="signupFormView" style="display:none;">
           <h3 style="margin-bottom:12px; font-size:1.1rem; text-align:center;">Customer Sign Up</h3>
           <div class="form-group"><label>Full Name *</label><input type="text" id="signupName" placeholder="Full Name"></div>
@@ -294,6 +291,11 @@
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
 
+        <div id="sellerDashboardCard" style="display:none; background:#ede7f6; padding:20px; border-radius:8px; border:1px solid #d1c4e9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-dashboard')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#512da8;">🏪 Seller Dashboard (Manage Store)</h4>
+          <p style="font-size:0.8rem; color:#555;">Manage products, orders, sales, and payouts.</p>
+        </div>
+
         <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:#2e7d32;">📝 Seller KYC & Bank Verification</h4>
           <p style="font-size:0.8rem; color:#555;">Complete your PAN & bank verification to receive payouts.</p>
@@ -309,6 +311,86 @@
           <p style="font-size:0.8rem; color:#555;">Register your store and start selling products.</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- DEDICATED SELLER DASHBOARD -->
+  <div id="page-seller-dashboard" class="app-page">
+    <div class="page-header" style="background:#512da8; color:#fff;">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')" style="color:#fff;">← Back to Profile</button>
+      <span style="font-weight:700;">🏪 Seller Dashboard (<span id="dashStoreTitle">Store</span>)</span>
+    </div>
+    <div class="page-content" style="max-width:1000px;">
+      
+      <!-- Summary Cards -->
+      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin-bottom:20px;">
+        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+          <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:bold;">Total Sales</div>
+          <div id="dashTotalSales" style="font-size:1.3rem; font-weight:800; color:var(--success); margin-top:4px;">₹0</div>
+        </div>
+        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+          <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:bold;">Total Orders</div>
+          <div id="dashTotalOrders" style="font-size:1.3rem; font-weight:800; color:var(--primary); margin-top:4px;">0</div>
+        </div>
+        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+          <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:bold;">Pending Payout</div>
+          <div id="dashPendingPayout" style="font-size:1.3rem; font-weight:800; color:#ff9800; margin-top:4px;">₹0</div>
+        </div>
+        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+          <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:bold;">Completed Payout</div>
+          <div id="dashCompletedPayout" style="font-size:1.3rem; font-weight:800; color:var(--success); margin-top:4px;">₹0</div>
+        </div>
+      </div>
+
+      <div class="dash-tabs">
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Product Add / Edit</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payout History & Commission</button>
+      </div>
+
+      <!-- Tab 1: Product Add / Edit -->
+      <div id="sellerDashTabProducts" class="dash-tab-content active">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
+          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Store Product</h4>
+          <input type="hidden" id="sellerEditProdId" value="">
+          <div class="form-group"><label>Product Title *</label><input type="text" id="sProdTitle" placeholder="Product Title"></div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="sProdCategory">
+              <option value="Men Wear">Men Wear</option>
+              <option value="Women Wear">Women Wear</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Footwear">Footwear</option>
+              <option value="Jewellery">Jewellery</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Price (₹) *</label><input type="number" id="sProdPrice" placeholder="Selling Price"></div>
+          <div class="form-group"><label>MRP (₹) *</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+          <div class="form-group"><label>Stock Qty *</label><input type="number" id="sProdStock" placeholder="Stock Quantity"></div>
+          <div class="form-group">
+            <label>Product Photo (Gallery) *</label>
+            <input type="file" id="sProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+          </div>
+          <div class="form-group"><label>Description *</label><textarea id="sProdDesc" rows="2" placeholder="Product description..."></textarea></div>
+          <button type="button" class="btn-solid" style="background:#512da8; padding:12px;" onclick="saveSellerProduct()">Save Product</button>
+        </div>
+
+        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products</h5>
+        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products added.</div>
+      </div>
+
+      <!-- Tab 2: Order Management -->
+      <div id="sellerDashTabOrders" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders Workflow</h5>
+        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders received yet.</div>
+      </div>
+
+      <!-- Tab 3: Payout History & Commission -->
+      <div id="sellerDashTabPayouts" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Order Earning & Kosh Commission Breakdown</h5>
+        <div id="sellerPayoutHistoryList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payout history.</div>
+      </div>
+
     </div>
   </div>
 
@@ -699,6 +781,7 @@
     
     let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
     let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
+    let activeSellerDashTab = 'products';
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
@@ -723,6 +806,7 @@
       loadPaymentSettingsToUI();
       renderCustomerTickets();
       loadSellerKycData();
+      loadSellerDashboardData();
       
       let savedProdId = localStorage.getItem('kosh_selected_prod_id');
       if(savedProdId) {
@@ -831,6 +915,722 @@
         document.getElementById('userDashboardSection').style.display = 'none'; 
         document.getElementById('authContainer').style.display = 'block'; 
       }
+    }
+
+    function toggleGatewayFields() {
+      let gw = document.getElementById('gatewaySelect').value;
+      document.getElementById('autoGatewayConfig').style.display = gw === 'UPI' ? 'none' : 'block';
+      document.getElementById('upiGatewayConfig').style.display = gw === 'UPI' ? 'block' : 'none';
+    }
+
+    function loadPaymentSettingsToUI() {
+      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
+      document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
+      document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
+      toggleGatewayFields();
+    }
+
+    function savePaymentSettings() {
+      let fileInput = document.getElementById('gwQrFile');
+      let saveConfig = function(qrImgUrl) {
+        paymentConfig = {
+          gateway: document.getElementById('gatewaySelect').value,
+          apiKey: document.getElementById('gwApiKey').value,
+          upiId: document.getElementById('gwUpiId').value,
+          qrImage: qrImgUrl || paymentConfig.qrImage || ''
+        };
+        localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+        showAlert("Payment gateway configuration successfully save ho gayi hai!", "Success", true);
+      };
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          saveConfig(e.target.result);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveConfig();
+      }
+    }
+
+    function lookupPincode(pin) {
+      if(pin.length === 6) {
+        fetch('https://api.postalpincode.in/pincode/' + pin)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data[0].Status === 'Success') {
+              let po = data[0].PostOffice[0];
+              document.getElementById('chkCity').value = po.District;
+              document.getElementById('chkState').value = po.State;
+            }
+          }).catch(err => console.log(err));
+      } else {
+        document.getElementById('chkCity').value = '';
+        document.getElementById('chkState').value = '';
+      }
+    }
+
+    function lookupSellerPincode(pin) {
+      if(pin.length === 6) {
+        fetch('https://api.postalpincode.in/pincode/' + pin)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data[0].Status === 'Success') {
+              let po = data[0].PostOffice[0];
+              document.getElementById('selCity').value = po.District;
+              document.getElementById('selState').value = po.State;
+            }
+          }).catch(err => console.log(err));
+      } else {
+        document.getElementById('selCity').value = '';
+        document.getElementById('selState').value = '';
+      }
+    }
+
+    function lookupIfsc(ifsc) {
+      if(ifsc.length === 11) {
+        fetch('https://ifsc.razorpay.com/' + ifsc)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.BANK) {
+              document.getElementById('kycBankName').value = data.BANK;
+              document.getElementById('kycBranchName').value = data.BRANCH;
+            }
+          }).catch(err => console.log(err));
+      } else {
+        document.getElementById('kycBankName').value = '';
+        document.getElementById('kycBranchName').value = '';
+      }
+    }
+
+    function lookupAdminEditIfsc(ifsc) {
+      if(ifsc.length === 11) {
+        fetch('https://ifsc.razorpay.com/' + ifsc)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data.BANK) {
+              document.getElementById('editBankName').value = data.BANK;
+              document.getElementById('editBranchName').value = data.BRANCH;
+            }
+          }).catch(err => console.log(err));
+      }
+    }
+
+    function goToCheckoutPage() {
+      if(cart.length === 0) return;
+      toggleCartDrawer(false);
+      navigateTo('checkout');
+    }
+
+    function proceedToPaymentAfterAddress() {
+      let fname = document.getElementById('chkFirstName').value.trim();
+      let lname = document.getElementById('chkLastName').value.trim();
+      let phone = document.getElementById('chkPhone').value.trim();
+      let address = document.getElementById('chkAddress').value.trim();
+      let pincode = document.getElementById('chkPincode').value.trim();
+      let city = document.getElementById('chkCity').value.trim();
+      let state = document.getElementById('chkState').value.trim();
+
+      if(!fname || !lname || !phone || !address || !pincode || !city || !state) {
+        showAlert("Kripya sabhi compulsory fields bharein.");
+        return;
+      }
+
+      if(phone.length !== 10) {
+        showAlert("Phone number strictly 10 digits ka hona chahiye.");
+        return;
+      }
+
+      let shippingData = { fname, lname, phone, address, pincode, city, state };
+      localStorage.setItem('kosh_shipping_data', JSON.stringify(shippingData));
+
+      navigateTo('payment');
+      renderPaymentPage();
+    }
+
+    function renderPaymentPage() {
+      let total = cart.reduce((a,c) => a + c.finalPrice, 0);
+      document.getElementById('payTotalAmount').innerText = '₹' + total;
+      let container = document.getElementById('paymentMethodContainer');
+      container.innerHTML = '';
+      
+      if(paymentConfig.gateway === 'UPI') {
+        if(!paymentConfig.upiId) {
+          container.innerHTML = `<p style="color:red; font-size:0.9rem;">Admin ne UPI ID configure nahi kiya hai. Kripya Settings check karein.</p>`;
+          return;
+        }
+        let qrSrc = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="font-size:0.88rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete payment.</p>
+            <img src="${qrSrc}" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px; margin-bottom:10px;">
+            <p style="font-size:0.9rem; font-weight:bold; margin-bottom:16px;">UPI ID: <span style="color:var(--accent);">${paymentConfig.upiId}</span></p>
+            <div class="form-group" style="text-align:left;">
+              <label>Enter Transaction ID / UTR *</label>
+              <input type="text" id="pageUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
+            </div>
+            <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="verifyAndPlaceOrderFromPage()">Submit & Place Order</button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="font-size:0.95rem; margin-bottom:20px; font-weight:bold;">Active Gateway: ${paymentConfig.gateway}</p>
+            <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment('${paymentConfig.gateway}')">Pay ₹${total} Now via ${paymentConfig.gateway}</button>
+          </div>
+        `;
+      }
+    }
+
+    function verifyAndPlaceOrderFromPage() {
+      let utr = document.getElementById('pageUtrInput').value.trim();
+      if(!utr) {
+        showAlert("Kripya Transaction ID / UTR enter karein.");
+        return;
+      }
+      let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
+      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', shipping, status: 'New', date: new Date().toLocaleDateString() });
+      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      cart = [];
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      localStorage.removeItem('kosh_shipping_data');
+      updateCartUI();
+      showAlert("Payment verified & Order placed successfully!", "Success", true);
+      navigateTo('home');
+    }
+
+    function processAutoPayment(gw) {
+      showAlert(`Processing secure payment via ${gw}...`, "Secure Checkout", true);
+      setTimeout(() => {
+        let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
+        ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: gw, shipping, status: 'New', date: new Date().toLocaleDateString() });
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        cart = [];
+        localStorage.setItem('kosh_cart', JSON.stringify(cart));
+        localStorage.removeItem('kosh_shipping_data');
+        updateCartUI();
+        showAlert("Order successfully placed via " + gw + "!", "Success", true);
+        navigateTo('home');
+      }, 1500);
+    }
+
+    function toggleOtherMsgBox() {
+      let val = document.getElementById('grievanceCategorySelect').value;
+      document.getElementById('otherMsgContainer').style.display = val === 'Other' ? 'block' : 'none';
+    }
+
+    function submitGrievanceTicket() {
+      let cat = document.getElementById('grievanceCategorySelect').value;
+      if(!cat) {
+        showAlert("Kripya grievance category select karein.");
+        return;
+      }
+      let initialMsg = cat;
+      if(cat === 'Other') {
+        let customText = document.getElementById('otherMsgInput').value.trim();
+        if(!customText) {
+          showAlert("Kripya 'Other' ke liye message enter karein.");
+          return;
+        }
+        initialMsg = "Other: " + customText;
+      }
+
+      let newTicket = {
+        id: Date.now(),
+        email: currentUser || 'Guest Customer',
+        category: cat,
+        status: 'Open',
+        messages: [
+          { sender: 'user', text: initialMsg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+        ]
+      };
+
+      ticketsList.unshift(newTicket);
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      document.getElementById('grievanceCategorySelect').value = '';
+      document.getElementById('otherMsgInput').value = '';
+      document.getElementById('otherMsgContainer').style.display = 'none';
+      renderCustomerTickets();
+      showAlert("Grievance ticket successfully raise ho gayi hai!", "Success", true);
+    }
+
+    function sendCustomerChatMessage(ticketId) {
+      let inputEl = document.getElementById('custReplyInput_' + ticketId);
+      let text = inputEl.value.trim();
+      if(!text) return;
+
+      let ticket = ticketsList.find(t => t.id == ticketId);
+      if(!ticket || ticket.status === 'Closed') {
+        showAlert("Yeh ticket close ho chuki hai.");
+        return;
+      }
+
+      ticket.messages.push({
+        sender: 'user',
+        text: text,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
+
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      inputEl.value = '';
+      renderCustomerTickets();
+      if(isAdminLoggedIn) loadAdminMasterData();
+    }
+
+    function sendAdminChatMessage(ticketId) {
+      let inputEl = document.getElementById('adminReplyInput_' + ticketId);
+      let text = inputEl.value.trim();
+      if(!text) return;
+
+      let ticket = ticketsList.find(t => t.id == ticketId);
+      if(!ticket || ticket.status === 'Closed') {
+        showAlert("Yeh ticket already closed hai.");
+        return;
+      }
+
+      ticket.messages.push({
+        sender: 'admin',
+        text: text,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
+
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      inputEl.value = '';
+      loadAdminMasterData();
+      renderCustomerTickets();
+    }
+
+    function closeAdminTicket(ticketId) {
+      showCustomConfirm("Kya aap is grievance ko close karna chahte hain?", function(res) {
+        if(res) {
+          let ticket = ticketsList.find(t => t.id == ticketId);
+          if(ticket) {
+            ticket.status = 'Closed';
+            localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+            loadAdminMasterData();
+            renderCustomerTickets();
+            showAlert("Grievance successfully closed!", "Success", true);
+          }
+        }
+      });
+    }
+
+    function renderCustomerTickets() {
+      let container = document.getElementById('customerTicketsList');
+      if(!container) return;
+      let userTickets = ticketsList.filter(t => !currentUser || t.email === currentUser || t.email === 'Guest Customer');
+      if(userTickets.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">No tickets raised yet.</p>';
+        return;
+      }
+
+      container.innerHTML = userTickets.map(t => {
+        let isClosed = t.status === 'Closed';
+        let msgsHtml = t.messages.map(m => `
+          <div style="margin-bottom:8px; text-align:${m.sender === 'user' ? 'right' : 'left'};">
+            <div style="display:inline-block; padding:8px 12px; border-radius:8px; background:${m.sender === 'user' ? '#e3f2fd' : '#f1f3f6'}; font-size:0.85rem; max-width:85%; text-align:left;">
+              <small style="display:block; font-weight:bold; color:${m.sender === 'user' ? '#0d47a1' : '#333'};">${m.sender === 'user' ? 'You' : 'Admin'}</small>
+              ${m.text}
+              <div style="font-size:0.65rem; color:#888; text-align:right; margin-top:2px;">${m.time}</div>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:0.85rem; font-weight:bold; color:var(--primary);">Category: ${t.category}</span>
+              <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold;">${t.status}</span>
+            </div>
+            <div style="max-height:160px; overflow-y:auto; background:#fff; padding:8px; border:1px solid #eee; border-radius:4px; margin-bottom:8px;">
+              ${msgsHtml}
+            </div>
+            ${isClosed ? '<p style="font-size:0.8rem; color:#d32f2f; font-style:italic;">This grievance has been closed by Admin.</p>' : `
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="custReplyInput_${t.id}" placeholder="Type reply..." style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
+                <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem;" onclick="sendCustomerChatMessage(${t.id})">Send</button>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function submitSellerRegistration() {
+      let fullName = document.getElementById('selFullName').value.trim();
+      let storeName = document.getElementById('selStoreName').value.trim();
+      let phone = document.getElementById('selPhone').value.trim();
+      let email = document.getElementById('selEmail').value.trim();
+      let address = document.getElementById('selAddress').value.trim();
+      let pincode = document.getElementById('selPincode').value.trim();
+      let city = document.getElementById('selCity').value.trim();
+      let state = document.getElementById('selState').value.trim();
+      let category = document.getElementById('selCategory').value;
+      let pickup = document.getElementById('selPickupAddress').value.trim();
+      let upi = document.getElementById('selUpiId').value.trim();
+      let pass = document.getElementById('selPassword').value.trim();
+      let confirmPass = document.getElementById('selConfirmPassword').value.trim();
+      let terms = document.getElementById('selTerms').checked;
+
+      if(!fullName || !storeName || !phone || !email || !address || !pincode || !city || !state || !pickup || !upi || !pass || !confirmPass) {
+        showAlert("Kripya sabhi mandatory fields bharein.");
+        return;
+      }
+      if(phone.length !== 10) {
+        showAlert("Phone number strictly 10 digits ka hona chahiye.");
+        return;
+      }
+      if(pass !== confirmPass) {
+        showAlert("Passwords match nahi kar rahe hain.");
+        return;
+      }
+      if(!terms) {
+        showAlert("Kripya Terms & Conditions accept karein.");
+        return;
+      }
+
+      let newSeller = {
+        uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
+        fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, password: pass,
+        approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false,
+        panName: '', panNumber: '', accountNum: '', ifsc: '', bankName: '', branchName: ''
+      };
+
+      sellersList.unshift(newSeller);
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+
+      showAlert(`Registration successful! Your Seller ID is ${newSeller.uniqueId}. Please login using your mobile number.`, "Success", true);
+      navigateTo('profile');
+    }
+
+    function loadSellerKycData() {
+      let kycCard = document.getElementById('sellerKycCard');
+      let joinCard = document.getElementById('joinSellerCard');
+      let dashCard = document.getElementById('sellerDashboardCard');
+      if(!kycCard || !joinCard || !dashCard) return;
+
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        joinCard.style.display = 'none';
+        if(seller.approvalStatus === 'Approved') {
+          dashCard.style.display = 'block';
+          kycCard.style.display = 'block';
+          if(seller.kycLocked) {
+            document.getElementById('kycPanName').value = seller.panName;
+            document.getElementById('kycPanNumber').value = seller.panNumber;
+            document.getElementById('kycAccountNum').value = seller.accountNum;
+            document.getElementById('kycIfsc').value = seller.ifsc;
+            document.getElementById('kycBankName').value = seller.bankName;
+            document.getElementById('kycBranchName').value = seller.branchName;
+
+            document.getElementById('kycPanName').readOnly = true;
+            document.getElementById('kycPanNumber').readOnly = true;
+            document.getElementById('kycAccountNum').readOnly = true;
+            document.getElementById('kycIfsc').readOnly = true;
+            document.getElementById('kycLockedNotice').style.display = 'block';
+            document.getElementById('kycSubmitBtn').style.display = 'none';
+          }
+        } else {
+          dashCard.style.display = 'none';
+          kycCard.style.display = 'none';
+        }
+      } else {
+        dashCard.style.display = 'none';
+        kycCard.style.display = 'none';
+        joinCard.style.display = 'block';
+      }
+    }
+
+    function submitSellerKyc() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(!seller) return;
+
+      let panName = document.getElementById('kycPanName').value.trim();
+      let panNumber = document.getElementById('kycPanNumber').value.trim();
+      let accountNum = document.getElementById('kycAccountNum').value.trim();
+      let ifsc = document.getElementById('kycIfsc').value.trim();
+      let bankName = document.getElementById('kycBankName').value.trim();
+      let branchName = document.getElementById('kycBranchName').value.trim();
+
+      if(!panName || !panNumber || !accountNum || !ifsc || !bankName) {
+        showAlert("Kripya sabhi KYC details sahi se bharein.");
+        return;
+      }
+
+      seller.panName = panName;
+      seller.panNumber = panNumber;
+      seller.accountNum = accountNum;
+      seller.ifsc = ifsc;
+      seller.bankName = bankName;
+      seller.branchName = branchName;
+      seller.kycStatus = 'Submitted & Locked';
+      seller.kycLocked = true;
+
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      loadSellerKycData();
+      showAlert("KYC & Bank details successfully submitted and locked!", "Success", true);
+    }
+
+    // Dedicated Seller Dashboard Functions
+    function switchSellerDashTab(tab) {
+      activeSellerDashTab = tab;
+      document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-seller-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById('sellerDashTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+      loadSellerDashboardData();
+    }
+
+    function loadSellerDashboardData() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(!seller) return;
+
+      document.getElementById('dashStoreTitle').innerText = seller.storeName;
+
+      // Filter products belonging to this seller category or store
+      let storeProducts = products.filter(p => p.category === seller.category);
+      let prodContainer = document.getElementById('sellerProductsList');
+      if(storeProducts.length === 0) {
+        prodContainer.innerHTML = 'No products found in your category.';
+      } else {
+        prodContainer.innerHTML = storeProducts.map(p => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+            <div style="display:flex; gap:10px; align-items:center;">
+              <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+              <div><b>${p.title}</b><br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50}</small></div>
+            </div>
+            <button type="button" onclick="editSellerProduct(${p.id})" style="background:#512da8; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Edit</button>
+          </div>
+        `).join('');
+      }
+
+      // Orders & Payout calculations
+      let totalSales = 0;
+      let totalOrdersCount = ordersList.length;
+      let payoutListHtml = '';
+      let ordersListHtml = '';
+
+      if(totalOrdersCount === 0) {
+        ordersListHtml = 'No orders received yet.';
+        payoutListHtml = 'No payout history.';
+      } else {
+        ordersListHtml = ordersList.map(o => {
+          let orderStatus = o.status || 'New';
+          return `
+            <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                <b>Order #${o.id}</b>
+                <span style="font-weight:bold; color:var(--success);">₹${o.total}</span>
+              </div>
+              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px;">Date: ${o.date} | Gateway: ${o.gateway}</div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <label style="font-size:0.75rem; font-weight:bold;">Status:</label>
+                <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid var(--border);">
+                  <option value="New" ${orderStatus==='New'?'selected':''}>New</option>
+                  <option value="Confirmed" ${orderStatus==='Confirmed'?'selected':''}>Confirmed</option>
+                  <option value="Shipped" ${orderStatus==='Shipped'?'selected':''}>Shipped</option>
+                  <option value="Delivered" ${orderStatus==='Delivered'?'selected':''}>Delivered</option>
+                  <option value="Cancelled/RTO" ${orderStatus==='Cancelled/RTO'?'selected':''}>Cancelled/RTO</option>
+                </select>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        ordersList.forEach(o => {
+          let sellerEarning = Math.round(o.total * 0.90); // 90% to seller
+          let koshCommission = Math.round(o.total * 0.10); // 10% Kosh commission
+          totalSales += o.total;
+
+          payoutListHtml += `
+            <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <b>Order #${o.id}</b>
+                <span style="color:var(--success); font-weight:bold;">Order Total: ₹${o.total}</span>
+              </div>
+              <div>Seller Earning (90%): <strong style="color:var(--primary);">₹${sellerEarning}</strong></div>
+              <div>Kosh Commission (10%): <strong style="color:#d32f2f;">₹${koshCommission}</strong></div>
+              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'New'}</b> | Payout: ${o.status === 'Delivered' ? '<span style="color:var(--success)">Completed</span>' : '<span style="color:#ff9800">Pending</span>'}</div>
+            </div>
+          `;
+        });
+      }
+
+      let completedPayout = ordersList.filter(o => o.status === 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
+      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
+
+      document.getElementById('dashTotalSales').innerText = '₹' + totalSales;
+      document.getElementById('dashTotalOrders').innerText = totalOrdersCount;
+      document.getElementById('dashPendingPayout').innerText = '₹' + pendingPayout;
+      document.getElementById('dashCompletedPayout').innerText = '₹' + completedPayout;
+
+      document.getElementById('sellerOrdersList').innerHTML = ordersListHtml;
+      document.getElementById('sellerPayoutHistoryList').innerHTML = payoutListHtml;
+    }
+
+    function updateOrderStatus(orderId, newStatus) {
+      let order = ordersList.find(o => o.id == orderId);
+      if(order) {
+        order.status = newStatus;
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        loadSellerDashboardData();
+        showAlert("Order status updated successfully!", "Success", true);
+      }
+    }
+
+    function saveSellerProduct() {
+      let title = document.getElementById('sProdTitle').value.trim();
+      let category = document.getElementById('sProdCategory').value;
+      let price = parseFloat(document.getElementById('sProdPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('sProdMrp').value) || price * 1.5;
+      let stock = parseInt(document.getElementById('sProdStock').value) || 50;
+      let desc = document.getElementById('sProdDesc').value.trim();
+      let fileInput = document.getElementById('sProdFile');
+      let editId = document.getElementById('sellerEditProdId').value;
+
+      if(!title || !price) {
+        showAlert("Kripya Product Title aur Price bharein.");
+        return;
+      }
+
+      let saveProc = function(imgUrl) {
+        if(editId) {
+          let p = products.find(item => item.id == editId);
+          if(p) {
+            p.title = title;
+            p.category = category;
+            p.price = price;
+            p.mrp = mrp;
+            p.stock = stock;
+            p.desc = desc;
+            if(imgUrl) p.image = imgUrl;
+          }
+          document.getElementById('sellerEditProdId').value = '';
+          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Store Product';
+          showAlert("Product successfully updated!", "Success", true);
+        } else {
+          let newId = Date.now();
+          products.unshift({
+            id: newId,
+            sku: `KOSH-${newId.toString().slice(-5)}`,
+            title, category, price, mrp, stock,
+            image: imgUrl || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+            desc: desc || "Premium quality product."
+          });
+          showAlert("Product successfully added to store!", "Success", true);
+        }
+
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        renderProducts();
+        loadSellerDashboardData();
+        
+        document.getElementById('sProdTitle').value = '';
+        document.getElementById('sProdPrice').value = '';
+        document.getElementById('sProdMrp').value = '';
+        document.getElementById('sProdStock').value = '';
+        document.getElementById('sProdFile').value = '';
+        document.getElementById('sProdDesc').value = '';
+      };
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) { saveProc(e.target.result); };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveProc(editId ? null : "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60");
+      }
+    }
+
+    function editSellerProduct(id) {
+      let p = products.find(item => item.id == id);
+      if(!p) return;
+      document.getElementById('sellerEditProdId').value = p.id;
+      document.getElementById('sellerProdFormTitle').innerText = '✏️ Edit Product ID: ' + p.sku;
+      document.getElementById('sProdTitle').value = p.title;
+      document.getElementById('sProdCategory').value = p.category;
+      document.getElementById('sProdPrice').value = p.price;
+      document.getElementById('sProdMrp').value = p.mrp;
+      document.getElementById('sProdStock').value = p.stock || 50;
+      document.getElementById('sProdDesc').value = p.desc;
+      window.scrollTo(0, 0);
+    }
+
+    function renderAdminSellersList(query = '') {
+      let container = document.getElementById('admSellersList');
+      if(!container) return;
+
+      let filtered = sellersList;
+      if(query.trim()) {
+        let q = query.trim().toLowerCase();
+        filtered = sellersList.filter(s => s.uniqueId.toLowerCase().includes(q) || s.phone.toLowerCase().includes(q) || s.storeName.toLowerCase().includes(q));
+      }
+
+      if(filtered.length === 0) {
+        container.innerHTML = 'No sellers found.';
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => `
+        <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem; background:${s.approvalStatus === 'Approved' ? '#f1f8e9' : '#fff3e0'}; border-radius:6px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <b>Store:</b> ${s.storeName} (${s.uniqueId})
+            <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${s.approvalStatus === 'Approved' ? '#388e3c' : '#ff9800'}; color:#fff; font-weight:bold;">${s.approvalStatus}</span>
+          </div>
+          <div><b>Owner:</b> ${s.fullName} | <b>Phone (Login ID):</b> ${s.phone} | <b>Email:</b> ${s.email}</div>
+          <div><b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}</div>
+          <div><b>PAN Name:</b> ${s.panName || 'N/A'} | <b>PAN No:</b> ${s.panNumber || 'N/A'}</div>
+          <div><b>Bank A/C:</b> ${s.accountNum || 'N/A'} | <b>IFSC:</b> ${s.ifsc || 'N/A'} (${s.bankName || ''})</div>
+          <div style="margin-top:8px; display:flex; gap:8px;">
+            ${s.approvalStatus !== 'Approved' ? `<button type="button" onclick="approveSeller('${s.uniqueId}')" style="background:#388e3c; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Approve Seller</button>` : ''}
+            <button type="button" onclick="openAdminEditSeller('${s.uniqueId}')" style="background:#2196f3; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Edit / Correct KYC</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function approveSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(s) {
+        s.approvalStatus = 'Approved';
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        renderAdminSellersList();
+        loadSellerKycData();
+        showAlert(`Seller ${s.storeName} approved successfully!`, "Success", true);
+      }
+    }
+
+    function openAdminEditSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(!s) return;
+      document.getElementById('editSellerId').value = s.uniqueId;
+      document.getElementById('editStoreName').value = s.storeName;
+      document.getElementById('editPanName').value = s.panName;
+      document.getElementById('editPanNumber').value = s.panNumber;
+      document.getElementById('editAccountNum').value = s.accountNum;
+      document.getElementById('editIfsc').value = s.ifsc;
+      document.getElementById('editBankName').value = s.bankName;
+      document.getElementById('editBranchName').value = s.branchName;
+      document.getElementById('adminSellerEditModal').style.display = 'flex';
+    }
+
+    function saveAdminEditedSeller() {
+      let uid = document.getElementById('editSellerId').value;
+      let s = sellersList.find(item => item.uniqueId === uid);
+      if(!s) return;
+      s.storeName = document.getElementById('editStoreName').value.trim();
+      s.panName = document.getElementById('editPanName').value.trim();
+      s.panNumber = document.getElementById('editPanNumber').value.trim();
+      s.accountNum = document.getElementById('editAccountNum').value.trim();
+      s.ifsc = document.getElementById('editIfsc').value.trim();
+      s.bankName = document.getElementById('editBankName').value.trim();
+      s.branchName = document.getElementById('editBranchName').value.trim();
+
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      document.getElementById('adminSellerEditModal').style.display = 'none';
+      renderAdminSellersList();
+      showAlert("Seller details successfully updated by Admin!", "Success", true);
     }
   </script>
 </body>
