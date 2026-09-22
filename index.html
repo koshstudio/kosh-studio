@@ -213,24 +213,33 @@
     <div class="page-content"><div id="ordersPageList"></div></div>
   </div>
 
-  <!-- ADMIN MASTER DASHBOARD -->
+  <!-- ADMIN MASTER DASHBOARD (FULL RESTORED TABS) -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
-      <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit</button>
-      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (Supabase Products Hub)</span>
+      <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
+      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeding</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeding</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
-      <div id="admTabProducts" class="dash-tab-content active">
-        <!-- 1000+ Products Seeding Button Hub -->
+      <!-- Tab 1: Sellers -->
+      <div id="admTabSellers" class="dash-tab-content active">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Registered Sellers</h5>
+        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
+      </div>
+
+      <!-- Tab 2: Products & Seeder -->
+      <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
           <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder</h4>
-          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to automatically populate your Supabase database with 1,000+ genuinely unique items across all 11 categories with duplicate protection.</p>
-          <button type="button" class="btn-solid" onclick="seedKoshProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Unique Products</button>
+          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to populate Supabase with 1,000+ unique items across 11 categories with duplicate protection.</p>
+          <button type="button" class="btn-solid" onclick="seedKoshProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Products</button>
           <div id="seedProgressText" style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:#333;"></div>
         </div>
 
@@ -240,27 +249,31 @@
           <div id="importProgressText" style="margin-top:6px; font-weight:bold;"></div>
         </div>
 
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Add Single Product to Supabase</h5>
-          <div class="form-group"><label>SKU (Unique)</label><input type="text" id="admSku" placeholder="SKU-1001"></div>
-          <div class="form-group"><label>Title</label><input type="text" id="admTitle" placeholder="Product Title"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="admCategory" placeholder="Women's Fashion / Men's Fashion etc."></div>
-          <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="admPrice" placeholder="Price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="admMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock</label><input type="number" id="admStock" value="50"></div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="admImage" placeholder="https://..."></div>
-          <div class="form-group"><label>Description</label><textarea id="admDesc" rows="2" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" onclick="saveAdminProductToSupabase()" style="background:#2196f3;">Save to Supabase</button>
-        </div>
-
         <h5 style="margin-bottom:10px; font-weight:bold;">Supabase Database Products Manager</h5>
         <button type="button" onclick="checkDuplicatesInSupabase()" style="background:#ff9800; color:#fff; border:none; padding:8px 12px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:10px;">🔍 Check Duplicate SKUs Report</button>
         <div id="duplicateReportBox" style="font-size:0.85rem; margin-bottom:10px; color:#d32f2f;"></div>
         <div id="admSupabaseProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">Loading...</div>
       </div>
 
+      <!-- Tab 3: Orders -->
       <div id="admTabOrders" class="dash-tab-content">
-        <div id="admOrdersList">No orders.</div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Customer Orders</h5>
+        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
+      </div>
+
+      <!-- Tab 4: Tickets -->
+      <div id="admTabTickets" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
+        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
+      </div>
+
+      <!-- Tab 5: Settings -->
+      <div id="admTabSettings" class="dash-tab-content">
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
+          <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
+          <button type="button" class="btn-solid" onclick="showAlert('Settings saved!')" style="background:#ff9800; color:#fff;">Save Configuration</button>
+        </div>
       </div>
     </div>
   </div>
@@ -322,12 +335,11 @@
     let secretClickCount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
-      navigateTo('home'); // Fix: Ensure home page is active on load
+      navigateTo('home');
       fetchProductsPaginated();
       updateCartUI();
     });
 
-    // Server-side Supabase Paginated Fetcher for Scalability (1000+ products support)
     async function fetchProductsPaginated() {
       if(!supabaseClient) {
         document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Supabase client not initialized.</p>';
@@ -366,7 +378,7 @@
       grid.innerHTML = '';
 
       if(products.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database. Click Admin (bottom footer 5 times) to seed products.</p>';
+        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database. Go to Admin (tap footer 5 times) to seed products.</p>';
         document.getElementById('paginationBar').innerHTML = '';
         return;
       }
@@ -553,7 +565,6 @@
       loadAdminMasterData();
     }
 
-    // Bulk CSV/JSON Importer with Batch Chunking & Duplicate SKU Skipping
     async function handleBulkImportFile(input) {
       if(!input.files || input.files.length === 0) return;
       let file = input.files[0];
@@ -612,26 +623,6 @@
         }
       };
       reader.readAsText(file);
-    }
-
-    async function saveAdminProductToSupabase() {
-      let sku = document.getElementById('admSku').value.trim();
-      let title = document.getElementById('admTitle').value.trim();
-      let category = document.getElementById('admCategory').value.trim();
-      let price = parseFloat(document.getElementById('admPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('admMrp').value) || 0;
-      let stock = parseInt(document.getElementById('admStock').value) || 20;
-      let image = document.getElementById('admImage').value.trim();
-      let desc = document.getElementById('admDesc').value.trim();
-
-      if(!sku || !title || !price) { showAlert('Fill SKU, Title and Price.'); return; }
-      let newProd = { sku, title, category, selling_price: price, mrp, stock, images: [image], description: desc, source_platform: 'Admin Direct' };
-
-      let { error } = await supabaseClient.from('products').insert([newProd]);
-      if(error) { showAlert('Error inserting product (SKU already exists in DB): ' + error.message); return; }
-      showAlert('Product added to Supabase successfully!', 'Success', true);
-      fetchProductsPaginated();
-      loadAdminMasterData();
     }
 
     async function checkDuplicatesInSupabase() {
