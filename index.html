@@ -308,7 +308,7 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search kurtis, sarees, lehengas, watches..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search men wear, women wear, accessories..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
@@ -343,13 +343,9 @@
 
     <div class="categories-bar" id="categoriesBar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Kurtis')">Kurtis</div>
-      <div class="cat-item" onclick="filterCategory('Sarees')">Sarees</div>
-      <div class="cat-item" onclick="filterCategory('Lehengas')">Lehengas</div>
       <div class="cat-item" onclick="filterCategory('Men Wear')">Men Wear</div>
-      <div class="cat-item" onclick="filterCategory('Electronics')">Electronics</div>
-      <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
+      <div class="cat-item" onclick="filterCategory('Women Wear')">Women Wear</div>
+      <div class="cat-item" onclick="filterCategory('Accessories')">Accessories</div>
       <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
       <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
     </div>
@@ -534,7 +530,7 @@
           
           <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
           <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
+          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
           <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
           <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
           <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
@@ -622,8 +618,8 @@
           
           <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
           <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
-          <div class="form-group"><label>Sourcing Source (e.g. Meesho / Flipkart)</label><input type="text" id="aProdSource" placeholder="Source Platform"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
+          <div class="form-group"><label>Sourcing Source (e.g. Meesho / Flipkart / Amazon)</label><input type="text" id="aProdSource" placeholder="Source Platform"></div>
           <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
           <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
           <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
@@ -854,68 +850,51 @@
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
-    // Strict 1000 Unique Products Generator with Multi-Image Pool per Category (No Clones)
-    function generateMassiveCatalog() {
-      let categories = ["Kurtis", "Sarees", "Lehengas", "Men Wear", "Electronics", "Watches", "Bags", "Footwear", "Jewellery", "Western Wear"];
-      let sources = ["Meesho Wholesale", "Flipkart Seller Hub", "Amazon Business Partner", "Direct Factory Supplier"];
+    // Strict Unique Catalog Generator mapped to User's Exact Categories
+    function generateStrictCatalog() {
+      let categories = ["Men Wear", "Women Wear", "Accessories", "Footwear", "Jewellery"];
+      let sources = ["Meesho Wholesale", "Flipkart Hub", "Amazon Supplier", "Direct Manufacturer"];
       
-      let imagePool = {
-        "Kurtis": [
-          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Sarees": [
-          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Lehengas": [
-          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60"
-        ],
+      let categoryImages = {
         "Men Wear": [
           "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"
+          "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=500&auto=format&fit=crop&q=60"
         ],
-        "Electronics": [
-          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
+        "Women Wear": [
+          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60"
         ],
-        "Watches": [
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Bags": [
-          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60"
+        "Accessories": [
+          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60"
         ],
         "Footwear": [
-          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60"
+          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&auto=format&fit=crop&q=60"
         ],
         "Jewellery": [
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Western Wear": [
-          "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=500&auto=format&fit=crop&q=60"
+          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&auto=format&fit=crop&q=60"
         ]
       };
 
       let list = [];
-      let idCounter = 2000;
+      let idCounter = 3000;
       categories.forEach(cat => {
-        let pool = imagePool[cat] || imagePool["Kurtis"];
-        for(let i = 1; i <= 100; i++) {
+        let imgs = categoryImages[cat];
+        for(let i = 1; i <= 200; i++) {
           idCounter++;
-          let source = sources[(idCounter) % sources.length];
-          let img = pool[(idCounter) % pool.length];
-          let base = 250 + (i * 11) % 1500;
-          let price = Math.round(base * 1.4); // Solid margin for reselling
+          let source = sources[idCounter % sources.length];
+          let img = imgs[i % imgs.length];
+          let base = 200 + (i * 13) % 1200;
+          let price = Math.round(base * 1.45); // High Margin Sourced Pricing
           let mrp = Math.round(price * 1.9);
           list.push({
             id: idCounter,
             sku: `${cat.substring(0,3).toUpperCase()}-${idCounter}`,
-            title: `Exclusive ${cat} Collection Design #${i}`,
+            title: `${cat} Trend Item #${i}`,
             category: cat,
             sourcingSource: source,
             sellerId: "admin",
@@ -923,30 +902,30 @@
             basePrice: base,
             price: price,
             mrp: mrp,
-            stock: 20 + (i % 35),
+            stock: 30 + (i % 50),
             image: img,
-            desc: `High margin ${cat} sourced from ${source}. Premium quality for your store customers.`
+            desc: `Best quality ${cat} item sourced from ${source}. Ready for instant customer delivery with high margin.`
           });
         }
       });
       return list;
     }
 
-    // Using fresh storage key 'kosh_products_v6' to wipe clean all previous clutter
-    let products = JSON.parse(localStorage.getItem('kosh_products_v6'));
+    // Using fresh storage key 'kosh_products_v7' to flush old data completely
+    let products = JSON.parse(localStorage.getItem('kosh_products_v7'));
     if(!products || products.length === 0) {
-      products = generateMassiveCatalog();
-      localStorage.setItem('kosh_products_v6', JSON.stringify(products));
+      products = generateStrictCatalog();
+      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
     }
 
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let defaultReviews = [
-      { productId: 2001, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture.", date: "18 Sep 2026" },
-      { productId: 2101, author: "Rekha Devi", rating: "5", comment: "Saree looks very rich and premium. Got compliments!", date: "20 Sep 2026" }
+      { productId: 3001, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture.", date: "18 Sep 2026" },
+      { productId: 3201, author: "Rahul Verma", rating: "5", comment: "Great product quality and fast delivery.", date: "20 Sep 2026" }
     ];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v6')) || defaultReviews;
-    localStorage.setItem('kosh_reviews_v6', JSON.stringify(reviewsList));
+    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v7')) || defaultReviews;
+    localStorage.setItem('kosh_reviews_v7', JSON.stringify(reviewsList));
 
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
@@ -1212,7 +1191,7 @@
       let comment = document.getElementById('newReviewText').value.trim();
       if (!comment) { showAlert('Please enter review comment.'); return; }
       reviewsList.push({ productId: currentSelectedProduct.id, author, rating, comment, date: new Date().toLocaleDateString() });
-      localStorage.setItem('kosh_reviews_v6', JSON.stringify(reviewsList));
+      localStorage.setItem('kosh_reviews_v7', JSON.stringify(reviewsList));
       document.getElementById('newReviewText').value = '';
       loadProductReviews(currentSelectedProduct.id);
       showAlert('Review submitted successfully!', 'Success', true);
@@ -1477,7 +1456,7 @@
       if(editIdx >= 0) products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
       else products.push({ id: Date.now(), sku, title, category, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Self Vendor", basePrice, price: finalPrice, mrp, stock, image, desc });
 
-      localStorage.setItem('kosh_products_v6', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
       renderProducts(); loadSellerData(foundSeller.id); resetSellerForm();
       showAlert('Product saved successfully!', 'Success', true);
     }
@@ -1513,7 +1492,7 @@
         let finalPrice = Math.round(row.basePrice + (row.basePrice * globalCommission / 100));
         products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Vendor CSV" });
       });
-      localStorage.setItem('kosh_products_v6', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
       renderProducts(); loadSellerData(foundSeller.id);
       document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
       showAlert('CSV Imported successfully!', 'Success', true);
@@ -1532,7 +1511,7 @@
 
       if(!title || !price || !mrp) { showAlert('Fill title, price and MRP.'); return; }
       products.unshift({ id: Date.now(), sku, title, category, sourcingSource: source, sellerId: 'admin', sellerName: 'Kosh Direct', basePrice: Math.round(price * 0.7), price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v6', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
       renderProducts(); loadAdminMasterData();
       showAlert('Admin product added successfully!', 'Success', true);
     }
@@ -1598,7 +1577,7 @@
     }
 
     function removeSellerProduct(globalIdx, sellerId) {
-      if(confirm('Remove product?')) { products.splice(globalIdx, 1); localStorage.setItem('kosh_products_v6', JSON.stringify(products)); renderProducts(); loadSellerData(sellerId); }
+      if(confirm('Remove product?')) { products.splice(globalIdx, 1); localStorage.setItem('kosh_products_v7', JSON.stringify(products)); renderProducts(); loadSellerData(sellerId); }
     }
 
     function openCheckoutModal() {
@@ -1794,7 +1773,7 @@
       sArea.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map((s, idx) => `<div style="background:#fcfcfc; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:8px;"><strong>${s.store}</strong> (${s.uniqueId}) - ${s.status}<br><button type="button" onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:4px; cursor:pointer;">Approve</button></div>`).join('');
 
       let pArea = document.getElementById('admProductsList');
-      pArea.innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${p.title}</b> (₹${p.price})<br><small style="color:var(--muted);">Source: ${p.sourcingSource || 'Direct Supplier'}</small></span><button type="button" onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Remove</button></div>`).join('');
+      pArea.innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${p.title}</b> (₹${p.price})<br><small style="color:var(--muted);">Category: ${p.category} | Source: ${p.sourcingSource || 'Direct Supplier'}</small></span><button type="button" onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Remove</button></div>`).join('');
 
       let oArea = document.getElementById('admOrdersList');
       oArea.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px;"><b>Order #${o.id}</b> - ${o.name} (₹${o.total})<br><button type="button" onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:6px; cursor:pointer;">Delete Order</button></div>`).join('');
@@ -1807,7 +1786,7 @@
     }
 
     function updateSellerStatus(idx, st) { sellersList[idx].status = st; localStorage.setItem('kosh_sellers', JSON.stringify(sellersList)); loadAdminMasterData(); showAlert('Status updated.', 'Success', true); }
-    function adminRemoveProduct(idx) { products.splice(idx, 1); localStorage.setItem('kosh_products_v6', JSON.stringify(products)); renderProducts(); loadAdminMasterData(); showAlert('Removed.', 'Success', true); }
+    function adminRemoveProduct(idx) { products.splice(idx, 1); localStorage.setItem('kosh_products_v7', JSON.stringify(products)); renderProducts(); loadAdminMasterData(); showAlert('Removed.', 'Success', true); }
     function saveGlobalCommission() { let v = parseFloat(document.getElementById('globalCommissionInput').value); if(!isNaN(v)) { globalCommission = v; localStorage.setItem('kosh_commission', v); showAlert('Saved.', 'Success', true); } }
   </script>
 </body>
