@@ -301,7 +301,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO (CASHFREE SECURED)</div>
+  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -335,8 +335,8 @@
     <!-- Flash Sale Banner -->
     <div class="flash-banner">
       <div>
-        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Reselling Sale Live!</h4>
-        <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH10</strong> for extra 10% OFF</p>
+        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
+        <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH20</strong> for Flat ₹20 OFF</p>
       </div>
       <div class="flash-timer" id="flashTimer">05:42:18</div>
     </div>
@@ -711,7 +711,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER WITH QUANTITY CONTROLS & COUPONS -->
+  <!-- CART DRAWER WITH QUANTITY CONTROLS & FLAT ₹20 OFF COUPON -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
@@ -721,20 +721,20 @@
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <!-- Discount Coupon Box -->
+      <!-- Flat ₹20 Coupon Box -->
       <div style="margin-bottom:12px; display:flex; gap:6px;">
-        <input type="text" id="couponInput" placeholder="Enter Coupon (e.g. KOSH10)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
+        <input type="text" id="couponInput" placeholder="Enter Coupon (KOSH20)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
         <button onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
       </div>
       <div id="couponMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:bold;"></div>
 
       <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555; color:var(--success);" id="discountRow" style="display:none;"><span>Discount Applied</span><span id="summaryDiscount">- ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Cashfree Gateway Fee (~2%)</span><span id="summaryPgFee">+ ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555; color:var(--success);" id="discountRow" style="display:none;"><span>Flat Discount</span><span id="summaryDiscount">- ₹20</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Gateway Fee (~2%)</span><span id="summaryPgFee">+ ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
       <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Cashfree Checkout</button>
+      <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
     </div>
   </div>
 
@@ -742,12 +742,12 @@
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">Secure Cashfree Checkout</h3>
+        <h3 style="font-size:1.1rem;">Secure Online Checkout</h3>
         <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Cashfree Gateway Fee (~2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Gateway Fee (~2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
         <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
       </div>
       <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
@@ -761,14 +761,14 @@
         <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
         <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
       </div>
-      <button class="btn-solid" onclick="initiateCheckoutOtp()" style="margin-top:10px;">Pay via Cashfree & Place Order</button>
+      <button class="btn-solid" onclick="initiateCheckoutOtp()" style="margin-top:10px;">Pay & Place Order</button>
     </div>
   </div>
 
   <!-- PAYMENT OTP MODAL -->
   <div class="modal-overlay" id="paymentOtpModal">
     <div class="modal-box" style="max-width:380px; text-align:center;">
-      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Cashfree Payment OTP Verification</h3>
+      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment OTP Verification</h3>
       <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
       <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
       <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
@@ -818,55 +818,47 @@
   </div>
 
   <script>
-    // --- Custom Branded Alert Helper ---
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
       document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
       document.getElementById('customAlertModal').style.display = 'flex';
     }
-    function closeCustomAlert() {
-      document.getElementById('customAlertModal').style.display = 'none';
-    }
+    function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    // --- State & Storage (Forced Fresh V2 Catalog & Reviews) ---
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
-    let defaultProducts = [
-      { id: 1, sku: "MES-KURT-101", title: "Fancy Rayon Printed Anarkali Kurti With Dupatta", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1299, stock: 45, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Best-selling rayon kurti with rich foil print and comfortable fitting." },
-      { id: 2, sku: "MES-KURT-102", title: "Embroidered Pure Cotton Straight Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 1099, stock: 35, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Pure cotton daily wear straight kurti with delicate thread work." },
-      { id: 3, sku: "MES-KURT-103", title: "Designer Partywear Georgette Kurti Set", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 450, price: 999, mrp: 1899, stock: 25, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Partywear georgette kurti set with elegant embroidery." },
-      { id: 4, sku: "MES-SAR-201", title: "Banarasi Silk Designer Party Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 650, price: 1299, mrp: 2499, stock: 20, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Elegant Banarasi art silk saree with rich zari work and blouse piece." },
-      { id: 5, sku: "MES-SAR-202", title: "Georgette Floral Printed Daily Wear Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 380, price: 799, mrp: 1499, stock: 30, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Soft georgette floral printed saree, lightweight and skin-friendly." },
-      { id: 6, sku: "MES-SAR-203", title: "Heavy Sequence Work Georgette Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 750, price: 1499, mrp: 2999, stock: 15, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Partywear georgette saree featuring shimmering sequence border." },
-      { id: 7, sku: "MES-LEH-301", title: "Bridal Net Embroidered Lehenga Choli", category: "Lehengas", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1200, price: 2499, mrp: 4999, stock: 12, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Stunning net lehenga choli with heavy zari and stone embroidery." },
-      { id: 8, sku: "MES-LEH-302", title: "Designer Silk Semi-Stitched Lehenga", category: "Lehengas", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 950, price: 1899, mrp: 3599, stock: 18, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Art silk semi-stitched lehenga with matching dupatta." },
-      { id: 9, sku: "MES-MEN-401", title: "Men Casual Cotton Check Shirt", category: "Men Wear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 300, price: 699, mrp: 1299, stock: 40, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", desc: "Comfortable slim fit casual cotton check shirt for men." },
-      { id: 10, sku: "MES-MEN-402", title: "Men Ethnic Kurta Pyjama Set", category: "Men Wear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 500, price: 1099, mrp: 2199, stock: 22, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", desc: "Traditional silk blend ethnic kurta pyjama set for festivals." },
-      { id: 11, sku: "MES-ELE-501", title: "Wireless Bluetooth Neckband Earphones", category: "Electronics", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 350, price: 799, mrp: 1599, stock: 50, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60", desc: "High bass wireless sports neckband with 30hrs battery backup." },
-      { id: 12, sku: "MES-ELE-502", title: "Smart Watch Bluetooth Calling & Fitness Tracker", category: "Electronics", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 750, price: 1499, mrp: 3999, stock: 30, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Advanced smartwatch with HD display and bluetooth calling." },
-      { id: 13, sku: "MES-WTC-601", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1400, price: 2499, mrp: 4999, stock: 20, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch." },
-      { id: 14, sku: "MES-BAG-701", title: "Embroidered Ethnic Potli & Handbag Set", category: "Bags", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 999, stock: 35, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60", desc: "Traditional ethnic handbag and potli bag set." },
-      { id: 15, sku: "MES-FOOT-801", title: "Embroidered Punjabi Juttis & Mojaris", category: "Footwear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1199, stock: 25, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60", desc: "Comfortable handcrafted ethnic juttis with embroidery." },
-      { id: 16, sku: "MES-JEW-901", title: "Kundan Temple Jewellery Necklace Set", category: "Jewellery", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 450, price: 999, mrp: 1999, stock: 28, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60", desc: "Royal Kundan gold-plated necklace set with matching earrings." }
+    // Unique non-duplicate diverse product catalog
+    let uniqueDefaultProducts = [
+      { id: 101, sku: "CAT-KURT-01", title: "Fancy Rayon Printed Anarkali Kurti With Dupatta", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1299, stock: 40, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Best-selling rayon kurti with rich foil print and comfortable fitting." },
+      { id: 102, sku: "CAT-KURT-02", title: "Embroidered Pure Cotton Straight Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 1099, stock: 30, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Pure cotton daily wear straight kurti with delicate thread work." },
+      { id: 103, sku: "CAT-SAR-01", title: "Banarasi Silk Designer Party Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 650, price: 1299, mrp: 2499, stock: 20, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Elegant Banarasi art silk saree with rich zari work and blouse piece." },
+      { id: 104, sku: "CAT-SAR-02", title: "Georgette Floral Printed Daily Wear Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 380, price: 799, mrp: 1499, stock: 25, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Soft georgette floral printed saree, lightweight and skin-friendly." },
+      { id: 105, sku: "CAT-LEH-01", title: "Bridal Net Embroidered Lehenga Choli", category: "Lehengas", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1200, price: 2499, mrp: 4999, stock: 15, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Stunning net lehenga choli with heavy zari and stone embroidery." },
+      { id: 106, sku: "CAT-MEN-01", title: "Men Casual Cotton Check Shirt", category: "Men Wear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 300, price: 699, mrp: 1299, stock: 35, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", desc: "Comfortable slim fit casual cotton check shirt for men." },
+      { id: 107, sku: "CAT-MEN-02", title: "Men Ethnic Kurta Pyjama Set", category: "Men Wear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 500, price: 1099, mrp: 2199, stock: 20, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", desc: "Traditional silk blend ethnic kurta pyjama set for festivals." },
+      { id: 108, sku: "CAT-ELE-01", title: "Wireless Bluetooth Neckband Earphones", category: "Electronics", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 350, price: 799, mrp: 1599, stock: 50, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60", desc: "High bass wireless sports neckband with 30hrs battery backup." },
+      { id: 109, sku: "CAT-ELE-02", title: "Smart Watch Bluetooth Calling & Fitness Tracker", category: "Electronics", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 750, price: 1499, mrp: 3999, stock: 30, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Advanced smartwatch with HD display and bluetooth calling." },
+      { id: 110, sku: "CAT-WTC-01", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1400, price: 2499, mrp: 4999, stock: 18, image: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch." },
+      { id: 111, sku: "CAT-BAG-01", title: "Embroidered Ethnic Potli & Handbag Set", category: "Bags", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 999, stock: 30, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60", desc: "Traditional ethnic handbag and potli bag set." },
+      { id: 112, sku: "CAT-FOOT-01", title: "Embroidered Punjabi Juttis & Mojaris", category: "Footwear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1199, stock: 25, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60", desc: "Comfortable handcrafted ethnic juttis with embroidery." },
+      { id: 113, sku: "CAT-JEW-01", title: "Kundan Temple Jewellery Necklace Set", category: "Jewellery", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 450, price: 999, mrp: 1999, stock: 22, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60", desc: "Royal Kundan gold-plated necklace set with matching earrings." }
     ];
 
     let defaultReviews = [
-      { productId: 1, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture. Loved it.", date: "18 Sep 2026" },
-      { productId: 1, author: "Sneha Gupta", rating: "5", comment: "Very nice kurti, fitting is perfect. Fast delivery too.", date: "19 Sep 2026" },
-      { productId: 2, author: "Anjali Verma", rating: "4", comment: "Pure cotton material, very comfortable for daily office wear.", date: "15 Sep 2026" },
-      { productId: 4, author: "Rekha Devi", rating: "5", comment: "Saree looks very rich and premium. Got so many compliments!", date: "20 Sep 2026" },
-      { productId: 11, author: "Rahul Kumar", rating: "5", comment: "Amazing sound quality and bass. Battery backup is also great.", date: "21 Sep 2026" }
+      { productId: 101, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture.", date: "18 Sep 2026" },
+      { productId: 103, author: "Rekha Devi", rating: "5", comment: "Saree looks very rich and premium. Got compliments!", date: "20 Sep 2026" },
+      { productId: 108, author: "Rahul Kumar", rating: "5", comment: "Amazing sound quality and bass. Great backup.", date: "21 Sep 2026" }
     ];
 
-    // Force V2 key load so previous cached empty arrays don't break display
-    let products = JSON.parse(localStorage.getItem('kosh_products_v2')) || defaultProducts;
-    localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+    // Fresh V3 Key to reset cache and prevent double listing bugs
+    let products = JSON.parse(localStorage.getItem('kosh_products_v3')) || uniqueDefaultProducts;
+    localStorage.setItem('kosh_products_v3', JSON.stringify(products));
 
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v2')) || defaultReviews;
-    localStorage.setItem('kosh_reviews_v2', JSON.stringify(reviewsList));
+    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v3')) || defaultReviews;
+    localStorage.setItem('kosh_reviews_v3', JSON.stringify(reviewsList));
 
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
@@ -880,8 +872,9 @@
     let paymentOtpGenerated = "";
     let verifiedBankDetails = null;
     let parsedSellerCsvRows = [];
+    let activeCategoryFilter = 'All';
     let activeSellerFilter = null;
-    let appliedDiscountPercent = 0;
+    let appliedDiscountAmount = 0;
 
     function startFlashTimer() {
       let timerEl = document.getElementById('flashTimer');
@@ -924,7 +917,12 @@
       }
     }
 
-    function renderProducts(filterCat = 'All') {
+    // --- Render Products with State Persistence (Fixes Refresh Bug) ---
+    function renderProducts(filterCat = null) {
+      if(filterCat !== null) {
+        activeCategoryFilter = filterCat;
+      }
+      
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
@@ -943,8 +941,8 @@
         document.getElementById('catalogBanner').style.display = 'none';
       }
 
-      if(filterCat !== 'All') {
-        filtered = filtered.filter(p => p.category === filterCat);
+      if(activeCategoryFilter !== 'All') {
+        filtered = filtered.filter(p => p.category === activeCategoryFilter);
       }
 
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
@@ -1061,13 +1059,18 @@
         populateProductDetails(currentSelectedProduct);
       }
       navigateTo(savedPage);
-      renderProducts();
+      renderProducts(activeCategoryFilter);
       updateCartUI();
     });
 
     function filterCategory(cat) {
-      document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-      event.target.classList.add('active');
+      document.querySelectorAll('.cat-item').forEach(i => {
+        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) {
+          i.classList.add('active');
+        } else {
+          i.classList.remove('active');
+        }
+      });
       renderProducts(cat);
     }
 
@@ -1166,12 +1169,10 @@
 
       reviewsList.push({
         productId: currentSelectedProduct.id,
-        author,
-        rating,
-        comment,
+        author, rating, comment,
         date: new Date().toLocaleDateString()
       });
-      localStorage.setItem('kosh_reviews_v2', JSON.stringify(reviewsList));
+      localStorage.setItem('kosh_reviews_v3', JSON.stringify(reviewsList));
       document.getElementById('newReviewText').value = '';
       document.getElementById('newReviewAuthor').value = '';
       loadProductReviews(currentSelectedProduct.id);
@@ -1229,16 +1230,12 @@
     function applyCouponCode() {
       let code = document.getElementById('couponInput').value.trim().toUpperCase();
       let msg = document.getElementById('couponMsg');
-      if(code === 'KOSH10') {
-        appliedDiscountPercent = 10;
+      if(code === 'KOSH20') {
+        appliedDiscountAmount = 20;
         msg.style.color = 'var(--success)';
-        msg.innerText = '✅ Coupon "KOSH10" applied successfully (10% OFF)!';
-      } else if(code === 'KOSH20') {
-        appliedDiscountPercent = 20;
-        msg.style.color = 'var(--success)';
-        msg.innerText = '✅ Coupon "KOSH20" applied successfully (20% OFF)!';
+        msg.innerText = '✅ Coupon "KOSH20" applied successfully (Flat ₹20 OFF)!';
       } else {
-        appliedDiscountPercent = 0;
+        appliedDiscountAmount = 0;
         msg.style.color = 'var(--danger)';
         msg.innerText = '❌ Invalid or expired coupon code.';
       }
@@ -1288,12 +1285,12 @@
         container.appendChild(div);
       });
 
-      let discountAmt = Math.round(totalProdPrice * (appliedDiscountPercent / 100));
-      let discountedSubtotal = totalProdPrice - discountAmt;
+      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
+      let discountedSubtotal = Math.max(0, totalProdPrice - discountAmt);
       let pgFee = Math.round(discountedSubtotal * 0.02);
       let grandTotal = discountedSubtotal + pgFee;
 
-      if(appliedDiscountPercent > 0) {
+      if(appliedDiscountAmount > 0) {
         document.getElementById('discountRow').style.display = 'flex';
         document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt;
       } else {
@@ -1572,7 +1569,7 @@
         });
         showAlert('Product added successfully!', 'Success', true);
       }
-      localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
       renderProducts();
       loadSellerData(foundSeller.id);
       resetSellerForm();
@@ -1618,7 +1615,7 @@
         let finalPrice = Math.round(row.basePrice + (row.basePrice * globalCommission / 100));
         products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})` });
       });
-      localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
       renderProducts();
       loadSellerData(foundSeller.id);
       document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
@@ -1771,7 +1768,7 @@
     function removeSellerProduct(globalIdx, sellerId) {
       if(confirm('Remove this product?')) {
         products.splice(globalIdx, 1);
-        localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v3', JSON.stringify(products));
         renderProducts();
         loadSellerData(sellerId);
       }
@@ -1781,8 +1778,8 @@
       if(cart.length === 0) { showAlert('Cart is empty!'); return; }
       toggleCartDrawer(false);
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = Math.round(subtotal * (appliedDiscountPercent / 100));
-      let discountedSubtotal = subtotal - discountAmt;
+      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
+      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
       let pgFee = Math.round(discountedSubtotal * 0.02);
       let finalTotal = discountedSubtotal + pgFee;
 
@@ -1837,8 +1834,8 @@
       document.getElementById('paymentOtpModal').style.display = 'none';
 
       let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = Math.round(subtotal * (appliedDiscountPercent / 100));
-      let discountedSubtotal = subtotal - discountAmt;
+      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
+      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
       let pgFee = Math.round(discountedSubtotal * 0.02);
       let grandTotal = discountedSubtotal + pgFee;
 
@@ -1862,7 +1859,7 @@
       localStorage.removeItem('kosh_cart');
       updateCartUI();
 
-      showAlert("Order placed successfully via Cashfree Secure Gateway!", "Order Placed", true);
+      showAlert("Order placed successfully via Secure Gateway!", "Order Placed", true);
       navigateTo('orders');
     }
 
@@ -1929,7 +1926,7 @@
           <tr><th>Item</th><th>SKU</th><th>Qty</th><th>Price</th></tr>
           ${o.items.map(i => `<tr><td>${i.title}</td><td>${i.sku}</td><td>${i.qty}</td><td>₹${i.price * i.qty}</td></tr>`).join('')}
         </table>
-        <p style="margin-top:15px;"><strong>Subtotal:</strong> ₹${o.subtotal}<br><strong>Cashfree Fee (~2%):</strong> ₹${o.pgFee}<br><strong>Grand Total:</strong> ₹${o.total}</p>
+        <p style="margin-top:15px;"><strong>Subtotal:</strong> ₹${o.subtotal}<br><strong>Gateway Fee (~2%):</strong> ₹${o.pgFee}<br><strong>Grand Total:</strong> ₹${o.total}</p>
         <script>window.print();<\/script>
         </body></html>
       `);
@@ -1980,7 +1977,7 @@
             <div style="font-size:0.85rem; color:#555; margin:8px 0;"><strong>Delivery To:</strong> ${o.name} (${o.phone}), ${o.address}</div>
             ${returnSectionHtml}
             <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:8px; margin-top:10px; font-size:0.85rem;">
-              <span>Subtotal: ₹${o.subtotal} | Cashfree Fee (~2%): ₹${o.pgFee}</span>
+              <span>Subtotal: ₹${o.subtotal} | Gateway Fee (~2%): ₹${o.pgFee}</span>
               <span style="font-weight:700; font-size:0.95rem;">Total: ₹${o.total}</span>
             </div>
           </div>
@@ -2189,7 +2186,7 @@
     function adminRemoveProduct(idx) {
       if(confirm('Remove product?')) {
         products.splice(idx, 1);
-        localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v3', JSON.stringify(products));
         renderProducts();
         loadAdminMasterData();
       }
@@ -2207,7 +2204,7 @@
 
       if(!title || !price || !mrp) { showAlert('Fill Title, Price and MRP.'); return; }
       products.push({ id: Date.now(), sku, title, category, sellerId: 'admin', sellerName: 'Kosh Direct (Admin)', basePrice: price, price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v2', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
       renderProducts();
       loadAdminMasterData();
       showAlert('Product listed successfully!', 'Success', true);
