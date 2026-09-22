@@ -327,7 +327,7 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search marketplace products..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search kurtis, sarees, watches, bags..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button class="icon-btn" onclick="navigateTo('wishlist')">
@@ -354,7 +354,7 @@
     <!-- Flash Sale Banner -->
     <div class="flash-banner">
       <div>
-        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Flash Sale Live!</h4>
+        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Fashion Sale Live!</h4>
         <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH10</strong> for extra 10% OFF</p>
       </div>
       <div class="flash-timer" id="flashTimer">05:42:18</div>
@@ -362,11 +362,12 @@
 
     <div class="categories-bar" id="categoriesBar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
+      <div class="cat-item" onclick="filterCategory('Kurtis')">Kurtis</div>
+      <div class="cat-item" onclick="filterCategory('Sarees')">Sarees</div>
       <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Wallets')">Wallets</div>
-      <div class="cat-item" onclick="filterCategory('Sunglasses')">Sunglasses</div>
-      <div class="cat-item" onclick="filterCategory('Bracelets')">Bracelets</div>
       <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
+      <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
+      <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
     </div>
 
     <main class="container">
@@ -553,7 +554,7 @@
             <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Watches / Wallets / etc."></div>
+            <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
             <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
           </div>
           <div class="form-row">
@@ -648,7 +649,7 @@
             <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Watches / Wallets / etc."></div>
+            <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
             <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
           </div>
           <div class="form-row">
@@ -838,12 +839,18 @@
       document.getElementById('customAlertModal').style.display = 'none';
     }
 
-    // --- State & Storage ---
+    // --- State & Storage (Expanded Meesho-style Catalog with Dropshipping Margins) ---
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
     let defaultProducts = [
-      { id: 1, sku: "MKT-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 2700, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch." },
-      { id: 2, sku: "MKT-WLT-202", title: "Minimalist Black Leather Wallet", category: "Wallets", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1150, price: 1299, mrp: 2499, stock: 25, image: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=500&auto=format&fit=crop&q=60", desc: "Handcrafted genuine leather wallet." }
+      { id: 1, sku: "MKT-KURTI-01", title: "Stylish Printed Rayon Anarkali Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 350, price: 699, mrp: 1299, stock: 25, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Trendy printed rayon kurti with beautiful ethnic prints. Perfect for daily and festive wear." },
+      { id: 2, sku: "MKT-SAREE-02", title: "Banarasi Silk Designer Party Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 650, price: 1299, mrp: 2499, stock: 15, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Elegant Banarasi art silk saree with zari work and unstitched blouse piece." },
+      { id: 3, sku: "MKT-WTC-101", title: "Classic Chronograph Luxury Watch", category: "Watches", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1400, price: 2499, mrp: 4999, stock: 20, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc: "Premium stainless steel chronograph watch for men and women." },
+      { id: 4, sku: "MKT-BAG-301", title: "Embroidered Ethnic Potli & Handbag", category: "Bags", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 999, stock: 30, image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60", desc: "Traditional ethnic handbag and potli bag set for weddings and parties." },
+      { id: 5, sku: "MKT-FOOT-401", title: "Embroidered Punjabi Juttis & Mojaris", category: "Footwear", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1199, stock: 18, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60", desc: "Comfortable handcrafted ethnic juttis with beautiful embroidery." },
+      { id: 6, sku: "MKT-JEW-501", title: "Kundan Temple Jewellery Necklace Set", category: "Jewellery", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 450, price: 999, mrp: 1999, stock: 22, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60", desc: "Royal Kundan gold-plated necklace set with matching earrings." },
+      { id: 7, sku: "MKT-KURTI-02", title: "Embroidery Work Cotton Straight Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 290, price: 599, mrp: 1099, stock: 35, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Pure cotton straight kurti with fine thread embroidery." },
+      { id: 8, sku: "MKT-SAREE-03", title: "Georgette Floral Printed Daily Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 400, price: 899, mrp: 1599, stock: 20, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Soft georgette floral printed saree comfortable for all-day wear." }
     ];
 
     let products = JSON.parse(localStorage.getItem('kosh_products')) || defaultProducts;
@@ -917,7 +924,7 @@
       }
 
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
-      const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey));
+      const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
 
       if (finalFiltered.length === 0) {
         grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found.</p>';
