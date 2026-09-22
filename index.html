@@ -8,6 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --bg: #f8f9fa;
@@ -614,7 +617,7 @@
         <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Admin Listing</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders & Invoices</button>
         <button class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Support Tickets</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings & Reset</button>
+        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings & Supabase</button>
       </div>
 
       <!-- Tab 1: Sellers, Sales & Payout Tracker -->
@@ -667,8 +670,16 @@
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
       </div>
 
-      <!-- Tab 5: Settings & Reset -->
+      <!-- Tab 5: Settings & Supabase Cloud Setup (PLACED AT TOP) -->
       <div id="admTabSettings" class="dash-tab-content">
+        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+          <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Setup</h4>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter your Supabase credentials here to sync products & orders to the cloud.</p>
+          <div class="form-group"><label>Supabase Project URL</label><input type="text" id="sbUrlInput" placeholder="https://xyz.supabase.co"></div>
+          <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" id="sbKeyInput" placeholder="sb_publishable_..." autocomplete="off"></div>
+          <button class="btn-solid" onclick="saveSupabaseConfig()" style="background:#2196f3; margin-top:6px;">Connect & Sync Supabase</button>
+        </div>
+
         <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
           <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
@@ -826,9 +837,12 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
+    let sbUrl = localStorage.getItem('kosh_sb_url') || '';
+    let sbKey = localStorage.getItem('kosh_sb_key') || '';
+    let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
+
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
-    // Unique non-duplicate diverse product catalog
     let uniqueDefaultProducts = [
       { id: 101, sku: "CAT-KURT-01", title: "Fancy Rayon Printed Anarkali Kurti With Dupatta", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 320, price: 699, mrp: 1299, stock: 40, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Best-selling rayon kurti with rich foil print and comfortable fitting." },
       { id: 102, sku: "CAT-KURT-02", title: "Embroidered Pure Cotton Straight Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 280, price: 599, mrp: 1099, stock: 30, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Pure cotton daily wear straight kurti with delicate thread work." },
@@ -851,14 +865,13 @@
       { productId: 108, author: "Rahul Kumar", rating: "5", comment: "Amazing sound quality and bass. Great backup.", date: "21 Sep 2026" }
     ];
 
-    // Fresh V3 Key to reset cache and prevent double listing bugs
-    let products = JSON.parse(localStorage.getItem('kosh_products_v3')) || uniqueDefaultProducts;
-    localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+    let products = JSON.parse(localStorage.getItem('kosh_products_v4')) || uniqueDefaultProducts;
+    localStorage.setItem('kosh_products_v4', JSON.stringify(products));
 
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v3')) || defaultReviews;
-    localStorage.setItem('kosh_reviews_v3', JSON.stringify(reviewsList));
+    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v4')) || defaultReviews;
+    localStorage.setItem('kosh_reviews_v4', JSON.stringify(reviewsList));
 
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
@@ -917,7 +930,6 @@
       }
     }
 
-    // --- Render Products with State Persistence (Fixes Refresh Bug) ---
     function renderProducts(filterCat = null) {
       if(filterCat !== null) {
         activeCategoryFilter = filterCat;
@@ -1172,7 +1184,7 @@
         author, rating, comment,
         date: new Date().toLocaleDateString()
       });
-      localStorage.setItem('kosh_reviews_v3', JSON.stringify(reviewsList));
+      localStorage.setItem('kosh_reviews_v4', JSON.stringify(reviewsList));
       document.getElementById('newReviewText').value = '';
       document.getElementById('newReviewAuthor').value = '';
       loadProductReviews(currentSelectedProduct.id);
@@ -1195,7 +1207,6 @@
       }
     }
 
-    // --- Cart System with Qty (+ / -) Management ---
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
       if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
@@ -1273,7 +1284,6 @@
               <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
               <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
               
-              <!-- Quantity Controls -->
               <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
                 <button onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
                 <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
@@ -1569,7 +1579,7 @@
         });
         showAlert('Product added successfully!', 'Success', true);
       }
-      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v4', JSON.stringify(products));
       renderProducts();
       loadSellerData(foundSeller.id);
       resetSellerForm();
@@ -1615,7 +1625,7 @@
         let finalPrice = Math.round(row.basePrice + (row.basePrice * globalCommission / 100));
         products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})` });
       });
-      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v4', JSON.stringify(products));
       renderProducts();
       loadSellerData(foundSeller.id);
       document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
@@ -1768,7 +1778,7 @@
     function removeSellerProduct(globalIdx, sellerId) {
       if(confirm('Remove this product?')) {
         products.splice(globalIdx, 1);
-        localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v4', JSON.stringify(products));
         renderProducts();
         loadSellerData(sellerId);
       }
@@ -1855,6 +1865,12 @@
       ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
 
+      if(supabaseClient) {
+        supabaseClient.from('orders').insert([newOrder]).then(({error}) => {
+          if(error) console.error("Supabase sync error:", error);
+        });
+      }
+
       cart = [];
       localStorage.removeItem('kosh_cart');
       updateCartUI();
@@ -1908,6 +1924,16 @@
         loadAdminMasterData();
         showAlert('All orders and revenue successfully reset to zero!', 'Success', true);
       }
+    }
+
+    function saveSupabaseConfig() {
+      let url = document.getElementById('sbUrlInput').value.trim();
+      let key = document.getElementById('sbKeyInput').value.trim();
+      if(!url || !key) { showAlert('Please enter both Supabase URL and Key.'); return; }
+      localStorage.setItem('kosh_sb_url', url);
+      localStorage.setItem('kosh_sb_key', key);
+      supabaseClient = window.supabase.createClient(url, key);
+      showAlert('Supabase connected successfully!', 'Success', true);
     }
 
     function printOrderInvoice(orderId) {
@@ -2112,6 +2138,8 @@
         tArea.innerHTML = tHtml;
       }
       document.getElementById('globalCommissionInput').value = globalCommission;
+      if(sbUrl) document.getElementById('sbUrlInput').value = sbUrl;
+      if(sbKey) document.getElementById('sbKeyInput').value = sbKey;
     }
 
     function adminUpdateItemFulfillment(orderId, sku) {
@@ -2151,9 +2179,9 @@
       let store = document.getElementById('admEditStore').value.trim();
       let name = document.getElementById('admEditName').value.trim();
       let email = document.getElementById('admEditEmail').value.trim();
-      let phone = document.getElementById('admEditPhone').value.trim();
-      if (!store || !name || !email || phone.length !== 10) { showAlert('Fill valid details.'); return; }
-      sellersList[idx].store = store; sellersList[idx].name = name; sellersList[idx].email = email; sellersList[idx].phone = phone;
+      let phone = document.getElementById('admEditPhone'.value || '').trim();
+      if (!store || !name || !email) { showAlert('Fill valid details.'); return; }
+      sellersList[idx].store = store; sellersList[idx].name = name; sellersList[idx].email = email;
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       closeAdminEditSellerModal();
       loadAdminMasterData();
@@ -2178,7 +2206,7 @@
       if(confirm('Delete this seller?')) {
         sellersList.splice(idx, 1);
         localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-        loadAdminMasterData();
+        loadAdminManagerData();
         showAlert('Seller deleted.', 'Success', true);
       }
     }
@@ -2186,7 +2214,7 @@
     function adminRemoveProduct(idx) {
       if(confirm('Remove product?')) {
         products.splice(idx, 1);
-        localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v4', JSON.stringify(products));
         renderProducts();
         loadAdminMasterData();
       }
@@ -2204,7 +2232,7 @@
 
       if(!title || !price || !mrp) { showAlert('Fill Title, Price and MRP.'); return; }
       products.push({ id: Date.now(), sku, title, category, sellerId: 'admin', sellerName: 'Kosh Direct (Admin)', basePrice: price, price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v3', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v4', JSON.stringify(products));
       renderProducts();
       loadAdminMasterData();
       showAlert('Product listed successfully!', 'Success', true);
