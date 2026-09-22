@@ -27,7 +27,7 @@
 
     .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
-    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
     .brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
     
     .header-search { flex-grow: 1; max-width: 260px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
@@ -256,7 +256,7 @@
       <!-- Settings Tab with Flexible Payment Gateway Manager -->
       <div id="admTabSettings" class="dash-tab-content">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>[span_1](start_span)[span_1](end_span)
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
           
           <div class="form-group">
             <label>Active Gateway</label>
@@ -278,8 +278,8 @@
               <input type="text" id="gwUpiId" placeholder="e.g. yourname@upi">
             </div>
             <div class="form-group">
-              <label>QR Code Image URL / Scanner Link</label>
-              <input type="text" id="gwQrImage" placeholder="Paste QR Code image URL">
+              <label>Upload QR Code Image from Gallery</label>
+              <input type="file" id="gwQrFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
             </div>
           </div>
 
@@ -309,6 +309,23 @@
         <button type="button" class="btn-solid" style="background:#888;" onclick="resolveConfirm(false)">Cancel</button>
         <button type="button" class="btn-solid" style="background:var(--danger);" onclick="resolveConfirm(true)">Confirm</button>
       </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT ADDRESS & PINCODE AUTO-DETECT MODAL -->
+  <div class="modal-overlay" id="checkoutAddressModal">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem;">📍 Shipping Address</h3>
+        <button type="button" onclick="document.getElementById('checkoutAddressModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="chkName" placeholder="Enter full name"></div>
+      <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number"></div>
+      <div class="form-group"><label>Street Address</label><input type="text" id="chkAddress" placeholder="House no, Street, Area"></div>
+      <div class="form-group"><label>Pin Code (Auto-Detects City & State)</label><input type="text" id="chkPincode" placeholder="6-digit pincode" maxlength="6" oninput="lookupPincode(this.value)"></div>
+      <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City"></div>
+      <div class="form-group"><label>State</label><input type="text" id="chkState" placeholder="State"></div>
+      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
     </div>
   </div>
 
@@ -344,7 +361,7 @@
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; color:var(--muted);"><span>Subtotal</span><span id="cartSubtotalPrice">₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">FREE Delivery</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="proceedToCheckout()">Proceed to Checkout</button>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutAddressModal()">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -427,40 +444,83 @@
       document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
       document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
       document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
-      document.getElementById('gwQrImage').value = paymentConfig.qrImage || '';
       toggleGatewayFields();
     }
 
     function savePaymentSettings() {
-      paymentConfig = {
-        gateway: document.getElementById('gatewaySelect').value,
-        apiKey: document.getElementById('gwApiKey').value,
-        upiId: document.getElementById('gwUpiId').value,
-        qrImage: document.getElementById('gwQrImage').value
+      let fileInput = document.getElementById('gwQrFile');
+      let saveConfig = function(qrImgUrl) {
+        paymentConfig = {
+          gateway: document.getElementById('gatewaySelect').value,
+          apiKey: document.getElementById('gwApiKey').value,
+          upiId: document.getElementById('gwUpiId').value,
+          qrImage: qrImgUrl || paymentConfig.qrImage || ''
+        };
+        localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+        showAlert("Payment gateway configuration successfully save ho gayi hai!", "Success", true);
       };
-      localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
-      showAlert("Payment gateway configuration successfully save ho gayi hai!", "Success", true);
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          saveConfig(e.target.result);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveConfig();
+      }
     }
 
-    function proceedToCheckout() {
+    function lookupPincode(pin) {
+      if(pin.length === 6) {
+        fetch('https://api.postalpincode.in/pincode/' + pin)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data[0].Status === 'Success') {
+              let po = data[0].PostOffice[0];
+              document.getElementById('chkCity').value = po.District;
+              document.getElementById('chkState').value = po.State;
+            }
+          }).catch(err => console.log(err));
+      }
+    }
+
+    function openCheckoutAddressModal() {
       if(cart.length === 0) return;
+      toggleCartDrawer(false);
+      document.getElementById('checkoutAddressModal').style.display = 'flex';
+    }
+
+    function proceedToPaymentAfterAddress() {
+      let name = document.getElementById('chkName').value.trim();
+      let phone = document.getElementById('chkPhone').value.trim();
+      let address = document.getElementById('chkAddress').value.trim();
+      let pincode = document.getElementById('chkPincode').value.trim();
+      let city = document.getElementById('chkCity').value.trim();
+      let state = document.getElementById('chkState').value.trim();
+
+      if(!name || !phone || !address || !pincode || !city || !state) {
+        showAlert("Kripya sabhi address fields sahi se bharein.");
+        return;
+      }
+
+      document.getElementById('checkoutAddressModal').style.display = 'none';
+
       if(paymentConfig.gateway === 'UPI') {
         if(!paymentConfig.upiId) {
-          showAlert("Admin ne abhi UPI ID configure nahi kiya hai. Kripya Settings check karein.");
+          showAlert("Admin ne UPI ID configure nahi kiya hai. Kripya Settings check karein.");
           return;
         }
         document.getElementById('modalUpiIdText').innerText = paymentConfig.upiId;
         document.getElementById('modalQrImg').src = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
-        toggleCartDrawer(false);
         document.getElementById('upiPaymentModal').style.display = 'flex';
       } else {
         showAlert(`Redirecting to ${paymentConfig.gateway} secure payment gateway...`, "Secure Checkout", true);
         setTimeout(() => {
-          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, date: new Date().toLocaleDateString() });
+          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, shipping: { name, phone, address, pincode, city, state }, date: new Date().toLocaleDateString() });
           localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
           cart = [];
           localStorage.setItem('kosh_cart', JSON.stringify(cart));
-          toggleCartDrawer(false);
           updateCartUI();
           showAlert("Order successfully placed via " + paymentConfig.gateway + "!", "Success", true);
         }, 1500);
