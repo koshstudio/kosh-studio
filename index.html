@@ -240,7 +240,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE WITH SUPPORT & JOIN AS SELLER -->
+  <!-- PROFILE PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -255,40 +255,111 @@
       </div>
 
       <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
-        <!-- Profile Card -->
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow);">
           <h3 style="font-size:1.05rem; margin-bottom:6px; color:var(--primary);">👤 Profile</h3>
           <p id="displayUserEmail" style="color:var(--muted); font-size:0.88rem; margin-bottom:14px;"></p>
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
 
-        <!-- Support Card -->
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('support')">
-          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support</h4>
-          <p style="font-size:0.8rem; color:var(--muted);">Raise a ticket or chat with support for assistance.</p>
+          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support & Grievances</h4>
+          <p style="font-size:0.8rem; color:var(--muted);">Raise a grievance ticket or chat with support.</p>
         </div>
 
-        <!-- Join as Seller Card -->
         <div style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-reg')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:#0d47a1;">🏪 Join as Seller</h4>
-          <p style="font-size:0.8rem; color:#555;">Register your store and start selling products on Kosh Studio.</p>
+          <p style="font-size:0.8rem; color:#555;">Register your store and start selling products.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CUSTOMER SUPPORT PAGE -->
+  <!-- CUSTOMER SUPPORT & CHAT PAGE -->
   <div id="page-support" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700;">🛠️ Customer Support & Tickets</span>
+      <span style="font-weight:700;">🛠️ Customer Support & Grievances</span>
     </div>
-    <div class="page-content" style="max-width:550px;">
+    <div class="page-content" style="max-width:650px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:20px;">
+        <h3 style="margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Raise a Grievance Ticket</h3>
+        
+        <div class="form-group">
+          <label>Select Grievance Category *</label>
+          <select id="grievanceCategorySelect" onchange="toggleOtherMsgBox()">
+            <option value="">-- Choose Category --</option>
+            <optgroup label="Order Related">
+              <option value="Order nahi mila / late delivery">Order nahi mila / late delivery</option>
+              <option value="Wrong product">Wrong product</option>
+              <option value="Damaged product">Damaged product</option>
+              <option value="Missing item">Missing item</option>
+            </optgroup>
+            <optgroup label="Payment Related">
+              <option value="Payment failed">Payment failed</option>
+              <option value="Payment deducted but order nahi hua">Payment deducted but order nahi hua</option>
+              <option value="Refund not received">Refund not received</option>
+              <option value="Payment/settlement issue">Payment/settlement issue</option>
+            </optgroup>
+            <optgroup label="Return & Refund">
+              <option value="Return request">Return request</option>
+              <option value="Refund issue">Refund issue</option>
+              <option value="Return status issue">Return status issue</option>
+            </optgroup>
+            <optgroup label="Product Related">
+              <option value="Product quality issue">Product quality issue</option>
+              <option value="Product description/image mismatch">Product description/image mismatch</option>
+              <option value="Product availability issue">Product availability issue</option>
+            </optgroup>
+            <optgroup label="Seller Related">
+              <option value="Seller response nahi kar raha">Seller response nahi kar raha</option>
+              <option value="Seller ne order process nahi kiya">Seller ne order process nahi kiya</option>
+              <option value="Seller-related complaint">Seller-related complaint</option>
+            </optgroup>
+            <optgroup label="Delivery Related">
+              <option value="Delivery delay">Delivery delay</option>
+              <option value="Delivery partner issue">Delivery partner issue</option>
+              <option value="Package tampered/damaged">Package tampered/damaged</option>
+            </optgroup>
+            <optgroup label="Account Related">
+              <option value="Login/signup issue">Login/signup issue</option>
+              <option value="Account blocked/suspended">Account blocked/suspended</option>
+              <option value="Profile/account issue">Profile/account issue</option>
+            </optgroup>
+            <optgroup label="Seller Dashboard">
+              <option value="Order management issue">Order management issue</option>
+              <option value="Product upload issue">Product upload issue</option>
+              <option value="Payment/commission issue">Payment/commission issue</option>
+              <option value="Dashboard technical issue">Dashboard technical issue</option>
+            </optgroup>
+            <optgroup label="Technical Issue">
+              <option value="Website/app not working">Website/app not working</option>
+              <option value="Bug/error">Bug/error</option>
+              <option value="Page/loading issue">Page/loading issue</option>
+            </optgroup>
+            <optgroup label="Fraud / Suspicious Activity">
+              <option value="Suspicious order">Suspicious order</option>
+              <option value="Payment fraud">Payment fraud</option>
+              <option value="Fake/abusive activity">Fake/abusive activity</option>
+            </optgroup>
+            <optgroup label="Privacy & Security">
+              <option value="Personal information concern">Personal information concern</option>
+              <option value="Account security issue">Account security issue</option>
+            </optgroup>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="otherMsgContainer" style="display:none;">
+          <label>Describe Issue (Other) *</label>
+          <textarea id="otherMsgInput" rows="3" placeholder="Write your message..."></textarea>
+        </div>
+
+        <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitGrievanceTicket()">Submit Grievance Ticket</button>
+      </div>
+
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
-        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Raise a Support Ticket</h3>
-        <div class="form-group"><label>Subject *</label><input type="text" id="supSubject" placeholder="e.g. Order Delay Issue"></div>
-        <div class="form-group"><label>Message *</label><textarea id="supMsg" rows="3" placeholder="Describe your issue in detail..."></textarea></div>
-        <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitSupportTicket()">Submit Support Ticket</button>
+        <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary);">Your Grievance Tickets & Chat</h3>
+        <div id="customerTicketsList">No tickets raised.</div>
       </div>
     </div>
   </div>
@@ -365,7 +436,7 @@
       </div>
 
       <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Grievance & Chat Tickets</h5>
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
@@ -516,6 +587,7 @@
       updateCartUI();
       checkLoginStatus();
       loadPaymentSettingsToUI();
+      renderCustomerTickets();
       
       let savedProdId = localStorage.getItem('kosh_selected_prod_id');
       if(savedProdId) {
@@ -680,19 +752,146 @@
       }, 1500);
     }
 
-    function submitSupportTicket() {
-      let subject = document.getElementById('supSubject').value.trim();
-      let msg = document.getElementById('supMsg').value.trim();
-      if(!subject || !msg) {
-        showAlert("Kripya subject aur message bharein.");
+    function toggleOtherMsgBox() {
+      let val = document.getElementById('grievanceCategorySelect').value;
+      document.getElementById('otherMsgContainer').style.display = val === 'Other' ? 'block' : 'none';
+    }
+
+    function submitGrievanceTicket() {
+      let cat = document.getElementById('grievanceCategorySelect').value;
+      if(!cat) {
+        showAlert("Kripya grievance category select karein.");
         return;
       }
-      ticketsList.unshift({ id: Date.now(), email: currentUser || 'Guest', subject, msg, status: 'Open' });
+      let initialMsg = cat;
+      if(cat === 'Other') {
+        let customText = document.getElementById('otherMsgInput').value.trim();
+        if(!customText) {
+          showAlert("Kripya 'Other' ke liye message enter karein.");
+          return;
+        }
+        initialMsg = "Other: " + customText;
+      }
+
+      let newTicket = {
+        id: Date.now(),
+        email: currentUser || 'Guest Customer',
+        category: cat,
+        status: 'Open',
+        messages: [
+          { sender: 'user', text: initialMsg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+        ]
+      };
+
+      ticketsList.unshift(newTicket);
       localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      document.getElementById('supSubject').value = '';
-      document.getElementById('supMsg').value = '';
-      showAlert("Support ticket successfully raise ho gayi hai!", "Success", true);
-      navigateTo('profile');
+      document.getElementById('grievanceCategorySelect').value = '';
+      document.getElementById('otherMsgInput').value = '';
+      document.getElementById('otherMsgContainer').style.display = 'none';
+      renderCustomerTickets();
+      showAlert("Grievance ticket successfully raise ho gayi hai!", "Success", true);
+    }
+
+    function sendCustomerChatMessage(ticketId) {
+      let inputEl = document.getElementById('custReplyInput_' + ticketId);
+      let text = inputEl.value.trim();
+      if(!text) return;
+
+      let ticket = ticketsList.find(t => t.id == ticketId);
+      if(!ticket || ticket.status === 'Closed') {
+        showAlert("Yeh ticket close ho chuki hai.");
+        return;
+      }
+
+      ticket.messages.push({
+        sender: 'user',
+        text: text,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
+
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      inputEl.value = '';
+      renderCustomerTickets();
+      if(isAdminLoggedIn) loadAdminMasterData();
+    }
+
+    function sendAdminChatMessage(ticketId) {
+      let inputEl = document.getElementById('adminReplyInput_' + ticketId);
+      let text = inputEl.value.trim();
+      if(!text) return;
+
+      let ticket = ticketsList.find(t => t.id == ticketId);
+      if(!ticket || ticket.status === 'Closed') {
+        showAlert("Yeh ticket already closed hai.");
+        return;
+      }
+
+      ticket.messages.push({
+        sender: 'admin',
+        text: text,
+        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      });
+
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      inputEl.value = '';
+      loadAdminMasterData();
+      renderCustomerTickets();
+    }
+
+    function closeAdminTicket(ticketId) {
+      showCustomConfirm("Kya aap is grievance ko close karna chahte hain?", function(res) {
+        if(res) {
+          let ticket = ticketsList.find(t => t.id == ticketId);
+          if(ticket) {
+            ticket.status = 'Closed';
+            localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+            loadAdminMasterData();
+            renderCustomerTickets();
+            showAlert("Grievance successfully closed!", "Success", true);
+          }
+        }
+      });
+    }
+
+    function renderCustomerTickets() {
+      let container = document.getElementById('customerTicketsList');
+      if(!container) return;
+      let userTickets = ticketsList.filter(t => !currentUser || t.email === currentUser || t.email === 'Guest Customer');
+      if(userTickets.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">No tickets raised yet.</p>';
+        return;
+      }
+
+      container.innerHTML = userTickets.map(t => {
+        let isClosed = t.status === 'Closed';
+        let msgsHtml = t.messages.map(m => `
+          <div style="margin-bottom:8px; text-align:${m.sender === 'user' ? 'right' : 'left'};">
+            <div style="display:inline-block; padding:8px 12px; border-radius:8px; background:${m.sender === 'user' ? '#e3f2fd' : '#f1f3f6'}; font-size:0.85rem; max-width:85%; text-align:left;">
+              <small style="display:block; font-weight:bold; color:${m.sender === 'user' ? '#0d47a1' : '#333'};">${m.sender === 'user' ? 'You' : 'Admin'}</small>
+              ${m.text}
+              <div style="font-size:0.65rem; color:#888; text-align:right; margin-top:2px;">${m.time}</div>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:0.85rem; font-weight:bold; color:var(--primary);">Category: ${t.category}</span>
+              <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold;">${t.status}</span>
+            </div>
+            <div style="max-height:160px; overflow-y:auto; background:#fff; padding:8px; border:1px solid #eee; border-radius:4px; margin-bottom:8px;">
+              ${msgsHtml}
+            </div>
+            ${isClosed ? '<p style="font-size:0.8rem; color:#d32f2f; font-style:italic;">This grievance has been closed by Admin.</p>' : `
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="custReplyInput_${t.id}" placeholder="Type reply..." style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
+                <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem;" onclick="sendCustomerChatMessage(${t.id})">Send</button>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
     }
 
     function submitSellerRegistration() {
@@ -802,6 +1001,7 @@
       window.scrollTo(0, 0);
       
       if(pageId === 'wishlist') renderWishlist();
+      if(pageId === 'support') renderCustomerTickets();
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) {
           document.getElementById('adminLoginModal').style.display = 'flex';
@@ -1017,7 +1217,47 @@
         </div>
       `).join('');
       document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway})</div>`).join('');
-      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>[${t.email}]</b> ${t.subject}: ${t.msg}</div>`).join('');
+      
+      // Admin Tickets & Chat Management
+      let admTicketsContainer = document.getElementById('admTicketsList');
+      if(admTicketsContainer) {
+        if(ticketsList.length === 0) {
+          admTicketsContainer.innerHTML = 'No support tickets.';
+        } else {
+          admTicketsContainer.innerHTML = ticketsList.map(t => {
+            let isClosed = t.status === 'Closed';
+            let msgsHtml = t.messages.map(m => `
+              <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
+                <div style="display:inline-block; padding:6px 10px; border-radius:6px; background:${m.sender === 'admin' ? '#e8f5e9' : '#f1f3f6'}; font-size:0.8rem; max-width:85%; text-align:left;">
+                  <small style="display:block; font-weight:bold; color:${m.sender === 'admin' ? '#388e3c' : '#333'};">${m.sender === 'admin' ? 'Admin' : t.email}</small>
+                  ${m.text}
+                </div>
+              </div>
+            `).join('');
+
+            return `
+              <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-size:0.85rem; font-weight:bold;">User: ${t.email} | Category: ${t.category}</span>
+                  <div>
+                    <span style="font-size:0.7rem; padding:2px 6px; border-radius:3px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold; margin-right:6px;">${t.status}</span>
+                    ${!isClosed ? `<button type="button" onclick="closeAdminTicket(${t.id})" style="background:#d32f2f; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Close Grievance</button>` : ''}
+                  </div>
+                </div>
+                <div style="max-height:140px; overflow-y:auto; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px; margin-bottom:6px;">
+                  ${msgsHtml}
+                </div>
+                ${isClosed ? '<p style="font-size:0.75rem; color:#d32f2f; font-style:italic;">Grievance closed.</p>' : `
+                  <div style="display:flex; gap:6px;">
+                    <input type="text" id="adminReplyInput_${t.id}" placeholder="Reply to customer..." style="flex-grow:1; padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px;">
+                    <button type="button" class="btn-solid" style="width:auto; padding:6px 12px; font-size:0.75rem; background:#388e3c;" onclick="sendAdminChatMessage(${t.id})">Reply</button>
+                  </div>
+                `}
+              </div>
+            `;
+          }).join('');
+        }
+      }
     }
 
     function deleteAdminProduct(id) {
