@@ -206,7 +206,7 @@
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Clean Product Manager</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
@@ -218,14 +218,19 @@
       </div>
 
       <div id="admTabProducts" class="dash-tab-content">
-        <!-- Add Single Product Form -->
+        <!-- Add Product Form with Gallery Image Upload -->
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 style="margin-bottom:12px; font-weight:bold;">➕ Add New Clean Product</h4>
+          <h4 style="margin-bottom:12px; font-weight:bold;">➕ Add New Product with Gallery Photo</h4>
           <div class="form-group"><label>Product Title</label><input type="text" id="newProdTitle" placeholder="e.g. Men Casual Shirt"></div>
           <div class="form-group"><label>Category</label><select id="newProdCategory"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
           <div class="form-group"><label>Price (₹)</label><input type="number" id="newProdPrice" placeholder="Selling Price"></div>
           <div class="form-group"><label>MRP (₹)</label><input type="number" id="newProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="newProdImg" placeholder="Paste direct image URL"></div>
+          
+          <div class="form-group">
+            <label>Choose Image from Gallery</label>
+            <input type="file" id="newProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+          </div>
+
           <div class="form-group"><label>Description</label><textarea id="newProdDesc" rows="2" placeholder="Product details..."></textarea></div>
           <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="addNewCustomProduct()">Add Product</button>
         </div>
@@ -267,7 +272,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER WITH + / - & DELIVERY CHARGE BREAKUP -->
+  <!-- CART DRAWER -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
@@ -301,25 +306,48 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    let products = JSON.parse(localStorage.getItem('kosh_products_v12')) || [];
+    let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
+    
+    // Persistent Login Management
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
+    let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
+
     let currentSelectedProduct = null;
     let secretClickCount = 0;
-    let activeCategoryFilter = 'All';
+    
+    // Persistent Category & Admin Tab States
+    let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
+    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
 
     window.addEventListener('DOMContentLoaded', () => {
-      navigateTo(localStorage.getItem('kosh_active_page') || 'home');
+      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
+      navigateTo(savedPage, false);
+      
+      // Restore active category UI highlight
+      document.querySelectorAll('.cat-item').forEach(i => {
+        if(i.innerText.includes(activeCategoryFilter) || (activeCategoryFilter === 'All' && i.innerText.includes('All'))) {
+          i.classList.add('active');
+        } else {
+          i.classList.remove('active');
+        }
+      });
+
       renderProducts();
       updateCartUI();
+      checkLoginStatus();
     });
 
     function renderProducts(filterCat = null) {
-      if(filterCat !== null) activeCategoryFilter = filterCat;
+      if(filterCat !== null) {
+        activeCategoryFilter = filterCat;
+        localStorage.setItem('kosh_active_cat', filterCat);
+      }
+      
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
@@ -367,12 +395,20 @@
       renderProducts();
     }
 
-    function navigateTo(pageId) {
+    function navigateTo(pageId, save = true) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
-      localStorage.setItem('kosh_active_page', pageId);
+      if(save) localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
-      if(pageId === 'admin-dashboard') loadAdminMasterData();
+      
+      if(pageId === 'admin-dashboard') {
+        if(!isAdminLoggedIn) {
+          document.getElementById('adminLoginModal').style.display = 'flex';
+          return;
+        }
+        loadAdminMasterData();
+        switchAdminTab(activeAdminTab, false);
+      }
     }
 
     function filterCategory(cat) {
@@ -465,28 +501,41 @@
     }
 
     function clearAllProductsCompletely() {
-      if(confirm("Kya aap saare products ko permanent delete karna chahte hain? Store bilkul empty ho jayega.")) {
+      if(confirm("Kya aap saare products ko permanent delete karna chahte hain?")) {
         products = [];
-        localStorage.setItem('kosh_products_v12', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
         renderProducts();
         loadAdminMasterData();
-        showAlert("Saare products successfully delete kar diye gaye hain!", "Success", true);
+        showAlert("Saare products delete ho gaye hain!", "Success", true);
       }
     }
 
+    // Add Product with Gallery File Reader Support
     function addNewCustomProduct() {
       let title = document.getElementById('newProdTitle').value.trim();
       let category = document.getElementById('newProdCategory').value;
       let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
       let mrp = parseFloat(document.getElementById('newProdMrp').value) || price * 1.5;
-      let image = document.getElementById('newProdImg').value.trim() || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60";
       let desc = document.getElementById('newProdDesc').value.trim();
+      let fileInput = document.getElementById('newProdFile');
 
       if(!title || !price) {
         showAlert("Kripya Product Title aur Price bharein.");
         return;
       }
 
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          saveProductWithImage(title, category, price, mrp, e.target.result, desc);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveProductWithImage(title, category, price, mrp, "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc);
+      }
+    }
+
+    function saveProductWithImage(title, category, price, mrp, image, desc) {
       let newId = Date.now();
       products.unshift({
         id: newId,
@@ -500,37 +549,56 @@
         desc: desc || "Premium quality product from Kosh Studio."
       });
 
-      localStorage.setItem('kosh_products_v12', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
       renderProducts();
       loadAdminMasterData();
       
       document.getElementById('newProdTitle').value = '';
       document.getElementById('newProdPrice').value = '';
       document.getElementById('newProdMrp').value = '';
-      document.getElementById('newProdImg').value = '';
+      document.getElementById('newProdFile').value = '';
       document.getElementById('newProdDesc').value = '';
 
-      showAlert("Naya product successfully add ho gaya hai!", "Success", true);
+      showAlert("Naya product gallery image ke sath add ho gaya hai!", "Success", true);
     }
 
     function triggerAdminSecret() {
       secretClickCount++;
-      if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
+      if(secretClickCount >= 5) { 
+        secretClickCount = 0; 
+        if(isAdminLoggedIn) {
+          navigateTo('admin-dashboard');
+        } else {
+          document.getElementById('adminLoginModal').style.display = 'flex'; 
+        }
+      }
     }
+
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
       if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+        isAdminLoggedIn = true;
+        localStorage.setItem('kosh_is_admin', 'true');
         document.getElementById('adminLoginModal').style.display = 'none';
         navigateTo('admin-dashboard');
       } else { showAlert('Incorrect Admin ID or Password!'); }
     }
 
-    function switchAdminTab(tab) {
+    function switchAdminTab(tab, save = true) {
+      if(save) {
+        activeAdminTab = tab;
+        localStorage.setItem('kosh_admin_tab', tab);
+      }
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+      
+      // Find matching button and activate
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
+        if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
+      });
+      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      if(contentEl) contentEl.classList.add('active');
     }
 
     function loadAdminMasterData() {
@@ -548,15 +616,39 @@
     function deleteAdminProduct(id) {
       if(confirm("Kya aap is product ko delete karna chahte hain?")) {
         products = products.filter(p => p.id !== id);
-        localStorage.setItem('kosh_products_v12', JSON.stringify(products));
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
         renderProducts();
         loadAdminMasterData();
-        showAlert("Product successfully delete ho gaya hai!", "Success", true);
+        showAlert("Product delete ho gaya hai!", "Success", true);
       }
     }
 
-    function handleLogin() { currentUser = document.getElementById('loginEmail').value; localStorage.setItem('kosh_logged_email', currentUser); showAlert('Login successful!', 'Success', true); navigateTo('home'); }
-    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; showAlert('Logged out.'); navigateTo('home'); }
+    function handleLogin() { 
+      currentUser = document.getElementById('loginEmail').value; 
+      localStorage.setItem('kosh_logged_email', currentUser); 
+      checkLoginStatus();
+      showAlert('Login successful!', 'Success', true); 
+      navigateTo('home'); 
+    }
+
+    function handleLogout() { 
+      localStorage.removeItem('kosh_logged_email'); 
+      currentUser = null; 
+      checkLoginStatus();
+      showAlert('Logged out successfully.', 'Notice', false);
+      navigateTo('home'); 
+    }
+
+    function checkLoginStatus() {
+      if(currentUser) {
+        document.getElementById('authLoginView').style.display = 'none';
+        document.getElementById('userDashboardSection').style.display = 'block';
+        document.getElementById('displayUserEmail').innerText = currentUser;
+      } else { 
+        document.getElementById('userDashboardSection').style.display = 'none'; 
+        document.getElementById('authLoginView').style.display = 'block'; 
+      }
+    }
   </script>
 </body>
 </html>
