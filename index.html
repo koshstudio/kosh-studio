@@ -27,7 +27,7 @@
 
     .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
-    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
     .brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
     
     .header-search { flex-grow: 1; max-width: 260px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
@@ -35,8 +35,6 @@
     
     .header-icons { display: flex; align-items: center; gap: 12px; }
     .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text); font-weight: 600; padding: 4px 6px; }
-    
-    /* Professional Badge Positioning */
     .badge-count { position: absolute; top: -4px; right: 0px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; z-index: 2; }
 
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
@@ -255,10 +253,37 @@
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
+      <!-- Settings Tab with Flexible Payment Gateway Manager -->
       <div id="admTabSettings" class="dash-tab-content">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
-          <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>[span_1](start_span)[span_1](end_span)
+          
+          <div class="form-group">
+            <label>Active Gateway</label>
+            <select id="gatewaySelect" onchange="toggleGatewayFields()">
+              <option value="Cashfree">Cashfree (Automatic)</option>
+              <option value="Razorpay">Razorpay (Automatic)</option>
+              <option value="UPI">Manual UPI / QR Code Scanner</option>
+            </select>
+          </div>
+
+          <div id="autoGatewayConfig" class="form-group">
+            <label>API Key / Client ID</label>
+            <input type="text" id="gwApiKey" placeholder="Enter API Key">
+          </div>
+
+          <div id="upiGatewayConfig" style="display:none;">
+            <div class="form-group">
+              <label>Business UPI ID</label>
+              <input type="text" id="gwUpiId" placeholder="e.g. yourname@upi">
+            </div>
+            <div class="form-group">
+              <label>QR Code Image URL / Scanner Link</label>
+              <input type="text" id="gwQrImage" placeholder="Paste QR Code image URL">
+            </div>
+          </div>
+
+          <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         </div>
       </div>
     </div>
@@ -287,6 +312,26 @@
     </div>
   </div>
 
+  <!-- MANUAL UPI PAYMENT MODAL -->
+  <div class="modal-overlay" id="upiPaymentModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary);">📷 Scan & Pay via UPI</h3>
+      <p style="font-size:0.85rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete your payment.</p>
+      <div style="margin-bottom:12px;">
+        <img id="modalQrImg" src="" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px;">
+      </div>
+      <p style="font-size:0.85rem; font-weight:bold; margin-bottom:12px;">UPI ID: <span id="modalUpiIdText" style="color:var(--accent);"></span></p>
+      <div class="form-group">
+        <label>Enter Transaction ID / UTR</label>
+        <input type="text" id="modalUtrInput" placeholder="e.g. 4231xxxxxxxx">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button type="button" class="btn-solid" style="background:#888;" onclick="document.getElementById('upiPaymentModal').style.display='none'">Cancel</button>
+        <button type="button" class="btn-solid" style="background:var(--success);" onclick="verifyAndPlaceOrder()">Submit & Place Order</button>
+      </div>
+    </div>
+  </div>
+
   <!-- CART DRAWER -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
@@ -299,7 +344,7 @@
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; color:var(--muted);"><span>Subtotal</span><span id="cartSubtotalPrice">₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">FREE Delivery</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to secure checkout...')">Proceed to Checkout</button>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="proceedToCheckout()">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -343,6 +388,8 @@
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     
+    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '' };
+    
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
 
@@ -367,7 +414,74 @@
       renderProducts();
       updateCartUI();
       checkLoginStatus();
+      loadPaymentSettingsToUI();
     });
+
+    function toggleGatewayFields() {
+      let gw = document.getElementById('gatewaySelect').value;
+      document.getElementById('autoGatewayConfig').style.display = gw === 'UPI' ? 'none' : 'block';
+      document.getElementById('upiGatewayConfig').style.display = gw === 'UPI' ? 'block' : 'none';
+    }
+
+    function loadPaymentSettingsToUI() {
+      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
+      document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
+      document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
+      document.getElementById('gwQrImage').value = paymentConfig.qrImage || '';
+      toggleGatewayFields();
+    }
+
+    function savePaymentSettings() {
+      paymentConfig = {
+        gateway: document.getElementById('gatewaySelect').value,
+        apiKey: document.getElementById('gwApiKey').value,
+        upiId: document.getElementById('gwUpiId').value,
+        qrImage: document.getElementById('gwQrImage').value
+      };
+      localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+      showAlert("Payment gateway configuration successfully save ho gayi hai!", "Success", true);
+    }
+
+    function proceedToCheckout() {
+      if(cart.length === 0) return;
+      if(paymentConfig.gateway === 'UPI') {
+        if(!paymentConfig.upiId) {
+          showAlert("Admin ne abhi UPI ID configure nahi kiya hai. Kripya Settings check karein.");
+          return;
+        }
+        document.getElementById('modalUpiIdText').innerText = paymentConfig.upiId;
+        document.getElementById('modalQrImg').src = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
+        toggleCartDrawer(false);
+        document.getElementById('upiPaymentModal').style.display = 'flex';
+      } else {
+        showAlert(`Redirecting to ${paymentConfig.gateway} secure payment gateway...`, "Secure Checkout", true);
+        setTimeout(() => {
+          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, date: new Date().toLocaleDateString() });
+          localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+          cart = [];
+          localStorage.setItem('kosh_cart', JSON.stringify(cart));
+          toggleCartDrawer(false);
+          updateCartUI();
+          showAlert("Order successfully placed via " + paymentConfig.gateway + "!", "Success", true);
+        }, 1500);
+      }
+    }
+
+    function verifyAndPlaceOrder() {
+      let utr = document.getElementById('modalUtrInput').value.trim();
+      if(!utr) {
+        showAlert("Kripya Transaction ID / UTR enter karein.");
+        return;
+      }
+      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', date: new Date().toLocaleDateString() });
+      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      cart = [];
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      document.getElementById('upiPaymentModal').style.display = 'none';
+      document.getElementById('modalUtrInput').value = '';
+      updateCartUI();
+      showAlert("Payment verified & Order placed successfully!", "Success", true);
+    }
 
     function renderProducts(filterCat = null) {
       if(filterCat !== null) {
@@ -636,7 +750,7 @@
           <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
         </div>
       `).join('');
-      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : '';
+      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway})</div>`).join('');
       document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : '';
     }
 
