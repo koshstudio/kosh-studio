@@ -18,7 +18,7 @@
       --text: #212121;
       --muted: #878787;
       --primary: #111111;
-      --accent: #d4af37; /* Champagne Gold */
+      --accent: #d4af37;
       --border: #e0e0e0;
       --shadow: 0 2px 8px rgba(0,0,0,0.06);
       --success: #388e3c;
@@ -186,9 +186,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      transition: transform 0.2s;
     }
-    .product-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
     .product-img {
       width: 100%;
@@ -239,7 +237,6 @@
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px;
       border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
     }
-    .btn-add-cart:hover { background: #333; }
 
     .app-page { display: none; }
     .app-page.active { display: block; }
@@ -267,15 +264,13 @@
       max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
+    /* Strict Vertical Form Stack */
     .form-group { margin-bottom: 14px; display: block; width: 100%; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select {
       width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff;
     }
-    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; }
-    @media (min-width: 600px) {
-      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    }
+    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; margin-bottom: 14px; }
 
     .btn-solid {
       width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px;
@@ -289,8 +284,8 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
-    .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-    @media (max-width: 768px) { .summary-cards-grid { grid-template-columns: 1fr; } }
+    .summary-cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    @media (min-width: 768px) { .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); } }
     .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
     .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
     .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
@@ -317,16 +312,16 @@
         <input type="text" id="searchInput" placeholder="Search kurtis, sarees, lehengas, watches..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
-        <button class="icon-btn" onclick="navigateTo('wishlist')">
+        <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           <span>Wishlist</span>
           <span class="badge-count" id="wishlistCount">0</span>
         </button>
-        <button class="icon-btn" onclick="navigateTo('profile')">
+        <button type="button" class="icon-btn" onclick="navigateTo('profile')">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Account</span>
         </button>
-        <button class="icon-btn" onclick="toggleCartDrawer(true)">
+        <button type="button" class="icon-btn" onclick="toggleCartDrawer(true)">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span>Cart</span>
           <span class="badge-count" id="cartCount">0</span>
@@ -335,7 +330,7 @@
     </header>
 
     <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
-      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
+      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button type="button" onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
     </div>
 
     <!-- Flash Sale Banner -->
@@ -373,7 +368,7 @@
   <!-- WISHLIST PAGE -->
   <div id="page-wishlist" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
       <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
     </div>
     <div class="page-content">
@@ -384,10 +379,10 @@
   <!-- PRODUCT DETAILS PAGE -->
   <div id="page-product" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
       <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
     </div>
-    <div class="page-content" style="display:grid; grid-template-columns: 1fr; gap:20px;">
+    <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
       <div>
         <img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
       </div>
@@ -404,9 +399,9 @@
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:20px;">
-          <button class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
-          <button class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+          <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
+          <button type="button" class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
         
@@ -427,7 +422,7 @@
               <div class="form-group"><label>Your Name</label><input type="text" id="newReviewAuthor" placeholder="Name"></div>
             </div>
             <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
-            <button class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
+            <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
           </div>
           <div id="unverifiedReviewMsg" style="font-size:0.8rem; color:#d32f2f; margin-top:10px; font-style:italic;">
             🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
@@ -444,7 +439,7 @@
   <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
       <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
     </div>
     <div class="page-content">
@@ -453,7 +448,7 @@
         <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access account or seller dashboard</p>
         <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
         <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <button class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
+        <button type="button" class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
       </div>
 
@@ -461,7 +456,7 @@
         <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
         <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
         <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
+        <button type="button" class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
         <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
       </div>
 
@@ -471,7 +466,7 @@
             <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
             <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
           </div>
-          <button onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
+          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
           <div>
@@ -486,14 +481,14 @@
           <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
           <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject (e.g. Order #1234 issue)"></div>
           <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe your issue..."></textarea></div>
-          <button class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
+          <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
           <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
         </div>
         
         <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
           <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
           <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start dropshipping / selling your products.</p>
-          <button class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
+          <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
         </div>
       </div>
     </div>
@@ -502,7 +497,7 @@
   <!-- MY ORDERS PAGE -->
   <div id="page-orders" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
       <span style="font-weight:700; font-size:0.95rem;">My Orders, Invoices & Tracking</span>
     </div>
     <div class="page-content">
@@ -510,68 +505,66 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
+  <!-- FULL-SCREEN SELLER DASHBOARD PAGE (Vertical Form Layout) -->
   <div id="page-seller-dashboard" class="app-page">
     <div class="page-header">
-      <button class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
       <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</span>
     </div>
     <div class="page-content" style="max-width:1000px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products & Sharing</button>
-        <button class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders & Tracking</button>
-        <button class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings & Sales</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings</button>
       </div>
 
       <!-- Tab 1: My Products, Bulk CSV & Catalog Sharing -->
       <div id="sellerTabProducts" class="dash-tab-content active">
         <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
-          <strong>🔗 Share Your Store Catalog:</strong> Send all your products together to your personal customers via WhatsApp.
-          <button class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link on WhatsApp</button>
+          <strong>🔗 Share Your Store Catalog:</strong> Send all products to customers via WhatsApp.
+          <button type="button" class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link</button>
         </div>
 
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#e65100;">
-          <strong>📋 Seller Bulk CSV Import:</strong> Upload catalogue CSV. Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
+          <strong>📋 Seller Bulk CSV Import:</strong> Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
           <input type="file" id="sellerCsvInput" accept=".csv" style="margin-top:8px; display:block;" onchange="previewSellerCsv(this)">
-          <button class="btn-solid" id="sellerConfirmCsvBtn" style="background:#d4af37; color:#000; margin-top:8px; display:none; padding:8px;" onclick="executeSellerCsvImport()">Import CSV Products</button>
+          <button type="button" class="btn-solid" id="sellerConfirmCsvBtn" style="background:#d4af37; color:#000; margin-top:8px; display:none; padding:8px;" onclick="executeSellerCsvImport()">Import CSV Products</button>
         </div>
 
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
           <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product</h5>
           <input type="hidden" id="sellerEditIndex" value="-1">
-          <div class="form-row">
-            <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
-            <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
-            <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-            <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
-          </div>
+          
+          <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
+          <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
+          <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
+          <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+          <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
+
           <div style="background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.85rem; font-weight:bold; margin-bottom:12px;" id="previewListingPriceText">
-            ℹ️ Final Listing Price for Customer = Base Price + Admin Commission
+            ℹ️ Final Price for Customer = Base Price + Admin Commission
           </div>
+
           <div class="form-group">
             <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px;">
+            <div style="display:flex; gap:6px; flex-direction:column;">
               <input type="text" id="sProdImage" placeholder="Paste Image URL">
               <input type="file" id="sProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'sProdImage')">
-              <button type="button" onclick="document.getElementById('sProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:0 14px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem; white-space:nowrap;">📁 Gallery</button>
+              <button type="button" onclick="document.getElementById('sProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
             </div>
           </div>
+
           <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
+          <button type="button" class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
         </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Your Listed Products (Low Stock Alerts)</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Your Listed Products</h5>
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <!-- Tab 2: My Orders, Invoices & Returns -->
       <div id="sellerTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Orders, Tracking Details, Custom Popups & Invoices</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Orders & Tracking Details</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
       </div>
 
@@ -587,16 +580,16 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE (rohitku316 / Rohit@2006) -->
+  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE (Vertical Form Layout) -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
-      <button class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
+      <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
       <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#fff; padding:12px; border:1px solid var(--border); border-radius:6px;">
         <h4 style="font-size:0.95rem; color:var(--success);">✅ Logged in as Master Admin</h4>
-        <button onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
+        <button type="button" onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
       </div>
 
       <!-- Admin Summary Cards -->
@@ -616,54 +609,51 @@
       </div>
 
       <div class="dash-tabs">
-        <button class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers, Sales & Payouts</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Admin Listing</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 All Orders & Invoices</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Support Tickets</button>
-        <button class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings & Gateways</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
       <!-- Tab 1: Sellers, Sales & Payout Tracker -->
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Seller Sales, Payable Amounts & Settlement Tracker</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Seller Sales & Settlement Tracker</h5>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
       </div>
 
-      <!-- Tab 2: Products & Admin Listing -->
+      <!-- Tab 2: Products & Admin Listing (Vertical Form) -->
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing (Kosh Direct)</h5>
+          <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing</h5>
           <input type="hidden" id="adminEditIndex" value="-1">
-          <div class="form-row">
-            <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
-            <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
-            <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
-            <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
-          </div>
+          
+          <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
+          <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
+          <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
+          <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
+          <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
+
           <div class="form-group">
             <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px;">
+            <div style="display:flex; gap:6px; flex-direction:column;">
               <input type="text" id="aProdImage" placeholder="Paste Image URL">
               <input type="file" id="aProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'aProdImage')">
-              <button type="button" onclick="document.getElementById('aProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:0 14px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem; white-space:nowrap;">📁 Gallery</button>
+              <button type="button" onclick="document.getElementById('aProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
             </div>
           </div>
+
           <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
+          <button type="button" class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
         </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Marketplace Products across Vendors</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Marketplace Products</h5>
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <!-- Tab 3: Orders with Return Video Proofs & Invoices -->
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Customer Orders, Tracking Details, Custom Popups & Printable Invoices</h5>
+        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Customer Orders & Tracking Details</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
@@ -673,13 +663,13 @@
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
       </div>
 
-      <!-- Tab 5: Settings, Gateways & Supabase (Vertical Layout) -->
+      <!-- Tab 5: Settings, Gateways & Supabase (Strict Vertical Form Layout) -->
       <div id="admTabSettings" class="dash-tab-content">
         
         <!-- Payment Gateway Switcher (No Code Needed) -->
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select your active payment gateway and configure credentials without touching code.</p>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select active payment gateway and configure credentials.</p>
           
           <div class="form-group">
             <label>Select Active Payment Gateway</label>
@@ -696,7 +686,7 @@
           </div>
 
           <div class="form-group" id="gwField2Group">
-            <label id="gwField2Label">Cashfree Secret Key / UPI ID</label>
+            <label id="gwField2Label">Cashfree Secret Key</label>
             <input type="text" id="gwMerchantSecret" placeholder="Enter Secret or UPI ID">
           </div>
 
@@ -704,25 +694,25 @@
         </div>
 
         <!-- Supabase Cloud Setup -->
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Setup</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter Supabase credentials to sync products & orders to the cloud.</p>
+          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter Supabase credentials to sync data to the cloud.</p>
           <div class="form-group"><label>Supabase Project URL</label><input type="text" id="sbUrlInput" placeholder="https://xyz.supabase.co"></div>
           <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" id="sbKeyInput" placeholder="sb_publishable_..." autocomplete="off"></div>
           <button type="button" class="btn-solid" onclick="saveSupabaseConfig()" style="background:#2196f3; margin-top:6px;">Connect & Sync Supabase</button>
         </div>
 
         <!-- Global Commission -->
-        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+        <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
           <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
           <button type="button" class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
         </div>
 
         <!-- Reset Data -->
-        <div style="background:#ffebee; border:1px solid #ffcdd2; padding:24px; border-radius:6px; max-width:500px;">
+        <div style="background:#ffebee; border:1px solid #ffcdd2; padding:20px; border-radius:6px; max-width:500px;">
           <h4 style="margin-bottom:12px; color:#c62828;">⚠️ Reset Dashboard Data & Revenue</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;">This will clear all orders, reset total revenue to zero, and clear customer support tickets.</p>
+          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;">Clear all orders and reset total revenue to zero.</p>
           <button type="button" class="btn-solid" onclick="resetAllDashboardData()" style="background:#d32f2f;">Reset All Orders & Revenue</button>
         </div>
       </div>
@@ -735,7 +725,7 @@
       <div id="customAlertIcon" style="font-size:2rem; margin-bottom:8px;">📢</div>
       <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700; color:var(--primary);">Kosh Studio Notice</h3>
       <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px; line-height:1.5;"></p>
-      <button class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
+      <button type="button" class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
     </div>
   </div>
 
@@ -743,8 +733,8 @@
   <div class="modal-overlay" id="adminEditSellerModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">✏️ Edit Seller Details (Admin Only)</h3>
-        <button onclick="closeAdminEditSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        <h3 style="font-size:1.1rem;">✏️ Edit Seller Details</h3>
+        <button type="button" onclick="closeAdminEditSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <input type="hidden" id="admEditSellerIdx">
       <div class="form-group"><label>Seller Unique ID</label><input type="text" id="admEditUniqueId" readonly style="background:#f1f3f6;"></div>
@@ -752,7 +742,7 @@
       <div class="form-group"><label>Owner Full Name</label><input type="text" id="admEditName"></div>
       <div class="form-group"><label>Email (Login ID)</label><input type="text" id="admEditEmail"></div>
       <div class="form-group"><label>Mobile Number</label><input type="text" id="admEditPhone" maxlength="10"></div>
-      <button class="btn-solid" onclick="saveAdminEditedSeller()" style="margin-top:10px; background:#2196f3;">Update Seller Details</button>
+      <button type="button" class="btn-solid" onclick="saveAdminEditedSeller()" style="margin-top:10px; background:#2196f3;">Update Seller Details</button>
     </div>
   </div>
 
@@ -761,14 +751,14 @@
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
       <h3 style="font-size:1rem; font-weight:700;">CART</h3>
-      <button onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
       <div style="margin-bottom:12px; display:flex; gap:6px;">
         <input type="text" id="couponInput" placeholder="Enter Coupon (KOSH20)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
-        <button onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
+        <button type="button" onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
       </div>
       <div id="couponMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:bold;"></div>
 
@@ -778,37 +768,35 @@
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Gateway Fee (~2%)</span><span id="summaryPgFee">+ ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
       <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL -->
+  <!-- CHECKOUT MODAL (Strict Vertical Form) -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
         <h3 id="checkoutTitle" style="font-size:1.1rem;">Secure Online Checkout</h3>
-        <button onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        <button type="button" onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
         <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Gateway Fee (~2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
         <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
       </div>
+      
       <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
       <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required></div>
       <div class="form-group"><label>House No. / Street / Area</label><input type="text" id="chkArea" placeholder="Area / Address" required></div>
-      <div class="form-row">
-        <div class="form-group"><label>6-Digit PIN Code</label><input type="text" id="chkPincode" placeholder="PIN code" maxlength="6" oninput="lookupPincode(this.value)" required></div>
-        <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City" required></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
-        <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
-      </div>
+      <div class="form-group"><label>6-Digit PIN Code</label><input type="text" id="chkPincode" placeholder="PIN code" maxlength="6" oninput="lookupPincode(this.value)" required></div>
+      <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City" required></div>
+      <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
+      <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
+
       <div id="upiExtraInfo" style="display:none; background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.82rem; margin-bottom:12px; font-weight:bold;">
         📲 Direct UPI Mode Active: Complete payment via your UPI application.
       </div>
-      <button class="btn-solid" onclick="initiateCheckoutFlow()" style="margin-top:10px;">Pay & Place Order</button>
+      <button type="button" class="btn-solid" onclick="initiateCheckoutFlow()" style="margin-top:10px;">Pay & Place Order</button>
     </div>
   </div>
 
@@ -819,7 +807,7 @@
       <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
       <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
       <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
-      <button class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
+      <button type="button" class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
     </div>
   </div>
 
@@ -828,7 +816,7 @@
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
         <h3 style="font-size:1.1rem;">🏪 Secure Seller Registration & Bank KYC</h3>
-        <button onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        <button type="button" onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
       <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com" readonly style="background:#f1f3f6;"></div>
@@ -837,17 +825,17 @@
       
       <div class="form-group">
         <label>IFSC Code</label>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:6px; flex-direction:column;">
           <input type="text" id="sellerRegIfsc" placeholder="e.g. SBIN0001234" maxlength="11" style="text-transform:uppercase;">
-          <button type="button" onclick="verifyIfscCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer; white-space:nowrap;">Verify IFSC</button>
+          <button type="button" onclick="verifyIfscCode()" style="background:var(--primary); color:#fff; border:none; padding:10px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Verify IFSC</button>
         </div>
       </div>
       <div id="ifscResultBox" style="font-size:0.75rem; color:var(--success); margin-bottom:8px; font-weight:bold; display:none;"></div>
 
-      <div class="form-group"><label>Bank Account Number (9 to 18 digits)</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
+      <div class="form-group"><label>Bank Account Number</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
       <div class="form-group"><label>Confirm Bank Account Number</label><input type="text" id="sellerRegAcc2" placeholder="Re-enter Account Number"></div>
       
-      <button class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
+      <button type="button" class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
     </div>
   </div>
 
@@ -856,11 +844,11 @@
     <div class="modal-box" style="max-width:380px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
         <h3 style="font-size:1.1rem;">🔒 Admin Master Login</h3>
-        <button onclick="closeAdminLoginModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        <button type="button" onclick="closeAdminLoginModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
       <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
       <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
-      <button class="btn-solid" onclick="verifyAdminPassword()" style="margin-top:10px;">Login to Master Admin</button>
+      <button type="button" class="btn-solid" onclick="verifyAdminPassword()" style="margin-top:10px;">Login to Master Admin</button>
     </div>
   </div>
 
@@ -1003,7 +991,7 @@
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <button class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
           <div class="product-img" onclick="openProductDetail(${p.id})">
             <img src="${p.image}" alt="${p.title}">
           </div>
@@ -1018,7 +1006,7 @@
               <span class="p-price">₹${p.price}</span>
               <span class="p-mrp">₹${p.mrp}</span>
             </div>
-            <button class="btn-add-cart" onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
           </div>
         `;
         grid.appendChild(card);
@@ -1055,13 +1043,13 @@
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <button class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
           <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
           <div class="product-info">
             <span class="p-category">${p.category}</span>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
             <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
@@ -1242,7 +1230,7 @@
         totalItems += item.qty;
         container.innerHTML += `
           <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;">
-            <button onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
+            <button type="button" onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
             <div style="display:flex; gap:12px;">
               <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
               <div style="flex-grow:1; padding-right:15px;">
@@ -1250,9 +1238,9 @@
                 <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
                 <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
                 <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                  <button onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+                  <button type="button" onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
                   <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
-                  <button onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+                  <button type="button" onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
                 </div>
               </div>
             </div>
@@ -1489,7 +1477,7 @@
         let h = '';
         myProducts.forEach((p) => {
           let globalIdx = products.findIndex(item => item.id === p.id);
-          h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;"><div><b>${p.title}</b><br><span style="color:var(--muted);">Price: ₹${p.price} | Stock: ${p.stock}</span></div><button onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">Remove</button></div>`;
+          h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;"><div><b>${p.title}</b><br><span style="color:var(--muted);">Price: ₹${p.price} | Stock: ${p.stock}</span></div><button type="button" onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">Remove</button></div>`;
         });
         pArea.innerHTML = h;
       }
@@ -1501,7 +1489,7 @@
             let itemTotal = si.price * si.qty;
             let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
             totalSales += itemTotal; totalCommission += commissionAmt;
-            oHtml += `<div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"><b>Order #${o.id}</b> - ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}<br>Customer: ${o.name} (${o.phone}), ${o.address}<br><div style="display:flex; gap:6px; margin-top:8px;"><select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.75rem;"><option value="Processing">Processing</option><option value="Packed & Shipped">Shipped</option><option value="Delivered">Delivered</option></select><input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${si.courierName||''}" style="padding:6px; font-size:0.75rem; max-width:100px;"><input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${si.trackingId||''}" style="padding:6px; font-size:0.75rem; max-width:110px;"><button onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Save</button></div></div>`;
+            oHtml += `<div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"><b>Order #${o.id}</b> - ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}<br>Customer: ${o.name} (${o.phone}), ${o.address}<br><div style="display:flex; gap:6px; margin-top:8px; flex-direction:column;"><select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.75rem;"><option value="Processing">Processing</option><option value="Packed & Shipped">Shipped</option><option value="Delivered">Delivered</option></select><input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${si.courierName||''}" style="padding:6px; font-size:0.75rem;"><input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${si.trackingId||''}" style="padding:6px; font-size:0.75rem;"><button type="button" onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Save</button></div></div>`;
           });
         }
       });
@@ -1529,15 +1517,16 @@
       }
     }
 
-    function editSellerProduct(globalIdx) {
-      let p = products[globalIdx];
-      document.getElementById('sellerEditIndex').value = globalIdx;
-      document.getElementById('sProdTitle').value = p.title;
-      document.getElementById('sProdBasePrice').value = p.basePrice || p.price;
-      document.getElementById('sProdMrp').value = p.mrp;
-      document.getElementById('sProdStock').value = p.stock;
-      document.getElementById('sProdImage').value = p.image;
-      document.getElementById('sProdDesc').value = p.desc;
+    function resetSellerForm() {
+      document.getElementById('sellerEditIndex').value = '-1';
+      document.getElementById('sProdTitle').value = '';
+      document.getElementById('sProdSku').value = '';
+      document.getElementById('sProdCategory').value = '';
+      document.getElementById('sProdBasePrice').value = '';
+      document.getElementById('sProdMrp').value = '';
+      document.getElementById('sProdStock').value = '';
+      document.getElementById('sProdImage').value = '';
+      document.getElementById('sProdDesc').value = '';
     }
 
     function removeSellerProduct(globalIdx, sellerId) {
@@ -1659,7 +1648,6 @@
       }
     }
 
-    // --- No-Code Payment Gateway Manager Script ---
     function toggleGatewayFields() {
       let gw = document.getElementById('gatewaySelect').value;
       let lbl1 = document.getElementById('gwField1Label');
@@ -1671,7 +1659,7 @@
         lbl1.innerText = 'Razorpay Key ID';
         lbl2.innerText = 'Razorpay Key Secret';
       } else if(gw === 'UPI') {
-        lbl1.innerText = 'Merchant UPI ID (e.g. store@okhdfc)';
+        lbl1.innerText = 'Merchant UPI ID';
         lbl2.innerText = 'Merchant Display Name';
       }
     }
@@ -1709,7 +1697,7 @@
       ordersList.forEach(o => {
         let isShipped = o.items.some(i => i.fulfillmentStatus === 'Packed & Shipped' || i.fulfillmentStatus === 'Delivered');
         let isDel = o.status === 'Delivered';
-        html += `<div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;"><b>Order #${o.id}</b> - ₹${o.total}<br>${o.items.map(i=>i.title).join(', ')}<br><div class="timeline"><div class="timeline-step active"><span>✓</span>Placed</div><div class="timeline-step ${isShipped||isDel?'active':''}"><span>2</span>Shipped</div><div class="timeline-step ${isDel?'active':''}"><span>3</span>Delivered</div></div>${o.status==='New Order'?`<button onclick="markAsDeliveredByCustomer('${o.id}')" style="margin-top:8px; background:var(--accent); color:#000; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Confirm Delivery</button>`:''}</div>`;
+        html += `<div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;"><b>Order #${o.id}</b> - ₹${o.total}<br>${o.items.map(i=>i.title).join(', ')}<br><div class="timeline"><div class="timeline-step active"><span>✓</span>Placed</div><div class="timeline-step ${isShipped||isDel?'active':''}"><span>2</span>Shipped</div><div class="timeline-step ${isDel?'active':''}"><span>3</span>Delivered</div></div>${o.status==='New Order'?`<button type="button" onclick="markAsDeliveredByCustomer('${o.id}')" style="margin-top:8px; background:var(--accent); color:#000; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Confirm Delivery</button>`:''}</div>`;
       });
       area.innerHTML = html;
     }
