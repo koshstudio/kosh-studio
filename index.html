@@ -471,7 +471,7 @@
       if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    // 🚀 Official 1000+ Unique Products Seeder Function
+    // 🚀 Fixed 1000+ Unique Products Seeder using Supabase Upsert (No Network URL Limit Error)
     async function seedKoshProducts() {
       const categories = [
         { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
@@ -530,37 +530,28 @@
       }
 
       const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
-      const skus = uniqueProducts.map(p => p.sku);
 
-      if(progressEl) progressEl.innerText = "Checking existing SKUs in Supabase database...";
-
-      const { data: existing, error: existingError } = await supabaseClient.from("products").select("sku").in("sku", skus);
-      if (existingError) {
-        console.error(existingError);
-        showAlert("Existing SKU check failed: " + existingError.message);
-        return;
-      }
-
-      const existingSKUs = new Set((existing || []).map(p => p.sku));
-      const newProducts = uniqueProducts.filter(p => !existingSKUs.has(p.sku));
+      if(progressEl) progressEl.innerText = "Inserting products into Supabase using native upsert (duplicate protection)...";
 
       const batchSize = 100;
       let inserted = 0;
       let failed = 0;
 
-      for (let i = 0; i < newProducts.length; i += batchSize) {
-        const batch = newProducts.slice(i, i + batchSize);
-        const { error } = await supabaseClient.from("products").insert(batch);
+      for (let i = 0; i < uniqueProducts.length; i += batchSize) {
+        const batch = uniqueProducts.slice(i, i + batchSize);
+        // Using upsert with ignoreDuplicates to safely handle existing SKUs without massive .in() queries
+        const { error } = await supabaseClient.from("products").upsert(batch, { onConflict: 'sku', ignoreDuplicates: true });
+        
         if (error) {
           console.error("Batch failed:", error);
           failed += batch.length;
         } else {
           inserted += batch.length;
         }
-        if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, newProducts.length)} / ${newProducts.length}`;
+        if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, uniqueProducts.length)} / ${uniqueProducts.length}`;
       }
 
-      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nAlready existed: ${uniqueProducts.length - newProducts.length}\nInserted: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
+      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nProcessed/Inserted: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
       fetchProductsPaginated();
       loadAdminMasterData();
     }
@@ -597,25 +588,16 @@
 
           progressEl.innerText = `Processing ${rows.length} products in batches...`;
           let addedCount = 0;
-          let skippedCount = 0;
           let batchSize = 100;
 
           for(let i = 0; i < rows.length; i += batchSize) {
             let chunk = rows.slice(i, i + batchSize);
-            let { error } = await supabaseClient.from('products').insert(chunk, { returning: 'minimal' });
-            
-            if(error) {
-              for(let item of chunk) {
-                let { error: singleErr } = await supabaseClient.from('products').insert([item]);
-                if(singleErr) { skippedCount++; } else { addedCount++; }
-              }
-            } else {
-              addedCount += chunk.length;
-            }
+            let { error } = await supabaseClient.from('products').upsert(chunk, { onConflict: 'sku', ignoreDuplicates: true });
+            if(!error) { addedCount += chunk.length; }
             progressEl.innerText = `Importing... Progress: ${Math.min(i + batchSize, rows.length)} / ${rows.length}`;
           }
 
-          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished! Added: ${addedCount}, Skipped (Duplicate SKU): ${skippedCount}</span>`;
+          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished Successfully! Processed: ${addedCount} items.</span>`;
           fetchProductsPaginated();
           loadAdminMasterData();
         } catch(err) {
@@ -683,7 +665,7 @@
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+      if(uid === 'Rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginModal').style.display = 'none';
         navigateTo('admin-dashboard');
       } else {
