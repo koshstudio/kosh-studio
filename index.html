@@ -853,14 +853,14 @@
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
     let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
 
-    // Comprehensive Margin-Optimized & Category-Strict Product Catalog (Meesho Style)
+    // Corrected Category-Strict & Margin-Optimized Catalog with Accurate Images
     let baseCatalog = [
-      { id: 101, sku: "KURT-001", title: "Fancy Rayon Printed Anarkali Kurti With Dupatta", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 350, price: 799, mrp: 1499, stock: 50, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Rayon kurti with rich foil print." },
+      { id: 101, sku: "KURT-001", title: "Fancy Rayon Printed Anarkali Kurti With Dupatta", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 350, price: 799, mrp: 1499, stock: 50, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Rayon kurti with rich foil print." },
       { id: 102, sku: "KURT-002", title: "Embroidered Pure Cotton Straight Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 300, price: 699, mrp: 1299, stock: 40, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Pure cotton daily wear straight kurti." },
-      { id: 103, sku: "KURT-003", title: "Designer Party Wear Georgette Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 400, price: 899, mrp: 1699, stock: 35, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Georgette kurti for festive occasions." },
+      { id: 103, sku: "KURT-003", title: "Designer Party Wear Georgette Kurti", category: "Kurtis", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 400, price: 899, mrp: 1699, stock: 35, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Georgette kurti for festive occasions." },
       
       { id: 201, sku: "SAR-001", title: "Banarasi Silk Designer Party Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 700, price: 1499, mrp: 2999, stock: 25, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Banarasi art silk saree with zari work." },
-      { id: 202, sku: "SAR-002", title: "Georgette Floral Printed Daily Wear Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 400, price: 899, mrp: 1599, stock: 30, image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", desc: "Soft georgette floral printed saree." },
+      { id: 202, sku: "SAR-002", title: "Georgette Floral Printed Daily Wear Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 400, price: 899, mrp: 1599, stock: 30, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Soft georgette floral printed saree." },
       { id: 203, sku: "SAR-003", title: "Traditional Kanjivaram Style Silk Saree", category: "Sarees", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 900, price: 1899, mrp: 3499, stock: 20, image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60", desc: "Rich festive Kanjivaram style saree." },
 
       { id: 301, sku: "LEH-001", title: "Bridal Net Embroidered Lehenga Choli", category: "Lehengas", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 1500, price: 2999, mrp: 5999, stock: 15, image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60", desc: "Stunning net lehenga choli with embroidery." },
@@ -881,12 +881,9 @@
       { id: 901, sku: "JEW-001", title: "Kundan Temple Jewellery Necklace Set", category: "Jewellery", sellerId: "admin", sellerName: "Kosh Direct", basePrice: 500, price: 1099, mrp: 2199, stock: 28, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60", desc: "Royal Kundan gold-plated necklace set." }
     ];
 
-    // Deduplication & Storage Initialization Engine
-    let rawProducts = JSON.parse(localStorage.getItem('kosh_products_v4')) || [];
     let uniqueMap = new Map();
-    
-    // Always load base catalog first to maintain pristine items without mixups
     baseCatalog.forEach(p => uniqueMap.set(p.sku, p));
+    let rawProducts = JSON.parse(localStorage.getItem('kosh_products_v4')) || [];
     rawProducts.forEach(p => {
       if(p && p.sku) uniqueMap.set(p.sku, p);
     });
@@ -1750,4 +1747,3 @@
   </script>
 </body>
 </html>
-hm
