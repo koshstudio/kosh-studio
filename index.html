@@ -25,257 +25,63 @@
       --danger: #d32f2f;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    .top-strip {
-      background: var(--primary);
-      color: var(--accent);
-      text-align: center;
-      padding: 6px 12px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; }
+    header { background: #fff; position: sticky; top: 0; z-index: 60; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: var(--shadow); }
+    .brand-name { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-decoration: none; cursor: pointer; }
+    .header-search { flex-grow: 1; max-width: 500px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .header-search input { width: 100%; border: none; background: transparent; padding: 8px 12px; font-size: 0.85rem; outline: none; }
+    .header-icons { display: flex; align-items: center; gap: 14px; }
+    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text); font-weight: 600; }
+    .badge-count { position: absolute; top: -4px; right: 2px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-    header {
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 60;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: var(--shadow);
-    }
+    .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+    .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
 
-    .brand-name {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--primary);
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .header-search {
-      flex-grow: 1;
-      max-width: 500px;
-      display: flex;
-      background: #f1f3f6;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .header-search input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 8px 12px;
-      font-size: 0.85rem;
-      outline: none;
-    }
-
-    .header-icons {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 0.72rem;
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .badge-count {
-      position: absolute;
-      top: -4px;
-      right: 2px;
-      background: var(--accent);
-      color: #000;
-      font-size: 0.6rem;
-      font-weight: 700;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .flash-banner {
-      background: linear-gradient(135deg, #111, #333);
-      color: #fff;
-      padding: 14px 20px;
-      margin: 12px 10px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-    .flash-timer {
-      background: var(--accent);
-      color: #000;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-weight: 800;
-      font-size: 0.85rem;
-    }
-
-    .categories-bar {
-      background: #ffffff;
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
+    .categories-bar { background: #fff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
     .categories-bar::-webkit-scrollbar { display: none; }
-
-    .cat-item {
-      flex: 0 0 auto;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #555;
-      cursor: pointer;
-      padding-bottom: 2px;
-    }
+    .cat-item { flex: 0 0 auto; font-size: 0.82rem; font-weight: 700; color: #555; cursor: pointer; padding-bottom: 2px; }
     .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-    .container {
-      max-width: 1200px;
-      margin: 16px auto;
-      padding: 0 10px;
-    }
+    .container { max-width: 1200px; margin: 16px auto; padding: 0 10px; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    }
-
-    .product-card {
-      background: var(--card-bg);
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .product-img {
-      width: 100%;
-      padding-top: 100%;
-      position: relative;
-      background: #f9f9f9;
-      cursor: pointer;
-    }
-    .product-img img {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-    }
-
-    .wishlist-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255,255,255,0.85);
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      z-index: 5;
-    }
-
-    .product-info {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
+    .product-card { background: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
+    .product-img { width: 100%; padding-top: 100%; position: relative; background: #f9f9f9; cursor: pointer; }
+    .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wishlist-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.85); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 5; }
+    .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
     .p-category { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
-    .p-title {
-      font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em;
-    }
-
+    .p-title { font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em; }
     .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
     .p-price { font-size: 1rem; font-weight: 700; color: #111; }
     .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
+    .btn-add-cart { width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-    .btn-add-cart {
-      width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px;
-      border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
-    }
+    .pagination-bar { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 30px 0; flex-wrap: wrap; }
+    .page-num-btn { background: #fff; border: 1px solid var(--border); padding: 8px 14px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    .page-num-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
     .app-page { display: none; }
     .app-page.active { display: block; }
-
-    .page-header {
-      background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
-    }
+    .page-header { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); }
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
 
-    .cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px;
-      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
-      display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-    }
+    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
-    }
-    .modal-box {
-      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px; }
+    .modal-box { background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
     .form-group { margin-bottom: 14px; display: block; width: 100%; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff;
-    }
-    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; margin-bottom: 14px; }
-
-    .btn-solid {
-      width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px;
-      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; z-index: 10; position: relative;
-    }
-    .btn-solid:hover { background: #333; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff; }
+    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
     .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
     .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
@@ -283,56 +89,36 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
-    .summary-cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    @media (min-width: 768px) { .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); } }
-    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
-    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
-
-    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
-    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
-    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
-    .timeline-step.active span { background: var(--success); }
-
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
-    .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO</div>
+  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO (SUPABASE DB)</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search men wear, women wear, accessories..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           <span>Wishlist</span>
           <span class="badge-count" id="wishlistCount">0</span>
         </button>
         <button type="button" class="icon-btn" onclick="navigateTo('profile')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Account</span>
         </button>
         <button type="button" class="icon-btn" onclick="toggleCartDrawer(true)">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span>Cart</span>
           <span class="badge-count" id="cartCount">0</span>
         </button>
       </div>
     </header>
 
-    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
-      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button type="button" onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
-    </div>
-
-    <!-- Flash Sale Banner -->
     <div class="flash-banner">
       <div>
         <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
@@ -343,20 +129,24 @@
 
     <div class="categories-bar" id="categoriesBar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Men Wear')">Men Wear</div>
-      <div class="cat-item" onclick="filterCategory('Women Wear')">Women Wear</div>
-      <div class="cat-item" onclick="filterCategory('Accessories')">Accessories</div>
+      <div class="cat-item" onclick="filterCategory('Women\'s Fashion')">Women's Fashion</div>
+      <div class="cat-item" onclick="filterCategory('Men\'s Fashion')">Men's Fashion</div>
+      <div class="cat-item" onclick="filterCategory('Kids Fashion')">Kids Fashion</div>
+      <div class="cat-item" onclick="filterCategory('Jewellery & Accessories')">Jewellery</div>
+      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
       <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
-      <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
+      <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
+      <div class="cat-item" onclick="filterCategory('Beauty & Personal Care')">Beauty</div>
+      <div class="cat-item" onclick="filterCategory('Home & Lifestyle')">Home & Lifestyle</div>
     </div>
 
     <main class="container">
-      <div class="products-grid" id="productGrid"></div>
+      <div class="products-grid" id="productGrid">Loading products from Supabase...</div>
+      <div class="pagination-bar" id="paginationBar"></div>
     </main>
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
     </footer>
   </div>
 
@@ -364,7 +154,7 @@
   <div id="page-wishlist" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
+      <span style="font-weight:700;">❤️ My Wishlist</span>
     </div>
     <div class="page-content">
       <div class="products-grid" id="wishlistGrid"></div>
@@ -375,21 +165,14 @@
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
+      <span style="font-weight:700;">Product Details</span>
     </div>
     <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
+      <div><img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);"></div>
       <div>
-        <img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
-      </div>
-      <div>
-        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
+        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
-        
-        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
-          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
-        </div>
-
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -398,332 +181,96 @@
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <button type="button" class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
-        
-        <div style="margin-top:30px;">
-          <h4 style="font-size:1rem; margin-bottom:12px; font-weight:bold;">🔗 Related Products</h4>
-          <div class="products-grid" id="relatedProductsGrid"></div>
-        </div>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
-          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews (Verified)</h4>
-          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">Loading reviews...</div>
-          
-          <div id="verifiedReviewBox" style="border-top:1px solid #eee; padding-top:12px; display:none;">
-            <h5 style="font-size:0.85rem; margin-bottom:6px; color:var(--success);">✅ Write a Verified Review (Order Delivered)</h5>
-            <div class="form-row">
-              <div class="form-group"><label>Rating</label><select id="newReviewRating"><option value="5">⭐⭐⭐⭐⭐ (5/5)</option><option value="4">⭐⭐⭐⭐ (4/5)</option><option value="3">⭐⭐⭐ (3/5)</option><option value="2">⭐⭐ (2/5)</option><option value="1">⭐ (1/5)</option></select></div>
-              <div class="form-group"><label>Your Name</label><input type="text" id="newReviewAuthor" placeholder="Name"></div>
-            </div>
-            <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
-            <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
-          </div>
-          <div id="unverifiedReviewMsg" style="font-size:0.80rem; color:#d32f2f; margin-top:10px; font-style:italic;">
-            🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
-          </div>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
-          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
-        </div>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
       </div>
     </div>
   </div>
 
-  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
+  <!-- PROFILE & ACCOUNT -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
+      <span style="font-weight:700;">Customer Account</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access account or seller dashboard</p>
-        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <button type="button" class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login</h3>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
+        <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
       </div>
-
-      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
-        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button type="button" class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
-      </div>
-
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
-            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
-          </div>
-          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
-        </div>
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
-          <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">Track orders, print invoices & returns</p>
-          </div>
-          <span style="font-size:1.2rem; color:var(--muted);">›</span>
-        </div>
-
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
-          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
-          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
-          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject (e.g. Order #1234 issue)"></div>
-          <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe your issue..."></textarea></div>
-          <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
-          <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
-        </div>
-        
-        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
-          <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start dropshipping / selling your products.</p>
-          <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
-        </div>
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto; background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
+        <h3>👤 Profile</h3>
+        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
+        <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer;">Logout</button>
       </div>
     </div>
   </div>
 
   <!-- MY ORDERS PAGE -->
   <div id="page-orders" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders, Invoices & Tracking</span>
-    </div>
-    <div class="page-content">
-      <div id="ordersPageList"></div>
-    </div>
+    <div class="page-header"><button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button><span style="font-weight:700;">My Orders</span></div>
+    <div class="page-content"><div id="ordersPageList"></div></div>
   </div>
 
-  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
-  <div id="page-seller-dashboard" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</span>
-    </div>
-    <div class="page-content" style="max-width:1000px;">
-      <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings</button>
-      </div>
-
-      <div id="sellerTabProducts" class="dash-tab-content active">
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
-          <strong>🔗 Share Your Store Catalog:</strong> Send all products to customers via WhatsApp.
-          <button type="button" class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link</button>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#e65100;">
-          <strong>📋 Seller Bulk CSV Import:</strong> Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
-          <input type="file" id="sellerCsvInput" accept=".csv" style="margin-top:8px; display:block;" onchange="previewSellerCsv(this)">
-          <button type="button" class="btn-solid" id="sellerConfirmCsvBtn" style="background:#d4af37; color:#000; margin-top:8px; display:none; padding:8px;" onclick="executeSellerCsvImport()">Import CSV Products</button>
-        </div>
-
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product</h5>
-          <input type="hidden" id="sellerEditIndex" value="-1">
-          
-          <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
-          <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
-          <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
-
-          <div style="background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.85rem; font-weight:bold; margin-bottom:12px;" id="previewListingPriceText">
-            ℹ️ Final Price for Customer = Base Price + Admin Commission
-          </div>
-
-          <div class="form-group">
-            <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px; flex-direction:column;">
-              <input type="text" id="sProdImage" placeholder="Paste Image URL">
-              <input type="file" id="sProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'sProdImage')">
-              <button type="button" onclick="document.getElementById('sProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
-            </div>
-          </div>
-
-          <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
-        </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Your Listed Products</h5>
-        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
-      </div>
-
-      <div id="sellerTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Orders & Tracking Details</h5>
-        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
-      </div>
-
-      <div id="sellerTabEarnings" class="dash-tab-content">
-        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
-          <h4 style="margin-bottom:12px; font-size:1.1rem;">💰 Earnings Summary</h4>
-          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Total Sales Revenue:</strong> <span id="sellerTotalSales">₹0</span></p>
-          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Marketplace Commission Deducted:</strong> <span id="sellerTotalCommission">₹0</span></p>
-          <p style="font-size:1.1rem; color:var(--success); font-weight:bold; margin-top:12px;">Net Payable Payout: <span id="sellerNetEarnings">₹0</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE -->
+  <!-- ADMIN MASTER DASHBOARD -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
-      <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
-      <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
+      <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit</button>
+      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (Supabase Products Hub)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#fff; padding:12px; border:1px solid var(--border); border-radius:6px;">
-        <h4 style="font-size:0.95rem; color:var(--success);">✅ Logged in as Master Admin</h4>
-        <button type="button" onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
-      </div>
-
-      <div class="summary-cards-grid">
-        <div class="summary-card">
-          <h4>Total Sales Revenue</h4>
-          <div class="val" id="admSummarySales">₹0</div>
-        </div>
-        <div class="summary-card">
-          <h4>Admin Commission Earned</h4>
-          <div class="val" id="admSummaryCommission">₹0</div>
-        </div>
-        <div class="summary-card">
-          <h4>Active Vendors</h4>
-          <div class="val" id="admSummaryVendors">0</div>
-        </div>
-      </div>
-
-      <div class="dash-tabs">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Sourcing</button>
+      <div class="dash-tabs" style="margin-top:10px;">
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeding</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
-      <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Seller Sales & Settlement Tracker</h5>
-        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
-      </div>
-
-      <div id="admTabProducts" class="dash-tab-content">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing</h5>
-          <input type="hidden" id="adminEditIndex" value="-1">
-          
-          <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
-          <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
-          <div class="form-group"><label>Sourcing Source (e.g. Meesho / Flipkart / Amazon)</label><input type="text" id="aProdSource" placeholder="Source Platform"></div>
-          <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
-
-          <div class="form-group">
-            <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px; flex-direction:column;">
-              <input type="text" id="aProdImage" placeholder="Paste Image URL">
-              <input type="file" id="aProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'aProdImage')">
-              <button type="button" onclick="document.getElementById('aProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
-            </div>
-          </div>
-
-          <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
+      <div id="admTabProducts" class="dash-tab-content active">
+        <!-- 1000+ Products Seeding Button Hub -->
+        <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
+          <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder</h4>
+          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to automatically populate your Supabase database with 1,000+ genuinely unique items across all 11 categories with duplicate protection.</p>
+          <button type="button" class="btn-solid" onclick="seedKoshProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Unique Products</button>
+          <div id="seedProgressText" style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:#333;"></div>
         </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Marketplace Products (With Sourcing & Supplier Info)</h5>
-        <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
+
+        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
+          <strong>📥 Bulk CSV/JSON Import:</strong> Upload clean supplier file. Duplicate SKUs will be automatically skipped.
+          <input type="file" id="bulkImportInput" accept=".json,.csv" style="margin-top:8px; display:block;" onchange="handleBulkImportFile(this)">
+          <div id="importProgressText" style="margin-top:6px; font-weight:bold;"></div>
+        </div>
+
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Add Single Product to Supabase</h5>
+          <div class="form-group"><label>SKU (Unique)</label><input type="text" id="admSku" placeholder="SKU-1001"></div>
+          <div class="form-group"><label>Title</label><input type="text" id="admTitle" placeholder="Product Title"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="admCategory" placeholder="Women's Fashion / Men's Fashion etc."></div>
+          <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="admPrice" placeholder="Price"></div>
+          <div class="form-group"><label>MRP (₹)</label><input type="number" id="admMrp" placeholder="MRP"></div>
+          <div class="form-group"><label>Stock</label><input type="number" id="admStock" value="50"></div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="admImage" placeholder="https://..."></div>
+          <div class="form-group"><label>Description</label><textarea id="admDesc" rows="2" placeholder="Description"></textarea></div>
+          <button type="button" class="btn-solid" onclick="saveAdminProductToSupabase()" style="background:#2196f3;">Save to Supabase</button>
+        </div>
+
+        <h5 style="margin-bottom:10px; font-weight:bold;">Supabase Database Products Manager</h5>
+        <button type="button" onclick="checkDuplicatesInSupabase()" style="background:#ff9800; color:#fff; border:none; padding:8px 12px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:10px;">🔍 Check Duplicate SKUs Report</button>
+        <div id="duplicateReportBox" style="font-size:0.85rem; margin-bottom:10px; color:#d32f2f;"></div>
+        <div id="admSupabaseProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">Loading...</div>
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Customer Orders & Tracking Details</h5>
-        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
-      </div>
-
-      <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Customer Support & Dispute Tickets</h5>
-        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
-      </div>
-
-      <div id="admTabSettings" class="dash-tab-content">
-        
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select active payment gateway and configure credentials.</p>
-          
-          <div class="form-group">
-            <label>Select Active Payment Gateway</label>
-            <select id="gatewaySelect" onchange="toggleGatewayFields()">
-              <option value="Cashfree">Cashfree</option>
-              <option value="Razorpay">Razorpay</option>
-              <option value="UPI">Direct UPI QR / Collect</option>
-            </select>
-          </div>
-
-          <div class="form-group" id="gwField1Group">
-            <label id="gwField1Label">Cashfree App ID / Key</label>
-            <input type="text" id="gwMerchantKey" placeholder="Enter Key or App ID">
-          </div>
-
-          <div class="form-group" id="gwField2Group">
-            <label id="gwField2Label">Cashfree Secret Key</label>
-            <input type="text" id="gwMerchantSecret" placeholder="Enter Secret or UPI ID">
-          </div>
-
-          <button type="button" class="btn-solid" onclick="savePaymentGatewayConfig()" style="background:#ff9800; color:#fff; margin-top:6px;">Save Payment Configuration</button>
-        </div>
-
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Status</h4>
-          <p style="font-size:0.85rem; color:var(--success); font-weight:bold; margin-bottom:12px;">✅ Connected Automatically via Hardcoded Credentials!</p>
-          <div class="form-group"><label>Supabase Project URL</label><input type="text" value="https://iqzlqyykabbxoyjpmyb.supabase.co" readonly style="background:#f1f3f6;"></div>
-          <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" value="Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr" readonly style="background:#f1f3f6;"></div>
-        </div>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
-          <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
-          <button type="button" class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
-        </div>
-
-        <div style="background:#ffebee; border:1px solid #ffcdd2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:12px; color:#c62828;">⚠️ Reset Dashboard Data & Revenue</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;">Clear all orders and reset total revenue to zero.</p>
-          <button type="button" class="btn-solid" onclick="resetAllDashboardData()" style="background:#d32f2f;">Reset All Orders & Revenue</button>
-        </div>
+        <div id="admOrdersList">No orders.</div>
       </div>
     </div>
   </div>
 
-  <!-- CUSTOM BRANDED ALERT MODAL -->
+  <!-- MODALS -->
   <div class="modal-overlay" id="customAlertModal">
-    <div class="modal-box" style="max-width:360px; text-align:center; padding:24px;">
-      <div id="customAlertIcon" style="font-size:2rem; margin-bottom:8px;">📢</div>
-      <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700; color:var(--primary);">Kosh Studio Notice</h3>
-      <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px; line-height:1.5;"></p>
-      <button type="button" class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
-    </div>
-  </div>
-
-  <!-- ADMIN EDIT SELLER MODAL -->
-  <div class="modal-overlay" id="adminEditSellerModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">✏️ Edit Seller Details</h3>
-        <button type="button" onclick="closeAdminEditSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <input type="hidden" id="admEditSellerIdx">
-      <div class="form-group"><label>Seller Unique ID</label><input type="text" id="admEditUniqueId" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>Store Name</label><input type="text" id="admEditStore"></div>
-      <div class="form-group"><label>Owner Full Name</label><input type="text" id="admEditName"></div>
-      <div class="form-group"><label>Email (Login ID)</label><input type="text" id="admEditEmail"></div>
-      <div class="form-group"><label>Mobile Number</label><input type="text" id="admEditPhone" maxlength="10"></div>
-      <button type="button" class="btn-solid" onclick="saveAdminEditedSeller()" style="margin-top:10px; background:#2196f3;">Update Seller Details</button>
+    <div class="modal-box" style="max-width:360px; text-align:center;">
+      <h3 id="customAlertTitle" style="margin-bottom:8px;">Notice</h3>
+      <p id="customAlertMsg" style="margin-bottom:20px;"></p>
+      <button type="button" class="btn-solid" onclick="closeCustomAlert()">OK</button>
     </div>
   </div>
 
@@ -735,101 +282,19 @@
       <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
-    
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <div style="margin-bottom:12px; display:flex; gap:6px;">
-        <input type="text" id="couponInput" placeholder="Enter Coupon (KOSH20)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
-        <button type="button" onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
-      </div>
-      <div id="couponMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:bold;"></div>
-
-      <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555; color:var(--success);" id="discountRow" style="display:none;"><span>Flat Discount</span><span id="summaryDiscount">- ₹20</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Gateway Fee (~2%)</span><span id="summaryPgFee">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
-    </div>
-  </div>
-
-  <!-- CHECKOUT MODAL -->
-  <div class="modal-overlay" id="checkoutModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 id="checkoutTitle" style="font-size:1.1rem;">Secure Online Checkout</h3>
-        <button type="button" onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Gateway Fee (~2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
-      </div>
-      
-      <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
-      <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required></div>
-      <div class="form-group"><label>House No. / Street / Area</label><input type="text" id="chkArea" placeholder="Area / Address" required></div>
-      <div class="form-group"><label>6-Digit PIN Code</label><input type="text" id="chkPincode" placeholder="PIN code" maxlength="6" oninput="lookupPincode(this.value)" required></div>
-      <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City" required></div>
-      <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
-
-      <div id="upiExtraInfo" style="display:none; background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.82rem; margin-bottom:12px; font-weight:bold;">
-        📲 Direct UPI Mode Active: Complete payment via your UPI application.
-      </div>
-      <button type="button" class="btn-solid" onclick="initiateCheckoutFlow()" style="margin-top:10px;">Pay & Place Order</button>
-    </div>
-  </div>
-
-  <!-- PAYMENT OTP MODAL -->
-  <div class="modal-overlay" id="paymentOtpModal">
-    <div class="modal-box" style="max-width:380px; text-align:center;">
-      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment Verification</h3>
-      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
-      <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
-      <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
-      <button type="button" class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
-    </div>
-  </div>
-
-  <!-- BECOME A SELLER REGISTRATION MODAL -->
-  <div class="modal-overlay" id="becomeSellerModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">🏪 Secure Seller Registration & Bank KYC</h3>
-        <button type="button" onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
-      <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>Mobile Number</label><input type="tel" id="sellerRegPhone" placeholder="10-digit mobile number" maxlength="10"></div>
-      <div class="form-group"><label>Business / Store Name</label><input type="text" id="sellerRegStore" placeholder="Store name"></div>
-      
-      <div class="form-group">
-        <label>IFSC Code</label>
-        <div style="display:flex; gap:6px; flex-direction:column;">
-          <input type="text" id="sellerRegIfsc" placeholder="e.g. SBIN0001234" maxlength="11" style="text-transform:uppercase;">
-          <button type="button" onclick="verifyIfscCode()" style="background:var(--primary); color:#fff; border:none; padding:10px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Verify IFSC</button>
-        </div>
-      </div>
-      <div id="ifscResultBox" style="font-size:0.75rem; color:var(--success); margin-bottom:8px; font-weight:bold; display:none;"></div>
-
-      <div class="form-group"><label>Bank Account Number</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
-      <div class="form-group"><label>Confirm Bank Account Number</label><input type="text" id="sellerRegAcc2" placeholder="Re-enter Account Number"></div>
-      
-      <button type="button" class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
+      <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:12px;"><span>Total</span><span id="cartTotalPrice">₹0</span></div>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to checkout...')">Checkout</button>
     </div>
   </div>
 
   <!-- ADMIN LOGIN MODAL -->
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-box" style="max-width:380px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">🔒 Admin Master Login</h3>
-        <button type="button" onclick="closeAdminLoginModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
-      <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
-      <button type="button" class="btn-solid" onclick="verifyAdminPassword()" style="margin-top:10px;">Login to Master Admin</button>
+      <h3 style="margin-bottom:14px;">🔒 Admin Master Login</h3>
+      <div class="form-group"><label>Admin ID</label><input type="text" id="admUserInput" placeholder="ID"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
+      <button type="button" class="btn-solid" onclick="verifyAdminPassword()">Login</button>
     </div>
   </div>
 
@@ -837,923 +302,380 @@
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
-      document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
       document.getElementById('customAlertModal').style.display = 'flex';
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    // Hardcoded Supabase Config
+    // Supabase Connection Config
     let sbUrl = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
     let sbKey = 'Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr';
     let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
 
-    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
-    let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
-
-    // Strict Unique Catalog Generator mapped to User's Exact Categories
-    function generateStrictCatalog() {
-      let categories = ["Men Wear", "Women Wear", "Accessories", "Footwear", "Jewellery"];
-      let sources = ["Meesho Wholesale", "Flipkart Hub", "Amazon Supplier", "Direct Manufacturer"];
-      
-      let categoryImages = {
-        "Men Wear": [
-          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Women Wear": [
-          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Accessories": [
-          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Footwear": [
-          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Jewellery": [
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&auto=format&fit=crop&q=60"
-        ]
-      };
-
-      let list = [];
-      let idCounter = 3000;
-      categories.forEach(cat => {
-        let imgs = categoryImages[cat];
-        for(let i = 1; i <= 200; i++) {
-          idCounter++;
-          let source = sources[idCounter % sources.length];
-          let img = imgs[i % imgs.length];
-          let base = 200 + (i * 13) % 1200;
-          let price = Math.round(base * 1.45); // High Margin Sourced Pricing
-          let mrp = Math.round(price * 1.9);
-          list.push({
-            id: idCounter,
-            sku: `${cat.substring(0,3).toUpperCase()}-${idCounter}`,
-            title: `${cat} Trend Item #${i}`,
-            category: cat,
-            sourcingSource: source,
-            sellerId: "admin",
-            sellerName: "Kosh Direct",
-            basePrice: base,
-            price: price,
-            mrp: mrp,
-            stock: 30 + (i % 50),
-            image: img,
-            desc: `Best quality ${cat} item sourced from ${source}. Ready for instant customer delivery with high margin.`
-          });
-        }
-      });
-      return list;
-    }
-
-    // Using fresh storage key 'kosh_products_v7' to flush old data completely
-    let products = JSON.parse(localStorage.getItem('kosh_products_v7'));
-    if(!products || products.length === 0) {
-      products = generateStrictCatalog();
-      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
-    }
-
-    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
-    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let defaultReviews = [
-      { productId: 3001, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture.", date: "18 Sep 2026" },
-      { productId: 3201, author: "Rahul Verma", rating: "5", comment: "Great product quality and fast delivery.", date: "20 Sep 2026" }
-    ];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v7')) || defaultReviews;
-    localStorage.setItem('kosh_reviews_v7', JSON.stringify(reviewsList));
-
-    let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
+    let currentPage = 1;
+    let itemsPerPage = 24;
+    let activeCategoryFilter = 'All';
+    let totalProductsCount = 0;
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
-    let registeredUsers = JSON.parse(localStorage.getItem('kosh_registered_users')) || [];
-    
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
-    let currentSelectedProduct = JSON.parse(localStorage.getItem('kosh_selected_product')) || null;
+    let currentSelectedProduct = null;
     let secretClickCount = 0;
-    let tempCheckoutData = {};
-    let paymentOtpGenerated = "";
-    let verifiedBankDetails = null;
-    let parsedSellerCsvRows = [];
-    let activeCategoryFilter = 'All';
-    let activeSellerFilter = null;
-    let appliedDiscountAmount = 0;
-
-    function startFlashTimer() {
-      let timerEl = document.getElementById('flashTimer');
-      if(!timerEl) return;
-      let totalSeconds = 5 * 3600 + 42 * 60 + 18;
-      setInterval(() => {
-        if(totalSeconds > 0) totalSeconds--;
-        let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-        let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        let s = (totalSeconds % 60).toString().padStart(2, '0');
-        timerEl.innerText = `${h}:${m}:${s}`;
-      }, 1000);
-    }
 
     window.addEventListener('DOMContentLoaded', () => {
-      startFlashTimer();
-      checkCustomerCustomMessagePopup();
+      fetchProductsPaginated();
+      updateCartUI();
     });
 
-    function checkCustomerCustomMessagePopup() {
-      if (!currentUser) return;
-      let myOrders = ordersList.filter(o => o.userEmail === currentUser);
-      myOrders.forEach(o => {
-        if (o.customPopupMsg && !o.popupShown) {
-          showAlert(o.customPopupMsg, `Store Update (Order #${o.id})`, true);
-          o.popupShown = true;
-          localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        }
-      });
-    }
-
-    function handleImageGalleryUpload(input, targetInputId) {
-      if (input.files && input.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById(targetInputId).value = e.target.result;
-          showAlert('Image loaded successfully!', 'Success', true);
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function renderProducts(filterCat = null) {
-      if(filterCat !== null) activeCategoryFilter = filterCat;
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '';
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      let sellerParam = urlParams.get('seller');
-      if(sellerParam) activeSellerFilter = sellerParam;
-
-      let filtered = products;
-      if(activeSellerFilter) {
-        filtered = filtered.filter(p => p.sellerId === activeSellerFilter || p.sellerName?.includes(activeSellerFilter));
-        document.getElementById('catalogStoreName').innerText = activeSellerFilter;
-        document.getElementById('catalogBanner').style.display = 'block';
-      } else {
-        document.getElementById('catalogBanner').style.display = 'none';
-      }
-
-      if(activeCategoryFilter !== 'All') {
-        filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
-      }
-
-      const searchKey = document.getElementById('searchInput').value.toLowerCase();
-      const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
-
-      if (finalFiltered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found.</p>';
+    // Server-side Supabase Paginated Fetcher for Scalability (1000+ products support)
+    async function fetchProductsPaginated() {
+      if(!supabaseClient) {
+        document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Supabase client not initialized.</p>';
         return;
       }
 
-      finalFiltered.forEach(p => {
+      let startIdx = (currentPage - 1) * itemsPerPage;
+      let endIdx = startIdx + itemsPerPage - 1;
+
+      let query = supabaseClient.from('products').select('*', { count: 'exact' });
+      
+      if(activeCategoryFilter !== 'All') {
+        query = query.ilike('category', activeCategoryFilter);
+      }
+
+      let searchKey = document.getElementById('searchInput').value.trim();
+      if(searchKey) {
+        query = query.or(`title.ilike.%${searchKey}%,category.ilike.%${searchKey}%`);
+      }
+
+      let { data, count, error } = await query.order('created_at', { ascending: false }).range(startIdx, endIdx);
+
+      if(error) {
+        console.error(error);
+        document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Error loading products from Supabase table.</p>';
+        return;
+      }
+
+      totalProductsCount = count || 0;
+      let products = data || [];
+      renderProductsGrid(products);
+    }
+
+    function renderProductsGrid(products) {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+
+      if(products.length === 0) {
+        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database.</p>';
+        document.getElementById('paginationBar').innerHTML = '';
+        return;
+      }
+
+      products.forEach(p => {
         let isWishlisted = wishlist.some(item => item.id === p.id);
-        let stockBadge = p.stock > 0 ? `<span style="font-size:0.65rem; color:var(--success); font-weight:700;">● In Stock</span>` : `<span style="font-size:0.65rem; color:red; font-weight:700;">● Out of Stock</span>`;
+        let imgUrl = (p.images && Array.isArray(p.images)) ? p.images[0] : (p.images || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500');
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
           <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})">
-            <img src="${p.image}" alt="${p.title}">
-          </div>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${imgUrl}" alt="${p.title}"></div>
           <div class="product-info">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="p-category">${p.category}</span>
-              ${stockBadge}
-            </div>
+            <span class="p-category">${p.category || 'General'}</span>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${p.sellerName || 'Kosh Direct'}</div>
-            <div class="p-price-row">
-              <span class="p-price">₹${p.price}</span>
-              <span class="p-mrp">₹${p.mrp}</span>
-            </div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      updateWishlistUI();
-    }
-
-    function toggleWishlist(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let idx = wishlist.findIndex(item => item.id === id);
-      if(idx >= 0) {
-        wishlist.splice(idx, 1);
-        showAlert("Removed from Wishlist", "Wishlist", false);
-      } else {
-        wishlist.push(prod);
-        showAlert("Added to Wishlist successfully!", "Wishlist", true);
-      }
-      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
-      renderProducts();
-      if(document.getElementById('page-wishlist').classList.contains('active')) renderWishlistPage();
-    }
-
-    function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; }
-
-    function renderWishlistPage() {
-      const grid = document.getElementById('wishlistGrid');
-      grid.innerHTML = '';
-      if(wishlist.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--muted); padding:30px;">Your wishlist is empty.</p>';
-        return;
-      }
-      wishlist.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
+            <div class="p-price-row"><span class="p-price">₹${p.selling_price}</span><span class="p-mrp">₹${p.mrp || ''}</span></div>
             <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
       });
+
+      let totalPages = Math.ceil(totalProductsCount / itemsPerPage);
+      renderPaginationControls(totalPages);
     }
 
-    function clearCatalogFilter() {
-      activeSellerFilter = null;
-      window.history.replaceState({}, document.title, window.location.pathname);
-      renderProducts();
+    function renderPaginationControls(totalPages) {
+      let bar = document.getElementById('paginationBar');
+      bar.innerHTML = '';
+      if(totalPages <= 1) return;
+      for(let i = 1; i <= totalPages; i++) {
+        bar.innerHTML += `<button type="button" class="page-num-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+      }
+    }
+
+    function goToPage(p) { currentPage = p; fetchProductsPaginated(); window.scrollTo(0, 0); }
+    function filterCategory(cat) { currentPage = 1; activeCategoryFilter = cat; fetchProductsPaginated(); }
+    function handleSearch(val) { currentPage = 1; fetchProductsPaginated(); }
+
+    async function openProductDetail(id) {
+      let { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
+      if(error || !data) return;
+      currentSelectedProduct = data;
+      let imgUrl = (currentSelectedProduct.images && Array.isArray(currentSelectedProduct.images)) ? currentSelectedProduct.images[0] : currentSelectedProduct.images;
+      document.getElementById('pPageImg').src = imgUrl;
+      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
+      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku} | Source: ${currentSelectedProduct.source_platform || 'Direct'}`;
+      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.selling_price;
+      document.getElementById('pPageMrp').innerText = '₹' + (currentSelectedProduct.mrp || '');
+      document.getElementById('pPageDesc').innerText = currentSelectedProduct.description || '';
+      navigateTo('product');
+    }
+
+    async function addToCart(id) {
+      let { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
+      if(error || !data) return;
+      cart.push({ ...data, finalPrice: data.selling_price, qty: 1 });
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      updateCartUI();
+      showAlert("Added to cart successfully!", "Cart", true);
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.length;
+      let container = document.getElementById('cartItemsContainer');
+      container.innerHTML = '';
+      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center;">Cart is empty.</p>'; document.getElementById('cartPriceDetailsBox').style.display='none'; return; }
+      document.getElementById('cartPriceDetailsBox').style.display='block';
+      let total = 0;
+      cart.forEach(item => {
+        total += item.finalPrice;
+        let imgUrl = Array.isArray(item.images)?item.images[0]:item.images;
+        container.innerHTML += `<div style="display:flex; gap:10px; margin-bottom:10px; background:#fff; padding:8px; border:1px solid #ddd; border-radius:4px;"><img src="${imgUrl}" style="width:50px;height:50px;object-fit:cover;"><div><b>${item.title}</b><br>₹${item.finalPrice}</div></div>`;
+      });
+      document.getElementById('cartTotalPrice').innerText = '₹' + total;
+    }
+
+    function toggleCartDrawer(open) {
+      let drawer = document.getElementById('cartDrawer');
+      let backdrop = document.getElementById('cartBackdrop');
+      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
+      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
     }
 
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
-      localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
-
-      if(pageId === 'profile') checkLoginStatus();
-      else if(pageId === 'orders') renderOrdersPage();
-      else if(pageId === 'wishlist') renderWishlistPage();
-      else if(pageId === 'seller-dashboard') loadSellerDashboardData();
-      else if(pageId === 'admin-dashboard') loadAdminMasterData();
+      if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
-      if(savedPage === 'product' && currentSelectedProduct) populateProductDetails(currentSelectedProduct);
-      navigateTo(savedPage);
-      renderProducts(activeCategoryFilter);
-      updateCartUI();
-    });
+    // 🚀 Official 1000+ Unique Products Seeder Function
+    async function seedKoshProducts() {
+      const categories = [
+        { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
+        { name: "Men's Fashion", subcategories: ["T-Shirts","Shirts","Jeans","Trousers","Kurtas","Track Pants","Jackets","Hoodies","Shorts"], count: 140 },
+        { name: "Kids Fashion", subcategories: ["Girls Dresses","Boys T-Shirts","Kids Sets","Frocks","Kids Shirts","Kids Nightwear"], count: 100 },
+        { name: "Jewellery & Accessories", subcategories: ["Earrings","Rings","Necklaces","Bracelets","Bangles","Anklets","Jewellery Sets","Hair Accessories"], count: 150 },
+        { name: "Bags", subcategories: ["Handbags","Sling Bags","Tote Bags","Backpacks","Clutches","Wallets","Travel Bags"], count: 90 },
+        { name: "Footwear", subcategories: ["Sandals","Flats","Heels","Casual Shoes","Sports Shoes","Slippers","Men's Shoes"], count: 90 },
+        { name: "Watches", subcategories: ["Men's Watches","Women's Watches","Couple Watches","Analog Watches","Digital Watches"], count: 70 },
+        { name: "Beauty & Personal Care", subcategories: ["Beauty Tools","Makeup Accessories","Hair Care Accessories","Skincare Accessories"], count: 50 },
+        { name: "Home & Lifestyle", subcategories: ["Home Decor","Storage","Organizers","Kitchen Accessories","Bathroom Accessories"], count: 50 },
+        { name: "Mobile & Daily-use Accessories", subcategories: ["Mobile Covers","Phone Stands","Charging Accessories","Earphone Accessories","Daily-use Gadgets"], count: 35 },
+        { name: "Sunglasses & Fashion Accessories", subcategories: ["Sunglasses","Belts","Caps","Scarves","Fashion Accessories"], count: 45 }
+      ];
 
-    function filterCategory(cat) {
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
-        else i.classList.remove('active');
-      });
-      renderProducts(cat);
-    }
+      const adjectives = ["Classic","Elegant","Premium","Trendy","Modern","Stylish","Minimal","Luxury","Casual","Urban","Comfort","Daily","Fashion","Signature"];
+      const materials = ["Cotton","Polyester","Alloy","Stainless Steel","Faux Leather","Synthetic","Acrylic","Metal","Georgette","Rayon","Denim","Canvas"];
+      const colours = ["Black","White","Blue","Pink","Red","Green","Beige","Brown","Maroon","Navy","Grey","Gold"];
 
-    function handleSearch(val) { renderProducts(); }
+      let progressEl = document.getElementById('seedProgressText');
+      if(progressEl) progressEl.innerText = "Generating unique catalog items...";
 
-    function openProductDetail(id) {
-      currentSelectedProduct = products.find(p => p.id === id);
-      if(!currentSelectedProduct) return;
-      localStorage.setItem('kosh_selected_product', JSON.stringify(currentSelectedProduct));
-      populateProductDetails(currentSelectedProduct);
-      navigateTo('product');
-    }
+      const products = [];
+      let globalIndex = 1;
 
-    function populateProductDetails(p) {
-      document.getElementById('pPageImg').src = p.image;
-      document.getElementById('pPageCategory').innerText = p.category;
-      document.getElementById('pPageTitle').innerText = p.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku || 'N/A'} | Stock: ${p.stock > 0 ? p.stock + ' Available' : 'Out of Stock'}`;
-      document.getElementById('pPageSellerName').innerText = p.sellerName || 'Kosh Direct (Admin)';
-      document.getElementById('pPagePrice').innerText = '₹' + p.price;
-      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
-      document.getElementById('pPageDesc').innerText = p.desc;
-      renderRelatedProducts(p);
-      loadProductReviews(p.id);
-      checkUserReviewEligibility(p.id);
-    }
+      for (const category of categories) {
+        for (let i = 0; i < category.count; i++) {
+          const subcategory = category.subcategories[i % category.subcategories.length];
+          const adjective = adjectives[i % adjectives.length];
+          const material = materials[i % materials.length];
+          const colour = colours[i % colours.length];
+          const sku = `KOSH-${String(globalIndex).padStart(5, "0")}`;
+          const title = `${adjective} ${colour} ${material} ${subcategory} ${globalIndex}`;
+          const mrp = 399 + ((globalIndex * 37) % 1600);
+          const discount = 10 + (globalIndex % 41);
+          const sellingPrice = Math.max(149, Math.round(mrp * (100 - discount) / 100));
 
-    function renderRelatedProducts(currentProd) {
-      const grid = document.getElementById('relatedProductsGrid');
-      grid.innerHTML = '';
-      let related = products.filter(p => p.category.toLowerCase() === currentProd.category.toLowerCase() && p.id !== currentProd.id).slice(0, 4);
-      if(related.length === 0) { grid.innerHTML = '<p style="font-size:0.8rem; color:var(--muted);">No related products found.</p>'; return; }
-      related.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function checkUserReviewEligibility(productId) {
-      let reviewBox = document.getElementById('verifiedReviewBox');
-      let reviewMsg = document.getElementById('unverifiedReviewMsg');
-      if (!currentUser) { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Please login."; return; }
-      let hasDelivered = ordersList.some(o => o.userEmail === currentUser && o.status === 'Delivered');
-      if (hasDelivered) { reviewBox.style.display = 'block'; reviewMsg.style.display = 'none'; }
-      else { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Only delivered orders can be reviewed."; }
-    }
-
-    function loadProductReviews(productId) {
-      let prodReviews = reviewsList.filter(r => r.productId === productId);
-      let area = document.getElementById('productReviewsList');
-      if (prodReviews.length === 0) { area.innerHTML = '⭐⭐⭐⭐⭐ (4.8/5) Based on 124 Verified Customer Reviews'; return; }
-      let html = '⭐⭐⭐⭐⭐ (4.8/5) Trusted by Thousands of Customers<br>';
-      prodReviews.forEach(r => {
-        let stars = '⭐'.repeat(parseInt(r.rating) || 5);
-        html += `<div style="border-bottom:1px solid #eee; padding:6px 0;"><strong>${r.author}</strong> <span style="font-size:0.75rem; color:#888;">(${r.date})</span><br><span>${stars}</span><p style="color:#444; margin-top:2px;">${r.comment}</p></div>`;
-      });
-      area.innerHTML = html;
-    }
-
-    function submitProductReview() {
-      if (!currentSelectedProduct) return;
-      let author = document.getElementById('newReviewAuthor').value.trim() || currentUser || 'Anonymous';
-      let rating = document.getElementById('newReviewRating').value;
-      let comment = document.getElementById('newReviewText').value.trim();
-      if (!comment) { showAlert('Please enter review comment.'); return; }
-      reviewsList.push({ productId: currentSelectedProduct.id, author, rating, comment, date: new Date().toLocaleDateString() });
-      localStorage.setItem('kosh_reviews_v7', JSON.stringify(reviewsList));
-      document.getElementById('newReviewText').value = '';
-      loadProductReviews(currentSelectedProduct.id);
-      showAlert('Review submitted successfully!', 'Success', true);
-    }
-
-    function addCurrentProductToCart() {
-      if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
-        addToCart(currentSelectedProduct.id);
-        toggleCartDrawer(true);
-      }
-    }
-
-    function buyNowCurrentProduct() {
-      if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
-        addToCart(currentSelectedProduct.id);
-        openCheckoutModal();
-      }
-    }
-
-    function addToCart(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
-      let existing = cart.find(item => item.id === id);
-      if(existing) existing.qty += 1;
-      else cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-      showAlert(prod.title + " added to cart!", 'Cart', true);
-    }
-
-    function increaseCartQty(index) { cart[index].qty += 1; localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
-    function decreaseCartQty(index) {
-      if(cart[index].qty > 1) cart[index].qty -= 1;
-      else cart.splice(index, 1);
-      localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI();
-    }
-
-    function applyCouponCode() {
-      let code = document.getElementById('couponInput').value.trim().toUpperCase();
-      let msg = document.getElementById('couponMsg');
-      if(code === 'KOSH20') {
-        appliedDiscountAmount = 20;
-        msg.style.color = 'var(--success)';
-        msg.innerText = '✅ Coupon "KOSH20" applied (Flat ₹20 OFF)!';
-      } else {
-        appliedDiscountAmount = 0;
-        msg.style.color = 'var(--danger)';
-        msg.innerText = '❌ Invalid coupon code.';
-      }
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-      const container = document.getElementById('cartItemsContainer');
-      const priceDetailsBox = document.getElementById('cartPriceDetailsBox');
-      container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>'; priceDetailsBox.style.display = 'none'; return; }
-      priceDetailsBox.style.display = 'block';
-      let totalProdPrice = 0, totalItems = 0;
-      cart.forEach((item, index) => {
-        totalProdPrice += (item.finalPrice * item.qty);
-        totalItems += item.qty;
-        container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;">
-            <button type="button" onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
-            <div style="display:flex; gap:12px;">
-              <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-              <div style="flex-grow:1; padding-right:15px;">
-                <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
-                <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
-                <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
-                <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                  <button type="button" onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                  <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
-                  <button type="button" onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, totalProdPrice - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let grandTotal = discountedSubtotal + pgFee;
-
-      if(appliedDiscountAmount > 0) { document.getElementById('discountRow').style.display = 'flex'; document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt; }
-      else { document.getElementById('discountRow').style.display = 'none'; }
-
-      document.getElementById('cartItemCountText').innerText = totalItems;
-      document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalProdPrice;
-      document.getElementById('summaryPgFee').innerText = '+ ₹' + pgFee;
-      document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
-    }
-
-    function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
-    function toggleCartDrawer(open) {
-      const drawer = document.getElementById('cartDrawer');
-      const backdrop = document.getElementById('cartBackdrop');
-      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
-      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
-    }
-
-    function switchAuthView(view) {
-      document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
-      document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
-    }
-
-    function isValidEmail(email) {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) return false;
-      let parts = email.split('@');
-      let domain = parts[1].toLowerCase();
-      const blockedDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com', 'mail.com'];
-      return !blockedDomains.includes(domain);
-    }
-
-    async function handleSignup() {
-      let email = document.getElementById('signupEmail').value.trim().toLowerCase();
-      let pass = document.getElementById('signupPass').value.trim();
-      if (!email || !pass) { showAlert('Please enter email and password.'); return; }
-      if (pass.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
-      if (!isValidEmail(email)) { showAlert('Please enter a valid working email ID.'); return; }
-      if (registeredUsers.some(u => u.email === email)) { showAlert('Account already exists! Please Login.'); switchAuthView('login'); return; }
-
-      registeredUsers.push({ email, pass });
-      localStorage.setItem('kosh_registered_users', JSON.stringify(registeredUsers));
-      currentUser = email; localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus(); showAlert('✅ Account created successfully!', 'Success', true);
-    }
-
-    async function handleLogin() {
-      let email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      let pass = document.getElementById('loginPass').value.trim();
-      let foundUser = registeredUsers.find(u => u.email === email && u.pass === pass);
-      if (!foundUser) { showAlert('❌ Invalid email or password.'); return; }
-      currentUser = email; localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus(); showAlert('Login successful!', 'Success', true);
-    }
-
-    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; checkLoginStatus(); switchAuthView('login'); }
-
-    function checkLoginStatus() {
-      if(currentUser) {
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('authSignupView').style.display = 'none';
-        document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = currentUser;
-        let foundSeller = sellersList.find(s => s.email === currentUser);
-        let titleEl = document.getElementById('portalBoxTitle');
-        let textEl = document.getElementById('sellerStatusText');
-        let btnEl = document.getElementById('portalActionBtn');
-        if(foundSeller) {
-          if(foundSeller.status === 'Approved') { titleEl.innerText = `🏪 Seller Active (${foundSeller.uniqueId})`; textEl.innerText = `Approved`; btnEl.innerText = 'Open Seller Dashboard'; btnEl.style.background = '#2196f3'; }
-          else { titleEl.innerText = `🏪 Seller Application (${foundSeller.uniqueId})`; textEl.innerText = `Status: ${foundSeller.status}`; btnEl.innerText = 'Pending Approval'; btnEl.style.background = '#888'; btnEl.disabled = true; }
-        } else { titleEl.innerText = '🏪 Want to Sell on Kosh Studio?'; textEl.innerText = 'Register as a vendor.'; btnEl.innerText = 'Register as Seller'; btnEl.style.background = '#2196f3'; btnEl.disabled = false; }
-        loadCustomerTickets();
-      } else { document.getElementById('userDashboardSection').style.display = 'none'; switchAuthView('login'); }
-    }
-
-    function handlePortalAction() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(foundSeller && foundSeller.status === 'Approved') navigateTo('seller-dashboard');
-      else { document.getElementById('sellerRegEmail').value = currentUser; verifiedBankDetails = null; document.getElementById('ifscResultBox').style.display = 'none'; document.getElementById('becomeSellerModal').style.display = 'flex'; }
-    }
-
-    function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
-
-    async function verifyIfscCode() {
-      let ifsc = document.getElementById('sellerRegIfsc').value.trim().toUpperCase();
-      let resultBox = document.getElementById('ifscResultBox');
-      if(ifsc.length !== 11) { showAlert('Enter valid 11-digit IFSC.'); return; }
-      resultBox.style.display = 'block'; resultBox.innerText = 'Verifying IFSC...';
-      try {
-        let res = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
-        if(res.ok) {
-          let data = await res.json();
-          verifiedBankDetails = { ifsc: data.IFSC, bank: data.BANK, branch: data.BRANCH };
-          resultBox.style.color = 'var(--success)';
-          resultBox.innerHTML = `✅ <strong>Bank Verified:</strong> ${data.BANK}, ${data.BRANCH}`;
-        } else { verifiedBankDetails = null; resultBox.style.color = 'red'; resultBox.innerText = '❌ Invalid IFSC.'; }
-      } catch(e) { resultBox.style.color = 'red'; resultBox.innerText = '❌ Error verifying IFSC.'; }
-    }
-
-    function submitSellerApplication() {
-      let name = document.getElementById('sellerRegName').value.trim();
-      let email = document.getElementById('sellerRegEmail').value.trim();
-      let phone = document.getElementById('sellerRegPhone').value.trim();
-      let store = document.getElementById('sellerRegStore').value.trim();
-      let acc1 = document.getElementById('sellerRegAcc1').value.trim();
-      let acc2 = document.getElementById('sellerRegAcc2').value.trim();
-      let ifsc = document.getElementById('sellerRegIfsc').value.trim();
-      if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) { showAlert('Fill all details.'); return; }
-      if(acc1 !== acc2) { showAlert('Account numbers do not match!'); return; }
-      if(!verifiedBankDetails) { showAlert('Verify IFSC first.'); return; }
-
-      let uniqueShortId = 'KS-S' + Math.floor(100 + Math.random() * 900);
-      sellersList.push({ id: 'SEL-' + Math.floor(1000 + Math.random() * 9000), uniqueId: uniqueShortId, name, email, phone, store, accountNo: 'XXXXXX' + acc1.slice(-4), bankName: verifiedBankDetails.bank, branch: verifiedBankDetails.branch, ifsc: verifiedBankDetails.ifsc, payoutSettled: false, status: 'Pending' });
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      closeBecomeSellerModal();
-      showAlert(`Application submitted! ID: ${uniqueShortId}.`, 'Success', true);
-      checkLoginStatus();
-    }
-
-    function submitCustomerTicket() {
-      let subject = document.getElementById('custTicketSubject').value.trim();
-      let msg = document.getElementById('custTicketMsg').value.trim();
-      if(!subject || !msg) { showAlert('Enter subject and message.'); return; }
-      ticketsList.push({ id: 'TCK-' + Math.floor(1000 + Math.random() * 9000), userEmail: currentUser, subject, message: msg, status: 'Open', date: new Date().toLocaleDateString() });
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      document.getElementById('custTicketSubject').value = ''; document.getElementById('custTicketMsg').value = '';
-      showAlert('Ticket raised!', 'Success', true); loadCustomerTickets();
-    }
-
-    function loadCustomerTickets() {
-      let myTickets = ticketsList.filter(t => t.userEmail === currentUser);
-      let area = document.getElementById('customerTicketsList');
-      if (myTickets.length === 0) { area.innerHTML = 'No support tickets.'; return; }
-      let h = '';
-      myTickets.forEach(t => { h += `<div style="background:#f9f9f9; padding:8px; border:1px solid #ddd; border-radius:4px; margin-top:6px;"><strong>[${t.id}] ${t.subject}</strong><br>${t.message}<br>Status: ${t.status}</div>`; });
-      area.innerHTML = h;
-    }
-
-    function loadSellerDashboardData() {
-      let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
-      if(!foundSeller) { showAlert('Seller account pending approval.'); navigateTo('profile'); return; }
-      document.getElementById('sellerdashName').innerText = `${foundSeller.store} (${foundSeller.uniqueId})`;
-      loadSellerData(foundSeller.id);
-    }
-
-    function switchSellerTab(tab) {
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('sellerTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    }
-
-    function calculatePreviewListingPrice() {
-      let base = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
-      let final = Math.round(base + (base * globalCommission / 100));
-      document.getElementById('previewListingPriceText').innerText = `ℹ️ Commission (${globalCommission}%): ₹${Math.round(base * globalCommission / 100)} | Customer Price: ₹${final}`;
-    }
-
-    function saveSellerProduct() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      let editIdx = parseInt(document.getElementById('sellerEditIndex').value);
-      let title = document.getElementById('sProdTitle').value.trim();
-      let sku = document.getElementById('sProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
-      let category = document.getElementById('sProdCategory').value.trim() || 'General';
-      let basePrice = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('sProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('sProdStock').value) || 10;
-      let image = document.getElementById('sProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('sProdDesc').value.trim() || 'Vendor product.';
-
-      if(!title || !basePrice || !mrp) { showAlert('Fill Title, Base Price and MRP.'); return; }
-      let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
-
-      if(editIdx >= 0) products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
-      else products.push({ id: Date.now(), sku, title, category, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Self Vendor", basePrice, price: finalPrice, mrp, stock, image, desc });
-
-      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
-      renderProducts(); loadSellerData(foundSeller.id); resetSellerForm();
-      showAlert('Product saved successfully!', 'Success', true);
-    }
-
-    function shareSellerCatalog() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(!foundSeller) return;
-      let catalogUrl = window.location.origin + window.location.pathname + `?seller=${foundSeller.uniqueId}`;
-      window.open(`https://api.whatsapp.com/send?text=Check out our store collection:%0A${catalogUrl}`, '_blank');
-    }
-
-    function previewSellerCsv(input) {
-      if(input.files.length === 0) return;
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let lines = e.target.result.split('\n');
-        parsedSellerCsvRows = [];
-        for(let i = 1; i < lines.length; i++) {
-          let cols = lines[i].trim().split(',');
-          if(cols.length >= 6) {
-            parsedSellerCsvRows.push({ sku: cols[0].trim(), title: cols[1].trim(), category: cols[2].trim() || 'General', basePrice: parseFloat(cols[3]) || 500, mrp: parseFloat(cols[4]) || 999, stock: parseInt(cols[5]) || 10, image: cols[6]?.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500', desc: 'CSV Item' });
-          }
-        }
-        if(parsedSellerCsvRows.length > 0) { document.getElementById('sellerConfirmCsvBtn').style.display = 'block'; showAlert(`${parsedSellerCsvRows.length} products ready to import.`, 'CSV Ready', true); }
-      };
-      reader.readAsText(input.files[0]);
-    }
-
-    function executeSellerCsvImport() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(!foundSeller || parsedSellerCsvRows.length === 0) return;
-      parsedSellerCsvRows.forEach((row, i) => {
-        let finalPrice = Math.round(row.basePrice + (row.basePrice * globalCommission / 100));
-        products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Vendor CSV" });
-      });
-      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
-      renderProducts(); loadSellerData(foundSeller.id);
-      document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
-      showAlert('CSV Imported successfully!', 'Success', true);
-    }
-
-    function saveAdminProduct() {
-      let title = document.getElementById('aProdTitle').value.trim();
-      let sku = document.getElementById('aProdSku').value.trim() || ('SKU-' + Math.floor(1000 + Math.random() * 9000));
-      let category = document.getElementById('aProdCategory').value.trim() || 'General';
-      let source = document.getElementById('aProdSource').value.trim() || 'Direct Supplier';
-      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('aProdStock').value) || 20;
-      let image = document.getElementById('aProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('aProdDesc').value.trim() || 'Admin added product.';
-
-      if(!title || !price || !mrp) { showAlert('Fill title, price and MRP.'); return; }
-      products.unshift({ id: Date.now(), sku, title, category, sourcingSource: source, sellerId: 'admin', sellerName: 'Kosh Direct', basePrice: Math.round(price * 0.7), price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v7', JSON.stringify(products));
-      renderProducts(); loadAdminMasterData();
-      showAlert('Admin product added successfully!', 'Success', true);
-    }
-
-    function loadSellerData(sellerId) {
-      let myProducts = products.filter(p => p.sellerId === sellerId);
-      let pArea = document.getElementById('sellerProductsList');
-      if(myProducts.length === 0) pArea.innerHTML = 'No products listed.';
-      else {
-        let h = '';
-        myProducts.forEach((p) => {
-          let globalIdx = products.findIndex(item => item.id === p.id);
-          h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;"><div><b>${p.title}</b><br><span style="color:var(--muted);">Price: ₹${p.price} | Stock: ${p.stock}</span></div><button type="button" onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">Remove</button></div>`;
-        });
-        pArea.innerHTML = h;
-      }
-      let totalSales = 0, totalCommission = 0, oHtml = '';
-      ordersList.forEach(o => {
-        let sellerItems = o.items.filter(i => i.sellerId === sellerId);
-        if(sellerItems.length > 0) {
-          sellerItems.forEach((si, itemIdx) => {
-            let itemTotal = si.price * si.qty;
-            let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
-            totalSales += itemTotal; totalCommission += commissionAmt;
-            oHtml += `<div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"><b>Order #${o.id}</b> - ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}<br>Customer: ${o.name} (${o.phone}), ${o.address}<br><div style="display:flex; gap:6px; margin-top:8px; flex-direction:column;"><select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.75rem;"><option value="Processing">Processing</option><option value="Packed & Shipped">Shipped</option><option value="Delivered">Delivered</option></select><input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${si.courierName||''}" style="padding:6px; font-size:0.75rem;"><input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${si.trackingId||''}" style="padding:6px; font-size:0.75rem;"><button type="button" onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Save</button></div></div>`;
+          products.push({
+            sku,
+            title,
+            category: category.name,
+            subcategory,
+            description: `${adjective} ${subcategory} designed for everyday style and comfortable use. Colour: ${colour}. Material: ${material}.`,
+            images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500'],
+            selling_price: sellingPrice,
+            mrp,
+            discount,
+            variants: { colour: colour, material: material },
+            stock: 10 + (globalIndex % 41),
+            source_platform: "Kosh Studio Demo Catalog",
+            source_url: null,
+            created_at: new Date().toISOString()
           });
+          globalIndex++;
         }
-      });
-      document.getElementById('sellerOrdersList').innerHTML = oHtml || 'No orders.';
-      document.getElementById('sellerTotalSales').innerText = '₹' + totalSales;
-      document.getElementById('sellerTotalCommission').innerText = '₹' + totalCommission;
-      document.getElementById('sellerNetEarnings').innerText = '₹' + (totalSales - totalCommission);
-    }
-
-    function updateItemFulfillment(orderId, sku) {
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.items.forEach((item, idx) => {
-          if(item.sku === sku) {
-            let statusSel = document.getElementById(`fulfillStatus_${orderId}_${idx}`);
-            let courierInp = document.getElementById(`fulfillCourier_${orderId}_${idx}`);
-            let trackInp = document.getElementById(`fulfillTracking_${orderId}_${idx}`);
-            if(statusSel) item.fulfillmentStatus = statusSel.value;
-            if(courierInp) item.courierName = courierInp.value.trim();
-            if(trackInp) item.trackingId = trackInp.value.trim();
-          }
-        });
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert('Tracking updated!', 'Success', true);
-      }
-    }
-
-    function resetSellerForm() {
-      document.getElementById('sellerEditIndex').value = '-1';
-      document.getElementById('sProdTitle').value = '';
-      document.getElementById('sProdSku').value = '';
-      document.getElementById('sProdCategory').value = '';
-      document.getElementById('sProdBasePrice').value = '';
-      document.getElementById('sProdMrp').value = '';
-      document.getElementById('sProdStock').value = '';
-      document.getElementById('sProdImage').value = '';
-      document.getElementById('sProdDesc').value = '';
-    }
-
-    function removeSellerProduct(globalIdx, sellerId) {
-      if(confirm('Remove product?')) { products.splice(globalIdx, 1); localStorage.setItem('kosh_products_v7', JSON.stringify(products)); renderProducts(); loadSellerData(sellerId); }
-    }
-
-    function openCheckoutModal() {
-      if(cart.length === 0) { showAlert('Cart is empty!'); return; }
-      toggleCartDrawer(false);
-      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let finalTotal = discountedSubtotal + pgFee;
-
-      document.getElementById('chkSubtotalVal').innerText = '₹' + discountedSubtotal;
-      document.getElementById('chkPgFeeVal').innerText = '+ ₹' + pgFee;
-      document.getElementById('chkFinalTotalVal').innerText = '₹' + finalTotal;
-      
-      let gateway = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('checkoutTitle').innerText = `Secure Checkout (${gateway})`;
-      if(gateway === 'UPI') {
-        document.getElementById('upiExtraInfo').style.display = 'block';
-      } else {
-        document.getElementById('upiExtraInfo').style.display = 'none';
       }
 
-      document.getElementById('checkoutModal').style.display = 'flex';
-    }
-    function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
+      const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
+      const skus = uniqueProducts.map(p => p.sku);
 
-    async function lookupPincode(pin) {
-      if(pin.length === 6) {
+      if(progressEl) progressEl.innerText = "Checking existing SKUs in Supabase database...";
+
+      const { data: existing, error: existingError } = await supabaseClient.from("products").select("sku").in("sku", skus);
+      if (existingError) {
+        console.error(existingError);
+        showAlert("Existing SKU check failed: " + existingError.message);
+        return;
+      }
+
+      const existingSKUs = new Set((existing || []).map(p => p.sku));
+      const newProducts = uniqueProducts.filter(p => !existingSKUs.has(p.sku));
+
+      const batchSize = 100;
+      let inserted = 0;
+      let failed = 0;
+
+      for (let i = 0; i < newProducts.length; i += batchSize) {
+        const batch = newProducts.slice(i, i + batchSize);
+        const { error } = await supabaseClient.from("products").insert(batch);
+        if (error) {
+          console.error("Batch failed:", error);
+          failed += batch.length;
+        } else {
+          inserted += batch.length;
+        }
+        if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, newProducts.length)} / ${newProducts.length}`;
+      }
+
+      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nAlready existed: ${uniqueProducts.length - newProducts.length}\nInserted: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
+      fetchProductsPaginated();
+      loadAdminMasterData();
+    }
+
+    // Bulk CSV/JSON Importer with Batch Chunking & Duplicate SKU Skipping
+    async function handleBulkImportFile(input) {
+      if(!input.files || input.files.length === 0) return;
+      let file = input.files[0];
+      let reader = new FileReader();
+      let progressEl = document.getElementById('importProgressText');
+      progressEl.innerText = "Reading file...";
+
+      reader.onload = async function(e) {
         try {
-          let res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-          let data = await res.json();
-          if(data[0].Status === "Success") {
-            let info = data[0].PostOffice[0];
-            document.getElementById('chkCity').value = info.Name || '';
-            document.getElementById('chkDistrict').value = info.District || '';
-            document.getElementById('chkState').value = info.State || '';
+          let rows = [];
+          if(file.name.endsWith('.json')) {
+            rows = JSON.parse(e.target.result);
+          } else {
+            let lines = e.target.result.split('\n');
+            for(let i = 1; i < lines.length; i++) {
+              let cols = lines[i].trim().split(',');
+              if(cols.length >= 5) {
+                rows.push({
+                  sku: cols[0].trim(),
+                  title: cols[1].trim(),
+                  category: cols[2].trim(),
+                  selling_price: parseFloat(cols[3]) || 100,
+                  mrp: parseFloat(cols[4]) || 200,
+                  images: [cols[5]?.trim() || ''],
+                  description: cols[6]?.trim() || ''
+                });
+              }
+            }
           }
-        } catch(e){}
-      }
-    }
 
-    function initiateCheckoutFlow() {
-      let name = document.getElementById('chkName').value.trim();
-      let phone = document.getElementById('chkPhone').value.trim();
-      let area = document.getElementById('chkArea').value.trim();
-      let pincode = document.getElementById('chkPincode').value.trim();
-      let district = document.getElementById('chkDistrict').value.trim();
+          progressEl.innerText = `Processing ${rows.length} products in batches...`;
+          let addedCount = 0;
+          let skippedCount = 0;
+          let batchSize = 100;
 
-      if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district) {
-        showAlert('Please fill in all delivery details correctly.'); return;
-      }
+          for(let i = 0; i < rows.length; i += batchSize) {
+            let chunk = rows.slice(i, i + batchSize);
+            let { error } = await supabaseClient.from('products').insert(chunk, { returning: 'minimal' });
+            
+            if(error) {
+              for(let item of chunk) {
+                let { error: singleErr } = await supabaseClient.from('products').insert([item]);
+                if(singleErr) { skippedCount++; } else { addedCount++; }
+              }
+            } else {
+              addedCount += chunk.length;
+            }
+            progressEl.innerText = `Importing... Progress: ${Math.min(i + batchSize, rows.length)} / ${rows.length}`;
+          }
 
-      tempCheckoutData = { name, phone, address: `${area}, PIN: ${pincode}, ${district}` };
-      paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
-      document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
-      document.getElementById('checkoutModal').style.display = 'none';
-      document.getElementById('paymentOtpModal').style.display = 'flex';
-    }
-
-    function verifyAndFinalizeOrder() {
-      let otp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(otp !== paymentOtpGenerated) { showAlert('Incorrect OTP!'); return; }
-      document.getElementById('paymentOtpModal').style.display = 'none';
-
-      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let grandTotal = discountedSubtotal + pgFee;
-
-      let newOrder = {
-        id: "KS" + Math.floor(10000 + Math.random() * 90000),
-        timestamp: Date.now(), userEmail: currentUser || 'guest',
-        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        name: tempCheckoutData.name, phone: tempCheckoutData.phone, address: tempCheckoutData.address,
-        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice, fulfillmentStatus: 'Processing', courierName: '', trackingId: '', returnRequested: false, returnProof: '' })),
-        subtotal: discountedSubtotal, pgFee, total: grandTotal, status: 'New Order', deliveredAt: null, customPopupMsg: "", popupShown: false
+          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished! Added: ${addedCount}, Skipped (Duplicate SKU): ${skippedCount}</span>`;
+          fetchProductsPaginated();
+          loadAdminMasterData();
+        } catch(err) {
+          progressEl.innerHTML = `<span style="color:var(--danger);">❌ Error: ${err.message}</span>`;
+        }
       };
-
-      ordersList.unshift(newOrder);
-      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-      if(supabaseClient) { supabaseClient.from('orders').insert([newOrder]).then(); }
-
-      cart = []; localStorage.removeItem('kosh_cart'); updateCartUI();
-      showAlert("Order placed successfully!", "Order Placed", true);
-      navigateTo('orders');
+      reader.readAsText(file);
     }
 
-    function markAsDeliveredByCustomer(orderId) {
-      let o = ordersList.find(x => x.id === orderId);
-      if(o) { o.status = 'Delivered'; o.deliveredAt = Date.now(); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Delivery confirmed!", "Success", true); renderOrdersPage(); }
+    async function saveAdminProductToSupabase() {
+      let sku = document.getElementById('admSku').value.trim();
+      let title = document.getElementById('admTitle').value.trim();
+      let category = document.getElementById('admCategory').value.trim();
+      let price = parseFloat(document.getElementById('admPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('admMrp').value) || 0;
+      let stock = parseInt(document.getElementById('admStock').value) || 20;
+      let image = document.getElementById('admImage').value.trim();
+      let desc = document.getElementById('admDesc').value.trim();
+
+      if(!sku || !title || !price) { showAlert('Fill SKU, Title and Price.'); return; }
+      let newProd = { sku, title, category, selling_price: price, mrp, stock, images: [image], description: desc, source_platform: 'Admin Direct' };
+
+      let { error } = await supabaseClient.from('products').insert([newProd]);
+      if(error) { showAlert('Error inserting product (SKU already exists in DB): ' + error.message); return; }
+      showAlert('Product added to Supabase successfully!', 'Success', true);
+      fetchProductsPaginated();
+      loadAdminMasterData();
     }
 
-    function requestCustomerReturn(orderId) {
-      let videoProof = prompt("Enter Unboxing Video Link:");
-      if (!videoProof) return;
-      let o = ordersList.find(x => x.id === orderId);
-      if(o) { o.items.forEach(i => { i.returnRequested = true; i.returnProof = videoProof; }); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Return requested!", "Success", true); renderOrdersPage(); }
-    }
+    async function checkDuplicatesInSupabase() {
+      let box = document.getElementById('duplicateReportBox');
+      box.innerText = "Analyzing database for duplicate SKUs...";
+      
+      let { data, error } = await supabaseClient.from('products').select('sku');
+      if(error) { box.innerText = "Error checking DB."; return; }
 
-    function deleteSingleOrder(orderId) {
-      if(confirm('Delete order?')) {
-        let idx = ordersList.findIndex(o => o.id === orderId);
-        if(idx >= 0) { ordersList.splice(idx, 1); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert('Order deleted!', 'Success', true); loadAdminMasterData(); }
-      }
-    }
-
-    function resetAllDashboardData() {
-      if(confirm('⚠️ Reset all orders and revenue?')) {
-        ordersList = []; ticketsList = [];
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-        loadAdminMasterData(); showAlert('Data reset to zero!', 'Success', true);
-      }
-    }
-
-    function toggleGatewayFields() {
-      let gw = document.getElementById('gatewaySelect').value;
-      let lbl1 = document.getElementById('gwField1Label');
-      let lbl2 = document.getElementById('gwField2Label');
-      if(gw === 'Cashfree') {
-        lbl1.innerText = 'Cashfree App ID / Key';
-        lbl2.innerText = 'Cashfree Secret Key';
-      } else if(gw === 'Razorpay') {
-        lbl1.innerText = 'Razorpay Key ID';
-        lbl2.innerText = 'Razorpay Key Secret';
-      } else if(gw === 'UPI') {
-        lbl1.innerText = 'Merchant UPI ID';
-        lbl2.innerText = 'Merchant Display Name';
-      }
-    }
-
-    function savePaymentGatewayConfig() {
-      let gw = document.getElementById('gatewaySelect').value;
-      let key = document.getElementById('gwMerchantKey').value.trim();
-      let secret = document.getElementById('gwMerchantSecret').value.trim();
-      paymentConfig = { gateway: gw, key, secret };
-      localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
-      showAlert(`Payment gateway updated to ${gw} successfully!`, 'Success', true);
-    }
-
-    function printOrderInvoice(orderId) {
-      let o = ordersList.find(x => x.id === orderId);
-      if(!o) return;
-      let win = window.open('', '_blank');
-      win.document.write(`<html><head><title>Invoice #${o.id}</title></head><body style="font-family:sans-serif; padding:20px;"><h2>INVOICE #${o.id}</h2><p>Customer: ${o.name} (${o.phone})<br>Address: ${o.address}</p><hr><h3>Total: ₹${o.total}</h3><script>window.print();<\/script></body></html>`);
-      win.document.close();
-    }
-
-    function renderOrdersPage() {
-      const area = document.getElementById('ordersPageList');
-      if(ordersList.length === 0) { area.innerHTML = '<div style="background:#fff; padding:30px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders.</div>'; return; }
-      let html = '';
-      ordersList.forEach(o => {
-        let isShipped = o.items.some(i => i.fulfillmentStatus === 'Packed & Shipped' || i.fulfillmentStatus === 'Delivered');
-        let isDel = o.status === 'Delivered';
-        html += `<div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;"><b>Order #${o.id}</b> - ₹${o.total}<br>${o.items.map(i=>i.title).join(', ')}<br><div class="timeline"><div class="timeline-step active"><span>✓</span>Placed</div><div class="timeline-step ${isShipped||isDel?'active':''}"><span>2</span>Shipped</div><div class="timeline-step ${isDel?'active':''}"><span>3</span>Delivered</div></div>${o.status==='New Order'?`<button type="button" onclick="markAsDeliveredByCustomer('${o.id}')" style="margin-top:8px; background:var(--accent); color:#000; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Confirm Delivery</button>`:''}</div>`;
+      let skuCounts = {};
+      (data || []).forEach(p => {
+        skuCounts[p.sku] = (skuCounts[p.sku] || 0) + 1;
       });
-      area.innerHTML = html;
+      let duplicates = Object.keys(skuCounts).filter(sku => skuCounts[sku] > 1);
+
+      if(duplicates.length === 0) {
+        box.style.color = 'var(--success)';
+        box.innerText = '✅ Clean Database! Zero duplicate SKUs found in Supabase table.';
+      } else {
+        box.style.color = 'var(--danger)';
+        box.innerText = `⚠️ Warning: Found ${duplicates.length} duplicate SKU groups in database: ${duplicates.join(', ')}. (No records deleted automatically).`;
+      }
     }
 
-    function triggerAdminSecret() {
-      secretClickCount++;
-      if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
+    async function loadAdminMasterData() {
+      let listEl = document.getElementById('admSupabaseProductsList');
+      let { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false }).limit(50);
+      if(error || !data || data.length === 0) { listEl.innerHTML = 'No products found in Supabase.'; return; }
+      listEl.innerHTML = data.map((p) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.selling_price} <br><small style="color:var(--muted);">Category: ${p.category} | Source: ${p.source_platform || 'N/A'}</small></div>
+          <button type="button" onclick="deleteSupabaseProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+        </div>
+      `).join('') + `<p style="margin-top:10px; font-size:0.75rem; color:var(--muted);">Showing latest 50 products from Supabase database.</p>`;
     }
-    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
 
-    function verifyAdminPassword() {
-      let uid = document.getElementById('admUserInput').value.trim();
-      let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') { closeAdminLoginModal(); navigateTo('admin-dashboard'); }
-      else showAlert('Incorrect Admin ID or Password!');
+    async function deleteSupabaseProduct(id) {
+      if(confirm('Delete this product from Supabase?')) {
+        let { error } = await supabaseClient.from('products').delete().eq('id', id);
+        if(error) { showAlert('Error deleting: ' + error.message); return; }
+        showAlert('Product deleted!', 'Success', true);
+        fetchProductsPaginated();
+        loadAdminMasterData();
+      }
     }
-
-    function adminLogout() { navigateTo('home'); showAlert('Logged out.'); }
 
     function switchAdminTab(tab) {
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1762,32 +684,22 @@
       document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
     }
 
-    function loadAdminMasterData() {
-      let totalSalesRev = 0, totalCommEarned = 0;
-      ordersList.forEach(o => { totalSalesRev += o.subtotal; totalCommEarned += Math.round(o.subtotal * (globalCommission / 100)); });
-      document.getElementById('admSummarySales').innerText = '₹' + totalSalesRev;
-      document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
-      document.getElementById('admSummaryVendors').innerText = sellersList.filter(s => s.status === 'Approved').length;
-
-      let sArea = document.getElementById('admSellersList');
-      sArea.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map((s, idx) => `<div style="background:#fcfcfc; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:8px;"><strong>${s.store}</strong> (${s.uniqueId}) - ${s.status}<br><button type="button" onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:4px; cursor:pointer;">Approve</button></div>`).join('');
-
-      let pArea = document.getElementById('admProductsList');
-      pArea.innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${p.title}</b> (₹${p.price})<br><small style="color:var(--muted);">Category: ${p.category} | Source: ${p.sourcingSource || 'Direct Supplier'}</small></span><button type="button" onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Remove</button></div>`).join('');
-
-      let oArea = document.getElementById('admOrdersList');
-      oArea.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px;"><b>Order #${o.id}</b> - ${o.name} (₹${o.total})<br><button type="button" onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:6px; cursor:pointer;">Delete Order</button></div>`).join('');
-
-      document.getElementById('globalCommissionInput').value = globalCommission;
-      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('gwMerchantKey').value = paymentConfig.key || '';
-      document.getElementById('gwMerchantSecret').value = paymentConfig.secret || '';
-      toggleGatewayFields();
+    function triggerAdminSecret() {
+      secretClickCount++;
+      if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
     }
-
-    function updateSellerStatus(idx, st) { sellersList[idx].status = st; localStorage.setItem('kosh_sellers', JSON.stringify(sellersList)); loadAdminMasterData(); showAlert('Status updated.', 'Success', true); }
-    function adminRemoveProduct(idx) { products.splice(idx, 1); localStorage.setItem('kosh_products_v7', JSON.stringify(products)); renderProducts(); loadAdminMasterData(); showAlert('Removed.', 'Success', true); }
-    function saveGlobalCommission() { let v = parseFloat(document.getElementById('globalCommissionInput').value); if(!isNaN(v)) { globalCommission = v; localStorage.setItem('kosh_commission', v); showAlert('Saved.', 'Success', true); } }
+    function verifyAdminPassword() {
+      let uid = document.getElementById('admUserInput').value.trim();
+      let pass = document.getElementById('admPassInput').value.trim();
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+        document.getElementById('adminLoginModal').style.display = 'none';
+        navigateTo('admin-dashboard');
+      } else {
+        showAlert('Incorrect Admin ID or Password!');
+      }
+    }
+    function handleLogin() { currentUser = document.getElementById('loginEmail').value; localStorage.setItem('kosh_logged_email', currentUser); showAlert('Login successful!', 'Success', true); navigateTo('home'); }
+    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; showAlert('Logged out.'); navigateTo('home'); }
   </script>
 </body>
 </html>
