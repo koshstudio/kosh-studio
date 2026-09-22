@@ -436,11 +436,29 @@
 
         <div style="margin-bottom:16px; display:flex; align-items:center; gap:8px;">
           <input type="checkbox" id="selTerms" style="width:18px; height:18px;">
-          <label for="selTerms" style="font-size:0.85rem; cursor:pointer; margin-bottom:0;">I agree to the Terms & Conditions *</label>
+          <label for="selTerms" style="font-size:0.85rem; margin-bottom:0;">I agree to the <span style="color:#0d47a1; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('termsModal').style.display='flex'">Terms & Conditions</span> *</label>
         </div>
 
         <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="submitSellerRegistration()">Register Store Now</button>
       </div>
+    </div>
+  </div>
+
+  <!-- TERMS & CONDITIONS MODAL -->
+  <div class="modal-overlay" id="termsModal">
+    <div class="modal-box" style="text-align:left; max-width:500px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem; color:var(--primary);">📜 Terms & Conditions - Kosh Studio</h3>
+        <button type="button" onclick="document.getElementById('termsModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div style="max-height:300px; overflow-y:auto; font-size:0.83rem; color:#555; line-height:1.6; margin-bottom:16px;">
+        <p><b>1. Introduction:</b> Welcome to Kosh Studio Multi-Vendor Marketplace. By registering as a seller, you agree to comply with and be bound by the following professional terms and conditions.</p><br>
+        <p><b>2. Seller Obligations:</b> Sellers must provide accurate information, genuine products, and timely dispatch. Counterfeit or prohibited items will lead to immediate store suspension.</p><br>
+        <p><b>3. Payouts & Commission:</b> Payouts will be processed to the verified bank account or UPI ID after successful delivery and completion of the return window, minus applicable platform commissions.</p><br>
+        <p><b>4. KYC Compliance:</b> Sellers must submit valid PAN card and bank details matching their registered profile. Payouts are subject to successful KYC verification.</p><br>
+        <p><b>5. Termination:</b> Kosh Studio reserves the right to terminate or suspend any seller account found violating marketplace policies.</p>
+      </div>
+      <button type="button" class="btn-solid" style="background:var(--primary);" onclick="document.getElementById('termsModal').style.display='none'">Got It</button>
     </div>
   </div>
 
@@ -1554,18 +1572,6 @@
       }
     }
 
-    function deleteAdminProduct(id) {
-      showCustomConfirm("Kya aap is product ko delete karna chahte hain?", function(res) {
-        if(res) {
-          products = products.filter(p => p.id !== id);
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-          renderProducts();
-          loadAdminMasterData();
-          showAlert("Product delete ho gaya hai!", "Success", true);
-        }
-      });
-    }
-
     function handleLogin() { 
       let val = document.getElementById('loginEmail').value.trim();
       let pass = document.getElementById('loginPass').value.trim();
@@ -1588,26 +1594,6 @@
         navigateTo('home');
       } else {
         showAlert('Kripya email ya mobile number bharein.');
-      }
-    }
-
-    function handleLogout() { 
-      localStorage.removeItem('kosh_logged_email'); 
-      currentUser = null; 
-      checkLoginStatus();
-      showAlert('Logged out successfully.', 'Notice', false);
-      navigateTo('home'); 
-    }
-
-    function checkLoginStatus() {
-      if(currentUser) {
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = currentUser;
-        loadSellerKycData();
-      } else { 
-        document.getElementById('userDashboardSection').style.display = 'none'; 
-        document.getElementById('authLoginView').style.display = 'block'; 
       }
     }
   </script>
