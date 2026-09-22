@@ -27,7 +27,6 @@
 
     .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
-    /* Professional Two-Row Mobile Header */
     header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); }
     .header-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
     .brand-name { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
@@ -241,7 +240,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- PROFILE PAGE WITH SUPPORT & JOIN AS SELLER -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -254,10 +253,26 @@
         <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
         <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
       </div>
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto; background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
-        <h3>👤 Profile</h3>
-        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
-        <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer;">Logout</button>
+
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
+        <!-- Profile Card -->
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow);">
+          <h3 style="font-size:1.05rem; margin-bottom:6px; color:var(--primary);">👤 Profile</h3>
+          <p id="displayUserEmail" style="color:var(--muted); font-size:0.88rem; margin-bottom:14px;"></p>
+          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
+        </div>
+
+        <!-- Support Card -->
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="openSupportModal()">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support</h4>
+          <p style="font-size:0.8rem; color:var(--muted);">Raise a ticket or chat with support for assistance.</p>
+        </div>
+
+        <!-- Join as Seller Card -->
+        <div style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="openJoinSellerModal()">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#0d47a1;">🏪 Join as Seller</h4>
+          <p style="font-size:0.8rem; color:#555;">Register your store and start selling products on Kosh Studio.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -351,6 +366,33 @@
           <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT MODAL -->
+  <div class="modal-overlay" id="supportModal">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem;">🛠️ Raise Support Ticket</h3>
+        <button type="button" onclick="document.getElementById('supportModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group"><label>Subject</label><input type="text" id="supSubject" placeholder="e.g. Order Delay Issue"></div>
+      <div class="form-group"><label>Message</label><textarea id="supMsg" rows="3" placeholder="Describe your issue..."></textarea></div>
+      <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitSupportTicket()">Submit Ticket</button>
+    </div>
+  </div>
+
+  <!-- JOIN AS SELLER MODAL -->
+  <div class="modal-overlay" id="joinSellerModal">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem;">🏪 Join as Seller Registration</h3>
+        <button type="button" onclick="document.getElementById('joinSellerModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group"><label>Store Name</label><input type="text" id="selStoreName" placeholder="Your Brand/Store Name"></div>
+      <div class="form-group"><label>Owner Name</label><input type="text" id="selOwnerName" placeholder="Full Name"></div>
+      <div class="form-group"><label>Contact Phone (10 Digits)</label><input type="tel" id="selPhone" maxlength="10" placeholder="Mobile Number"></div>
+      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="submitSellerRegistration()">Register Store</button>
     </div>
   </div>
 
@@ -627,6 +669,46 @@
         showAlert("Order successfully placed via " + gw + "!", "Success", true);
         navigateTo('home');
       }, 1500);
+    }
+
+    function openSupportModal() {
+      document.getElementById('supportModal').style.display = 'flex';
+    }
+
+    function submitSupportTicket() {
+      let subject = document.getElementById('supSubject').value.trim();
+      let msg = document.getElementById('supMsg').value.trim();
+      if(!subject || !msg) {
+        showAlert("Kripya subject aur message bharein.");
+        return;
+      }
+      ticketsList.unshift({ id: Date.now(), email: currentUser, subject, msg, status: 'Open' });
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      document.getElementById('supportModal').style.display = 'none';
+      document.getElementById('supSubject').value = '';
+      document.getElementById('supMsg').value = '';
+      showAlert("Support ticket successfully raise ho gayi hai!", "Success", true);
+    }
+
+    function openJoinSellerModal() {
+      document.getElementById('joinSellerModal').style.display = 'flex';
+    }
+
+    function submitSellerRegistration() {
+      let store = document.getElementById('selStoreName').value.trim();
+      let owner = document.getElementById('selOwnerName').value.trim();
+      let phone = document.getElementById('selPhone').value.trim();
+      if(!store || !owner || !phone) {
+        showAlert("Kripya sabhi details bharein.");
+        return;
+      }
+      sellersList.unshift({ uniqueId: 'SEL-' + Date.now().toString().slice(-5), store, owner, phone, status: 'Active' });
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      document.getElementById('joinSellerModal').style.display = 'none';
+      document.getElementById('selStoreName').value = '';
+      document.getElementById('selOwnerName').value = '';
+      document.getElementById('selPhone').value = '';
+      showAlert("Seller registration successful! Aapka store register ho gaya hai.", "Success", true);
     }
 
     function renderProducts(filterCat = null) {
@@ -922,7 +1004,7 @@
     }
 
     function loadAdminMasterData() {
-      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div>${s.store}</div>`).join('');
+      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div>${s.store} (${s.owner})</div>`).join('');
       document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
           <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
@@ -930,7 +1012,7 @@
         </div>
       `).join('');
       document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway})</div>`).join('');
-      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : '';
+      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>[${t.email}]</b> ${t.subject}: ${t.msg}</div>`).join('');
     }
 
     function deleteAdminProduct(id) {
