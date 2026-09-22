@@ -444,6 +444,10 @@
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage, false);
       
+      if(localStorage.getItem('kosh_cart_open') === 'true') {
+        toggleCartDrawer(true);
+      }
+
       document.querySelectorAll('.cat-item').forEach(i => {
         if(i.innerText.includes(activeCategoryFilter) || (activeCategoryFilter === 'All' && i.innerText.includes('All'))) {
           i.classList.add('active');
@@ -453,10 +457,17 @@
       });
 
       renderProducts();
+      renderWishlist();
       updateCartUI();
       checkLoginStatus();
       loadPaymentSettingsToUI();
       
+      let savedProdId = localStorage.getItem('kosh_selected_prod_id');
+      if(savedProdId) {
+        currentSelectedProduct = products.find(p => p.id == savedProdId);
+        if(currentSelectedProduct) displayProductDetailData(currentSelectedProduct);
+      }
+
       if(savedPage === 'payment') {
         renderPaymentPage();
       }
@@ -657,6 +668,30 @@
       document.getElementById('wishlistCount').innerText = wishlist.length;
     }
 
+    function renderWishlist() {
+      const grid = document.getElementById('wishlistGrid');
+      grid.innerHTML = '';
+      if(wishlist.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">Your wishlist is empty.</p>';
+        return;
+      }
+      wishlist.forEach(p => {
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+          <div class="product-info">
+            <span class="p-category">${p.category}</span>
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
     function toggleWishlist(id) {
       let prod = products.find(p => p.id === id);
       if(!prod) return;
@@ -665,6 +700,7 @@
       else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
       localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
       renderProducts();
+      renderWishlist();
     }
 
     function navigateTo(pageId, save = true) {
@@ -674,6 +710,7 @@
       if(save) localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
       
+      if(pageId === 'wishlist') renderWishlist();
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) {
           document.getElementById('adminLoginModal').style.display = 'flex';
@@ -697,14 +734,19 @@
     function openProductDetail(id) {
       currentSelectedProduct = products.find(item => item.id === id);
       if(!currentSelectedProduct) return;
-      document.getElementById('pPageImg').src = currentSelectedProduct.image;
-      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
-      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku}`;
-      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
-      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
-      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
+      localStorage.setItem('kosh_selected_prod_id', id);
+      displayProductDetailData(currentSelectedProduct);
       navigateTo('product');
+    }
+
+    function displayProductDetailData(p) {
+      document.getElementById('pPageImg').src = p.image;
+      document.getElementById('pPageCategory').innerText = p.category;
+      document.getElementById('pPageTitle').innerText = p.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku}`;
+      document.getElementById('pPagePrice').innerText = '₹' + p.price;
+      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
+      document.getElementById('pPageDesc').innerText = p.desc;
     }
 
     function addCurrentProductToCart() {
@@ -771,6 +813,7 @@
     function toggleCartDrawer(open) {
       document.getElementById('cartDrawer').classList.toggle('open', open);
       document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
+      localStorage.setItem('kosh_cart_open', open);
     }
 
     function clearAllProductsCompletely() {
