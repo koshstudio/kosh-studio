@@ -27,15 +27,17 @@
 
     .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
-    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
     .brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
     
-    .header-search { flex-grow: 1; max-width: 280px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .header-search { flex-grow: 1; max-width: 260px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
     .header-search input { width: 100%; border: none; background: transparent; padding: 6px 8px; font-size: 0.78rem; outline: none; }
     
-    .header-icons { display: flex; align-items: center; gap: 10px; }
-    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.68rem; color: var(--text); font-weight: 600; padding: 4px; }
-    .badge-count { position: absolute; top: -2px; right: 2px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; }
+    .header-icons { display: flex; align-items: center; gap: 12px; }
+    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text); font-weight: 600; padding: 4px 6px; }
+    
+    /* Professional Badge Positioning */
+    .badge-count { position: absolute; top: -4px; right: 0px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; z-index: 2; }
 
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
     .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
