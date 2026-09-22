@@ -240,18 +240,36 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE WITH SUPPORT & JOIN AS SELLER -->
+  <!-- PROFILE PAGE WITH LOGIN & SIGN UP -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
       <span style="font-weight:700;">Customer & Seller Account</span>
     </div>
     <div class="page-content">
-      <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
-        <div class="form-group"><label>Email or Mobile Number</label><input type="text" id="loginEmail" placeholder="Email or Mobile"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
-        <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
+      <div id="authContainer" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
+        <div style="display:flex; gap:10px; margin-bottom:18px; border-bottom:2px solid var(--border);">
+          <button type="button" id="tabLoginBtn" class="dash-tab-btn active" onclick="switchAuthTab('login')" style="flex:1;">Login</button>
+          <button type="button" id="tabSignupBtn" class="dash-tab-btn" onclick="switchAuthTab('signup')" style="flex:1;">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginFormView">
+          <h3 style="margin-bottom:12px; font-size:1.1rem; text-align:center;">Customer / Seller Login</h3>
+          <div class="form-group"><label>Email or Mobile Number</label><input type="text" id="loginEmail" placeholder="Email or Mobile"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
+          <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="signupFormView" style="display:none;">
+          <h3 style="margin-bottom:12px; font-size:1.1rem; text-align:center;">Customer Sign Up</h3>
+          <div class="form-group"><label>Full Name *</label><input type="text" id="signupName" placeholder="Full Name"></div>
+          <div class="form-group"><label>Email *</label><input type="email" id="signupEmail" placeholder="Email Address"></div>
+          <div class="form-group"><label>Mobile Number *</label><input type="tel" id="signupPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)"></div>
+          <div class="form-group"><label>Password *</label><input type="password" id="signupPass" placeholder="Create Password"></div>
+          <button type="button" class="btn-solid" style="background:var(--success);" onclick="handleCustomerSignup()">Register Account</button>
+        </div>
       </div>
 
       <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
@@ -650,6 +668,7 @@
 
     let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
+    let customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
@@ -700,6 +719,104 @@
         renderPaymentPage();
       }
     });
+
+    function switchAuthTab(tab) {
+      if(tab === 'login') {
+        document.getElementById('tabLoginBtn').classList.add('active');
+        document.getElementById('tabSignupBtn').classList.remove('active');
+        document.getElementById('loginFormView').style.display = 'block';
+        document.getElementById('signupFormView').style.display = 'none';
+      } else {
+        document.getElementById('tabSignupBtn').classList.add('active');
+        document.getElementById('tabLoginBtn').classList.remove('active');
+        document.getElementById('signupFormView').style.display = 'block';
+        document.getElementById('loginFormView').style.display = 'none';
+      }
+    }
+
+    function handleCustomerSignup() {
+      let name = document.getElementById('signupName').value.trim();
+      let email = document.getElementById('signupEmail').value.trim();
+      let phone = document.getElementById('signupPhone').value.trim();
+      let pass = document.getElementById('signupPass').value.trim();
+
+      if(!name || !email || !phone || !pass) {
+        showAlert("Kripya sabhi fields bharein.");
+        return;
+      }
+      if(phone.length !== 10) {
+        showAlert("Phone number strictly 10 digits ka hona chahiye.");
+        return;
+      }
+
+      let exists = customersList.some(c => c.email === email || c.phone === phone);
+      if(exists) {
+        showAlert("Yeh email ya phone number pehle se registered hai. Kripya Login karein.");
+        return;
+      }
+
+      customersList.push({ name, email, phone, password: pass });
+      localStorage.setItem('kosh_customers', JSON.stringify(customersList));
+
+      showAlert("Registration successful! Ab aap login kar sakte hain.", "Success", true);
+      switchAuthTab('login');
+      document.getElementById('signupName').value = '';
+      document.getElementById('signupEmail').value = '';
+      document.getElementById('signupPhone').value = '';
+      document.getElementById('signupPass').value = '';
+    }
+
+    function handleLogin() { 
+      let val = document.getElementById('loginEmail').value.trim();
+      let pass = document.getElementById('loginPass').value.trim();
+
+      if(!val || !pass) {
+        showAlert("Kripya email/mobile aur password enter karein.");
+        return;
+      }
+      
+      let seller = sellersList.find(s => (s.phone === val || s.email === val) && s.password === pass);
+      if(seller) {
+        currentUser = seller.phone;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        showAlert('Seller Login successful!', 'Success', true);
+        navigateTo('home');
+        return;
+      }
+
+      let customer = customersList.find(c => (c.email === val || c.phone === val) && c.password === pass);
+      if(customer) {
+        currentUser = customer.email;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        showAlert('Login successful!', 'Success', true);
+        navigateTo('home');
+        return;
+      }
+
+      showAlert('Invalid credentials! Kripya sahi email/mobile aur password dalein ya Sign Up karein.');
+    }
+
+    function handleLogout() { 
+      localStorage.removeItem('kosh_logged_email'); 
+      currentUser = null; 
+      checkLoginStatus();
+      showAlert('Logged out successfully.', 'Notice', false);
+      navigateTo('home'); 
+    }
+
+    function checkLoginStatus() {
+      if(currentUser) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('userDashboardSection').style.display = 'block';
+        document.getElementById('displayUserEmail').innerText = currentUser;
+        loadSellerKycData();
+      } else { 
+        document.getElementById('userDashboardSection').style.display = 'none'; 
+        document.getElementById('authContainer').style.display = 'block'; 
+      }
+    }
 
     function toggleGatewayFields() {
       let gw = document.getElementById('gatewaySelect').value;
@@ -1569,31 +1686,6 @@
             `;
           }).join('');
         }
-      }
-    }
-
-    function handleLogin() { 
-      let val = document.getElementById('loginEmail').value.trim();
-      let pass = document.getElementById('loginPass').value.trim();
-      
-      let seller = sellersList.find(s => (s.phone === val || s.email === val) && s.password === pass);
-      if(seller) {
-        currentUser = seller.phone;
-        localStorage.setItem('kosh_logged_email', currentUser);
-        checkLoginStatus();
-        showAlert('Seller Login successful!', 'Success', true);
-        navigateTo('home');
-        return;
-      }
-
-      if(val) {
-        currentUser = val;
-        localStorage.setItem('kosh_logged_email', currentUser);
-        checkLoginStatus();
-        showAlert('Login successful!', 'Success', true);
-        navigateTo('home');
-      } else {
-        showAlert('Kripya email ya mobile number bharein.');
       }
     }
   </script>
