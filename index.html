@@ -25,257 +25,63 @@
       --danger: #d32f2f;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    .top-strip {
-      background: var(--primary);
-      color: var(--accent);
-      text-align: center;
-      padding: 6px 12px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
+    .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: var(--shadow); }
+    .brand-name { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: var(--primary); text-decoration: none; cursor: pointer; }
+    .header-search { flex-grow: 1; max-width: 500px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .header-search input { width: 100%; border: none; background: transparent; padding: 8px 12px; font-size: 0.85rem; outline: none; }
+    .header-icons { display: flex; align-items: center; gap: 14px; }
+    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: var(--text); font-weight: 600; }
+    .badge-count { position: absolute; top: -4px; right: 2px; background: var(--accent); color: #000; font-size: 0.6rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-    header {
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 60;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: var(--shadow);
-    }
+    .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+    .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
 
-    .brand-name {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--primary);
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .header-search {
-      flex-grow: 1;
-      max-width: 500px;
-      display: flex;
-      background: #f1f3f6;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .header-search input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 8px 12px;
-      font-size: 0.85rem;
-      outline: none;
-    }
-
-    .header-icons {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 0.72rem;
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .badge-count {
-      position: absolute;
-      top: -4px;
-      right: 2px;
-      background: var(--accent);
-      color: #000;
-      font-size: 0.6rem;
-      font-weight: 700;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .flash-banner {
-      background: linear-gradient(135deg, #111, #333);
-      color: #fff;
-      padding: 14px 20px;
-      margin: 12px 10px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: var(--shadow);
-    }
-    .flash-timer {
-      background: var(--accent);
-      color: #000;
-      padding: 4px 10px;
-      border-radius: 4px;
-      font-weight: 800;
-      font-size: 0.85rem;
-    }
-
-    .categories-bar {
-      background: #ffffff;
-      display: flex;
-      overflow-x: auto;
-      gap: 20px;
-      padding: 12px 20px;
-      border-bottom: 1px solid var(--border);
-      scrollbar-width: none;
-    }
+    .categories-bar { background: #ffffff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
     .categories-bar::-webkit-scrollbar { display: none; }
-
-    .cat-item {
-      flex: 0 0 auto;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #555;
-      cursor: pointer;
-      padding-bottom: 2px;
-    }
+    .cat-item { flex: 0 0 auto; font-size: 0.82rem; font-weight: 700; color: #555; cursor: pointer; padding-bottom: 2px; }
     .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
 
-    .container {
-      max-width: 1200px;
-      margin: 16px auto;
-      padding: 0 10px;
-    }
+    .container { max-width: 1200px; margin: 16px auto; padding: 0 10px; }
+    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .products-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    }
-
-    .product-card {
-      background: var(--card-bg);
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .product-img {
-      width: 100%;
-      padding-top: 100%;
-      position: relative;
-      background: #f9f9f9;
-      cursor: pointer;
-    }
-    .product-img img {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-    }
-
-    .wishlist-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255,255,255,0.85);
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      z-index: 5;
-    }
-
-    .product-info {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
+    .product-card { background: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
+    .product-img { width: 100%; padding-top: 100%; position: relative; background: #f9f9f9; cursor: pointer; }
+    .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wishlist-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.85); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 5; }
+    .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
     .p-category { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; font-weight: 700; margin-bottom: 2px; }
-    .p-title {
-      font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em;
-    }
-
+    .p-title { font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em; }
     .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
     .p-price { font-size: 1rem; font-weight: 700; color: #111; }
     .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
+    .btn-add-cart { width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-    .btn-add-cart {
-      width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px;
-      border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase;
-    }
+    .pagination-bar { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 30px 0; flex-wrap: wrap; }
+    .page-num-btn { background: #fff; border: 1px solid var(--border); padding: 8px 14px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    .page-num-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
     .app-page { display: none; }
     .app-page.active { display: block; }
-
-    .page-header {
-      background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border);
-    }
+    .page-header { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); }
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
 
-    .cart-drawer {
-      position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px;
-      background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease;
-      display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-    }
+    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px;
-    }
-    .modal-box {
-      background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px; }
+    .modal-box { background: #fff; width: 100%; max-width: 500px; border-radius: 6px; padding: 20px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
     .form-group { margin-bottom: 14px; display: block; width: 100%; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff;
-    }
-    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; margin-bottom: 14px; }
-
-    .btn-solid {
-      width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px;
-      border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; z-index: 10; position: relative;
-    }
-    .btn-solid:hover { background: #333; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff; }
+    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
     .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
     .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
@@ -283,20 +89,8 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
-    .summary-cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    @media (min-width: 768px) { .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); } }
-    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
-    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
-
-    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
-    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
-    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
-    .timeline-step.active span { background: var(--success); }
-
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
-    .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -308,31 +102,23 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search men wear, women wear, accessories..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
           <span>Wishlist</span>
           <span class="badge-count" id="wishlistCount">0</span>
         </button>
         <button type="button" class="icon-btn" onclick="navigateTo('profile')">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span>Account</span>
         </button>
         <button type="button" class="icon-btn" onclick="toggleCartDrawer(true)">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span>Cart</span>
           <span class="badge-count" id="cartCount">0</span>
         </button>
       </div>
     </header>
 
-    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
-      🛍️ Browsing Exclusive Store Catalog (<span id="catalogStoreName">Store</span>) <button type="button" onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All Products</button>
-    </div>
-
-    <!-- Flash Sale Banner -->
     <div class="flash-banner">
       <div>
         <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
@@ -356,7 +142,6 @@
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
     </footer>
   </div>
 
@@ -364,7 +149,7 @@
   <div id="page-wishlist" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
+      <span style="font-weight:700;">❤️ My Wishlist</span>
     </div>
     <div class="page-content">
       <div class="products-grid" id="wishlistGrid"></div>
@@ -375,21 +160,14 @@
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
+      <span style="font-weight:700;">Product Details</span>
     </div>
     <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
+      <div><img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);"></div>
       <div>
-        <img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);">
-      </div>
-      <div>
-        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
+        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
-        
-        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
-          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
-        </div>
-
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -398,213 +176,91 @@
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <button type="button" class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
-        
-        <div style="margin-top:30px;">
-          <h4 style="font-size:1rem; margin-bottom:12px; font-weight:bold;">🔗 Related Products</h4>
-          <div class="products-grid" id="relatedProductsGrid"></div>
-        </div>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
-          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews (Verified)</h4>
-          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">Loading reviews...</div>
-          
-          <div id="verifiedReviewBox" style="border-top:1px solid #eee; padding-top:12px; display:none;">
-            <h5 style="font-size:0.85rem; margin-bottom:6px; color:var(--success);">✅ Write a Verified Review (Order Delivered)</h5>
-            <div class="form-row">
-              <div class="form-group"><label>Rating</label><select id="newReviewRating"><option value="5">⭐⭐⭐⭐⭐ (5/5)</option><option value="4">⭐⭐⭐⭐ (4/5)</option><option value="3">⭐⭐⭐ (3/5)</option><option value="2">⭐⭐ (2/5)</option><option value="1">⭐ (1/5)</option></select></div>
-              <div class="form-group"><label>Your Name</label><input type="text" id="newReviewAuthor" placeholder="Name"></div>
-            </div>
-            <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
-            <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
-          </div>
-          <div id="unverifiedReviewMsg" style="font-size:0.80rem; color:#d32f2f; margin-top:10px; font-style:italic;">
-            🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
-          </div>
-        </div>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
       </div>
     </div>
   </div>
 
-  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
+  <!-- PROFILE PAGE -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
+      <span style="font-weight:700;">Customer Account</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
-        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:16px; text-align:center;">Access account or seller dashboard</p>
-        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <button type="button" class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login</h3>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
+        <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
       </div>
-
-      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
-        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button type="button" class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
-      </div>
-
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
-            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
-          </div>
-          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
-        </div>
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
-          <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">Track orders, print invoices & returns</p>
-          </div>
-          <span style="font-size:1.2rem; color:var(--muted);">›</span>
-        </div>
-
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
-          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
-          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
-          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject"></div>
-          <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe your issue..."></textarea></div>
-          <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
-          <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
-        </div>
-        
-        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
-          <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start selling.</p>
-          <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
-        </div>
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto; background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
+        <h3>👤 Profile</h3>
+        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
+        <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer;">Logout</button>
       </div>
     </div>
   </div>
 
-  <!-- MY ORDERS PAGE -->
-  <div id="page-orders" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders, Invoices & Tracking</span>
-    </div>
-    <div class="page-content">
-      <div id="ordersPageList"></div>
-    </div>
-  </div>
-
-  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
-  <div id="page-seller-dashboard" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard (<span id="sellerdashName">Vendor</span>)</span>
-    </div>
-    <div class="page-content" style="max-width:1000px;">
-      <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 My Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings</button>
-      </div>
-
-      <div id="sellerTabProducts" class="dash-tab-content active">
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
-          <strong>🔗 Share Your Store Catalog:</strong> Send your collection via WhatsApp.
-          <button type="button" class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link</button>
-        </div>
-
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product</h5>
-          <input type="hidden" id="sellerEditIndex" value="-1">
-          <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
-          <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
-          <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Paste Image URL"></div>
-          <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="saveSellerProduct()">Save Product</button>
-        </div>
-        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
-      </div>
-
-      <div id="sellerTabOrders" class="dash-tab-content">
-        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
-      </div>
-
-      <div id="sellerTabEarnings" class="dash-tab-content">
-        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
-          <h4 style="margin-bottom:12px; font-size:1.1rem;">💰 Earnings Summary</h4>
-          <p>Total Sales Revenue: <span id="sellerTotalSales">₹0</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE -->
+  <!-- ADMIN MASTER DASHBOARD -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
       <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
-      <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
+      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
-      <div class="dash-tabs">
+      <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Sourcing</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Auto-Injector</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Seller Sales & Settlement Tracker</h5>
-        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers Management</h5>
+        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
       </div>
 
       <div id="admTabProducts" class="dash-tab-content">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Admin Direct Product Listing</h5>
-          <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
-          <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
-          <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="aProdImage" placeholder="Paste Image URL"></div>
-          <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="saveAdminProduct()">Save Admin Product</button>
+        <!-- Quick Action Buttons for Clearing Meesho & Auto Injecting 100 Products -->
+        <div style="background:#f1f3f6; border:1px solid var(--border); padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
+          <h4 style="margin-bottom:10px; font-weight:bold;">⚡ Catalog Management Hub</h4>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" class="btn-solid" style="background:#d32f2f; max-width:260px; padding:12px;" onclick="clearMeeshoProducts()">🗑️ Remove Meesho Products</button>
+            <button type="button" class="btn-solid" style="background:#388e3c; max-width:280px; padding:12px;" onclick="autoInject100Products()">⚡ Automatically Inject 100 Products</button>
+          </div>
         </div>
+
+        <h5 style="margin-bottom:10px; font-weight:bold;">Current Products List</h5>
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Customer Orders</h5>
-        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders</h5>
+        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
       </div>
 
       <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Support & Dispute Tickets</h5>
-        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
+        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
       <div id="admTabSettings" class="dash-tab-content">
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
-          <div class="form-group"><label>Active Payment Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
-          <button type="button" class="btn-solid" onclick="showAlert('Settings saved!')" style="background:#ff9800; color:#fff;">Save Configuration</button>
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
+          <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CUSTOM BRANDED ALERT MODAL -->
+  <!-- MODALS -->
   <div class="modal-overlay" id="customAlertModal">
-    <div class="modal-box" style="max-width:360px; text-align:center; padding:24px;">
-      <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700;">Kosh Studio Notice</h3>
-      <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px;"></p>
-      <button type="button" class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
+    <div class="modal-box" style="max-width:360px; text-align:center;">
+      <h3 id="customAlertTitle" style="margin-bottom:8px;">Notice</h3>
+      <p id="customAlertMsg" style="margin-bottom:20px;"></p>
+      <button type="button" class="btn-solid" onclick="closeCustomAlert()">OK</button>
     </div>
   </div>
 
@@ -617,21 +273,18 @@
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to checkout...')">Proceed to Checkout</button>
+      <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:12px;"><span>Total</span><span id="cartTotalPrice">₹0</span></div>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to checkout...')">Checkout</button>
     </div>
   </div>
 
   <!-- ADMIN LOGIN MODAL -->
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-box" style="max-width:380px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">🔒 Admin Master Login</h3>
-        <button type="button" onclick="closeAdminLoginModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="form-group"><label>Admin User ID</label><input type="text" id="admUserInput" placeholder="Admin ID"></div>
-      <div class="form-group"><label>Admin Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
-      <button type="button" class="btn-solid" onclick="verifyAdminPassword()" style="margin-top:10px;">Login to Master Admin</button>
+      <h3 style="margin-bottom:14px;">🔒 Admin Master Login</h3>
+      <div class="form-group"><label>Admin ID</label><input type="text" id="admUserInput" placeholder="ID"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="admPassInput" placeholder="Password"></div>
+      <button type="button" class="btn-solid" onclick="verifyAdminPassword()">Login</button>
     </div>
   </div>
 
@@ -643,88 +296,59 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    // Fresh storage key 'kosh_products_v8' to flush any old duplicate data automatically
     function generateStrictCatalog() {
       let categories = ["Men Wear", "Women Wear", "Accessories", "Footwear", "Jewellery"];
-      let sources = ["Meesho Wholesale", "Flipkart Hub", "Amazon Supplier", "Direct Manufacturer"];
       let categoryImages = {
-        "Men Wear": [
-          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Women Wear": [
-          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Accessories": [
-          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Footwear": [
-          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&auto=format&fit=crop&q=60"
-        ],
-        "Jewellery": [
-          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60",
-          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&auto=format&fit=crop&q=60"
-        ]
+        "Men Wear": ["https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=500&auto=format&fit=crop&q=60"],
+        "Women Wear": ["https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60", "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60"],
+        "Accessories": ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60"],
+        "Footwear": ["https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60"],
+        "Jewellery": ["https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60"]
       };
 
       let list = [];
-      let idCounter = 4000;
+      let idCounter = 5000;
       categories.forEach(cat => {
         let imgs = categoryImages[cat];
-        for(let i = 1; i <= 25; i++) {
+        for(let i = 1; i <= 20; i++) {
           idCounter++;
-          let source = sources[idCounter % sources.length];
           let img = imgs[i % imgs.length];
-          let base = 250 + (i * 17) % 800;
-          let price = Math.round(base * 1.4);
-          let mrp = Math.round(price * 1.8);
+          let price = 299 + (i * 23) % 1000;
+          let mrp = Math.round(price * 1.7);
           list.push({
             id: idCounter,
             sku: `${cat.substring(0,3).toUpperCase()}-${idCounter}`,
-            title: `${cat} Exclusive Item #${i}`,
+            title: `${cat} Trend Item #${i}`,
             category: cat,
-            sourcingSource: source,
-            sellerId: "admin",
-            sellerName: "Kosh Direct",
-            basePrice: base,
+            sourcingSource: "Kosh Direct",
             price: price,
             mrp: mrp,
-            stock: 40,
+            stock: 30,
             image: img,
-            desc: `High quality ${cat} item sourced securely from ${source}.`
+            desc: `High quality ${cat} item ready for delivery.`
           });
         }
       });
       return list;
     }
 
-    let products = JSON.parse(localStorage.getItem('kosh_products_v8'));
+    let products = JSON.parse(localStorage.getItem('kosh_products_v9'));
     if(!products || products.length === 0) {
       products = generateStrictCatalog();
-      localStorage.setItem('kosh_products_v8', JSON.stringify(products));
+      localStorage.setItem('kosh_products_v9', JSON.stringify(products));
     }
 
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v8')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
-    let registeredUsers = JSON.parse(localStorage.getItem('kosh_registered_users')) || [];
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
-    let currentSelectedProduct = null;
     let secretClickCount = 0;
     let activeCategoryFilter = 'All';
-    let activeSellerFilter = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
-      navigateTo(savedPage);
+      navigateTo(localStorage.getItem('kosh_active_page') || 'home');
       renderProducts();
       updateCartUI();
     });
@@ -745,7 +369,7 @@
       }
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found.</p>';
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found. Go to Admin panel to inject products.</p>';
         return;
       }
 
@@ -755,49 +379,35 @@
         card.className = 'product-card';
         card.innerHTML = `
           <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})">
-            <img src="${p.image}" alt="${p.title}">
-          </div>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
           <div class="product-info">
             <span class="p-category">${p.category}</span>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row">
-              <span class="p-price">₹${p.price}</span>
-              <span class="p-mrp">₹${p.mrp}</span>
-            </div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
             <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
       });
-      updateWishlistUI();
+      document.getElementById('wishlistCount').innerText = wishlist.length;
     }
 
     function toggleWishlist(id) {
       let prod = products.find(p => p.id === id);
       if(!prod) return;
       let idx = wishlist.findIndex(item => item.id === id);
-      if(idx >= 0) {
-        wishlist.splice(idx, 1);
-        showAlert("Removed from Wishlist", "Wishlist", false);
-      } else {
-        wishlist.push(prod);
-        showAlert("Added to Wishlist successfully!", "Wishlist", true);
-      }
+      if(idx >= 0) { wishlist.splice(idx, 1); showAlert("Removed from Wishlist", "Wishlist", false); }
+      else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
       localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
       renderProducts();
     }
-
-    function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; }
 
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
       localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
-
-      if(pageId === 'profile') checkLoginStatus();
-      else if(pageId === 'admin-dashboard') loadAdminMasterData();
+      if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
     function filterCategory(cat) {
@@ -811,16 +421,15 @@
     function handleSearch(val) { renderProducts(); }
 
     function openProductDetail(id) {
-      currentSelectedProduct = products.find(p => p.id === id);
-      if(!currentSelectedProduct) return;
-      document.getElementById('pPageImg').src = currentSelectedProduct.image;
-      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
-      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku}`;
-      document.getElementById('pPageSellerName').innerText = currentSelectedProduct.sellerName || 'Kosh Direct';
-      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
-      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
-      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
+      let p = products.find(item => item.id === id);
+      if(!p) return;
+      document.getElementById('pPageImg').src = p.image;
+      document.getElementById('pPageCategory').innerText = p.category;
+      document.getElementById('pPageTitle').innerText = p.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku}`;
+      document.getElementById('pPagePrice').innerText = '₹' + p.price;
+      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
+      document.getElementById('pPageDesc').innerText = p.desc;
       navigateTo('product');
     }
 
@@ -838,72 +447,92 @@
       const container = document.getElementById('cartItemsContainer');
       const priceBox = document.getElementById('cartPriceDetailsBox');
       container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>'; priceBox.style.display = 'none'; return; }
+      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Cart is empty.</p>'; priceBox.style.display = 'none'; return; }
       priceBox.style.display = 'block';
       let total = 0;
-      cart.forEach((item, index) => {
+      cart.forEach(item => {
         total += item.finalPrice;
-        container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px;">
-            <img src="${item.image}" alt="${item.title}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
-            <div>
-              <div style="font-size:0.85rem; font-weight:600;">${item.title}</div>
-              <div style="font-size:0.9rem; font-weight:800; margin-top:4px;">₹${item.finalPrice}</div>
-            </div>
-          </div>
-        `;
+        container.innerHTML += `<div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px;"><img src="${item.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;"><div><div style="font-size:0.85rem; font-weight:600;">${item.title}</div><div style="font-size:0.9rem; font-weight:800; margin-top:4px;">₹${item.finalPrice}</div></div></div>`;
       });
       document.getElementById('cartTotalPrice').innerText = '₹' + total;
     }
 
     function toggleCartDrawer(open) {
-      const drawer = document.getElementById('cartDrawer');
-      const backdrop = document.getElementById('cartBackdrop');
-      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
-      else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
+      document.getElementById('cartDrawer').classList.toggle('open', open);
+      document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
     }
 
-    function switchAuthView(view) {
-      document.getElementById('authLoginView').style.display = view === 'login' ? 'block' : 'none';
-      document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
+    // 🚀 NEW FEATURE: Clear All Meesho / Wholesale Products
+    function clearMeeshoProducts() {
+      if(confirm("Kya aap saare Meesho ya wholesale products delete karna chahte hain?")) {
+        products = products.filter(p => !p.sourcingSource || !p.sourcingSource.toLowerCase().includes("meesho"));
+        localStorage.setItem('kosh_products_v9', JSON.stringify(products));
+        renderProducts();
+        loadAdminMasterData();
+        showAlert("Saare Meesho products successfully delete kar diye gaye hain!", "Success", true);
+      }
     }
 
-    function handleSignup() {
-      let email = document.getElementById('signupEmail').value.trim();
-      let pass = document.getElementById('signupPass').value.trim();
-      if(!email || !pass) { showAlert('Enter email and password.'); return; }
-      currentUser = email; localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus(); showAlert('Account created successfully!', 'Success', true);
-    }
+    // 🚀 NEW FEATURE: Automatically Inject 100 Unique Products without filling any form
+    function autoInject100Products() {
+      let categories = ["Men Wear", "Women Wear", "Accessories", "Footwear", "Jewellery"];
+      let imagesList = [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60",
+        "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop&q=60"
+      ];
 
-    function handleLogin() {
-      let email = document.getElementById('loginEmail').value.trim();
-      currentUser = email; localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus(); showAlert('Login successful!', 'Success', true);
-    }
+      let newInjected = [];
+      let startId = Date.now();
+      for(let i = 1; i <= 100; i++) {
+        startId++;
+        let cat = categories[i % categories.length];
+        let img = imagesList[i % imagesList.length];
+        let price = 199 + (i * 31) % 1500;
+        let mrp = Math.round(price * 1.8);
+        newInjected.push({
+          id: startId,
+          sku: `INJ-${cat.substring(0,3).toUpperCase()}-${startId}`,
+          title: `Auto-Injected ${cat} Special #${i}`,
+          category: cat,
+          sourcingSource: "Kosh Auto Injector",
+          price: price,
+          mrp: mrp,
+          stock: 50,
+          image: img,
+          desc: `Automatically injected premium ${cat} product for Kosh Studio.`
+        });
+      }
 
-    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; checkLoginStatus(); }
+      // Merge with existing products without duplicates by SKU
+      let existingSkus = new Set(products.map(p => p.sku));
+      let addedCount = 0;
+      newInjected.forEach(p => {
+        if(!existingSkus.has(p.sku)) {
+          products.unshift(p);
+          addedCount++;
+        }
+      });
 
-    function checkLoginStatus() {
-      if(currentUser) {
-        document.getElementById('authLoginView').style.display = 'none';
-        document.getElementById('authSignupView').style.display = 'none';
-        document.getElementById('userDashboardSection').style.display = 'block';
-        document.getElementById('displayUserEmail').innerText = currentUser;
-      } else { document.getElementById('userDashboardSection').style.display = 'none'; switchAuthView('login'); }
+      localStorage.setItem('kosh_products_v9', JSON.stringify(products));
+      renderProducts();
+      loadAdminMasterData();
+      showAlert(`Successfully injected ${addedCount} unique products automatically!`, "Success", true);
     }
 
     function triggerAdminSecret() {
       secretClickCount++;
       if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
     }
-    function closeAdminLoginModal() { document.getElementById('adminLoginModal').style.display = 'none'; }
-
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') { closeAdminLoginModal(); navigateTo('admin-dashboard'); }
-      else showAlert('Incorrect Admin ID or Password!');
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+        document.getElementById('adminLoginModal').style.display = 'none';
+        navigateTo('admin-dashboard');
+      } else { showAlert('Incorrect Admin ID or Password!'); }
     }
 
     function switchAdminTab(tab) {
@@ -915,21 +544,28 @@
 
     function loadAdminMasterData() {
       document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div>${s.store}</div>`).join('');
-      document.getElementById('admProductsList').innerHTML = products.map(p => `<div>${p.title} - ₹${p.price}</div>`).join('');
+      document.getElementById('admProductsList').innerHTML = products.map(p => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
+          <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+        </div>
+      `).join('');
       document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : '';
-      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No support tickets.' : '';
+      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No tickets.' : '';
     }
 
-    function saveAdminProduct() {
-      let title = document.getElementById('aProdTitle').value.trim();
-      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
-      if(!title || !price) { showAlert('Fill title and price.'); return; }
-      products.unshift({ id: Date.now(), sku: 'SKU-' + Math.floor(1000+Math.random()*9000), title, category: document.getElementById('aProdCategory').value || 'General', price, mrp, image: document.getElementById('aProdImage').value || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500', desc: document.getElementById('aProdDesc').value });
-      localStorage.setItem('kosh_products_v8', JSON.stringify(products));
-      renderProducts(); loadAdminMasterData();
-      showAlert('Product added successfully!', 'Success', true);
+    function deleteAdminProduct(id) {
+      if(confirm("Are you sure you want to delete this product?")) {
+        products = products.filter(p => p.id !== id);
+        localStorage.setItem('kosh_products_v9', JSON.stringify(products));
+        renderProducts();
+        loadAdminMasterData();
+        showAlert("Product deleted successfully!", "Success", true);
+      }
     }
+
+    function handleLogin() { currentUser = document.getElementById('loginEmail').value; localStorage.setItem('kosh_logged_email', currentUser); showAlert('Login successful!', 'Success', true); navigateTo('home'); }
+    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; showAlert('Logged out.'); navigateTo('home'); }
   </script>
 </body>
 </html>
