@@ -240,7 +240,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- PROFILE PAGE WITH SUPPORT & JOIN AS SELLER -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -364,22 +364,48 @@
     </div>
   </div>
 
-  <!-- JOIN AS SELLER PAGE -->
+  <!-- JOIN AS SELLER REGISTRATION PAGE -->
   <div id="page-seller-reg" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
       <span style="font-weight:700;">🏪 Join as Seller Registration</span>
     </div>
-    <div class="page-content" style="max-width:550px;">
+    <div class="page-content" style="max-width:600px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
         <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Register Your Store</h3>
-        <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Your Brand/Store Name"></div>
-        <div class="form-group"><label>Owner Name *</label><input type="text" id="selOwnerName" placeholder="Full Name"></div>
+        
+        <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Full Name" required></div>
+        <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name" required></div>
+        <div class="form-group"><label>Mobile Number (Strictly 10 Digits) *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" required></div>
+        <div class="form-group"><label>Email Address *</label><input type="email" id="selEmail" placeholder="Email Address" required></div>
+        <div class="form-group"><label>Address *</label><input type="text" id="selAddress" placeholder="Street Address" required></div>
+        
+        <div class="form-group"><label>Pin Code (Auto-Detects City & State) *</label><input type="text" id="selPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupSellerPincode(this.value);" required></div>
+        <div class="form-group"><label>City (Auto-fetched)</label><input type="text" id="selCity" placeholder="City" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>State (Auto-fetched)</label><input type="text" id="selState" placeholder="State" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+
         <div class="form-group">
-          <label>Contact Phone (Strictly 10 Digits) *</label>
-          <input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
+          <label>Product Category *</label>
+          <select id="selCategory" required>
+            <option value="Men Wear">Men Wear</option>
+            <option value="Women Wear">Women Wear</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Footwear">Footwear</option>
+            <option value="Jewellery">Jewellery</option>
+          </select>
         </div>
-        <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="submitSellerRegistration()">Register Store Now</button>
+
+        <div class="form-group"><label>Pickup Address *</label><input type="text" id="selPickupAddress" placeholder="Warehouse / Pickup Address" required></div>
+        <div class="form-group"><label>UPI ID *</label><input type="text" id="selUpiId" placeholder="yourname@upi" required></div>
+        <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Create Password" required></div>
+        <div class="form-group"><label>Confirm Password *</label><input type="password" id="selConfirmPassword" placeholder="Confirm Password" required></div>
+
+        <div style="margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="selTerms" style="width:18px; height:18px;">
+          <label for="selTerms" style="font-size:0.85rem; cursor:pointer; margin-bottom:0;">I agree to the Terms & Conditions *</label>
+        </div>
+
+        <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="submitSellerRegistration()">Register Store Now</button>
       </div>
     </div>
   </div>
@@ -654,6 +680,23 @@
       }
     }
 
+    function lookupSellerPincode(pin) {
+      if(pin.length === 6) {
+        fetch('https://api.postalpincode.in/pincode/' + pin)
+          .then(res => res.json())
+          .then(data => {
+            if(data && data[0].Status === 'Success') {
+              let po = data[0].PostOffice[0];
+              document.getElementById('selCity').value = po.District;
+              document.getElementById('selState').value = po.State;
+            }
+          }).catch(err => console.log(err));
+      } else {
+        document.getElementById('selCity').value = '';
+        document.getElementById('selState').value = '';
+      }
+    }
+
     function goToCheckoutPage() {
       if(cart.length === 0) return;
       toggleCartDrawer(false);
@@ -895,22 +938,60 @@
     }
 
     function submitSellerRegistration() {
-      let store = document.getElementById('selStoreName').value.trim();
-      let owner = document.getElementById('selOwnerName').value.trim();
+      let fullName = document.getElementById('selFullName').value.trim();
+      let storeName = document.getElementById('selStoreName').value.trim();
       let phone = document.getElementById('selPhone').value.trim();
-      if(!store || !owner || !phone) {
-        showAlert("Kripya sabhi details bharein.");
+      let email = document.getElementById('selEmail').value.trim();
+      let address = document.getElementById('selAddress').value.trim();
+      let pincode = document.getElementById('selPincode').value.trim();
+      let city = document.getElementById('selCity').value.trim();
+      let state = document.getElementById('selState').value.trim();
+      let category = document.getElementById('selCategory').value;
+      let pickup = document.getElementById('selPickupAddress').value.trim();
+      let upi = document.getElementById('selUpiId').value.trim();
+      let pass = document.getElementById('selPassword').value.trim();
+      let confirmPass = document.getElementById('selConfirmPassword').value.trim();
+      let terms = document.getElementById('selTerms').checked;
+
+      if(!fullName || !storeName || !phone || !email || !address || !pincode || !city || !state || !pickup || !upi || !pass || !confirmPass) {
+        showAlert("Kripya sabhi mandatory fields bharein.");
         return;
       }
       if(phone.length !== 10) {
         showAlert("Phone number strictly 10 digits ka hona chahiye.");
         return;
       }
-      sellersList.unshift({ uniqueId: 'SEL-' + Date.now().toString().slice(-5), store, owner, phone, status: 'Active' });
+      if(pass !== confirmPass) {
+        showAlert("Passwords match nahi kar rahe hain.");
+        return;
+      }
+      if(!terms) {
+        showAlert("Kripya Terms & Conditions accept karein.");
+        return;
+      }
+
+      let newSeller = {
+        uniqueId: 'SEL-' + Date.now().toString().slice(-5),
+        fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, status: 'Active'
+      };
+
+      sellersList.unshift(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+
+      document.getElementById('selFullName').value = '';
       document.getElementById('selStoreName').value = '';
-      document.getElementById('selOwnerName').value = '';
       document.getElementById('selPhone').value = '';
+      document.getElementById('selEmail').value = '';
+      document.getElementById('selAddress').value = '';
+      document.getElementById('selPincode').value = '';
+      document.getElementById('selCity').value = '';
+      document.getElementById('selState').value = '';
+      document.getElementById('selPickupAddress').value = '';
+      document.getElementById('selUpiId').value = '';
+      document.getElementById('selPassword').value = '';
+      document.getElementById('selConfirmPassword').value = '';
+      document.getElementById('selTerms').checked = false;
+
       showAlert("Seller registration successful! Aapka store register ho gaya hai.", "Success", true);
       navigateTo('profile');
     }
@@ -1209,7 +1290,15 @@
     }
 
     function loadAdminMasterData() {
-      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div><b>${s.store}</b> (${s.owner} - ${s.phone})</div>`).join('');
+      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `
+        <div style="padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <b>Store:</b> ${s.storeName} (${s.uniqueId})<br>
+          <b>Owner:</b> ${s.fullName} | <b>Phone:</b> ${s.phone} | <b>Email:</b> ${s.email}<br>
+          <b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}<br>
+          <b>UPI ID:</b> ${s.upi}
+        </div>
+      `).join('');
+
       document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
           <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
@@ -1218,7 +1307,6 @@
       `).join('');
       document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway})</div>`).join('');
       
-      // Admin Tickets & Chat Management
       let admTicketsContainer = document.getElementById('admTicketsList');
       if(admTicketsContainer) {
         if(ticketsList.length === 0) {
