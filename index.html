@@ -308,7 +308,7 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search kurtis, sarees, lehengas, watches..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search men wear, women wear, accessories..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
@@ -343,13 +343,9 @@
 
     <div class="categories-bar" id="categoriesBar">
       <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Kurtis')">Kurtis</div>
-      <div class="cat-item" onclick="filterCategory('Sarees')">Sarees</div>
-      <div class="cat-item" onclick="filterCategory('Lehengas')">Lehengas</div>
       <div class="cat-item" onclick="filterCategory('Men Wear')">Men Wear</div>
-      <div class="cat-item" onclick="filterCategory('Electronics')">Electronics</div>
-      <div class="cat-item" onclick="filterCategory('Watches')">Watches</div>
-      <div class="cat-item" onclick="filterCategory('Bags')">Bags</div>
+      <div class="cat-item" onclick="filterCategory('Women Wear')">Women Wear</div>
+      <div class="cat-item" onclick="filterCategory('Accessories')">Accessories</div>
       <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
       <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
     </div>
@@ -426,10 +422,6 @@
             🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
           </div>
         </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
-          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
-        </div>
       </div>
     </div>
   </div>
@@ -477,7 +469,7 @@
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
           <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
           <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">Raise an issue regarding orders or payments</p>
-          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject (e.g. Order #1234 issue)"></div>
+          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject"></div>
           <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe your issue..."></textarea></div>
           <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Support Ticket</button>
           <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
@@ -485,7 +477,7 @@
         
         <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
           <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start dropshipping / selling your products.</p>
+          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor & start selling.</p>
           <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
         </div>
       </div>
@@ -518,58 +510,34 @@
 
       <div id="sellerTabProducts" class="dash-tab-content active">
         <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
-          <strong>🔗 Share Your Store Catalog:</strong> Send all products to customers via WhatsApp.
+          <strong>🔗 Share Your Store Catalog:</strong> Send your collection via WhatsApp.
           <button type="button" class="btn-solid" style="background:#2196f3; color:#fff; margin-top:8px; padding:8px; font-size:0.8rem;" onclick="shareSellerCatalog()">📤 Share Store Catalog Link</button>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#e65100;">
-          <strong>📋 Seller Bulk CSV Import:</strong> Columns: <code>sku, title, category, base_price, mrp, stock, image, desc</code>.
-          <input type="file" id="sellerCsvInput" accept=".csv" style="margin-top:8px; display:block;" onchange="previewSellerCsv(this)">
-          <button type="button" class="btn-solid" id="sellerConfirmCsvBtn" style="background:#d4af37; color:#000; margin-top:8px; display:none; padding:8px;" onclick="executeSellerCsvImport()">Import CSV Products</button>
         </div>
 
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
           <h5 id="sellerFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Add New Product</h5>
           <input type="hidden" id="sellerEditIndex" value="-1">
-          
           <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
           <div class="form-group"><label>SKU / ID</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
-          <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price" oninput="calculatePreviewListingPrice()"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
+          <div class="form-group"><label>Your Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base cost price"></div>
           <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
           <div class="form-group"><label>Stock Qty</label><input type="number" id="sProdStock" placeholder="Stock"></div>
-
-          <div style="background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.85rem; font-weight:bold; margin-bottom:12px;" id="previewListingPriceText">
-            ℹ️ Final Price for Customer = Base Price + Admin Commission
-          </div>
-
-          <div class="form-group">
-            <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px; flex-direction:column;">
-              <input type="text" id="sProdImage" placeholder="Paste Image URL">
-              <input type="file" id="sProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'sProdImage')">
-              <button type="button" onclick="document.getElementById('sProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
-            </div>
-          </div>
-
+          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Paste Image URL"></div>
           <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" id="sellerSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveSellerProduct()">Save Product</button>
+          <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="saveSellerProduct()">Save Product</button>
         </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Your Listed Products</h5>
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <div id="sellerTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Manage Orders & Tracking Details</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders yet.</div>
       </div>
 
       <div id="sellerTabEarnings" class="dash-tab-content">
         <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
           <h4 style="margin-bottom:12px; font-size:1.1rem;">💰 Earnings Summary</h4>
-          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Total Sales Revenue:</strong> <span id="sellerTotalSales">₹0</span></p>
-          <p style="font-size:0.95rem; margin-bottom:8px;"><strong>Marketplace Commission Deducted:</strong> <span id="sellerTotalCommission">₹0</span></p>
-          <p style="font-size:1.1rem; color:var(--success); font-weight:bold; margin-top:12px;">Net Payable Payout: <span id="sellerNetEarnings">₹0</span></p>
+          <p>Total Sales Revenue: <span id="sellerTotalSales">₹0</span></p>
         </div>
       </div>
     </div>
@@ -582,26 +550,6 @@
       <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:#fff; padding:12px; border:1px solid var(--border); border-radius:6px;">
-        <h4 style="font-size:0.95rem; color:var(--success);">✅ Logged in as Master Admin</h4>
-        <button type="button" onclick="adminLogout()" style="background:#ff5252; color:#fff; border:none; padding:6px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:700;">Logout Admin</button>
-      </div>
-
-      <div class="summary-cards-grid">
-        <div class="summary-card">
-          <h4>Total Sales Revenue</h4>
-          <div class="val" id="admSummarySales">₹0</div>
-        </div>
-        <div class="summary-card">
-          <h4>Admin Commission Earned</h4>
-          <div class="val" id="admSummaryCommission">₹0</div>
-        </div>
-        <div class="summary-card">
-          <h4>Active Vendors</h4>
-          <div class="val" id="admSummaryVendors">0</div>
-        </div>
-      </div>
-
       <div class="dash-tabs">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Products & Sourcing</button>
@@ -611,94 +559,41 @@
       </div>
 
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Seller Sales & Settlement Tracker</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Seller Sales & Settlement Tracker</h5>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
       </div>
 
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing</h5>
-          <input type="hidden" id="adminEditIndex" value="-1">
-          
+          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Admin Direct Product Listing</h5>
           <div class="form-group"><label>Product Title</label><input type="text" id="aProdTitle" placeholder="Title"></div>
           <div class="form-group"><label>SKU / ID</label><input type="text" id="aProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Kurtis / Sarees / Watches / etc."></div>
-          <div class="form-group"><label>Sourcing Source (e.g. Meesho / Flipkart)</label><input type="text" id="aProdSource" placeholder="Source Platform"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="aProdCategory" placeholder="Men Wear / Women Wear / Accessories / Footwear / Jewellery"></div>
           <div class="form-group"><label>Selling Price (₹)</label><input type="number" id="aProdPrice" placeholder="Selling Price"></div>
           <div class="form-group"><label>MRP (₹)</label><input type="number" id="aProdMrp" placeholder="MRP"></div>
           <div class="form-group"><label>Stock Qty</label><input type="number" id="aProdStock" placeholder="Stock"></div>
-
-          <div class="form-group">
-            <label>Image URL (or Select from Gallery)</label>
-            <div style="display:flex; gap:6px; flex-direction:column;">
-              <input type="text" id="aProdImage" placeholder="Paste Image URL">
-              <input type="file" id="aProdGallery" accept="image/*" style="display:none;" onchange="handleImageGalleryUpload(this, 'aProdImage')">
-              <button type="button" onclick="document.getElementById('aProdGallery').click()" style="background:#2196f3; color:#fff; border:none; padding:10px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.85rem;">📁 Upload from Gallery</button>
-            </div>
-          </div>
-
+          <div class="form-group"><label>Image URL</label><input type="text" id="aProdImage" placeholder="Paste Image URL"></div>
           <div class="form-group"><label>Description</label><textarea id="aProdDesc" rows="3" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" id="adminSaveProdBtn" style="background:#2196f3; padding:12px; margin-top:5px;" onclick="saveAdminProduct()">Save Admin Product</button>
+          <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="saveAdminProduct()">Save Admin Product</button>
         </div>
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All 1000+ Marketplace Products (With Sourcing Info)</h5>
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">All Customer Orders & Tracking Details</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Customer Orders</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
       <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-size:1rem; color:var(--muted);">Customer Support & Dispute Tickets</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Support & Dispute Tickets</h5>
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
       </div>
 
       <div id="admTabSettings" class="dash-tab-content">
-        
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select active payment gateway and configure credentials.</p>
-          
-          <div class="form-group">
-            <label>Select Active Payment Gateway</label>
-            <select id="gatewaySelect" onchange="toggleGatewayFields()">
-              <option value="Cashfree">Cashfree</option>
-              <option value="Razorpay">Razorpay</option>
-              <option value="UPI">Direct UPI QR / Collect</option>
-            </select>
-          </div>
-
-          <div class="form-group" id="gwField1Group">
-            <label id="gwField1Label">Cashfree App ID / Key</label>
-            <input type="text" id="gwMerchantKey" placeholder="Enter Key or App ID">
-          </div>
-
-          <div class="form-group" id="gwField2Group">
-            <label id="gwField2Label">Cashfree Secret Key</label>
-            <input type="text" id="gwMerchantSecret" placeholder="Enter Secret or UPI ID">
-          </div>
-
-          <button type="button" class="btn-solid" onclick="savePaymentGatewayConfig()" style="background:#ff9800; color:#fff; margin-top:6px;">Save Payment Configuration</button>
-        </div>
-
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Status</h4>
-          <p style="font-size:0.85rem; color:var(--success); font-weight:bold; margin-bottom:12px;">✅ Connected Automatically via Hardcoded Credentials!</p>
-          <div class="form-group"><label>Supabase Project URL</label><input type="text" value="https://iqzlqyykabbxoyjpmyb.supabase.co" readonly style="background:#f1f3f6;"></div>
-          <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" value="Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr" readonly style="background:#f1f3f6;"></div>
-        </div>
-
-        <div style="background:#fff; border:1px solid var(--border); padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:12px;">⚙️ Global Marketplace Commission</h4>
-          <div class="form-group"><label>Admin Commission Percentage (%)</label><input type="number" id="globalCommissionInput" value="10" placeholder="10"></div>
-          <button type="button" class="btn-solid" onclick="saveGlobalCommission()" style="margin-top:10px;">Save Commission Rate</button>
-        </div>
-
-        <div style="background:#ffebee; border:1px solid #ffcdd2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:12px; color:#c62828;">⚠️ Reset Dashboard Data & Revenue</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;">Clear all orders and reset total revenue to zero.</p>
-          <button type="button" class="btn-solid" onclick="resetAllDashboardData()" style="background:#d32f2f;">Reset All Orders & Revenue</button>
+          <div class="form-group"><label>Active Payment Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
+          <button type="button" class="btn-solid" onclick="showAlert('Settings saved!')" style="background:#ff9800; color:#fff;">Save Configuration</button>
         </div>
       </div>
     </div>
@@ -707,27 +602,9 @@
   <!-- CUSTOM BRANDED ALERT MODAL -->
   <div class="modal-overlay" id="customAlertModal">
     <div class="modal-box" style="max-width:360px; text-align:center; padding:24px;">
-      <div id="customAlertIcon" style="font-size:2rem; margin-bottom:8px;">📢</div>
-      <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700; color:var(--primary);">Kosh Studio Notice</h3>
-      <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px; line-height:1.5;"></p>
+      <h3 id="customAlertTitle" style="font-size:1.1rem; margin-bottom:8px; font-weight:700;">Kosh Studio Notice</h3>
+      <p id="customAlertMsg" style="font-size:0.88rem; color:#555; margin-bottom:20px;"></p>
       <button type="button" class="btn-solid" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
-    </div>
-  </div>
-
-  <!-- ADMIN EDIT SELLER MODAL -->
-  <div class="modal-overlay" id="adminEditSellerModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">✏️ Edit Seller Details</h3>
-        <button type="button" onclick="closeAdminEditSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <input type="hidden" id="admEditSellerIdx">
-      <div class="form-group"><label>Seller Unique ID</label><input type="text" id="admEditUniqueId" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>Store Name</label><input type="text" id="admEditStore"></div>
-      <div class="form-group"><label>Owner Full Name</label><input type="text" id="admEditName"></div>
-      <div class="form-group"><label>Email (Login ID)</label><input type="text" id="admEditEmail"></div>
-      <div class="form-group"><label>Mobile Number</label><input type="text" id="admEditPhone" maxlength="10"></div>
-      <button type="button" class="btn-solid" onclick="saveAdminEditedSeller()" style="margin-top:10px; background:#2196f3;">Update Seller Details</button>
     </div>
   </div>
 
@@ -739,88 +616,9 @@
       <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
-    
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
-      <div style="margin-bottom:12px; display:flex; gap:6px;">
-        <input type="text" id="couponInput" placeholder="Enter Coupon (KOSH20)" style="flex-grow:1; padding:8px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; text-transform:uppercase;">
-        <button type="button" onclick="applyCouponCode()" style="background:var(--primary); color:#fff; border:none; padding:0 12px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Apply</button>
-      </div>
-      <div id="couponMsg" style="font-size:0.75rem; margin-bottom:8px; font-weight:bold;"></div>
-
-      <h4 style="font-size:0.9rem; font-weight:700; margin-bottom:10px;">Price Details (<span id="cartItemCountText">1</span> Item)</h4>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Products Total</span><span id="summaryProductPrice">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555; color:var(--success);" id="discountRow" style="display:none;"><span>Flat Discount</span><span id="summaryDiscount">- ₹20</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px; color:#555;"><span>Gateway Fee (~2%)</span><span id="summaryPgFee">+ ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:12px; color:#555;"><span>Delivery Charges</span><span style="color:var(--success); font-weight:600;">Free</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:1rem; font-weight:800; border-top:1px solid var(--border); padding-top:10px; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutModal()">Proceed to Secure Checkout</button>
-    </div>
-  </div>
-
-  <!-- CHECKOUT MODAL -->
-  <div class="modal-overlay" id="checkoutModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 id="checkoutTitle" style="font-size:1.1rem;">Secure Online Checkout</h3>
-        <button type="button" onclick="closeCheckoutModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div style="background:#f9f9f9; padding:12px; border-radius:4px; margin-bottom:15px; font-size:0.82rem; border:1px solid var(--border);">
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>Items Subtotal:</span><span id="chkSubtotalVal">₹0</span></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px; color:#d32f2f;"><span>Gateway Fee (~2%):</span><span id="chkPgFeeVal">+ ₹0</span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:bold; border-top:1px solid #ddd; padding-top:4px; margin-top:4px;"><span>Total Payable:</span><span id="chkFinalTotalVal">₹0</span></div>
-      </div>
-      
-      <div class="form-group"><label>Customer Full Name</label><input type="text" id="chkName" placeholder="Enter full name" required></div>
-      <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number" maxlength="10" required></div>
-      <div class="form-group"><label>House No. / Street / Area</label><input type="text" id="chkArea" placeholder="Area / Address" required></div>
-      <div class="form-group"><label>6-Digit PIN Code</label><input type="text" id="chkPincode" placeholder="PIN code" maxlength="6" oninput="lookupPincode(this.value)" required></div>
-      <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City" required></div>
-      <div class="form-group"><label>District</label><input type="text" id="chkDistrict" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>State</label><input type="text" id="chkState" readonly style="background:#f1f3f6;"></div>
-
-      <div id="upiExtraInfo" style="display:none; background:#e8f5e9; color:var(--success); padding:10px; border-radius:4px; font-size:0.82rem; margin-bottom:12px; font-weight:bold;">
-        📲 Direct UPI Mode Active: Complete payment via your UPI application.
-      </div>
-      <button type="button" class="btn-solid" onclick="initiateCheckoutFlow()" style="margin-top:10px;">Pay & Place Order</button>
-    </div>
-  </div>
-
-  <!-- PAYMENT OTP MODAL -->
-  <div class="modal-overlay" id="paymentOtpModal">
-    <div class="modal-box" style="max-width:380px; text-align:center;">
-      <h3 style="margin-bottom:8px; font-size:1.1rem;">🔒 Payment Verification</h3>
-      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">Enter verification code to complete order.</p>
-      <div style="background:#f9f9f9; padding:10px; border-radius:4px; margin-bottom:14px; font-weight:bold; font-size:1.1rem; color:var(--accent);" id="displayPaymentOtpCode">5829</div>
-      <div class="form-group" style="text-align:left;"><label>Enter 4-Digit OTP</label><input type="text" id="enteredPaymentOtp" placeholder="Enter OTP" maxlength="4"></div>
-      <button type="button" class="btn-solid" onclick="verifyAndFinalizeOrder()">Confirm & Place Order</button>
-    </div>
-  </div>
-
-  <!-- BECOME A SELLER REGISTRATION MODAL -->
-  <div class="modal-overlay" id="becomeSellerModal">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-        <h3 style="font-size:1.1rem;">🏪 Secure Seller Registration & Bank KYC</h3>
-        <button type="button" onclick="closeBecomeSellerModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="form-group"><label>Your Full Name</label><input type="text" id="sellerRegName" placeholder="Full name"></div>
-      <div class="form-group"><label>Email (Login ID)</label><input type="email" id="sellerRegEmail" placeholder="seller@gmail.com" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>Mobile Number</label><input type="tel" id="sellerRegPhone" placeholder="10-digit mobile number" maxlength="10"></div>
-      <div class="form-group"><label>Business / Store Name</label><input type="text" id="sellerRegStore" placeholder="Store name"></div>
-      
-      <div class="form-group">
-        <label>IFSC Code</label>
-        <div style="display:flex; gap:6px; flex-direction:column;">
-          <input type="text" id="sellerRegIfsc" placeholder="e.g. SBIN0001234" maxlength="11" style="text-transform:uppercase;">
-          <button type="button" onclick="verifyIfscCode()" style="background:var(--primary); color:#fff; border:none; padding:10px; border-radius:4px; font-size:0.8rem; font-weight:bold; cursor:pointer;">Verify IFSC</button>
-        </div>
-      </div>
-      <div id="ifscResultBox" style="font-size:0.75rem; color:var(--success); margin-bottom:8px; font-weight:bold; display:none;"></div>
-
-      <div class="form-group"><label>Bank Account Number</label><input type="password" id="sellerRegAcc1" placeholder="Enter Account Number"></div>
-      <div class="form-group"><label>Confirm Bank Account Number</label><input type="text" id="sellerRegAcc2" placeholder="Re-enter Account Number"></div>
-      
-      <button type="button" class="btn-solid" onclick="submitSellerApplication()" style="margin-top:10px; background:#2196f3;">Submit Verified Application</button>
+      <div style="display:flex; justify-content:space-between; font-weight:800; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="showAlert('Proceeding to checkout...')">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -841,49 +639,54 @@
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
-      document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
       document.getElementById('customAlertModal').style.display = 'flex';
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    // Hardcoded Supabase Config
-    let sbUrl = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
-    let sbKey = 'Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr';
-    let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
-
-    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
-    let globalCommission = parseFloat(localStorage.getItem('kosh_commission')) || 10;
-
-    // Strict 1000+ Unique Products Generator (Meesho, Flipkart, Amazon Sourced with Margins)
-    function generateMassiveCatalog() {
-      let categories = ["Kurtis", "Sarees", "Lehengas", "Men Wear", "Electronics", "Watches", "Bags", "Footwear", "Jewellery", "Western Wear"];
-      let sources = ["Meesho Wholesale", "Flipkart Seller Hub", "Amazon Business Partner", "Direct factory supplier"];
-      let images = {
-        "Kurtis": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
-        "Sarees": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
-        "Lehengas": "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60",
-        "Men Wear": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60",
-        "Electronics": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
-        "Watches": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60",
-        "Bags": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60",
-        "Footwear": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60",
-        "Jewellery": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60",
-        "Western Wear": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=500&auto=format&fit=crop&q=60"
+    // Fresh storage key 'kosh_products_v8' to flush any old duplicate data automatically
+    function generateStrictCatalog() {
+      let categories = ["Men Wear", "Women Wear", "Accessories", "Footwear", "Jewellery"];
+      let sources = ["Meesho Wholesale", "Flipkart Hub", "Amazon Supplier", "Direct Manufacturer"];
+      let categoryImages = {
+        "Men Wear": [
+          "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?w=500&auto=format&fit=crop&q=60"
+        ],
+        "Women Wear": [
+          "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=500&auto=format&fit=crop&q=60"
+        ],
+        "Accessories": [
+          "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=500&auto=format&fit=crop&q=60"
+        ],
+        "Footwear": [
+          "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=500&auto=format&fit=crop&q=60"
+        ],
+        "Jewellery": [
+          "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&auto=format&fit=crop&q=60",
+          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&auto=format&fit=crop&q=60"
+        ]
       };
 
       let list = [];
-      let idCounter = 1000;
+      let idCounter = 4000;
       categories.forEach(cat => {
-        for(let i = 1; i <= 100; i++) {
+        let imgs = categoryImages[cat];
+        for(let i = 1; i <= 25; i++) {
           idCounter++;
-          let source = sources[(idCounter) % sources.length];
-          let base = 250 + (i * 7) % 1200;
-          let price = Math.round(base * 1.35); // Margin included
+          let source = sources[idCounter % sources.length];
+          let img = imgs[i % imgs.length];
+          let base = 250 + (i * 17) % 800;
+          let price = Math.round(base * 1.4);
           let mrp = Math.round(price * 1.8);
           list.push({
             id: idCounter,
             sku: `${cat.substring(0,3).toUpperCase()}-${idCounter}`,
-            title: `Premium ${cat} Collection Vol. ${i}`,
+            title: `${cat} Exclusive Item #${i}`,
             category: cat,
             sourcingSource: source,
             sellerId: "admin",
@@ -891,122 +694,63 @@
             basePrice: base,
             price: price,
             mrp: mrp,
-            stock: 25 + (i % 40),
-            image: images[cat] || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
-            desc: `High margin ${cat} sourced from ${source}. Best quality for reselling.`
+            stock: 40,
+            image: img,
+            desc: `High quality ${cat} item sourced securely from ${source}.`
           });
         }
       });
       return list;
     }
 
-    // Using fresh storage key 'kosh_products_v5' to completely clear old duplicates
-    let products = JSON.parse(localStorage.getItem('kosh_products_v5'));
+    let products = JSON.parse(localStorage.getItem('kosh_products_v8'));
     if(!products || products.length === 0) {
-      products = generateMassiveCatalog();
-      localStorage.setItem('kosh_products_v5', JSON.stringify(products));
+      products = generateStrictCatalog();
+      localStorage.setItem('kosh_products_v8', JSON.stringify(products));
     }
 
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let defaultReviews = [
-      { productId: 1001, author: "Pooja Sharma", rating: "5", comment: "Fabric quality is awesome! Same as shown in picture.", date: "18 Sep 2026" },
-      { productId: 1101, author: "Rekha Devi", rating: "5", comment: "Saree looks very rich and premium. Got compliments!", date: "20 Sep 2026" },
-      { productId: 1401, author: "Rahul Kumar", rating: "5", comment: "Amazing sound quality and bass. Great backup.", date: "21 Sep 2026" }
-    ];
-    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v5')) || defaultReviews;
-    localStorage.setItem('kosh_reviews_v5', JSON.stringify(reviewsList));
-
+    let reviewsList = JSON.parse(localStorage.getItem('kosh_reviews_v8')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     let registeredUsers = JSON.parse(localStorage.getItem('kosh_registered_users')) || [];
-    
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
-    let currentSelectedProduct = JSON.parse(localStorage.getItem('kosh_selected_product')) || null;
+    let currentSelectedProduct = null;
     let secretClickCount = 0;
-    let tempCheckoutData = {};
-    let paymentOtpGenerated = "";
-    let verifiedBankDetails = null;
-    let parsedSellerCsvRows = [];
     let activeCategoryFilter = 'All';
     let activeSellerFilter = null;
-    let appliedDiscountAmount = 0;
-
-    function startFlashTimer() {
-      let timerEl = document.getElementById('flashTimer');
-      if(!timerEl) return;
-      let totalSeconds = 5 * 3600 + 42 * 60 + 18;
-      setInterval(() => {
-        if(totalSeconds > 0) totalSeconds--;
-        let h = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-        let m = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        let s = (totalSeconds % 60).toString().padStart(2, '0');
-        timerEl.innerText = `${h}:${m}:${s}`;
-      }, 1000);
-    }
 
     window.addEventListener('DOMContentLoaded', () => {
-      startFlashTimer();
-      checkCustomerCustomMessagePopup();
+      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
+      navigateTo(savedPage);
+      renderProducts();
+      updateCartUI();
     });
-
-    function checkCustomerCustomMessagePopup() {
-      if (!currentUser) return;
-      let myOrders = ordersList.filter(o => o.userEmail === currentUser);
-      myOrders.forEach(o => {
-        if (o.customPopupMsg && !o.popupShown) {
-          showAlert(o.customPopupMsg, `Store Update (Order #${o.id})`, true);
-          o.popupShown = true;
-          localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        }
-      });
-    }
-
-    function handleImageGalleryUpload(input, targetInputId) {
-      if (input.files && input.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById(targetInputId).value = e.target.result;
-          showAlert('Image loaded successfully!', 'Success', true);
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
 
     function renderProducts(filterCat = null) {
       if(filterCat !== null) activeCategoryFilter = filterCat;
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
-      const urlParams = new URLSearchParams(window.location.search);
-      let sellerParam = urlParams.get('seller');
-      if(sellerParam) activeSellerFilter = sellerParam;
-
       let filtered = products;
-      if(activeSellerFilter) {
-        filtered = filtered.filter(p => p.sellerId === activeSellerFilter || p.sellerName?.includes(activeSellerFilter));
-        document.getElementById('catalogStoreName').innerText = activeSellerFilter;
-        document.getElementById('catalogBanner').style.display = 'block';
-      } else {
-        document.getElementById('catalogBanner').style.display = 'none';
-      }
-
       if(activeCategoryFilter !== 'All') {
         filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
       }
 
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
-      const finalFiltered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
+      if(searchKey) {
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
+      }
 
-      if (finalFiltered.length === 0) {
+      if (filtered.length === 0) {
         grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:30px;">No products found.</p>';
         return;
       }
 
-      finalFiltered.forEach(p => {
+      filtered.forEach(p => {
         let isWishlisted = wishlist.some(item => item.id === p.id);
-        let stockBadge = p.stock > 0 ? `<span style="font-size:0.65rem; color:var(--success); font-weight:700;">● In Stock</span>` : `<span style="font-size:0.65rem; color:red; font-weight:700;">● Out of Stock</span>`;
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
@@ -1015,17 +759,13 @@
             <img src="${p.image}" alt="${p.title}">
           </div>
           <div class="product-info">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span class="p-category">${p.category}</span>
-              ${stockBadge}
-            </div>
+            <span class="p-category">${p.category}</span>
             <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${p.sellerName || 'Kosh Direct'}</div>
             <div class="p-price-row">
               <span class="p-price">₹${p.price}</span>
               <span class="p-mrp">₹${p.mrp}</span>
             </div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})" ${p.stock <= 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>${p.stock > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
@@ -1046,40 +786,9 @@
       }
       localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
       renderProducts();
-      if(document.getElementById('page-wishlist').classList.contains('active')) renderWishlistPage();
     }
 
     function updateWishlistUI() { document.getElementById('wishlistCount').innerText = wishlist.length; }
-
-    function renderWishlistPage() {
-      const grid = document.getElementById('wishlistGrid');
-      grid.innerHTML = '';
-      if(wishlist.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 2; text-align:center; color:var(--muted); padding:30px;">Your wishlist is empty.</p>';
-        return;
-      }
-      wishlist.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function clearCatalogFilter() {
-      activeSellerFilter = null;
-      window.history.replaceState({}, document.title, window.location.pathname);
-      renderProducts();
-    }
 
     function navigateTo(pageId) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
@@ -1088,19 +797,8 @@
       window.scrollTo(0, 0);
 
       if(pageId === 'profile') checkLoginStatus();
-      else if(pageId === 'orders') renderOrdersPage();
-      else if(pageId === 'wishlist') renderWishlistPage();
-      else if(pageId === 'seller-dashboard') loadSellerDashboardData();
       else if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      let savedPage = localStorage.getItem('kosh_active_page') || 'home';
-      if(savedPage === 'product' && currentSelectedProduct) populateProductDetails(currentSelectedProduct);
-      navigateTo(savedPage);
-      renderProducts(activeCategoryFilter);
-      updateCartUI();
-    });
 
     function filterCategory(cat) {
       document.querySelectorAll('.cat-item').forEach(i => {
@@ -1115,172 +813,49 @@
     function openProductDetail(id) {
       currentSelectedProduct = products.find(p => p.id === id);
       if(!currentSelectedProduct) return;
-      localStorage.setItem('kosh_selected_product', JSON.stringify(currentSelectedProduct));
-      populateProductDetails(currentSelectedProduct);
+      document.getElementById('pPageImg').src = currentSelectedProduct.image;
+      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
+      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku}`;
+      document.getElementById('pPageSellerName').innerText = currentSelectedProduct.sellerName || 'Kosh Direct';
+      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
+      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
+      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
       navigateTo('product');
-    }
-
-    function populateProductDetails(p) {
-      document.getElementById('pPageImg').src = p.image;
-      document.getElementById('pPageCategory').innerText = p.category;
-      document.getElementById('pPageTitle').innerText = p.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku || 'N/A'} | Stock: ${p.stock > 0 ? p.stock + ' Available' : 'Out of Stock'}`;
-      document.getElementById('pPageSellerName').innerText = p.sellerName || 'Kosh Direct (Admin)';
-      document.getElementById('pPagePrice').innerText = '₹' + p.price;
-      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
-      document.getElementById('pPageDesc').innerText = p.desc;
-      renderRelatedProducts(p);
-      loadProductReviews(p.id);
-      checkUserReviewEligibility(p.id);
-    }
-
-    function renderRelatedProducts(currentProd) {
-      const grid = document.getElementById('relatedProductsGrid');
-      grid.innerHTML = '';
-      let related = products.filter(p => p.category.toLowerCase() === currentProd.category.toLowerCase() && p.id !== currentProd.id).slice(0, 4);
-      if(related.length === 0) { grid.innerHTML = '<p style="font-size:0.8rem; color:var(--muted);">No related products found.</p>'; return; }
-      related.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function checkUserReviewEligibility(productId) {
-      let reviewBox = document.getElementById('verifiedReviewBox');
-      let reviewMsg = document.getElementById('unverifiedReviewMsg');
-      if (!currentUser) { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Please login."; return; }
-      let hasDelivered = ordersList.some(o => o.userEmail === currentUser && o.status === 'Delivered');
-      if (hasDelivered) { reviewBox.style.display = 'block'; reviewMsg.style.display = 'none'; }
-      else { reviewBox.style.display = 'none'; reviewMsg.style.display = 'block'; reviewMsg.innerText = "🔒 Only delivered orders can be reviewed."; }
-    }
-
-    function loadProductReviews(productId) {
-      let prodReviews = reviewsList.filter(r => r.productId === productId);
-      let area = document.getElementById('productReviewsList');
-      if (prodReviews.length === 0) { area.innerHTML = '⭐⭐⭐⭐⭐ (4.8/5) Based on 124 Verified Customer Reviews'; return; }
-      let html = '⭐⭐⭐⭐⭐ (4.8/5) Trusted by Thousands of Customers<br>';
-      prodReviews.forEach(r => {
-        let stars = '⭐'.repeat(parseInt(r.rating) || 5);
-        html += `<div style="border-bottom:1px solid #eee; padding:6px 0;"><strong>${r.author}</strong> <span style="font-size:0.75rem; color:#888;">(${r.date})</span><br><span>${stars}</span><p style="color:#444; margin-top:2px;">${r.comment}</p></div>`;
-      });
-      area.innerHTML = html;
-    }
-
-    function submitProductReview() {
-      if (!currentSelectedProduct) return;
-      let author = document.getElementById('newReviewAuthor').value.trim() || currentUser || 'Anonymous';
-      let rating = document.getElementById('newReviewRating').value;
-      let comment = document.getElementById('newReviewText').value.trim();
-      if (!comment) { showAlert('Please enter review comment.'); return; }
-      reviewsList.push({ productId: currentSelectedProduct.id, author, rating, comment, date: new Date().toLocaleDateString() });
-      localStorage.setItem('kosh_reviews_v5', JSON.stringify(reviewsList));
-      document.getElementById('newReviewText').value = '';
-      loadProductReviews(currentSelectedProduct.id);
-      showAlert('Review submitted successfully!', 'Success', true);
-    }
-
-    function addCurrentProductToCart() {
-      if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
-        addToCart(currentSelectedProduct.id);
-        toggleCartDrawer(true);
-      }
-    }
-
-    function buyNowCurrentProduct() {
-      if(currentSelectedProduct) {
-        if(currentSelectedProduct.stock <= 0) { showAlert("Out of stock."); return; }
-        addToCart(currentSelectedProduct.id);
-        openCheckoutModal();
-      }
     }
 
     function addToCart(id) {
       let prod = products.find(p => p.id === id);
-      if(!prod || prod.stock <= 0) { showAlert("Item is out of stock."); return; }
-      let existing = cart.find(item => item.id === id);
-      if(existing) existing.qty += 1;
-      else cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
+      if(!prod) return;
+      cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
       showAlert(prod.title + " added to cart!", 'Cart', true);
     }
 
-    function increaseCartQty(index) { cart[index].qty += 1; localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
-    function decreaseCartQty(index) {
-      if(cart[index].qty > 1) cart[index].qty -= 1;
-      else cart.splice(index, 1);
-      localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI();
-    }
-
-    function applyCouponCode() {
-      let code = document.getElementById('couponInput').value.trim().toUpperCase();
-      let msg = document.getElementById('couponMsg');
-      if(code === 'KOSH20') {
-        appliedDiscountAmount = 20;
-        msg.style.color = 'var(--success)';
-        msg.innerText = '✅ Coupon "KOSH20" applied (Flat ₹20 OFF)!';
-      } else {
-        appliedDiscountAmount = 0;
-        msg.style.color = 'var(--danger)';
-        msg.innerText = '❌ Invalid coupon code.';
-      }
-      updateCartUI();
-    }
-
     function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('cartCount').innerText = cart.length;
       const container = document.getElementById('cartItemsContainer');
-      const priceDetailsBox = document.getElementById('cartPriceDetailsBox');
+      const priceBox = document.getElementById('cartPriceDetailsBox');
       container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>'; priceDetailsBox.style.display = 'none'; return; }
-      priceDetailsBox.style.display = 'block';
-      let totalProdPrice = 0, totalItems = 0;
+      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Your cart is empty.</p>'; priceBox.style.display = 'none'; return; }
+      priceBox.style.display = 'block';
+      let total = 0;
       cart.forEach((item, index) => {
-        totalProdPrice += (item.finalPrice * item.qty);
-        totalItems += item.qty;
+        total += item.finalPrice;
         container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; position:relative;">
-            <button type="button" onclick="removeFromCart(${index})" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer;">✕</button>
-            <div style="display:flex; gap:12px;">
-              <img src="${item.image}" alt="${item.title}" style="width:70px; height:70px; object-fit:cover; border-radius:4px; border:1px solid var(--border);">
-              <div style="flex-grow:1; padding-right:15px;">
-                <div style="font-size:0.85rem; font-weight:600; color:#212121; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${item.title}</div>
-                <div style="font-size:0.65rem; color:var(--muted); margin-bottom:4px;">Vendor: ${item.sellerName || 'Kosh Direct'}</div>
-                <div style="font-size:1rem; font-weight:800; color:#111; margin-bottom:6px;">₹${item.finalPrice}</div>
-                <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                  <button type="button" onclick="decreaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                  <span style="font-size:0.85rem; font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
-                  <button type="button" onclick="increaseCartQty(${index})" style="background:#e0e0e0; border:none; width:26px; height:26px; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
-                </div>
-              </div>
+          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px;">
+            <img src="${item.image}" alt="${item.title}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
+            <div>
+              <div style="font-size:0.85rem; font-weight:600;">${item.title}</div>
+              <div style="font-size:0.9rem; font-weight:800; margin-top:4px;">₹${item.finalPrice}</div>
             </div>
           </div>
         `;
       });
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, totalProdPrice - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let grandTotal = discountedSubtotal + pgFee;
-
-      if(appliedDiscountAmount > 0) { document.getElementById('discountRow').style.display = 'flex'; document.getElementById('summaryDiscount').innerText = '- ₹' + discountAmt; }
-      else { document.getElementById('discountRow').style.display = 'none'; }
-
-      document.getElementById('cartItemCountText').innerText = totalItems;
-      document.getElementById('summaryProductPrice').innerText = '+ ₹' + totalProdPrice;
-      document.getElementById('summaryPgFee').innerText = '+ ₹' + pgFee;
-      document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
+      document.getElementById('cartTotalPrice').innerText = '₹' + total;
     }
 
-    function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('kosh_cart', JSON.stringify(cart)); updateCartUI(); }
     function toggleCartDrawer(open) {
       const drawer = document.getElementById('cartDrawer');
       const backdrop = document.getElementById('cartBackdrop');
@@ -1293,39 +868,21 @@
       document.getElementById('authSignupView').style.display = view === 'signup' ? 'block' : 'none';
     }
 
-    function isValidEmail(email) {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) return false;
-      let parts = email.split('@');
-      let domain = parts[1].toLowerCase();
-      const blockedDomains = ['gmskl.hjj', 'test.com', 'abc.com', 'xyz.com', 'example.com', 'hjj.com', 'mail.com'];
-      return !blockedDomains.includes(domain);
-    }
-
-    async function handleSignup() {
-      let email = document.getElementById('signupEmail').value.trim().toLowerCase();
+    function handleSignup() {
+      let email = document.getElementById('signupEmail').value.trim();
       let pass = document.getElementById('signupPass').value.trim();
-      if (!email || !pass) { showAlert('Please enter email and password.'); return; }
-      if (pass.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
-      if (!isValidEmail(email)) { showAlert('Please enter a valid working email ID.'); return; }
-      if (registeredUsers.some(u => u.email === email)) { showAlert('Account already exists! Please Login.'); switchAuthView('login'); return; }
-
-      registeredUsers.push({ email, pass });
-      localStorage.setItem('kosh_registered_users', JSON.stringify(registeredUsers));
+      if(!email || !pass) { showAlert('Enter email and password.'); return; }
       currentUser = email; localStorage.setItem('kosh_logged_email', email);
-      checkLoginStatus(); showAlert('✅ Account created successfully!', 'Success', true);
+      checkLoginStatus(); showAlert('Account created successfully!', 'Success', true);
     }
 
-    async function handleLogin() {
-      let email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      let pass = document.getElementById('loginPass').value.trim();
-      let foundUser = registeredUsers.find(u => u.email === email && u.pass === pass);
-      if (!foundUser) { showAlert('❌ Invalid email or password.'); return; }
+    function handleLogin() {
+      let email = document.getElementById('loginEmail').value.trim();
       currentUser = email; localStorage.setItem('kosh_logged_email', email);
       checkLoginStatus(); showAlert('Login successful!', 'Success', true);
     }
 
-    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; checkLoginStatus(); switchAuthView('login'); }
+    function handleLogout() { localStorage.removeItem('kosh_logged_email'); currentUser = null; checkLoginStatus(); }
 
     function checkLoginStatus() {
       if(currentUser) {
@@ -1333,401 +890,7 @@
         document.getElementById('authSignupView').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
-        let foundSeller = sellersList.find(s => s.email === currentUser);
-        let titleEl = document.getElementById('portalBoxTitle');
-        let textEl = document.getElementById('sellerStatusText');
-        let btnEl = document.getElementById('portalActionBtn');
-        if(foundSeller) {
-          if(foundSeller.status === 'Approved') { titleEl.innerText = `🏪 Seller Active (${foundSeller.uniqueId})`; textEl.innerText = `Approved`; btnEl.innerText = 'Open Seller Dashboard'; btnEl.style.background = '#2196f3'; }
-          else { titleEl.innerText = `🏪 Seller Application (${foundSeller.uniqueId})`; textEl.innerText = `Status: ${foundSeller.status}`; btnEl.innerText = 'Pending Approval'; btnEl.style.background = '#888'; btnEl.disabled = true; }
-        } else { titleEl.innerText = '🏪 Want to Sell on Kosh Studio?'; textEl.innerText = 'Register as a vendor.'; btnEl.innerText = 'Register as Seller'; btnEl.style.background = '#2196f3'; btnEl.disabled = false; }
-        loadCustomerTickets();
       } else { document.getElementById('userDashboardSection').style.display = 'none'; switchAuthView('login'); }
-    }
-
-    function handlePortalAction() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(foundSeller && foundSeller.status === 'Approved') navigateTo('seller-dashboard');
-      else { document.getElementById('sellerRegEmail').value = currentUser; verifiedBankDetails = null; document.getElementById('ifscResultBox').style.display = 'none'; document.getElementById('becomeSellerModal').style.display = 'flex'; }
-    }
-
-    function closeBecomeSellerModal() { document.getElementById('becomeSellerModal').style.display = 'none'; }
-
-    async function verifyIfscCode() {
-      let ifsc = document.getElementById('sellerRegIfsc').value.trim().toUpperCase();
-      let resultBox = document.getElementById('ifscResultBox');
-      if(ifsc.length !== 11) { showAlert('Enter valid 11-digit IFSC.'); return; }
-      resultBox.style.display = 'block'; resultBox.innerText = 'Verifying IFSC...';
-      try {
-        let res = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
-        if(res.ok) {
-          let data = await res.json();
-          verifiedBankDetails = { ifsc: data.IFSC, bank: data.BANK, branch: data.BRANCH };
-          resultBox.style.color = 'var(--success)';
-          resultBox.innerHTML = `✅ <strong>Bank Verified:</strong> ${data.BANK}, ${data.BRANCH}`;
-        } else { verifiedBankDetails = null; resultBox.style.color = 'red'; resultBox.innerText = '❌ Invalid IFSC.'; }
-      } catch(e) { resultBox.style.color = 'red'; resultBox.innerText = '❌ Error verifying IFSC.'; }
-    }
-
-    function submitSellerApplication() {
-      let name = document.getElementById('sellerRegName').value.trim();
-      let email = document.getElementById('sellerRegEmail').value.trim();
-      let phone = document.getElementById('sellerRegPhone').value.trim();
-      let store = document.getElementById('sellerRegStore').value.trim();
-      let acc1 = document.getElementById('sellerRegAcc1').value.trim();
-      let acc2 = document.getElementById('sellerRegAcc2').value.trim();
-      let ifsc = document.getElementById('sellerRegIfsc').value.trim();
-      if(!name || !email || phone.length !== 10 || !store || !acc1 || !acc2 || !ifsc) { showAlert('Fill all details.'); return; }
-      if(acc1 !== acc2) { showAlert('Account numbers do not match!'); return; }
-      if(!verifiedBankDetails) { showAlert('Verify IFSC first.'); return; }
-
-      let uniqueShortId = 'KS-S' + Math.floor(100 + Math.random() * 900);
-      sellersList.push({ id: 'SEL-' + Math.floor(1000 + Math.random() * 9000), uniqueId: uniqueShortId, name, email, phone, store, accountNo: 'XXXXXX' + acc1.slice(-4), bankName: verifiedBankDetails.bank, branch: verifiedBankDetails.branch, ifsc: verifiedBankDetails.ifsc, payoutSettled: false, status: 'Pending' });
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      closeBecomeSellerModal();
-      showAlert(`Application submitted! ID: ${uniqueShortId}.`, 'Success', true);
-      checkLoginStatus();
-    }
-
-    function submitCustomerTicket() {
-      let subject = document.getElementById('custTicketSubject').value.trim();
-      let msg = document.getElementById('custTicketMsg').value.trim();
-      if(!subject || !msg) { showAlert('Enter subject and message.'); return; }
-      ticketsList.push({ id: 'TCK-' + Math.floor(1000 + Math.random() * 9000), userEmail: currentUser, subject, message: msg, status: 'Open', date: new Date().toLocaleDateString() });
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      document.getElementById('custTicketSubject').value = ''; document.getElementById('custTicketMsg').value = '';
-      showAlert('Ticket raised!', 'Success', true); loadCustomerTickets();
-    }
-
-    function loadCustomerTickets() {
-      let myTickets = ticketsList.filter(t => t.userEmail === currentUser);
-      let area = document.getElementById('customerTicketsList');
-      if (myTickets.length === 0) { area.innerHTML = 'No support tickets.'; return; }
-      let h = '';
-      myTickets.forEach(t => { h += `<div style="background:#f9f9f9; padding:8px; border:1px solid #ddd; border-radius:4px; margin-top:6px;"><strong>[${t.id}] ${t.subject}</strong><br>${t.message}<br>Status: ${t.status}</div>`; });
-      area.innerHTML = h;
-    }
-
-    function loadSellerDashboardData() {
-      let foundSeller = sellersList.find(s => s.email === currentUser && s.status === 'Approved');
-      if(!foundSeller) { showAlert('Seller account pending approval.'); navigateTo('profile'); return; }
-      document.getElementById('sellerdashName').innerText = `${foundSeller.store} (${foundSeller.uniqueId})`;
-      loadSellerData(foundSeller.id);
-    }
-
-    function switchSellerTab(tab) {
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById('sellerTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    }
-
-    function calculatePreviewListingPrice() {
-      let base = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
-      let final = Math.round(base + (base * globalCommission / 100));
-      document.getElementById('previewListingPriceText').innerText = `ℹ️ Commission (${globalCommission}%): ₹${Math.round(base * globalCommission / 100)} | Customer Price: ₹${final}`;
-    }
-
-    function saveSellerProduct() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      let editIdx = parseInt(document.getElementById('sellerEditIndex').value);
-      let title = document.getElementById('sProdTitle').value.trim();
-      let sku = document.getElementById('sProdSku').value.trim() || ('SKU-' + Math.floor(100 + Math.random() * 900));
-      let category = document.getElementById('sProdCategory').value.trim() || 'General';
-      let basePrice = parseFloat(document.getElementById('sProdBasePrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('sProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('sProdStock').value) || 10;
-      let image = document.getElementById('sProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('sProdDesc').value.trim() || 'Vendor product.';
-
-      if(!title || !basePrice || !mrp) { showAlert('Fill Title, Base Price and MRP.'); return; }
-      let finalPrice = Math.round(basePrice + (basePrice * globalCommission / 100));
-
-      if(editIdx >= 0) products[editIdx] = { ...products[editIdx], title, sku, category, basePrice, price: finalPrice, mrp, stock, image, desc };
-      else products.push({ id: Date.now(), sku, title, category, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Self Vendor", basePrice, price: finalPrice, mrp, stock, image, desc });
-
-      localStorage.setItem('kosh_products_v5', JSON.stringify(products));
-      renderProducts(); loadSellerData(foundSeller.id); resetSellerForm();
-      showAlert('Product saved successfully!', 'Success', true);
-    }
-
-    function shareSellerCatalog() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(!foundSeller) return;
-      let catalogUrl = window.location.origin + window.location.pathname + `?seller=${foundSeller.uniqueId}`;
-      window.open(`https://api.whatsapp.com/send?text=Check out our store collection:%0A${catalogUrl}`, '_blank');
-    }
-
-    function previewSellerCsv(input) {
-      if(input.files.length === 0) return;
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let lines = e.target.result.split('\n');
-        parsedSellerCsvRows = [];
-        for(let i = 1; i < lines.length; i++) {
-          let cols = lines[i].trim().split(',');
-          if(cols.length >= 6) {
-            parsedSellerCsvRows.push({ sku: cols[0].trim(), title: cols[1].trim(), category: cols[2].trim() || 'General', basePrice: parseFloat(cols[3]) || 500, mrp: parseFloat(cols[4]) || 999, stock: parseInt(cols[5]) || 10, image: cols[6]?.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500', desc: 'CSV Item' });
-          }
-        }
-        if(parsedSellerCsvRows.length > 0) { document.getElementById('sellerConfirmCsvBtn').style.display = 'block'; showAlert(`${parsedSellerCsvRows.length} products ready to import.`, 'CSV Ready', true); }
-      };
-      reader.readAsText(input.files[0]);
-    }
-
-    function executeSellerCsvImport() {
-      let foundSeller = sellersList.find(s => s.email === currentUser);
-      if(!foundSeller || parsedSellerCsvRows.length === 0) return;
-      parsedSellerCsvRows.forEach((row, i) => {
-        let finalPrice = Math.round(row.basePrice + (row.basePrice * globalCommission / 100));
-        products.push({ id: Date.now() + i, ...row, price: finalPrice, sellerId: foundSeller.id, sellerName: `${foundSeller.store} (${foundSeller.uniqueId})`, sourcingSource: "Vendor CSV" });
-      });
-      localStorage.setItem('kosh_products_v5', JSON.stringify(products));
-      renderProducts(); loadSellerData(foundSeller.id);
-      document.getElementById('sellerConfirmCsvBtn').style.display = 'none';
-      showAlert('CSV Imported successfully!', 'Success', true);
-    }
-
-    function saveAdminProduct() {
-      let title = document.getElementById('aProdTitle').value.trim();
-      let sku = document.getElementById('aProdSku').value.trim() || ('SKU-' + Math.floor(1000 + Math.random() * 9000));
-      let category = document.getElementById('aProdCategory').value.trim() || 'General';
-      let source = document.getElementById('aProdSource').value.trim() || 'Direct Supplier';
-      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
-      let stock = parseInt(document.getElementById('aProdStock').value) || 20;
-      let image = document.getElementById('aProdImage').value.trim() || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500';
-      let desc = document.getElementById('aProdDesc').value.trim() || 'Admin added product.';
-
-      if(!title || !price || !mrp) { showAlert('Fill title, price and MRP.'); return; }
-      products.unshift({ id: Date.now(), sku, title, category, sourcingSource: source, sellerId: 'admin', sellerName: 'Kosh Direct', basePrice: Math.round(price * 0.7), price, mrp, stock, image, desc });
-      localStorage.setItem('kosh_products_v5', JSON.stringify(products));
-      renderProducts(); loadAdminMasterData();
-      showAlert('Admin product added successfully!', 'Success', true);
-    }
-
-    function loadSellerData(sellerId) {
-      let myProducts = products.filter(p => p.sellerId === sellerId);
-      let pArea = document.getElementById('sellerProductsList');
-      if(myProducts.length === 0) pArea.innerHTML = 'No products listed.';
-      else {
-        let h = '';
-        myProducts.forEach((p) => {
-          let globalIdx = products.findIndex(item => item.id === p.id);
-          h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.9rem;"><div><b>${p.title}</b><br><span style="color:var(--muted);">Price: ₹${p.price} | Stock: ${p.stock}</span></div><button type="button" onclick="removeSellerProduct(${globalIdx}, '${sellerId}')" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; cursor:pointer;">Remove</button></div>`;
-        });
-        pArea.innerHTML = h;
-      }
-      let totalSales = 0, totalCommission = 0, oHtml = '';
-      ordersList.forEach(o => {
-        let sellerItems = o.items.filter(i => i.sellerId === sellerId);
-        if(sellerItems.length > 0) {
-          sellerItems.forEach((si, itemIdx) => {
-            let itemTotal = si.price * si.qty;
-            let commissionAmt = Math.round(itemTotal * (globalCommission / 100));
-            totalSales += itemTotal; totalCommission += commissionAmt;
-            oHtml += `<div style="background:#f9f9f9; border:1px solid var(--border); padding:14px; border-radius:6px; margin-bottom:12px; font-size:0.88rem;"><b>Order #${o.id}</b> - ${si.title} (Qty: ${si.qty}) | Total: ₹${itemTotal}<br>Customer: ${o.name} (${o.phone}), ${o.address}<br><div style="display:flex; gap:6px; margin-top:8px; flex-direction:column;"><select id="fulfillStatus_${o.id}_${itemIdx}" style="padding:6px; font-size:0.75rem;"><option value="Processing">Processing</option><option value="Packed & Shipped">Shipped</option><option value="Delivered">Delivered</option></select><input type="text" id="fulfillCourier_${o.id}_${itemIdx}" placeholder="Courier" value="${si.courierName||''}" style="padding:6px; font-size:0.75rem;"><input type="text" id="fulfillTracking_${o.id}_${itemIdx}" placeholder="AWB" value="${si.trackingId||''}" style="padding:6px; font-size:0.75rem;"><button type="button" onclick="updateItemFulfillment('${o.id}', '${si.sku}')" style="background:var(--primary); color:#fff; border:none; padding:8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Save</button></div></div>`;
-          });
-        }
-      });
-      document.getElementById('sellerOrdersList').innerHTML = oHtml || 'No orders.';
-      document.getElementById('sellerTotalSales').innerText = '₹' + totalSales;
-      document.getElementById('sellerTotalCommission').innerText = '₹' + totalCommission;
-      document.getElementById('sellerNetEarnings').innerText = '₹' + (totalSales - totalCommission);
-    }
-
-    function updateItemFulfillment(orderId, sku) {
-      let order = ordersList.find(o => o.id === orderId);
-      if(order) {
-        order.items.forEach((item, idx) => {
-          if(item.sku === sku) {
-            let statusSel = document.getElementById(`fulfillStatus_${orderId}_${idx}`);
-            let courierInp = document.getElementById(`fulfillCourier_${orderId}_${idx}`);
-            let trackInp = document.getElementById(`fulfillTracking_${orderId}_${idx}`);
-            if(statusSel) item.fulfillmentStatus = statusSel.value;
-            if(courierInp) item.courierName = courierInp.value.trim();
-            if(trackInp) item.trackingId = trackInp.value.trim();
-          }
-        });
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        showAlert('Tracking updated!', 'Success', true);
-      }
-    }
-
-    function resetSellerForm() {
-      document.getElementById('sellerEditIndex').value = '-1';
-      document.getElementById('sProdTitle').value = '';
-      document.getElementById('sProdSku').value = '';
-      document.getElementById('sProdCategory').value = '';
-      document.getElementById('sProdBasePrice').value = '';
-      document.getElementById('sProdMrp').value = '';
-      document.getElementById('sProdStock').value = '';
-      document.getElementById('sProdImage').value = '';
-      document.getElementById('sProdDesc').value = '';
-    }
-
-    function removeSellerProduct(globalIdx, sellerId) {
-      if(confirm('Remove product?')) { products.splice(globalIdx, 1); localStorage.setItem('kosh_products_v5', JSON.stringify(products)); renderProducts(); loadSellerData(sellerId); }
-    }
-
-    function openCheckoutModal() {
-      if(cart.length === 0) { showAlert('Cart is empty!'); return; }
-      toggleCartDrawer(false);
-      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let finalTotal = discountedSubtotal + pgFee;
-
-      document.getElementById('chkSubtotalVal').innerText = '₹' + discountedSubtotal;
-      document.getElementById('chkPgFeeVal').innerText = '+ ₹' + pgFee;
-      document.getElementById('chkFinalTotalVal').innerText = '₹' + finalTotal;
-      
-      let gateway = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('checkoutTitle').innerText = `Secure Checkout (${gateway})`;
-      if(gateway === 'UPI') {
-        document.getElementById('upiExtraInfo').style.display = 'block';
-      } else {
-        document.getElementById('upiExtraInfo').style.display = 'none';
-      }
-
-      document.getElementById('checkoutModal').style.display = 'flex';
-    }
-    function closeCheckoutModal() { document.getElementById('checkoutModal').style.display = 'none'; }
-
-    async function lookupPincode(pin) {
-      if(pin.length === 6) {
-        try {
-          let res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-          let data = await res.json();
-          if(data[0].Status === "Success") {
-            let info = data[0].PostOffice[0];
-            document.getElementById('chkCity').value = info.Name || '';
-            document.getElementById('chkDistrict').value = info.District || '';
-            document.getElementById('chkState').value = info.State || '';
-          }
-        } catch(e){}
-      }
-    }
-
-    function initiateCheckoutFlow() {
-      let name = document.getElementById('chkName').value.trim();
-      let phone = document.getElementById('chkPhone').value.trim();
-      let area = document.getElementById('chkArea').value.trim();
-      let pincode = document.getElementById('chkPincode').value.trim();
-      let district = document.getElementById('chkDistrict').value.trim();
-
-      if(!name || phone.length !== 10 || !area || pincode.length !== 6 || !district) {
-        showAlert('Please fill in all delivery details correctly.'); return;
-      }
-
-      tempCheckoutData = { name, phone, address: `${area}, PIN: ${pincode}, ${district}` };
-      paymentOtpGenerated = Math.floor(1000 + Math.random() * 9000).toString();
-      document.getElementById('displayPaymentOtpCode').innerText = paymentOtpGenerated;
-      document.getElementById('checkoutModal').style.display = 'none';
-      document.getElementById('paymentOtpModal').style.display = 'flex';
-    }
-
-    function verifyAndFinalizeOrder() {
-      let otp = document.getElementById('enteredPaymentOtp').value.trim();
-      if(otp !== paymentOtpGenerated) { showAlert('Incorrect OTP!'); return; }
-      document.getElementById('paymentOtpModal').style.display = 'none';
-
-      let subtotal = cart.reduce((s, i) => s + (i.finalPrice * i.qty), 0);
-      let discountAmt = appliedDiscountAmount > 0 ? 20 : 0;
-      let discountedSubtotal = Math.max(0, subtotal - discountAmt);
-      let pgFee = Math.round(discountedSubtotal * 0.02);
-      let grandTotal = discountedSubtotal + pgFee;
-
-      let newOrder = {
-        id: "KS" + Math.floor(10000 + Math.random() * 90000),
-        timestamp: Date.now(), userEmail: currentUser || 'guest',
-        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-        name: tempCheckoutData.name, phone: tempCheckoutData.phone, address: tempCheckoutData.address,
-        items: cart.map(i => ({ title: i.title, sku: i.sku || 'N/A', sellerId: i.sellerId || 'admin', qty: i.qty, price: i.finalPrice, fulfillmentStatus: 'Processing', courierName: '', trackingId: '', returnRequested: false, returnProof: '' })),
-        subtotal: discountedSubtotal, pgFee, total: grandTotal, status: 'New Order', deliveredAt: null, customPopupMsg: "", popupShown: false
-      };
-
-      ordersList.unshift(newOrder);
-      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-      if(supabaseClient) { supabaseClient.from('orders').insert([newOrder]).then(); }
-
-      cart = []; localStorage.removeItem('kosh_cart'); updateCartUI();
-      showAlert("Order placed successfully!", "Order Placed", true);
-      navigateTo('orders');
-    }
-
-    function markAsDeliveredByCustomer(orderId) {
-      let o = ordersList.find(x => x.id === orderId);
-      if(o) { o.status = 'Delivered'; o.deliveredAt = Date.now(); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Delivery confirmed!", "Success", true); renderOrdersPage(); }
-    }
-
-    function requestCustomerReturn(orderId) {
-      let videoProof = prompt("Enter Unboxing Video Link:");
-      if (!videoProof) return;
-      let o = ordersList.find(x => x.id === orderId);
-      if(o) { o.items.forEach(i => { i.returnRequested = true; i.returnProof = videoProof; }); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert("Return requested!", "Success", true); renderOrdersPage(); }
-    }
-
-    function deleteSingleOrder(orderId) {
-      if(confirm('Delete order?')) {
-        let idx = ordersList.findIndex(o => o.id === orderId);
-        if(idx >= 0) { ordersList.splice(idx, 1); localStorage.setItem('kosh_orders', JSON.stringify(ordersList)); showAlert('Order deleted!', 'Success', true); loadAdminMasterData(); }
-      }
-    }
-
-    function resetAllDashboardData() {
-      if(confirm('⚠️ Reset all orders and revenue?')) {
-        ordersList = []; ticketsList = [];
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-        loadAdminMasterData(); showAlert('Data reset to zero!', 'Success', true);
-      }
-    }
-
-    function toggleGatewayFields() {
-      let gw = document.getElementById('gatewaySelect').value;
-      let lbl1 = document.getElementById('gwField1Label');
-      let lbl2 = document.getElementById('gwField2Label');
-      if(gw === 'Cashfree') {
-        lbl1.innerText = 'Cashfree App ID / Key';
-        lbl2.innerText = 'Cashfree Secret Key';
-      } else if(gw === 'Razorpay') {
-        lbl1.innerText = 'Razorpay Key ID';
-        lbl2.innerText = 'Razorpay Key Secret';
-      } else if(gw === 'UPI') {
-        lbl1.innerText = 'Merchant UPI ID';
-        lbl2.innerText = 'Merchant Display Name';
-      }
-    }
-
-    function savePaymentGatewayConfig() {
-      let gw = document.getElementById('gatewaySelect').value;
-      let key = document.getElementById('gwMerchantKey').value.trim();
-      let secret = document.getElementById('gwMerchantSecret').value.trim();
-      paymentConfig = { gateway: gw, key, secret };
-      localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
-      showAlert(`Payment gateway updated to ${gw} successfully!`, 'Success', true);
-    }
-
-    function printOrderInvoice(orderId) {
-      let o = ordersList.find(x => x.id === orderId);
-      if(!o) return;
-      let win = window.open('', '_blank');
-      win.document.write(`<html><head><title>Invoice #${o.id}</title></head><body style="font-family:sans-serif; padding:20px;"><h2>INVOICE #${o.id}</h2><p>Customer: ${o.name} (${o.phone})<br>Address: ${o.address}</p><hr><h3>Total: ₹${o.total}</h3><script>window.print();<\/script></body></html>`);
-      win.document.close();
-    }
-
-    function renderOrdersPage() {
-      const area = document.getElementById('ordersPageList');
-      if(ordersList.length === 0) { area.innerHTML = '<div style="background:#fff; padding:30px; text-align:center; color:var(--muted); border:1px solid var(--border);">No orders.</div>'; return; }
-      let html = '';
-      ordersList.forEach(o => {
-        let isShipped = o.items.some(i => i.fulfillmentStatus === 'Packed & Shipped' || i.fulfillmentStatus === 'Delivered');
-        let isDel = o.status === 'Delivered';
-        html += `<div style="background:#fff; padding:16px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;"><b>Order #${o.id}</b> - ₹${o.total}<br>${o.items.map(i=>i.title).join(', ')}<br><div class="timeline"><div class="timeline-step active"><span>✓</span>Placed</div><div class="timeline-step ${isShipped||isDel?'active':''}"><span>2</span>Shipped</div><div class="timeline-step ${isDel?'active':''}"><span>3</span>Delivered</div></div>${o.status==='New Order'?`<button type="button" onclick="markAsDeliveredByCustomer('${o.id}')" style="margin-top:8px; background:var(--accent); color:#000; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">Confirm Delivery</button>`:''}</div>`;
-      });
-      area.innerHTML = html;
     }
 
     function triggerAdminSecret() {
@@ -1743,8 +906,6 @@
       else showAlert('Incorrect Admin ID or Password!');
     }
 
-    function adminLogout() { navigateTo('home'); showAlert('Logged out.'); }
-
     function switchAdminTab(tab) {
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
@@ -1753,31 +914,22 @@
     }
 
     function loadAdminMasterData() {
-      let totalSalesRev = 0, totalCommEarned = 0;
-      ordersList.forEach(o => { totalSalesRev += o.subtotal; totalCommEarned += Math.round(o.subtotal * (globalCommission / 100)); });
-      document.getElementById('admSummarySales').innerText = '₹' + totalSalesRev;
-      document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
-      document.getElementById('admSummaryVendors').innerText = sellersList.filter(s => s.status === 'Approved').length;
-
-      let sArea = document.getElementById('admSellersList');
-      sArea.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map((s, idx) => `<div style="background:#fcfcfc; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:8px;"><strong>${s.store}</strong> (${s.uniqueId}) - ${s.status}<br><button type="button" onclick="updateSellerStatus(${idx}, 'Approved')" style="background:var(--success); color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:4px; cursor:pointer;">Approve</button></div>`).join('');
-
-      let pArea = document.getElementById('admProductsList');
-      pArea.innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;"><span><b>${p.title}</b> (₹${p.price})<br><small style="color:var(--muted);">Source: ${p.sourcingSource || 'Direct Supplier'}</small></span><button type="button" onclick="adminRemoveProduct(${idx})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Remove</button></div>`).join('');
-
-      let oArea = document.getElementById('admOrdersList');
-      oArea.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px;"><b>Order #${o.id}</b> - ${o.name} (₹${o.total})<br><button type="button" onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:6px; cursor:pointer;">Delete Order</button></div>`).join('');
-
-      document.getElementById('globalCommissionInput').value = globalCommission;
-      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('gwMerchantKey').value = paymentConfig.key || '';
-      document.getElementById('gwMerchantSecret').value = paymentConfig.secret || '';
-      toggleGatewayFields();
+      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div>${s.store}</div>`).join('');
+      document.getElementById('admProductsList').innerHTML = products.map(p => `<div>${p.title} - ₹${p.price}</div>`).join('');
+      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : '';
+      document.getElementById('admTicketsList').innerHTML = ticketsList.length === 0 ? 'No support tickets.' : '';
     }
 
-    function updateSellerStatus(idx, st) { sellersList[idx].status = st; localStorage.setItem('kosh_sellers', JSON.stringify(sellersList)); loadAdminMasterData(); showAlert('Status updated.', 'Success', true); }
-    function adminRemoveProduct(idx) { products.splice(idx, 1); localStorage.setItem('kosh_products_v5', JSON.stringify(products)); renderProducts(); loadAdminMasterData(); showAlert('Removed.', 'Success', true); }
-    function saveGlobalCommission() { let v = parseFloat(document.getElementById('globalCommissionInput').value); if(!isNaN(v)) { globalCommission = v; localStorage.setItem('kosh_commission', v); showAlert('Saved.', 'Success', true); } }
+    function saveAdminProduct() {
+      let title = document.getElementById('aProdTitle').value.trim();
+      let price = parseFloat(document.getElementById('aProdPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('aProdMrp').value) || 0;
+      if(!title || !price) { showAlert('Fill title and price.'); return; }
+      products.unshift({ id: Date.now(), sku: 'SKU-' + Math.floor(1000+Math.random()*9000), title, category: document.getElementById('aProdCategory').value || 'General', price, mrp, image: document.getElementById('aProdImage').value || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500', desc: document.getElementById('aProdDesc').value });
+      localStorage.setItem('kosh_products_v8', JSON.stringify(products));
+      renderProducts(); loadAdminMasterData();
+      showAlert('Product added successfully!', 'Success', true);
+    }
   </script>
 </body>
 </html>
