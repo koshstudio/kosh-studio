@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kosh Studio | Multi-Vendor Marketplace Pro</title>
+  <title>Kosh Studio | Multi-Vendor Marketplace Pro (Firebase)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Firebase SDK Compat (App & Firestore) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -92,32 +93,20 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
-    .summary-cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-    @media (min-width: 768px) { .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); } }
-    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
-    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
-
-    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
-    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
-    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
-    .timeline-step.active span { background: var(--success); }
-
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
-    .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO (SUPABASE DB)</div>
+  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO (FIREBASE DB)</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search kurtis, sarees, watches..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
@@ -133,10 +122,6 @@
         </button>
       </div>
     </header>
-
-    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
-      🛍️ Browsing Store Catalog (<span id="catalogStoreName">Store</span>) <button type="button" onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All</button>
-    </div>
 
     <div class="flash-banner">
       <div>
@@ -160,13 +145,12 @@
     </div>
 
     <main class="container">
-      <div class="products-grid" id="productGrid">Loading products from Supabase...</div>
+      <div class="products-grid" id="productGrid">Loading products from Firebase...</div>
       <div class="pagination-bar" id="paginationBar"></div>
     </main>
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
-      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
     </footer>
   </div>
 
@@ -174,7 +158,7 @@
   <div id="page-wishlist" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
+      <span style="font-weight:700;">❤️ My Wishlist</span>
     </div>
     <div class="page-content">
       <div class="products-grid" id="wishlistGrid"></div>
@@ -185,19 +169,14 @@
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
+      <span style="font-weight:700;">Product Details</span>
     </div>
     <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
       <div><img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);"></div>
       <div>
-        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
+        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
-        
-        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
-          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
-        </div>
-
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -206,139 +185,48 @@
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <button type="button" class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
-        
-        <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
-          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews (Verified)</h4>
-          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">⭐⭐⭐⭐⭐ (4.8/5) Trusted by Customers</div>
-        </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
-          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
-        </div>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
       </div>
     </div>
   </div>
 
-  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
+  <!-- PROFILE & ACCOUNT -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
+      <span style="font-weight:700;">Customer Account</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
-        <button type="button" class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login</h3>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
+        <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
       </div>
-
-      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
-        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
-        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
-        <button type="button" class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
-        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
-      </div>
-
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
-            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
-          </div>
-          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
-        </div>
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
-          <div>
-            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">Track orders & invoices</p>
-          </div>
-          <span style="font-size:1.2rem; color:var(--muted);">›</span>
-        </div>
-
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
-          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
-          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject"></div>
-          <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe issue..."></textarea></div>
-          <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Ticket</button>
-          <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
-        </div>
-        
-        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
-          <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
-          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor.</p>
-          <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
-        </div>
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto; background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
+        <h3>👤 Profile</h3>
+        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
+        <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer;">Logout</button>
       </div>
     </div>
   </div>
 
   <!-- MY ORDERS PAGE -->
   <div id="page-orders" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">My Orders & Tracking</span>
-    </div>
-    <div class="page-content">
-      <div id="ordersPageList"></div>
-    </div>
+    <div class="page-header"><button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button><span style="font-weight:700;">My Orders</span></div>
+    <div class="page-content"><div id="ordersPageList"></div></div>
   </div>
 
-  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
-  <div id="page-seller-dashboard" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard</span>
-    </div>
-    <div class="page-content" style="max-width:1000px;">
-      <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings</button>
-      </div>
-
-      <div id="sellerTabProducts" class="dash-tab-content active">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Add Vendor Product</h5>
-          <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
-          <div class="form-group"><label>SKU</label><input type="text" id="sProdSku" placeholder="SKU"></div>
-          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Category"></div>
-          <div class="form-group"><label>Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base Price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock</label><input type="number" id="sProdStock" value="20"></div>
-          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
-          <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="2" placeholder="Description"></textarea></div>
-          <button type="button" class="btn-solid" style="background:#2196f3;" onclick="saveSellerProduct()">Save Product</button>
-        </div>
-        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products.</div>
-      </div>
-
-      <div id="sellerTabOrders" class="dash-tab-content">
-        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
-      </div>
-
-      <div id="sellerTabEarnings" class="dash-tab-content">
-        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
-          <h4 style="margin-bottom:12px;">💰 Earnings</h4>
-          <p>Total Revenue: <span id="sellerTotalSales">₹0</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE -->
+  <!-- ADMIN MASTER DASHBOARD -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
       <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
-      <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
+      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeder</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Firebase Products & Seeder</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
@@ -351,22 +239,14 @@
 
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
-          <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder</h4>
-          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to populate Supabase with 1,000+ unique items across 11 categories safely.</p>
-          <button type="button" class="btn-solid" onclick="seedKoshProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Products</button>
+          <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder (Firebase)</h4>
+          <p style="font-size:0.85rem; color:#555; margin-bottom:14px;">Click below to populate Firestore with 1,000+ unique items with automatic SKU duplicate check.</p>
+          <button type="button" class="btn-solid" onclick="seedFirebaseProducts()" style="background:var(--success); max-width:320px; margin:0 auto; padding:12px;">🚀 Seed 1000+ Products</button>
           <div id="seedProgressText" style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:#333;"></div>
         </div>
 
-        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:15px; border-radius:6px; margin-bottom:20px; font-size:0.85rem; color:#0d47a1;">
-          <strong>📥 Bulk CSV/JSON Import:</strong> Upload clean supplier file. Duplicate SKUs will be automatically skipped.
-          <input type="file" id="bulkImportInput" accept=".json,.csv" style="margin-top:8px; display:block;" onchange="handleBulkImportFile(this)">
-          <div id="importProgressText" style="margin-top:6px; font-weight:bold;"></div>
-        </div>
-
-        <h5 style="margin-bottom:10px; font-weight:bold;">Supabase Database Products Manager</h5>
-        <button type="button" onclick="checkDuplicatesInSupabase()" style="background:#ff9800; color:#fff; border:none; padding:8px 12px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:10px;">🔍 Check Duplicate SKUs Report</button>
-        <div id="duplicateReportBox" style="font-size:0.85rem; margin-bottom:10px; color:#d32f2f;"></div>
-        <div id="admSupabaseProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">Loading...</div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Firestore Products Manager</h5>
+        <div id="admFirebaseProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">Loading...</div>
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
@@ -383,7 +263,6 @@
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
           <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
-          <button type="button" class="btn-solid" onclick="showAlert('Settings saved!')" style="background:#ff9800; color:#fff;">Save Configuration</button>
         </div>
       </div>
     </div>
@@ -430,15 +309,26 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    // Supabase Connection Config
-    let sbUrl = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
-    let sbKey = 'Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr';
-    let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
+    // 🔴 TODO: Replace with your actual Firebase Project Configuration keys from Firebase Console
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "your-project-id.firebaseapp.com",
+      projectId: "your-project-id",
+      storageBucket: "your-project-id.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    let allProducts = [];
     let currentPage = 1;
     let itemsPerPage = 24;
     let activeCategoryFilter = 'All';
-    let totalProductsCount = 0;
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -450,113 +340,103 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       navigateTo('home');
-      fetchProductsPaginated();
+      fetchProductsFromFirebase();
       updateCartUI();
     });
 
-    async function fetchProductsPaginated() {
+    async function fetchProductsFromFirebase() {
       try {
-        if(!supabaseClient) {
-          document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Supabase client not initialized.</p>';
-          return;
-        }
-
-        let startIdx = (currentPage - 1) * itemsPerPage;
-        let endIdx = startIdx + itemsPerPage - 1;
-
-        let query = supabaseClient.from('products').select('*', { count: 'exact' });
-        
-        if(activeCategoryFilter !== 'All') {
-          query = query.ilike('category', activeCategoryFilter);
-        }
-
-        let searchInputEl = document.getElementById('searchInput');
-        let searchKey = searchInputEl ? searchInputEl.value.trim() : '';
-        if(searchKey) {
-          query = query.or(`title.ilike.%${searchKey}%,category.ilike.%${searchKey}%`);
-        }
-
-        let { data, count, error } = await query.order('created_at', { ascending: false }).range(startIdx, endIdx);
-
-        if(error) {
-          console.error(error);
-          document.getElementById('productGrid').innerHTML = `<p style="grid-column:span 4; text-align:center; color:red;">Supabase Error: ${error.message}</p>`;
-          return;
-        }
-
-        totalProductsCount = count || 0;
-        let products = data || [];
-        renderProductsGrid(products);
-      } catch(err) {
+        let snapshot = await db.collection('products').orderBy('created_at', 'desc').get();
+        allProducts = [];
+        snapshot.forEach(doc => {
+          allProducts.push({ firestoreId: doc.id, ...doc.data() });
+        });
+        renderProductsGrid();
+      } catch (err) {
         console.error(err);
-        document.getElementById('productGrid').innerHTML = `<p style="grid-column:span 4; text-align:center; color:red;">Connection Error: ${err.message}</p>`;
+        document.getElementById('productGrid').innerHTML = `<p style="grid-column:span 4; text-align:center; color:red;">Firebase Error: ${err.message}. Please check your Firebase config keys.</p>`;
       }
     }
 
-    function renderProductsGrid(products) {
+    function renderProductsGrid() {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
 
-      if(products.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in Supabase database. Go to Admin (tap footer 5 times) to seed 1000+ products.</p>';
+      let filtered = allProducts;
+      if (activeCategoryFilter !== 'All') {
+        filtered = filtered.filter(p => p.category?.toLowerCase() === activeCategoryFilter.toLowerCase());
+      }
+
+      let searchInputEl = document.getElementById('searchInput');
+      let searchKey = searchInputEl ? searchInputEl.value.trim().toLowerCase() : '';
+      if (searchKey) {
+        filtered = filtered.filter(p => p.title?.toLowerCase().includes(searchKey) || p.category?.toLowerCase().includes(searchKey));
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in Firebase database. Go to Admin (tap footer 5 times) to seed 1000+ products.</p>';
         document.getElementById('paginationBar').innerHTML = '';
         return;
       }
 
-      products.forEach(p => {
-        let isWishlisted = wishlist.some(item => item.id === p.id);
+      let totalPages = Math.ceil(filtered.length / itemsPerPage);
+      if (currentPage > totalPages) currentPage = 1;
+      let startIdx = (currentPage - 1) * itemsPerPage;
+      let pageItems = filtered.slice(startIdx, startIdx + itemsPerPage);
+
+      pageItems.forEach(p => {
+        let isWishlisted = wishlist.some(item => item.sku === p.sku);
         let imgUrl = (p.images && Array.isArray(p.images)) ? p.images[0] : (p.images || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500');
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${imgUrl}" alt="${p.title}"></div>
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist('${p.sku}')">${isWishlisted ? '❤️' : '🤍'}</button>
+          <div class="product-img" onclick="openProductDetail('${p.sku}')"><img src="${imgUrl}" alt="${p.title}"></div>
           <div class="product-info">
             <span class="p-category">${p.category || 'General'}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-title" onclick="openProductDetail('${p.sku}')">${p.title}</div>
             <div class="p-price-row"><span class="p-price">₹${p.selling_price}</span><span class="p-mrp">₹${p.mrp || ''}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+            <button type="button" class="btn-add-cart" onclick="addToCart('${p.sku}')">Add to Cart</button>
           </div>
         `;
         grid.appendChild(card);
       });
 
-      let totalPages = Math.ceil(totalProductsCount / itemsPerPage);
       renderPaginationControls(totalPages);
     }
 
     function renderPaginationControls(totalPages) {
       let bar = document.getElementById('paginationBar');
       bar.innerHTML = '';
-      if(totalPages <= 1) return;
-      for(let i = 1; i <= totalPages; i++) {
+      if (totalPages <= 1) return;
+      for (let i = 1; i <= totalPages; i++) {
         bar.innerHTML += `<button type="button" class="page-num-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
       }
     }
 
-    function goToPage(p) { currentPage = p; fetchProductsPaginated(); window.scrollTo(0, 0); }
-    function filterCategory(cat) { currentPage = 1; activeCategoryFilter = cat; fetchProductsPaginated(); }
-    function handleSearch(val) { currentPage = 1; fetchProductsPaginated(); }
+    function goToPage(p) { currentPage = p; renderProductsGrid(); window.scrollTo(0, 0); }
+    function filterCategory(cat) { currentPage = 1; activeCategoryFilter = cat; renderProductsGrid(); }
+    function handleSearch(val) { currentPage = 1; renderProductsGrid(); }
 
-    async function openProductDetail(id) {
-      let { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
-      if(error || !data) return;
-      currentSelectedProduct = data;
-      let imgUrl = (currentSelectedProduct.images && Array.isArray(currentSelectedProduct.images)) ? currentSelectedProduct.images[0] : currentSelectedProduct.images;
+    function openProductDetail(sku) {
+      let p = allProducts.find(item => item.sku === sku);
+      if (!p) return;
+      currentSelectedProduct = p;
+      let imgUrl = (p.images && Array.isArray(p.images)) ? p.images[0] : p.images;
       document.getElementById('pPageImg').src = imgUrl;
-      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
-      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku} | Source: ${currentSelectedProduct.source_platform || 'Direct'}`;
-      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.selling_price;
-      document.getElementById('pPageMrp').innerText = '₹' + (currentSelectedProduct.mrp || '');
-      document.getElementById('pPageDesc').innerText = currentSelectedProduct.description || '';
+      document.getElementById('pPageCategory').innerText = p.category;
+      document.getElementById('pPageTitle').innerText = p.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku} | Source: ${p.source_platform || 'Direct'}`;
+      document.getElementById('pPagePrice').innerText = '₹' + p.selling_price;
+      document.getElementById('pPageMrp').innerText = '₹' + (p.mrp || '');
+      document.getElementById('pPageDesc').innerText = p.description || '';
       navigateTo('product');
     }
 
-    async function addToCart(id) {
-      let { data, error } = await supabaseClient.from('products').select('*').eq('id', id).single();
-      if(error || !data) return;
-      cart.push({ ...data, finalPrice: data.selling_price, qty: 1 });
+    function addToCart(sku) {
+      let p = allProducts.find(item => item.sku === sku);
+      if (!p) return;
+      cart.push({ ...p, finalPrice: p.selling_price, qty: 1 });
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
       showAlert("Added to cart successfully!", "Cart", true);
@@ -566,7 +446,7 @@
       document.getElementById('cartCount').innerText = cart.length;
       let container = document.getElementById('cartItemsContainer');
       container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center;">Cart is empty.</p>'; document.getElementById('cartPriceDetailsBox').style.display='none'; return; }
+      if (cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center;">Cart is empty.</p>'; document.getElementById('cartPriceDetailsBox').style.display='none'; return; }
       document.getElementById('cartPriceDetailsBox').style.display='block';
       let total = 0;
       cart.forEach(item => {
@@ -580,7 +460,7 @@
     function toggleCartDrawer(open) {
       let drawer = document.getElementById('cartDrawer');
       let backdrop = document.getElementById('cartBackdrop');
-      if(open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
+      if (open) { drawer.classList.add('open'); backdrop.style.display = 'block'; }
       else { drawer.classList.remove('open'); backdrop.style.display = 'none'; }
     }
 
@@ -588,11 +468,11 @@
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       document.getElementById('page-' + pageId).classList.add('active');
       window.scrollTo(0, 0);
-      if(pageId === 'admin-dashboard') loadAdminMasterData();
+      if (pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    // 🚀 Safe Seeder with 25-item batch size
-    async function seedKoshProducts() {
+    // 🚀 Firebase 1000+ Unique Products Seeder with SKU Duplicate Protection
+    async function seedFirebaseProducts() {
       const categories = [
         { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
         { name: "Men's Fashion", subcategories: ["T-Shirts","Shirts","Jeans","Trousers","Kurtas","Track Pants","Jackets","Hoodies","Shorts"], count: 140 },
@@ -612,7 +492,7 @@
       const colours = ["Black","White","Blue","Pink","Red","Green","Beige","Brown","Maroon","Navy","Grey","Gold"];
 
       let progressEl = document.getElementById('seedProgressText');
-      if(progressEl) progressEl.innerText = "Generating unique catalog items...";
+      if (progressEl) progressEl.innerText = "Generating 1000+ unique catalog items...";
 
       const products = [];
       let globalIndex = 1;
@@ -651,118 +531,54 @@
 
       const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
 
-      if(progressEl) progressEl.innerText = "Seeding into Supabase...";
+      if (progressEl) progressEl.innerText = "Checking existing SKUs and seeding into Firestore...";
 
-      const batchSize = 25;
+      let existingSkusSet = new Set(allProducts.map(p => p.sku));
+      let batch = db.batch();
+      let batchCount = 0;
       let inserted = 0;
-      let failed = 0;
+      let skipped = 0;
 
-      for (let i = 0; i < uniqueProducts.length; i += batchSize) {
-        const batch = uniqueProducts.slice(i, i + batchSize);
-        let { error } = await supabaseClient.from("products").upsert(batch, { onConflict: 'sku', ignoreDuplicates: true });
-        
-        if (error) {
-          console.error("Batch failed:", error);
-          failed += batch.length;
-        } else {
-          inserted += batch.length;
+      for (let p of uniqueProducts) {
+        if (existingSkusSet.has(p.sku)) {
+          skipped++;
+          continue;
         }
-        if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, uniqueProducts.length)} / ${uniqueProducts.length}`;
-        await new Promise(resolve => setTimeout(resolve, 150));
+        let docRef = db.collection('products').doc(); // Auto ID
+        batch.set(docRef, p);
+        batchCount++;
+        inserted++;
+
+        // Firestore batch limit is 500 operations
+        if (batchCount >= 400) {
+          await batch.commit();
+          batch = db.batch();
+          batchCount = 0;
+        }
+        if (progressEl) progressEl.innerText = `Seeding... Inserted: ${inserted}, Skipped: ${skipped}`;
       }
 
-      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nProcessed: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
-      fetchProductsPaginated();
+      if (batchCount > 0) {
+        await batch.commit();
+      }
+
+      showAlert(`Firebase seeding complete!\n\nInserted: ${inserted}\nSkipped (Duplicates): ${skipped}`, "Seeding Success", true);
+      fetchProductsFromFirebase();
       loadAdminMasterData();
-    }
-
-    async function handleBulkImportFile(input) {
-      if(!input.files || input.files.length === 0) return;
-      let file = input.files[0];
-      let reader = new FileReader();
-      let progressEl = document.getElementById('importProgressText');
-      progressEl.innerText = "Reading file...";
-
-      reader.onload = async function(e) {
-        try {
-          let rows = [];
-          if(file.name.endsWith('.json')) {
-            rows = JSON.parse(e.target.result);
-          } else {
-            let lines = e.target.result.split('\n');
-            for(let i = 1; i < lines.length; i++) {
-              let cols = lines[i].trim().split(',');
-              if(cols.length >= 5) {
-                rows.push({
-                  sku: cols[0].trim(),
-                  title: cols[1].trim(),
-                  category: cols[2].trim(),
-                  selling_price: parseFloat(cols[3]) || 100,
-                  mrp: parseFloat(cols[4]) || 200,
-                  images: [cols[5]?.trim() || ''],
-                  description: cols[6]?.trim() || ''
-                });
-              }
-            }
-          }
-
-          progressEl.innerText = `Processing ${rows.length} products in batches...`;
-          let addedCount = 0;
-          let batchSize = 25;
-
-          for(let i = 0; i < rows.length; i += batchSize) {
-            let chunk = rows.slice(i, i + batchSize);
-            let { error } = await supabaseClient.from('products').upsert(chunk, { onConflict: 'sku', ignoreDuplicates: true });
-            if(!error) { addedCount += chunk.length; }
-            progressEl.innerText = `Importing... Progress: ${Math.min(i + batchSize, rows.length)} / ${rows.length}`;
-            await new Promise(resolve => setTimeout(resolve, 150));
-          }
-
-          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished! Processed: ${addedCount} items.</span>`;
-          fetchProductsPaginated();
-          loadAdminMasterData();
-        } catch(err) {
-          progressEl.innerHTML = `<span style="color:var(--danger);">❌ Error: ${err.message}</span>`;
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    async function checkDuplicatesInSupabase() {
-      let box = document.getElementById('duplicateReportBox');
-      box.innerText = "Analyzing database for duplicate SKUs...";
-      
-      let { data, error } = await supabaseClient.from('products').select('sku');
-      if(error) { box.innerText = "Error checking DB."; return; }
-
-      let skuCounts = {};
-      (data || []).forEach(p => {
-        skuCounts[p.sku] = (skuCounts[p.sku] || 0) + 1;
-      });
-      let duplicates = Object.keys(skuCounts).filter(sku => skuCounts[sku] > 1);
-
-      if(duplicates.length === 0) {
-        box.style.color = 'var(--success)';
-        box.innerText = '✅ Clean Database! Zero duplicate SKUs found in Supabase table.';
-      } else {
-        box.style.color = 'var(--danger)';
-        box.innerText = `⚠️ Warning: Found ${duplicates.length} duplicate SKU groups in database: ${duplicates.join(', ')}.`;
-      }
     }
 
     async function loadAdminMasterData() {
       let sEl = document.getElementById('admSellersList');
       sEl.innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div><b>${s.store}</b> (${s.uniqueId}) - ${s.status}</div>`).join('');
 
-      let listEl = document.getElementById('admSupabaseProductsList');
-      let { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false }).limit(50);
-      if(error || !data || data.length === 0) { listEl.innerHTML = 'No products found in Supabase.'; return; }
-      listEl.innerHTML = data.map((p) => `
+      let listEl = document.getElementById('admFirebaseProductsList');
+      if (allProducts.length === 0) { listEl.innerHTML = 'No products found in Firestore.'; return; }
+      listEl.innerHTML = allProducts.slice(0, 50).map((p) => `
         <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.selling_price} <br><small style="color:var(--muted);">Category: ${p.category} | Source: ${p.source_platform || 'N/A'}</small></div>
-          <button type="button" onclick="deleteSupabaseProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.selling_price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
+          <button type="button" onclick="deleteFirebaseProduct('${p.firestoreId}')" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
         </div>
-      `).join('') + `<p style="margin-top:10px; font-size:0.75rem; color:var(--muted);">Showing latest 50 products from Supabase database.</p>`;
+      `).join('') + `<p style="margin-top:10px; font-size:0.75rem; color:var(--muted);">Showing latest 50 products from Firestore database.</p>`;
 
       let oEl = document.getElementById('admOrdersList');
       oEl.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div>Order #${o.id} - ₹${o.total}</div>`).join('');
@@ -771,13 +587,15 @@
       tEl.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>[${t.id}] ${t.subject}</div>`).join('');
     }
 
-    async function deleteSupabaseProduct(id) {
-      if(confirm('Delete this product from Supabase?')) {
-        let { error } = await supabaseClient.from('products').delete().eq('id', id);
-        if(error) { showAlert('Error deleting: ' + error.message); return; }
-        showAlert('Product deleted!', 'Success', true);
-        fetchProductsPaginated();
-        loadAdminMasterData();
+    async function deleteFirebaseProduct(firestoreId) {
+      if (confirm('Delete this product from Firestore?')) {
+        try {
+          await db.collection('products').doc(firestoreId).delete();
+          showAlert('Product deleted successfully!', 'Success', true);
+          fetchProductsFromFirebase();
+        } catch(err) {
+          showAlert('Error deleting: ' + err.message);
+        }
       }
     }
 
@@ -790,12 +608,12 @@
 
     function triggerAdminSecret() {
       secretClickCount++;
-      if(secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
+      if (secretClickCount >= 5) { secretClickCount = 0; document.getElementById('adminLoginModal').style.display = 'flex'; }
     }
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+      if (uid === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginModal').style.display = 'none';
         navigateTo('admin-dashboard');
       } else {
