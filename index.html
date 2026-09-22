@@ -28,9 +28,9 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; }
-    header { background: #fff; position: sticky; top: 0; z-index: 60; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: var(--shadow); }
-    .brand-name { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-decoration: none; cursor: pointer; }
+    .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: var(--shadow); }
+    .brand-name { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; color: var(--primary); text-decoration: none; cursor: pointer; }
     .header-search { flex-grow: 1; max-width: 500px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
     .header-search input { width: 100%; border: none; background: transparent; padding: 8px 12px; font-size: 0.85rem; outline: none; }
     .header-icons { display: flex; align-items: center; gap: 14px; }
@@ -40,7 +40,7 @@
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
     .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
 
-    .categories-bar { background: #fff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
+    .categories-bar { background: #ffffff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
     .categories-bar::-webkit-scrollbar { display: none; }
     .cat-item { flex: 0 0 auto; font-size: 0.82rem; font-weight: 700; color: #555; cursor: pointer; padding-bottom: 2px; }
     .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
@@ -81,7 +81,10 @@
     .form-group { margin-bottom: 14px; display: block; width: 100%; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
     .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff; }
-    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+    .form-row { display: flex; flex-direction: column; gap: 14px; width: 100%; margin-bottom: 14px; }
+
+    .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 4px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; z-index: 10; position: relative; }
+    .btn-solid:hover { background: #333; }
 
     .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
     .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
@@ -89,8 +92,20 @@
     .dash-tab-content { display: none; }
     .dash-tab-content.active { display: block; }
 
+    .summary-cards-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    @media (min-width: 768px) { .summary-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); } }
+    .summary-card { background: #fff; border: 1px solid var(--border); padding: 16px; border-radius: 6px; box-shadow: var(--shadow); }
+    .summary-card h4 { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .summary-card .val { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+
+    .timeline { display: flex; justify-content: space-between; position: relative; margin: 15px 0 10px 0; font-size: 0.75rem; font-weight: bold; color: var(--muted); }
+    .timeline-step { text-align: center; position: relative; z-index: 2; flex: 1; }
+    .timeline-step span { display: block; width: 22px; height: 22px; line-height: 22px; border-radius: 50%; background: #ddd; color: #fff; margin: 0 auto 4px auto; font-size: 0.7rem; }
+    .timeline-step.active span { background: var(--success); }
+
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
+    .auth-link { color: var(--accent); cursor: pointer; font-weight: 600; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -102,7 +117,7 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search kurtis, sarees, watches..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
@@ -118,6 +133,10 @@
         </button>
       </div>
     </header>
+
+    <div id="catalogBanner" style="background:#e8f5e9; color:var(--success); padding:10px 16px; text-align:center; font-weight:bold; font-size:0.85rem; display:none;">
+      🛍️ Browsing Store Catalog (<span id="catalogStoreName">Store</span>) <button type="button" onclick="clearCatalogFilter()" style="margin-left:10px; background:none; border:underline; color:#d32f2f; cursor:pointer; font-weight:bold;">Show All</button>
+    </div>
 
     <div class="flash-banner">
       <div>
@@ -147,6 +166,7 @@
 
     <footer>
       <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
+      <p style="margin-top:6px; color:#777;">Multi-Vendor Marketplace Pro System.</p>
     </footer>
   </div>
 
@@ -154,7 +174,7 @@
   <div id="page-wishlist" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700;">❤️ My Wishlist</span>
+      <span style="font-weight:700; font-size:0.95rem;">❤️ My Wishlist</span>
     </div>
     <div class="page-content">
       <div class="products-grid" id="wishlistGrid"></div>
@@ -165,14 +185,19 @@
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700;">Product Details</span>
+      <span style="font-weight:700; font-size:0.95rem;">Product Details & Reviews</span>
     </div>
     <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
       <div><img id="pPageImg" src="" alt="Product" style="width:100%; height:350px; object-fit:cover; border-radius:6px; border:1px solid var(--border);"></div>
       <div>
-        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;"></div>
+        <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700; margin-bottom:4px;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
+        
+        <div id="pPageSellerCard" style="background:#f1f3f6; border:1px solid var(--border); padding:10px 14px; border-radius:6px; margin-bottom:12px; font-size:0.85rem;">
+          🛡️ <strong>Sold By:</strong> <span id="pPageSellerName" style="font-weight:bold; color:var(--primary);">Kosh Direct</span> <span style="background:var(--success); color:#fff; font-size:0.65rem; padding:2px 6px; border-radius:3px; margin-left:6px;">Verified Seller</span>
+        </div>
+
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -181,60 +206,149 @@
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <button type="button" class="btn-solid" onclick="buyNowCurrentProduct()">Buy Now</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:16px;"></p>
+        
+        <div style="background:#fff; border:1px solid var(--border); padding:16px; border-radius:6px; margin-top:20px;">
+          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews (Verified)</h4>
+          <div id="productReviewsList" style="margin-bottom:15px; font-size:0.85rem;">⭐⭐⭐⭐⭐ (4.8/5) Trusted by Customers</div>
+        </div>
+
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; color:#e65100; padding:12px; border-radius:4px; font-size:0.8rem; font-weight:600; margin-top:15px;">
+          ⚠️ <strong>Return Policy:</strong> Valid within 3 days of delivery. Uncut unboxing video required.
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- PROFILE & ACCOUNT -->
+  <!-- PROFILE & AUTHENTICATION & SELLER PORTAL -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
-      <span style="font-weight:700;">Customer Account</span>
+      <span style="font-weight:700; font-size:0.95rem;">Customer Account, Support & Seller Portal</span>
     </div>
     <div class="page-content">
       <div id="authLoginView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Login</h3>
-        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="Email"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Password"></div>
-        <button type="button" class="btn-solid" onclick="handleLogin()">Login</button>
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Customer / Seller Login</h3>
+        <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="Enter your email"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
+        <button type="button" class="btn-solid" onclick="handleLogin()" style="margin-top:10px;">Login</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">New customer? <span class="auth-link" onclick="switchAuthView('signup')">Sign Up</span></p>
       </div>
-      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto; background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border);">
-        <h3>👤 Profile</h3>
-        <p id="displayUserEmail" style="color:var(--muted); margin:10px 0;"></p>
-        <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; cursor:pointer;">Logout</button>
+
+      <div id="authSignupView" style="background:#fff; padding:25px; border-radius:6px; border:1px solid var(--border); max-width:400px; margin:20px auto; display:none;">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; text-align:center;">Create Customer Account</h3>
+        <div class="form-group"><label>Email Address</label><input type="email" id="signupEmail" placeholder="e.g. yourname@gmail.com"></div>
+        <div class="form-group"><label>Create Password</label><input type="password" id="signupPass" placeholder="6+ characters"></div>
+        <button type="button" class="btn-solid" onclick="handleSignup()" style="margin-top:10px;">Sign Up</button>
+        <p style="font-size:0.82rem; text-align:center; margin-top:14px;">Already have an account? <span class="auth-link" onclick="switchAuthView('login')">Login</span></p>
+      </div>
+
+      <div id="userDashboardSection" style="display:none; max-width:450px; margin: 20px auto;">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 style="font-size:1rem; margin-bottom:4px;">👤 Customer Profile</h3>
+            <p style="font-size:0.85rem; color:var(--muted);" id="displayUserEmail">user@gmail.com</p>
+          </div>
+          <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
+        </div>
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); cursor:pointer; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;" onclick="navigateTo('orders')">
+          <div>
+            <h4 style="font-size:1rem; margin-bottom:2px;">📦 My Orders & Tracking</h4>
+            <p style="font-size:0.8rem; color:var(--muted);">Track orders & invoices</p>
+          </div>
+          <span style="font-size:1.2rem; color:var(--muted);">›</span>
+        </div>
+
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:12px;">
+          <h4 style="font-size:1rem; margin-bottom:6px;">🛠️ Support & Dispute Tickets</h4>
+          <div class="form-group"><input type="text" id="custTicketSubject" placeholder="Issue Subject"></div>
+          <div class="form-group"><textarea id="custTicketMsg" rows="2" placeholder="Describe issue..."></textarea></div>
+          <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem; background:#607d8b;" onclick="submitCustomerTicket()">Raise Ticket</button>
+          <div id="customerTicketsList" style="margin-top:12px; font-size:0.8rem;"></div>
+        </div>
+        
+        <div id="sellerPortalLinkBox" style="background:#e3f2fd; padding:20px; border-radius:6px; border:1px solid #bbdefb; text-align:center;">
+          <h4 style="font-size:1rem; color:#0d47a1; margin-bottom:6px;" id="portalBoxTitle">🏪 Want to Sell on Kosh Studio?</h4>
+          <p style="font-size:0.82rem; color:#555; margin-bottom:14px;" id="sellerStatusText">Register as a vendor.</p>
+          <button type="button" class="btn-solid" id="portalActionBtn" style="background:#2196f3;" onclick="handlePortalAction()">Register as Seller</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- MY ORDERS PAGE -->
   <div id="page-orders" class="app-page">
-    <div class="page-header"><button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button><span style="font-weight:700;">My Orders</span></div>
-    <div class="page-content"><div id="ordersPageList"></div></div>
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700; font-size:0.95rem;">My Orders & Tracking</span>
+    </div>
+    <div class="page-content">
+      <div id="ordersPageList"></div>
+    </div>
   </div>
 
-  <!-- ADMIN MASTER DASHBOARD (FULL RESTORED TABS) -->
+  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
+  <div id="page-seller-dashboard" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700; font-size:0.95rem;">🏪 Seller Dashboard</span>
+    </div>
+    <div class="page-content" style="max-width:1000px;">
+      <div class="dash-tabs" style="margin-top:10px;">
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerTab('products')">🛍️ My Products</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('orders')">📦 Orders</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerTab('earnings')">💰 Earnings</button>
+      </div>
+
+      <div id="sellerTabProducts" class="dash-tab-content active">
+        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
+          <h5 style="margin-bottom:12px; font-weight:bold;">➕ Add Vendor Product</h5>
+          <div class="form-group"><label>Product Title</label><input type="text" id="sProdTitle" placeholder="Title"></div>
+          <div class="form-group"><label>SKU</label><input type="text" id="sProdSku" placeholder="SKU"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="sProdCategory" placeholder="Category"></div>
+          <div class="form-group"><label>Base Price (₹)</label><input type="number" id="sProdBasePrice" placeholder="Base Price"></div>
+          <div class="form-group"><label>MRP (₹)</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+          <div class="form-group"><label>Stock</label><input type="number" id="sProdStock" value="20"></div>
+          <div class="form-group"><label>Image URL</label><input type="text" id="sProdImage" placeholder="Image URL"></div>
+          <div class="form-group"><label>Description</label><textarea id="sProdDesc" rows="2" placeholder="Description"></textarea></div>
+          <button type="button" class="btn-solid" style="background:#2196f3;" onclick="saveSellerProduct()">Save Product</button>
+        </div>
+        <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products.</div>
+      </div>
+
+      <div id="sellerTabOrders" class="dash-tab-content">
+        <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
+      </div>
+
+      <div id="sellerTabEarnings" class="dash-tab-content">
+        <div style="background:#fff; border:1px solid var(--border); padding:24px; border-radius:6px;">
+          <h4 style="margin-bottom:12px;">💰 Earnings</h4>
+          <p>Total Revenue: <span id="sellerTotalSales">₹0</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
       <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
-      <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
+      <span style="font-weight:700; font-size:1rem; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeding</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Supabase Products & Seeder</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
-      <!-- Tab 1: Sellers -->
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Registered Sellers</h5>
-        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers Management</h5>
+        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
       </div>
 
-      <!-- Tab 2: Products & Seeder -->
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:20px; border-radius:6px; margin-bottom:20px; text-align:center;">
           <h4 style="color:var(--success); margin-bottom:8px;">🚀 One-Click 1000+ Unique Products Seeder</h4>
@@ -255,21 +369,18 @@
         <div id="admSupabaseProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">Loading...</div>
       </div>
 
-      <!-- Tab 3: Orders -->
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Customer Orders</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
       </div>
 
-      <!-- Tab 4: Tickets -->
       <div id="admTabTickets" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
-        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
+        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
-      <!-- Tab 5: Settings -->
       <div id="admTabSettings" class="dash-tab-content">
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
           <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Direct UPI</option></select></div>
           <button type="button" class="btn-solid" onclick="showAlert('Settings saved!')" style="background:#ff9800; color:#fff;">Save Configuration</button>
@@ -333,6 +444,9 @@
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let currentSelectedProduct = null;
     let secretClickCount = 0;
+    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
+    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
+    let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
 
     window.addEventListener('DOMContentLoaded', () => {
       navigateTo('home');
@@ -477,7 +591,7 @@
       if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    // 🚀 Ultra-Safe Seeder with 25-item batch size and small delay to eliminate network fetch errors
+    // 🚀 Safe Seeder with 25-item batch size
     async function seedKoshProducts() {
       const categories = [
         { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
@@ -537,9 +651,9 @@
 
       const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
 
-      if(progressEl) progressEl.innerText = "Seeding into Supabase (safe slow batches)...";
+      if(progressEl) progressEl.innerText = "Seeding into Supabase...";
 
-      const batchSize = 25; // 25 items per batch to avoid network timeout on mobile
+      const batchSize = 25;
       let inserted = 0;
       let failed = 0;
 
@@ -554,8 +668,6 @@
           inserted += batch.length;
         }
         if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, uniqueProducts.length)} / ${uniqueProducts.length}`;
-        
-        // Small delay to prevent network throttling
         await new Promise(resolve => setTimeout(resolve, 150));
       }
 
@@ -606,7 +718,7 @@
             await new Promise(resolve => setTimeout(resolve, 150));
           }
 
-          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished Successfully! Processed: ${addedCount} items.</span>`;
+          progressEl.innerHTML = `<span style="color:var(--success);">✅ Import Finished! Processed: ${addedCount} items.</span>`;
           fetchProductsPaginated();
           loadAdminMasterData();
         } catch(err) {
@@ -634,11 +746,14 @@
         box.innerText = '✅ Clean Database! Zero duplicate SKUs found in Supabase table.';
       } else {
         box.style.color = 'var(--danger)';
-        box.innerText = `⚠️ Warning: Found ${duplicates.length} duplicate SKU groups in database: ${duplicates.join(', ')}. (No records deleted automatically).`;
+        box.innerText = `⚠️ Warning: Found ${duplicates.length} duplicate SKU groups in database: ${duplicates.join(', ')}.`;
       }
     }
 
     async function loadAdminMasterData() {
+      let sEl = document.getElementById('admSellersList');
+      sEl.innerHTML = sellersList.length === 0 ? 'No sellers registered.' : sellersList.map(s => `<div><b>${s.store}</b> (${s.uniqueId}) - ${s.status}</div>`).join('');
+
       let listEl = document.getElementById('admSupabaseProductsList');
       let { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false }).limit(50);
       if(error || !data || data.length === 0) { listEl.innerHTML = 'No products found in Supabase.'; return; }
@@ -648,6 +763,12 @@
           <button type="button" onclick="deleteSupabaseProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
         </div>
       `).join('') + `<p style="margin-top:10px; font-size:0.75rem; color:var(--muted);">Showing latest 50 products from Supabase database.</p>`;
+
+      let oEl = document.getElementById('admOrdersList');
+      oEl.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div>Order #${o.id} - ₹${o.total}</div>`).join('');
+
+      let tEl = document.getElementById('admTicketsList');
+      tEl.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>[${t.id}] ${t.subject}</div>`).join('');
     }
 
     async function deleteSupabaseProduct(id) {
