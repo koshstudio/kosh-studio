@@ -424,7 +424,7 @@
             <div class="form-group"><label>Review Comment</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
             <button type="button" class="btn-solid" style="padding:8px; font-size:0.8rem;" onclick="submitProductReview()">Submit Verified Review</button>
           </div>
-          <div id="unverifiedReviewMsg" style="font-size:0.8rem; color:#d32f2f; margin-top:10px; font-style:italic;">
+          <div id="unverifiedReviewMsg" style="font-size:0.80rem; color:#d32f2f; margin-top:10px; font-style:italic;">
             🔒 Note: Only customers who have received/delivered this product can submit ratings & reviews.
           </div>
         </div>
@@ -505,7 +505,7 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN SELLER DASHBOARD PAGE (Vertical Form Layout) -->
+  <!-- FULL-SCREEN SELLER DASHBOARD PAGE -->
   <div id="page-seller-dashboard" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
@@ -580,7 +580,7 @@
     </div>
   </div>
 
-  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE (Vertical Form Layout) -->
+  <!-- FULL-SCREEN ADMIN MASTER DASHBOARD PAGE -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
       <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
@@ -622,7 +622,7 @@
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers registered.</div>
       </div>
 
-      <!-- Tab 2: Products & Admin Listing (Vertical Form) -->
+      <!-- Tab 2: Products & Admin Listing -->
       <div id="admTabProducts" class="dash-tab-content">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
           <h5 id="adminFormTitle" style="margin-bottom:12px; font-size:1rem; font-weight:bold;">➕ Admin Direct Product Listing</h5>
@@ -663,10 +663,10 @@
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No support tickets.</div>
       </div>
 
-      <!-- Tab 5: Settings, Gateways & Supabase (Strict Vertical Form Layout) -->
+      <!-- Tab 5: Settings & Hardcoded Supabase -->
       <div id="admTabSettings" class="dash-tab-content">
         
-        <!-- Payment Gateway Switcher (No Code Needed) -->
+        <!-- Payment Gateway Switcher -->
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 No-Code Payment Gateway Manager</h4>
           <p style="font-size:0.8rem; color:#555; margin-bottom:14px;">Select active payment gateway and configure credentials.</p>
@@ -693,13 +693,12 @@
           <button type="button" class="btn-solid" onclick="savePaymentGatewayConfig()" style="background:#ff9800; color:#fff; margin-top:6px;">Save Payment Configuration</button>
         </div>
 
-        <!-- Supabase Cloud Setup -->
+        <!-- Supabase Cloud Setup (Auto Connected Status) -->
         <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:20px; border-radius:6px; max-width:500px; margin-bottom:20px;">
-          <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Setup</h4>
-          <p style="font-size:0.8rem; color:#555; margin-bottom:12px;">Enter Supabase credentials to sync data to the cloud.</p>
-          <div class="form-group"><label>Supabase Project URL</label><input type="text" id="sbUrlInput" placeholder="https://xyz.supabase.co"></div>
-          <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" id="sbKeyInput" placeholder="sb_publishable_..." autocomplete="off"></div>
-          <button type="button" class="btn-solid" onclick="saveSupabaseConfig()" style="background:#2196f3; margin-top:6px;">Connect & Sync Supabase</button>
+          <h4 style="margin-bottom:8px; color:#0d47a1;">☁️ Supabase Cloud Database Status</h4>
+          <p style="font-size:0.85rem; color:var(--success); font-weight:bold; margin-bottom:12px;">✅ Connected Automatically via Hardcoded Credentials!</p>
+          <div class="form-group"><label>Supabase Project URL</label><input type="text" value="https://iqzlqyykabbxoyjpmyb.supabase.co" readonly style="background:#f1f3f6;"></div>
+          <div class="form-group"><label>Supabase Anon / Public Key</label><input type="password" value="Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr" readonly style="background:#f1f3f6;"></div>
         </div>
 
         <!-- Global Commission -->
@@ -772,7 +771,7 @@
     </div>
   </div>
 
-  <!-- CHECKOUT MODAL (Strict Vertical Form) -->
+  <!-- CHECKOUT MODAL -->
   <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -861,8 +860,9 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    let sbUrl = localStorage.getItem('kosh_sb_url') || '';
-    let sbKey = localStorage.getItem('kosh_sb_key') || '';
+    // --- Hardcoded Supabase & Payment Gateway Config ---
+    let sbUrl = 'https://iqzlqyykabbxoyjpmyb.supabase.co';
+    let sbKey = 'Sb_publishable_fEgBTy3VgrP_o8M2sy3UtQ_0P6kxTcr';
     let supabaseClient = (sbUrl && sbKey && window.supabase) ? window.supabase.createClient(sbUrl, sbKey) : null;
 
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', key: '', secret: '' };
@@ -1673,15 +1673,6 @@
       showAlert(`Payment gateway updated to ${gw} successfully!`, 'Success', true);
     }
 
-    function saveSupabaseConfig() {
-      let url = document.getElementById('sbUrlInput').value.trim();
-      let key = document.getElementById('sbKeyInput').value.trim();
-      if(!url || !key) { showAlert('Enter URL and Key.'); return; }
-      localStorage.setItem('kosh_sb_url', url); localStorage.setItem('kosh_sb_key', key);
-      supabaseClient = window.supabase.createClient(url, key);
-      showAlert('Supabase connected successfully!', 'Success', true);
-    }
-
     function printOrderInvoice(orderId) {
       let o = ordersList.find(x => x.id === orderId);
       if(!o) return;
@@ -1726,6 +1717,7 @@
 
     function loadAdminMasterData() {
       let totalSalesRev = 0, totalCommEarned = 0;
+      ordersList.orders = ordersList.orders || [];
       ordersList.forEach(o => { totalSalesRev += o.subtotal; totalCommEarned += Math.round(o.subtotal * (globalCommission / 100)); });
       document.getElementById('admSummarySales').innerText = '₹' + totalSalesRev;
       document.getElementById('admSummaryCommission').innerText = '₹' + totalCommEarned;
@@ -1741,9 +1733,6 @@
       oArea.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="background:#f9f9f9; border:1px solid var(--border); padding:12px; border-radius:6px; margin-bottom:10px;"><b>Order #${o.id}</b> - ${o.name} (₹${o.total})<br><button type="button" onclick="deleteSingleOrder('${o.id}')" style="background:#d32f2f; color:#fff; border:none; padding:4px 8px; border-radius:4px; margin-top:6px; cursor:pointer;">Delete Order</button></div>`).join('');
 
       document.getElementById('globalCommissionInput').value = globalCommission;
-      if(sbUrl) document.getElementById('sbUrlInput').value = sbUrl;
-      if(sbKey) document.getElementById('sbKeyInput').value = sbKey;
-      
       document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
       document.getElementById('gwMerchantKey').value = paymentConfig.key || '';
       document.getElementById('gwMerchantSecret').value = paymentConfig.secret || '';
