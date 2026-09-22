@@ -152,6 +152,51 @@
     </div>
   </div>
 
+  <!-- CHECKOUT SHIPPING ADDRESS PAGE -->
+  <div id="page-checkout" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="toggleCartDrawer(true)">← Back to Cart</button>
+      <span style="font-weight:700;">📦 Shipping Address & Details</span>
+    </div>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Enter Delivery Address</h3>
+        
+        <div style="display:flex; gap:12px;">
+          <div class="form-group"><label>First Name *</label><input type="text" id="chkFirstName" placeholder="First Name" required></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" id="chkLastName" placeholder="Last Name" required></div>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number (Strictly 10 Digits) *</label>
+          <input type="tel" id="chkPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" required>
+        </div>
+
+        <div class="form-group">
+          <label>Street Address *</label>
+          <input type="text" id="chkAddress" placeholder="House no., Street name, Area" required>
+        </div>
+
+        <div class="form-group">
+          <label>Pin Code (Auto-Detects City & State) *</label>
+          <input type="text" id="chkPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupPincode(this.value);" required>
+        </div>
+
+        <div class="form-group">
+          <label>City (Auto-filled)</label>
+          <input type="text" id="chkCity" placeholder="Auto-detected city" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
+        </div>
+
+        <div class="form-group">
+          <label>State (Auto-filled)</label>
+          <input type="text" id="chkState" placeholder="Auto-detected state" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
+        </div>
+
+        <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px; padding:14px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
+      </div>
+    </div>
+  </div>
+
   <!-- PRODUCT DETAILS PAGE -->
   <div id="page-product" class="app-page">
     <div class="page-header">
@@ -312,23 +357,6 @@
     </div>
   </div>
 
-  <!-- CHECKOUT ADDRESS & PINCODE AUTO-DETECT MODAL -->
-  <div class="modal-overlay" id="checkoutAddressModal">
-    <div class="modal-box" style="text-align:left;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
-        <h3 style="font-size:1.1rem;">📍 Shipping Address</h3>
-        <button type="button" onclick="document.getElementById('checkoutAddressModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div class="form-group"><label>Full Name</label><input type="text" id="chkName" placeholder="Enter full name"></div>
-      <div class="form-group"><label>Phone Number</label><input type="tel" id="chkPhone" placeholder="10-digit mobile number"></div>
-      <div class="form-group"><label>Street Address</label><input type="text" id="chkAddress" placeholder="House no, Street, Area"></div>
-      <div class="form-group"><label>Pin Code (Auto-Detects City & State)</label><input type="text" id="chkPincode" placeholder="6-digit pincode" maxlength="6" oninput="lookupPincode(this.value)"></div>
-      <div class="form-group"><label>City</label><input type="text" id="chkCity" placeholder="City"></div>
-      <div class="form-group"><label>State</label><input type="text" id="chkState" placeholder="State"></div>
-      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
-    </div>
-  </div>
-
   <!-- MANUAL UPI PAYMENT MODAL -->
   <div class="modal-overlay" id="upiPaymentModal">
     <div class="modal-box">
@@ -339,8 +367,8 @@
       </div>
       <p style="font-size:0.85rem; font-weight:bold; margin-bottom:12px;">UPI ID: <span id="modalUpiIdText" style="color:var(--accent);"></span></p>
       <div class="form-group">
-        <label>Enter Transaction ID / UTR</label>
-        <input type="text" id="modalUtrInput" placeholder="e.g. 4231xxxxxxxx">
+        <label>Enter Transaction ID / UTR *</label>
+        <input type="text" id="modalUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
       </div>
       <div style="display:flex; gap:10px; margin-top:10px;">
         <button type="button" class="btn-solid" style="background:#888;" onclick="document.getElementById('upiPaymentModal').style.display='none'">Cancel</button>
@@ -361,7 +389,7 @@
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; color:var(--muted);"><span>Subtotal</span><span id="cartSubtotalPrice">₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">FREE Delivery</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="openCheckoutAddressModal()">Proceed to Checkout</button>
+      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="goToCheckoutPage()">Proceed to Checkout</button>
     </div>
   </div>
 
@@ -482,29 +510,38 @@
               document.getElementById('chkState').value = po.State;
             }
           }).catch(err => console.log(err));
+      } else {
+        document.getElementById('chkCity').value = '';
+        document.getElementById('chkState').value = '';
       }
     }
 
-    function openCheckoutAddressModal() {
+    function goToCheckoutPage() {
       if(cart.length === 0) return;
       toggleCartDrawer(false);
-      document.getElementById('checkoutAddressModal').style.display = 'flex';
+      navigateTo('checkout');
     }
 
     function proceedToPaymentAfterAddress() {
-      let name = document.getElementById('chkName').value.trim();
+      let fname = document.getElementById('chkFirstName').value.trim();
+      let lname = document.getElementById('chkLastName').value.trim();
       let phone = document.getElementById('chkPhone').value.trim();
       let address = document.getElementById('chkAddress').value.trim();
       let pincode = document.getElementById('chkPincode').value.trim();
       let city = document.getElementById('chkCity').value.trim();
       let state = document.getElementById('chkState').value.trim();
 
-      if(!name || !phone || !address || !pincode || !city || !state) {
-        showAlert("Kripya sabhi address fields sahi se bharein.");
+      if(!fname || !lname || !phone || !address || !pincode || !city || !state) {
+        showAlert("Kripya sabhi compulsory fields bharein.");
         return;
       }
 
-      document.getElementById('checkoutAddressModal').style.display = 'none';
+      if(phone.length !== 10) {
+        showAlert("Phone number strictly 10 digits ka hona chahiye.");
+        return;
+      }
+
+      window.shippingData = { fname, lname, phone, address, pincode, city, state };
 
       if(paymentConfig.gateway === 'UPI') {
         if(!paymentConfig.upiId) {
@@ -517,12 +554,13 @@
       } else {
         showAlert(`Redirecting to ${paymentConfig.gateway} secure payment gateway...`, "Secure Checkout", true);
         setTimeout(() => {
-          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, shipping: { name, phone, address, pincode, city, state }, date: new Date().toLocaleDateString() });
+          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, shipping: window.shippingData, date: new Date().toLocaleDateString() });
           localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
           cart = [];
           localStorage.setItem('kosh_cart', JSON.stringify(cart));
           updateCartUI();
           showAlert("Order successfully placed via " + paymentConfig.gateway + "!", "Success", true);
+          navigateTo('home');
         }, 1500);
       }
     }
@@ -533,7 +571,7 @@
         showAlert("Kripya Transaction ID / UTR enter karein.");
         return;
       }
-      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', date: new Date().toLocaleDateString() });
+      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', shipping: window.shippingData, date: new Date().toLocaleDateString() });
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
       cart = [];
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
@@ -541,6 +579,7 @@
       document.getElementById('modalUtrInput').value = '';
       updateCartUI();
       showAlert("Payment verified & Order placed successfully!", "Success", true);
+      navigateTo('home');
     }
 
     function renderProducts(filterCat = null) {
