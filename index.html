@@ -315,6 +315,7 @@
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
+      document.getElementById('customAlertIcon').innerText = isSuccess ? '✅' : '📢';
       document.getElementById('customAlertModal').style.display = 'flex';
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
@@ -341,36 +342,42 @@
     });
 
     async function fetchProductsPaginated() {
-      if(!supabaseClient) {
-        document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Supabase client not initialized.</p>';
-        return;
+      try {
+        if(!supabaseClient) {
+          document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Supabase client not initialized.</p>';
+          return;
+        }
+
+        let startIdx = (currentPage - 1) * itemsPerPage;
+        let endIdx = startIdx + itemsPerPage - 1;
+
+        let query = supabaseClient.from('products').select('*', { count: 'exact' });
+        
+        if(activeCategoryFilter !== 'All') {
+          query = query.ilike('category', activeCategoryFilter);
+        }
+
+        let searchInputEl = document.getElementById('searchInput');
+        let searchKey = searchInputEl ? searchInputEl.value.trim() : '';
+        if(searchKey) {
+          query = query.or(`title.ilike.%${searchKey}%,category.ilike.%${searchKey}%`);
+        }
+
+        let { data, count, error } = await query.order('created_at', { ascending: false }).range(startIdx, endIdx);
+
+        if(error) {
+          console.error(error);
+          document.getElementById('productGrid').innerHTML = `<p style="grid-column:span 4; text-align:center; color:red;">Supabase Error: ${error.message}</p>`;
+          return;
+        }
+
+        totalProductsCount = count || 0;
+        let products = data || [];
+        renderProductsGrid(products);
+      } catch(err) {
+        console.error(err);
+        document.getElementById('productGrid').innerHTML = `<p style="grid-column:span 4; text-align:center; color:red;">Connection Error: ${err.message}</p>`;
       }
-
-      let startIdx = (currentPage - 1) * itemsPerPage;
-      let endIdx = startIdx + itemsPerPage - 1;
-
-      let query = supabaseClient.from('products').select('*', { count: 'exact' });
-      
-      if(activeCategoryFilter !== 'All') {
-        query = query.ilike('category', activeCategoryFilter);
-      }
-
-      let searchKey = document.getElementById('searchInput').value.trim();
-      if(searchKey) {
-        query = query.or(`title.ilike.%${searchKey}%,category.ilike.%${searchKey}%`);
-      }
-
-      let { data, count, error } = await query.order('created_at', { ascending: false }).range(startIdx, endIdx);
-
-      if(error) {
-        console.error(error);
-        document.getElementById('productGrid').innerHTML = '<p style="grid-column:span 4; text-align:center; color:red;">Error loading products from Supabase table.</p>';
-        return;
-      }
-
-      totalProductsCount = count || 0;
-      let products = data || [];
-      renderProductsGrid(products);
     }
 
     function renderProductsGrid(products) {
@@ -378,7 +385,7 @@
       grid.innerHTML = '';
 
       if(products.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database. Go to Admin (tap footer 5 times) to seed products.</p>';
+        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in Supabase database. Go to Admin (tap footer 5 times) to seed 1000+ products.</p>';
         document.getElementById('paginationBar').innerHTML = '';
         return;
       }
@@ -471,7 +478,7 @@
       if(pageId === 'admin-dashboard') loadAdminMasterData();
     }
 
-    // 🚀 Fixed 1000+ Unique Products Seeder using Supabase Upsert (No Network URL Limit Error)
+    // 🚀 Safe Seeder using small chunks with upsert
     async function seedKoshProducts() {
       const categories = [
         { name: "Women's Fashion", subcategories: ["Kurtis","Dresses","Tops","Sarees","Kurta Sets","Jeans","Trousers","Palazzos","Co-ord Sets","Nightwear"], count: 180 },
@@ -531,15 +538,14 @@
 
       const uniqueProducts = Array.from(new Map(products.map(p => [p.sku, p])).values());
 
-      if(progressEl) progressEl.innerText = "Inserting products into Supabase using native upsert (duplicate protection)...";
+      if(progressEl) progressEl.innerText = "Inserting products into Supabase...";
 
-      const batchSize = 100;
+      const batchSize = 50; // Smaller batch size to prevent network timeout
       let inserted = 0;
       let failed = 0;
 
       for (let i = 0; i < uniqueProducts.length; i += batchSize) {
         const batch = uniqueProducts.slice(i, i + batchSize);
-        // Using upsert with ignoreDuplicates to safely handle existing SKUs without massive .in() queries
         const { error } = await supabaseClient.from("products").upsert(batch, { onConflict: 'sku', ignoreDuplicates: true });
         
         if (error) {
@@ -551,7 +557,7 @@
         if(progressEl) progressEl.innerText = `Seeding Progress: ${Math.min(i + batchSize, uniqueProducts.length)} / ${uniqueProducts.length}`;
       }
 
-      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nProcessed/Inserted: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
+      showAlert(`Kosh Studio seeding complete!\n\nGenerated: ${uniqueProducts.length}\nProcessed: ${inserted}\nFailed: ${failed}`, "Seeding Success", true);
       fetchProductsPaginated();
       loadAdminMasterData();
     }
@@ -588,7 +594,7 @@
 
           progressEl.innerText = `Processing ${rows.length} products in batches...`;
           let addedCount = 0;
-          let batchSize = 100;
+          let batchSize = 50;
 
           for(let i = 0; i < rows.length; i += batchSize) {
             let chunk = rows.slice(i, i + batchSize);
@@ -665,7 +671,7 @@
     function verifyAdminPassword() {
       let uid = document.getElementById('admUserInput').value.trim();
       let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'Rohitku316' && pass === 'Rohit@2006') {
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
         document.getElementById('adminLoginModal').style.display = 'none';
         navigateTo('admin-dashboard');
       } else {
