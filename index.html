@@ -322,6 +322,7 @@
     let secretClickCount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
+      navigateTo('home'); // Fix: Ensure home page is active on load
       fetchProductsPaginated();
       updateCartUI();
     });
@@ -365,7 +366,7 @@
       grid.innerHTML = '';
 
       if(products.length === 0) {
-        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database.</p>';
+        grid.innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--muted); padding:40px;">No products found in database. Click Admin (bottom footer 5 times) to seed products.</p>';
         document.getElementById('paginationBar').innerHTML = '';
         return;
       }
