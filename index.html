@@ -155,8 +155,8 @@
   <!-- CHECKOUT SHIPPING ADDRESS PAGE -->
   <div id="page-checkout" class="app-page">
     <div class="page-header">
-      <button type="button" class="back-btn" onclick="toggleCartDrawer(true)">← Back to Cart</button>
-      <span style="font-weight:700;">📦 Shipping Address & Details</span>
+      <button type="button" class="back-btn" onclick="navigateTo('home')">← Back to Store</button>
+      <span style="font-weight:700;">📦 Shipping Address</span>
     </div>
     <div class="page-content" style="max-width:550px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
@@ -183,16 +183,32 @@
         </div>
 
         <div class="form-group">
-          <label>City (Auto-filled)</label>
+          <label>City (Auto-fetched)</label>
           <input type="text" id="chkCity" placeholder="Auto-detected city" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
         </div>
 
         <div class="form-group">
-          <label>State (Auto-filled)</label>
+          <label>State (Auto-fetched)</label>
           <input type="text" id="chkState" placeholder="Auto-detected state" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
         </div>
 
         <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px; padding:14px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT PAGE -->
+  <div id="page-payment" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('checkout')">← Back to Address</button>
+      <span style="font-weight:700;">💳 Secure Payment</span>
+    </div>
+    <div class="page-content" style="max-width:500px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow); text-align:center;">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; color:var(--primary);">Complete Your Payment</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Total Payable Amount: <strong style="color:var(--primary); font-size:1.1rem;" id="payTotalAmount">₹0</strong></p>
+        
+        <div id="paymentMethodContainer"></div>
       </div>
     </div>
   </div>
@@ -357,26 +373,6 @@
     </div>
   </div>
 
-  <!-- MANUAL UPI PAYMENT MODAL -->
-  <div class="modal-overlay" id="upiPaymentModal">
-    <div class="modal-box">
-      <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary);">📷 Scan & Pay via UPI</h3>
-      <p style="font-size:0.85rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete your payment.</p>
-      <div style="margin-bottom:12px;">
-        <img id="modalQrImg" src="" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px;">
-      </div>
-      <p style="font-size:0.85rem; font-weight:bold; margin-bottom:12px;">UPI ID: <span id="modalUpiIdText" style="color:var(--accent);"></span></p>
-      <div class="form-group">
-        <label>Enter Transaction ID / UTR *</label>
-        <input type="text" id="modalUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button type="button" class="btn-solid" style="background:#888;" onclick="document.getElementById('upiPaymentModal').style.display='none'">Cancel</button>
-        <button type="button" class="btn-solid" style="background:var(--success);" onclick="verifyAndPlaceOrder()">Submit & Place Order</button>
-      </div>
-    </div>
-  </div>
-
   <!-- CART DRAWER -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
@@ -460,6 +456,10 @@
       updateCartUI();
       checkLoginStatus();
       loadPaymentSettingsToUI();
+      
+      if(savedPage === 'payment') {
+        renderPaymentPage();
+      }
     });
 
     function toggleGatewayFields() {
@@ -541,45 +541,77 @@
         return;
       }
 
-      window.shippingData = { fname, lname, phone, address, pincode, city, state };
+      let shippingData = { fname, lname, phone, address, pincode, city, state };
+      localStorage.setItem('kosh_shipping_data', JSON.stringify(shippingData));
 
+      navigateTo('payment');
+      renderPaymentPage();
+    }
+
+    function renderPaymentPage() {
+      let total = cart.reduce((a,c) => a + c.finalPrice, 0);
+      document.getElementById('payTotalAmount').innerText = '₹' + total;
+      let container = document.getElementById('paymentMethodContainer');
+      container.innerHTML = '';
+      
       if(paymentConfig.gateway === 'UPI') {
         if(!paymentConfig.upiId) {
-          showAlert("Admin ne UPI ID configure nahi kiya hai. Kripya Settings check karein.");
+          container.innerHTML = `<p style="color:red; font-size:0.9rem;">Admin ne UPI ID configure nahi kiya hai. Kripya Settings check karein.</p>`;
           return;
         }
-        document.getElementById('modalUpiIdText').innerText = paymentConfig.upiId;
-        document.getElementById('modalQrImg').src = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
-        document.getElementById('upiPaymentModal').style.display = 'flex';
+        let qrSrc = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="font-size:0.88rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete payment.</p>
+            <img src="${qrSrc}" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px; margin-bottom:10px;">
+            <p style="font-size:0.9rem; font-weight:bold; margin-bottom:16px;">UPI ID: <span style="color:var(--accent);">${paymentConfig.upiId}</span></p>
+            <div class="form-group" style="text-align:left;">
+              <label>Enter Transaction ID / UTR *</label>
+              <input type="text" id="pageUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
+            </div>
+            <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="verifyAndPlaceOrderFromPage()">Submit & Place Order</button>
+          </div>
+        `;
       } else {
-        showAlert(`Redirecting to ${paymentConfig.gateway} secure payment gateway...`, "Secure Checkout", true);
-        setTimeout(() => {
-          ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: paymentConfig.gateway, shipping: window.shippingData, date: new Date().toLocaleDateString() });
-          localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-          cart = [];
-          localStorage.setItem('kosh_cart', JSON.stringify(cart));
-          updateCartUI();
-          showAlert("Order successfully placed via " + paymentConfig.gateway + "!", "Success", true);
-          navigateTo('home');
-        }, 1500);
+        container.innerHTML = `
+          <div style="text-align:center;">
+            <p style="font-size:0.95rem; margin-bottom:20px; font-weight:bold;">Active Gateway: ${paymentConfig.gateway}</p>
+            <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment('${paymentConfig.gateway}')">Pay ₹${total} Now via ${paymentConfig.gateway}</button>
+          </div>
+        `;
       }
     }
 
-    function verifyAndPlaceOrder() {
-      let utr = document.getElementById('modalUtrInput').value.trim();
+    function verifyAndPlaceOrderFromPage() {
+      let utr = document.getElementById('pageUtrInput').value.trim();
       if(!utr) {
         showAlert("Kripya Transaction ID / UTR enter karein.");
         return;
       }
-      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', shipping: window.shippingData, date: new Date().toLocaleDateString() });
+      let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
+      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', shipping, date: new Date().toLocaleDateString() });
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
       cart = [];
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      document.getElementById('upiPaymentModal').style.display = 'none';
-      document.getElementById('modalUtrInput').value = '';
+      localStorage.removeItem('kosh_shipping_data');
       updateCartUI();
       showAlert("Payment verified & Order placed successfully!", "Success", true);
       navigateTo('home');
+    }
+
+    function processAutoPayment(gw) {
+      showAlert(`Processing secure payment via ${gw}...`, "Secure Checkout", true);
+      setTimeout(() => {
+        let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
+        ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: gw, shipping, date: new Date().toLocaleDateString() });
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        cart = [];
+        localStorage.setItem('kosh_cart', JSON.stringify(cart));
+        localStorage.removeItem('kosh_shipping_data');
+        updateCartUI();
+        showAlert("Order successfully placed via " + gw + "!", "Success", true);
+        navigateTo('home');
+      }, 1500);
     }
 
     function renderProducts(filterCat = null) {
@@ -637,7 +669,8 @@
 
     function navigateTo(pageId, save = true) {
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + pageId).classList.add('active');
+      let target = document.getElementById('page-' + pageId);
+      if(target) target.classList.add('active');
       if(save) localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
       
