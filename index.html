@@ -27,15 +27,17 @@
 
     .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
-    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; box-shadow: var(--shadow); }
-    .brand-name { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
+    header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: var(--shadow); }
+    .brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.5px; color: var(--primary); text-decoration: none; cursor: pointer; white-space: nowrap; }
     
-    .header-search { flex-grow: 1; max-width: 380px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .header-search input { width: 100%; border: none; background: transparent; padding: 8px 10px; font-size: 0.8rem; outline: none; }
+    .header-search { flex-grow: 1; max-width: 280px; display: flex; background: #f1f3f6; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+    .header-search input { width: 100%; border: none; background: transparent; padding: 6px 8px; font-size: 0.78rem; outline: none; }
     
-    .header-icons { display: flex; align-items: center; gap: 12px; }
-    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text); font-weight: 600; padding: 4px 6px; }
-    .badge-count { background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; padding: 1px 5px; border-radius: 10px; min-width: 16px; text-align: center; }
+    .header-icons { display: flex; align-items: center; gap: 10px; }
+    .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.68rem; color: var(--text); font-weight: 600; padding: 4px; }
+    
+    /* Professional Badge on top of text */
+    .badge-count { position: absolute; top: -2px; right: 2px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; }
 
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
     .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
@@ -98,19 +100,19 @@
     <header>
       <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search..." oninput="handleSearch(this.value)">
       </div>
       <div class="header-icons">
         <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
-          <span>Wishlist</span>
           <span class="badge-count" id="wishlistCount">0</span>
+          <span>Wishlist</span>
         </button>
         <button type="button" class="icon-btn" onclick="navigateTo('profile')">
           <span>Account</span>
         </button>
         <button type="button" class="icon-btn" onclick="toggleCartDrawer(true)">
-          <span>Cart</span>
           <span class="badge-count" id="cartCount">0</span>
+          <span>Cart</span>
         </button>
       </div>
     </header>
@@ -218,7 +220,6 @@
       </div>
 
       <div id="admTabProducts" class="dash-tab-content">
-        <!-- Add Product Form with Gallery Image Upload -->
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
           <h4 style="margin-bottom:12px; font-weight:bold;">➕ Add New Product with Gallery Photo</h4>
           <div class="form-group"><label>Product Title</label><input type="text" id="newProdTitle" placeholder="e.g. Men Casual Shirt"></div>
@@ -313,14 +314,12 @@
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     
-    // Persistent Login Management
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
 
     let currentSelectedProduct = null;
     let secretClickCount = 0;
     
-    // Persistent Category & Admin Tab States
     let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
     let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
 
@@ -328,7 +327,6 @@
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage, false);
       
-      // Restore active category UI highlight
       document.querySelectorAll('.cat-item').forEach(i => {
         if(i.innerText.includes(activeCategoryFilter) || (activeCategoryFilter === 'All' && i.innerText.includes('All'))) {
           i.classList.add('active');
@@ -510,7 +508,6 @@
       }
     }
 
-    // Add Product with Gallery File Reader Support
     function addNewCustomProduct() {
       let title = document.getElementById('newProdTitle').value.trim();
       let category = document.getElementById('newProdCategory').value;
@@ -593,7 +590,6 @@
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
       
-      // Find matching button and activate
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
         if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
       });
