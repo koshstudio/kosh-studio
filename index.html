@@ -14,7 +14,7 @@
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #111111;
+      --primary: #55165b; /* Meesho Purple Theme */
       --accent: #d4af37;
       --border: #e0e0e0;
       --shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -39,7 +39,7 @@
 
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    .top-strip { background: var(--primary); color: var(--accent); text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
+    .top-strip { background: var(--primary); color: #fff; text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
     
     header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); }
     .header-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
@@ -58,7 +58,7 @@
     .categories-bar { background: #ffffff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
     .categories-bar::-webkit-scrollbar { display: none; }
     .cat-item { flex: 0 0 auto; font-size: 0.82rem; font-weight: 700; color: #555; cursor: pointer; padding-bottom: 2px; }
-    .cat-item.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+    .cat-item.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
     .container { max-width: 1200px; margin: 16px auto; padding: 0 10px; }
     .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -86,15 +86,15 @@
     .modal-box { background: #fff; width: 100%; max-width: 400px; border-radius: 10px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; }
 
     .form-group { margin-bottom: 14px; display: block; width: 100%; text-align: left; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
-    .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; outline: none; background: #fff; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: #555; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
     .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-    .dash-tabs { display: flex; gap: 6px; border-bottom: 2px solid var(--border); margin-bottom: 15px; overflow-x: auto; }
-    .dash-tab-btn { background: #f1f3f6; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 6px 6px 0 0; white-space: nowrap; }
-    .dash-tab-btn.active { background: var(--primary); color: #fff; }
-    .dash-tab-content { display: none; }
-    .dash-tab-content.active { display: block; }
+    /* Meesho Seller Bottom Nav */
+    .meesho-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 50; }
+    .nav-tab-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #666; font-weight: 600; cursor: pointer; background: none; border: none; }
+    .nav-tab-item.active { color: var(--primary); }
+    .nav-tab-item span.icon { font-size: 1.2rem; margin-bottom: 2px; }
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
     .footer-copy { cursor: pointer; color: #fff; font-weight: 600; display: inline-block; padding: 4px 8px; }
@@ -102,7 +102,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO</div>
+  <div class="top-strip">⚡ KOSH STUDIO SELLER CENTRAL</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -321,101 +321,200 @@
     </div>
   </div>
 
-  <!-- DEDICATED SELLER DASHBOARD -->
+  <!-- EXACT MEESHO STYLE SELLER DASHBOARD & CATALOG UPLOAD -->
   <div id="page-seller-dashboard" class="app-page">
-    <div class="page-header" style="background:#512da8; color:#fff;">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')" style="color:#fff;">← Back to Profile</button>
-      <span style="font-weight:700;">🏪 Seller Dashboard (<span id="dashStoreTitle">Store</span>)</span>
+    <div class="page-header" style="background:#55165b; color:#fff; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button type="button" class="back-btn" onclick="navigateTo('profile')" style="color:#fff;">←</button>
+        <span style="font-weight:700; font-size:1.1rem;" id="dashStoreTitle">Welcome back, Treasury65!</span>
+      </div>
+      <span style="font-size:1.2rem; cursor:pointer;" onclick="showAlert('Help & Support')">❓</span>
     </div>
-    <div class="page-content" style="max-width:1000px;">
-      <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px 16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <h4 style="font-size:0.9rem; color:#e65100;">🏖️ Vacation Mode</h4>
-          <p style="font-size:0.75rem; color:#666;">Temporarily pause new orders while away.</p>
+
+    <!-- Step Progress Bar -->
+    <div style="background:#fff; padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-around; text-align:center;">
+      <div>
+        <div style="width:28px; height:28px; background:var(--primary); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">1</div>
+        <span style="font-size:0.75rem; font-weight:700; color:var(--primary);">Upload catalogs</span>
+      </div>
+      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
+      <div>
+        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">2</div>
+        <span style="font-size:0.75rem; color:#666;">Catalogs go live</span>
+      </div>
+      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
+      <div>
+        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">3</div>
+        <span style="font-size:0.75rem; color:#666;">Get first order</span>
+      </div>
+    </div>
+
+    <div class="page-content" style="max-width:700px; padding-bottom:90px;">
+      
+      <!-- Banner Video Card -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow);">
+        <div style="position:relative; background:#000; height:180px; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:3rem; color:#ff0000; cursor:pointer;" onclick="showAlert('Playing tutorial video...')">▶️</span>
         </div>
-        <input type="checkbox" id="vacationModeToggle" onchange="toggleVacationMode(this.checked)" style="width:20px; height:20px; cursor:pointer;">
-      </div>
-      <div class="dash-tabs">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('performance')">📊 Performance Score</button>
-      </div>
-      <div id="sellerDashTabProducts" class="dash-tab-content active">
-        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">
-          <h4 style="margin-bottom:12px; font-weight:bold;">My Store Products</h4>
-          <div id="sellerProductsList">No products added.</div>
+        <div style="padding:16px;">
+          <button type="button" class="btn-solid" style="background:var(--primary); font-size:0.95rem; padding:14px;" onclick="openCatalogUploadModal()">Upload Catalog</button>
         </div>
       </div>
-      <div id="sellerDashTabPerformance" class="dash-tab-content">
-        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">
-          <h4 style="margin-bottom:12px; font-weight:bold; color:#512da8;">📊 Internal Seller Performance Scorecard</h4>
-          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;">
-            <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border);">
-              <div style="font-size:0.75rem; color:var(--muted); font-weight:bold;">Overall Health Score</div>
-              <div id="perfOverallScore" style="font-size:1.6rem; font-weight:800; color:var(--success);">94 / 100</div>
+
+      <!-- Learn & Grow Section -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:12px; color:#333;">Learn & Grow on Meesho</h4>
+        
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="showAlert('Opening live training session...')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.3rem;">📖</span>
+            <div>
+              <div style="font-weight:700; font-size:0.88rem;">Book free live training <span style="background:#e8f5e9; color:#2e7d32; font-size:0.65rem; padding:2px 6px; border-radius:4px; font-weight:bold;">Expert Led</span></div>
+              <div style="font-size:0.75rem; color:#666;">Learn to operate and grow your business on meesho.</div>
             </div>
-            <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border);">
-              <div style="font-size:0.75rem; color:var(--muted); font-weight:bold;">Avg Dispatch Time</div>
-              <div id="perfDispatchTime" style="font-size:1.3rem; font-weight:800; color:var(--primary);">11.4 Hours</div>
+          </div>
+          <span style="color:#888;">›</span>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="showAlert('Opening catalog preparation guide...')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.3rem;">▶️</span>
+            <div>
+              <div style="font-weight:700; font-size:0.88rem;">Prepare catalogs for meesho</div>
             </div>
+          </div>
+          <span style="color:#888;">›</span>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="switchSellerDashTab('performance')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.3rem;">📊</span>
+            <div>
+              <div style="font-weight:700; font-size:0.88rem;">Pricing & commission / Performance Score</div>
+            </div>
+          </div>
+          <span style="color:#888;">›</span>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; cursor:pointer;" onclick="showAlert('Delivery & Returns info')">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:1.3rem;">🚚</span>
+            <div>
+              <div style="font-weight:700; font-size:0.88rem;">Delivery & Returns</div>
+            </div>
+          </div>
+          <span style="color:#888;">›</span>
+        </div>
+      </div>
+
+      <!-- Performance Score Card (Internal) -->
+      <div id="sellerPerformanceCard" style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📊 Internal Performance Scorecard</h4>
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
+          <div style="background:#f8f9fa; padding:10px; border-radius:6px;">
+            <div style="font-size:0.7rem; color:#666;">Health Score</div>
+            <div style="font-size:1.2rem; font-weight:bold; color:var(--success);">94 / 100</div>
+          </div>
+          <div style="background:#f8f9fa; padding:10px; border-radius:6px;">
+            <div style="font-size:0.7rem; color:#666;">Dispatch Time</div>
+            <div style="font-size:1.1rem; font-weight:bold; color:#111;">11.4 Hours</div>
           </div>
         </div>
       </div>
+
+    </div>
+
+    <!-- Meesho Bottom Navigation Bar -->
+    <div class="meesho-bottom-nav">
+      <button type="button" class="nav-tab-item active" onclick="navigateTo('seller-dashboard')">
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </button>
+      <button type="button" class="nav-tab-item" onclick="showAlert('Orders Section')">
+        <span class="icon">📦</span>
+        <span>Orders</span>
+      </button>
+      <button type="button" class="nav-tab-item" onclick="showAlert('Returns Section')">
+        <span class="icon">🔄</span>
+        <span>Returns</span>
+      </button>
+      <button type="button" class="nav-tab-item" onclick="showAlert('Inventory Section')">
+        <span class="icon">📊</span>
+        <span>Inventory</span>
+      </button>
+      <button type="button" class="nav-tab-item" onclick="navigateTo('profile')">
+        <span class="icon">☰</span>
+        <span>Menu</span>
+      </button>
     </div>
   </div>
 
-  <!-- SELLER KYC PAGE -->
-  <div id="page-seller-kyc" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700;">📝 Seller KYC & Bank Verification</span>
-    </div>
-    <div class="page-content" style="max-width:550px;">
-      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
-        <h3 style="margin-bottom:16px;">PAN & Bank Details</h3>
-        <div class="form-group"><label>PAN Card Full Name *</label><input type="text" id="kycPanName" placeholder="Name"></div>
-        <div class="form-group"><label>PAN Number *</label><input type="text" id="kycPanNumber" placeholder="ABCDE1234F" maxlength="10"></div>
-        <button type="button" class="btn-solid" style="background:var(--success);" onclick="showAlert('KYC submitted!')">Submit KYC</button>
+  <!-- CATALOG UPLOAD MULTI-STEP WIZARD MODAL -->
+  <div class="modal-overlay" id="catalogUploadModal">
+    <div class="modal-box" style="max-width:550px; text-align:left; padding:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:16px;">
+        <h3 style="font-size:1.1rem; color:var(--primary);">📦 Catalog Upload</h3>
+        <button type="button" onclick="closeCatalogUploadModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
-    </div>
-  </div>
 
-  <!-- CUSTOMER SUPPORT PAGE -->
-  <div id="page-support" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700;">🛠️ Customer Support & Grievances</span>
-    </div>
-    <div class="page-content" style="max-width:650px;">
-      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
-        <h3 style="margin-bottom:16px;">Raise a Grievance Ticket</h3>
+      <!-- Wizard Steps Header -->
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:bold; margin-bottom:16px; border-bottom:1px solid #eee; padding-bottom:8px;">
+        <span id="wizStep1Indicator" style="color:var(--primary);">1. Add Product</span>
+        <span id="wizStep2Indicator" style="color:#888;">2. Basic Details</span>
+        <span id="wizStep3Indicator" style="color:#888;">3. Pricing & Mfg</span>
+      </div>
+
+      <!-- Step 1: Add Product -->
+      <div id="wizStep1Content">
         <div class="form-group">
           <label>Select Category *</label>
-          <select id="grievanceCategorySelect">
-            <option value="Order late">Order late</option>
-            <option value="Wrong product">Wrong product</option>
-            <option value="Refund issue">Refund issue</option>
+          <select id="catSelectWizard" style="background:#f9f9f9; font-weight:bold;">
+            <option value="Men Wear">Men Wear (Tshirts, Shirts, Jeans)</option>
+            <option value="Women Wear">Women Wear (Sarees, Kurtis, Tops)</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Footwear">Footwear</option>
+            <option value="Jewellery">Jewellery</option>
           </select>
         </div>
-        <button type="button" class="btn-solid" style="background:#2196f3;" onclick="showAlert('Ticket raised successfully!')">Submit Ticket</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- JOIN AS SELLER REGISTRATION PAGE -->
-  <div id="page-seller-reg" class="app-page">
-    <div class="page-header">
-      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700;">🏪 Join as Seller Registration</span>
-    </div>
-    <div class="page-content" style="max-width:600px;">
-      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
-        <h3 style="margin-bottom:16px;">Register Your Store</h3>
-        <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Full Name"></div>
-        <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name"></div>
-        <div class="form-group"><label>Mobile Number *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile"></div>
-        <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Password"></div>
-        <button type="button" class="btn-solid" style="background:var(--success);" onclick="submitSellerRegistration()">Register Store Now</button>
+        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:10px; border-radius:6px; font-size:0.8rem; color:#e65100; margin-bottom:14px;">
+          ⚠️ <b>Image Guideline:</b> Upload clear product images from different sides. Watermark, price or logo is not allowed.
+        </div>
+
+        <div class="form-group">
+          <label>Product Image *</label>
+          <input type="file" id="wizProductImg" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+        </div>
+
+        <div class="form-group">
+          <label>Product Name (Title) *</label>
+          <input type="text" id="wizProdTitle" placeholder="e.g. Trendy Cotton Men T-Shirt">
+        </div>
+
+        <div class="form-group">
+          <label>Product Description *</label>
+          <textarea id="wizProdDesc" rows="2" placeholder="Fabric details, fit type, high quality..."></textarea>
+        </div>
+
+        <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="goToWizardStep(2)">Next: Basic Details →</button>
       </div>
+
+      <!-- Step 2 & 3: Basic & Pricing Details -->
+      <div id="wizStep2Content" style="display:none;">
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 350"></div>
+          <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="wizMrp" placeholder="e.g. 700"></div>
+        </div>
+
+        <div class="form-group"><label>Country of Origin</label><input type="text" id="wizCountry" value="India"></div>
+        <div class="form-group"><label>Manufacturer / Packer Name</label><input type="text" id="wizManufacturer" placeholder="Manufacturer or brand name"></div>
+
+        <div style="display:flex; gap:10px; margin-top:14px;">
+          <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="goToWizardStep(1)">← Back</button>
+          <button type="button" class="btn-solid" style="background:var(--success); flex:1;" onclick="submitMeeshoCatalog()">Publish Catalog Now ✓</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -582,7 +681,7 @@
     let currentSelectedProduct = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      // 1. Instant Cart Restore without flashing/going to home page first
+      // Instant Cart Restore
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         let drawer = document.getElementById('cartDrawer');
         drawer.style.transition = 'none';
@@ -593,7 +692,6 @@
 
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       
-      // Restore active category UI highlight
       document.querySelectorAll('.cat-item').forEach(item => {
         if(item.innerText.trim() === activeCategoryFilter) {
           item.classList.add('active');
@@ -722,6 +820,68 @@
         dashCard.style.display = 'none';
         kycCard.style.display = 'none';
         joinCard.style.display = 'block';
+      }
+    }
+
+    // --- MEESHO SELLER CATALOG UPLOAD WIZARD FUNCTIONS ---
+    function openCatalogUploadModal() {
+      document.getElementById('catalogUploadModal').style.display = 'flex';
+      goToWizardStep(1);
+    }
+    function closeCatalogUploadModal() {
+      document.getElementById('catalogUploadModal').style.display = 'none';
+    }
+
+    function goToWizardStep(step) {
+      if(step === 1) {
+        document.getElementById('wizStep1Content').style.display = 'block';
+        document.getElementById('wizStep2Content').style.display = 'none';
+        document.getElementById('wizStep1Indicator').style.color = 'var(--primary)';
+        document.getElementById('wizStep2Indicator').style.color = '#888';
+      } else {
+        document.getElementById('wizStep1Content').style.display = 'none';
+        document.getElementById('wizStep2Content').style.display = 'block';
+        document.getElementById('wizStep1Indicator').style.color = '#888';
+        document.getElementById('wizStep2Indicator').style.color = 'var(--primary)';
+      }
+    }
+
+    function submitMeeshoCatalog() {
+      let title = document.getElementById('wizProdTitle').value.trim();
+      let category = document.getElementById('catSelectWizard').value;
+      let price = parseFloat(document.getElementById('wizPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('wizMrp').value) || 0;
+      let desc = document.getElementById('wizProdDesc').value.trim();
+      let fileInput = document.getElementById('wizProductImg');
+
+      if(!title || !price) {
+        showAlert("Please enter Product Title and Selling Price.");
+        return;
+      }
+
+      let saveItem = (imgUrl) => {
+        let newItem = {
+          id: Date.now(),
+          title, category, price, mrp, desc,
+          sourceName: 'Meesho Seller Panel',
+          sourceUrl: '#',
+          image: imgUrl
+        };
+
+        products.unshift(newItem);
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+
+        showAlert("Catalog uploaded successfully and is now live!", "Success", true);
+        closeCatalogUploadModal();
+        renderProducts(activeCategoryFilter);
+      };
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) { saveItem(e.target.result); };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveItem('https://via.placeholder.com/300');
       }
     }
 
@@ -996,9 +1156,7 @@
       if(pageId === 'seller-dashboard') {
         let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
         if(seller) {
-          document.getElementById('dashStoreTitle').innerText = seller.storeName;
-          let storeProducts = products.filter(p => p.category === seller.category);
-          document.getElementById('sellerProductsList').innerHTML = storeProducts.length === 0 ? 'No products.' : storeProducts.map(p => `<div><b>${p.title}</b> - ₹${p.price}</div>`).join('');
+          document.getElementById('dashStoreTitle').innerText = 'Welcome back, ' + seller.storeName + '!';
         }
       }
     }
