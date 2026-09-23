@@ -59,7 +59,7 @@
     .banner-slide-item { flex: 0 0 100%; max-width: 100%; height: 150px; border-radius: 8px; overflow: hidden; background: #ddd; position: relative; box-shadow: var(--shadow); }
     .banner-slide-item img { width: 100%; height: 100%; object-fit: cover; }
 
-    .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+    .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); display: none; }
     .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
 
     .categories-bar { background: #ffffff; display: flex; overflow-x: auto; gap: 20px; padding: 12px 20px; border-bottom: 1px solid var(--border); scrollbar-width: none; }
@@ -154,10 +154,11 @@
       <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+4" alt="Banner 4"></div>
     </div>
 
-    <div class="flash-banner">
+    <!-- Custom Sale Live Banner (Controlled by Admin Settings) -->
+    <div class="flash-banner" id="customSaleBanner">
       <div>
-        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
-        <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH20</strong> for Flat ₹20 OFF</p>
+        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);" id="saleBannerTitle">🔥 Mega Sale Live!</h4>
+        <p style="font-size:0.75rem; color:#ccc;" id="saleBannerText">Use coupon code KOSH20 for Flat ₹20 OFF</p>
       </div>
       <div class="flash-timer" id="flashTimer">05:42:18</div>
     </div>
@@ -173,15 +174,9 @@
 
     <main class="container">
       <div class="products-grid" id="productGrid"></div>
-      
-      <div style="margin-top:40px;">
-        <h3 style="font-size:1.1rem; margin-bottom:12px; font-weight:bold;">🕒 Recently Viewed Products</h3>
-        <div class="products-grid" id="recentlyViewedGrid"></div>
-      </div>
     </main>
 
     <footer>
-      <!-- Footer with secret 5-click trigger for Admin Dashboard -->
       <p>© 2026 <span class="footer-copy" onclick="triggerAdminSecret()">Kosh Studio</span>. All rights reserved.</p>
     </footer>
   </div>
@@ -506,7 +501,7 @@
 
       <!-- Step 2 -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_7](start_span)[span_7](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_6](start_span)[span_6](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -643,8 +638,8 @@
           <div class="admin-card-btn" onclick="openAdminView('settings')">
             <div class="icon">⚙️</div>
             <div>
-              <div class="title">Gateway Settings</div>
-              <div class="desc">Configure Manual UPI and QR scanners</div>
+              <div class="title">Gateway & Sale Settings</div>
+              <div class="desc">Configure Manual UPI and Live Sale Banner</div>
             </div>
           </div>
         </div>
@@ -733,6 +728,7 @@
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
+    let saleConfig = JSON.parse(localStorage.getItem('kosh_sale_config')) || { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF' };
     let bannerConfig = JSON.parse(localStorage.getItem('kosh_banner_config')) || { announcement: '', banners: [] };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -761,7 +757,16 @@
         }
       });
 
-      // Apply dynamic banner config
+      // Render Sale Banner conditionally
+      let saleDiv = document.getElementById('customSaleBanner');
+      if(saleConfig.active) {
+        document.getElementById('saleBannerTitle').innerText = saleConfig.title;
+        document.getElementById('saleBannerText').innerText = saleConfig.text;
+        saleDiv.style.display = 'flex';
+      } else {
+        saleDiv.style.display = 'none';
+      }
+
       if(bannerConfig.announcement) {
         let b = document.getElementById('announcementBanner');
         if(b) { b.innerText = "📢 Announcement: " + bannerConfig.announcement; b.style.display = 'block'; }
@@ -1073,10 +1078,10 @@
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveItem(e.target.result); };
+        reader.onload = function(e) { saveReviewItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveItem('https://via.placeholder.com/300');
+        saveReviewItem('https://via.placeholder.com/300');
       }
     }
 
@@ -1146,19 +1151,36 @@
         list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Dynamic Banners & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
+          <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
+          <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
+          <button type="button" class="btn-solid" style="background:#55165b; margin-bottom:15px;" onclick="saveSaleConfig()">Save Sale Settings</button>
+
           <div class="form-group"><label>Announcement Banner Text</label><input type="text" id="setAnnounceText" placeholder="Mega Sale Live..."></div>
           <div class="form-group"><label>Banner Image URL (Slider)</label><input type="text" id="setBannerImgUrl" placeholder="https://image-url.com"></div>
-          <button type="button" class="btn-solid" style="background:#55165b; margin-bottom:15px;" onclick="saveDynamicBanners()">Save Banner Settings</button>
+          <button type="button" class="btn-solid" style="background:#333; margin-bottom:15px;" onclick="saveDynamicBanners()">Save Banner Image</button>
           
           <div class="form-group"><label>Gateway</label><select id="gatewaySelect" onchange="toggleGatewayFields()"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Manual UPI & Scanner</option></select></div>
           <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
           <div id="upiGatewayConfig" style="display:none;"><div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div><div class="form-group"><label>QR Code Scanner Image</label><input type="file" id="gwQrFile" accept="image/*"></div></div>
-          <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
+          <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         `;
         loadPaymentSettingsToUI();
+        document.getElementById('setSaleActiveChk').checked = saleConfig.active || false;
+        document.getElementById('setSaleTitleInput').value = saleConfig.title || '';
+        document.getElementById('setSaleTextInput').value = saleConfig.text || '';
         document.getElementById('setAnnounceText').value = bannerConfig.announcement || '';
       }
+    }
+
+    function saveSaleConfig() {
+      let active = document.getElementById('setSaleActiveChk').checked;
+      let title = document.getElementById('setSaleTitleInput').value.trim();
+      let text = document.getElementById('setSaleTextInput').value.trim();
+      saleConfig = { active, title, text };
+      localStorage.setItem('kosh_sale_config', JSON.stringify(saleConfig));
+      showAlert("Sale banner settings saved successfully!", "Success", true);
     }
 
     function saveDynamicBanners() {
@@ -1170,7 +1192,7 @@
         bannerConfig.banners.push(img);
       }
       localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
-      showAlert("Banner settings saved successfully!", "Success", true);
+      showAlert("Banner image added successfully!", "Success", true);
     }
 
     function closeAdminView() {
