@@ -79,18 +79,6 @@
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 90px; }
 
-    /* Big Card Buttons for Admin & Seller Dashboards */
-    .admin-menu-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 14px; margin-top: 10px; }
-    @media(min-width: 600px) { .admin-menu-grid { grid-template-columns: repeat(2, 1fr); } }
-    .admin-card-btn { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: left; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.1s ease; display: flex; align-items: center; gap: 16px; }
-    .admin-card-btn:active { transform: scale(0.98); }
-    .admin-card-btn .icon { font-size: 2rem; }
-    .admin-card-btn .title { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
-    .admin-card-btn .desc { font-size: 0.78rem; color: #666; }
-
-    .admin-view-section { display: none; }
-    .admin-view-section.active { display: block; }
-
     .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #f1f3f6; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
@@ -356,6 +344,24 @@
       <span style="font-size:1.2rem; cursor:pointer;" onclick="showAlert('Help & Support')">❓</span>
     </div>
 
+    <!-- Step Progress Bar -->
+    <div style="background:#fff; padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-around; text-align:center;">
+      <div>
+        <div style="width:28px; height:28px; background:var(--primary); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">1</div>
+        <span style="font-size:0.75rem; font-weight:700; color:var(--primary);">Upload catalogs</span>
+      </div>
+      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
+      <div>
+        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">2</div>
+        <span style="font-size:0.75rem; color:#666;">Catalogs go live</span>
+      </div>
+      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
+      <div>
+        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">3</div>
+        <span style="font-size:0.75rem; color:#666;">Get first order</span>
+      </div>
+    </div>
+
     <!-- Seller Main Menu (Big Cards) -->
     <div id="sellerHomeMenu" class="page-content" style="max-width:700px; padding-bottom:90px;">
       <div style="background:#fff; border-radius:8px; border:1px solid var(--border); overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow);">
@@ -475,7 +481,7 @@
 
       <!-- Step 2 -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_6](start_span)[span_6](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_5](start_span)[span_5](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -861,7 +867,6 @@
       if(section === 'catalog') {
         box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--primary);">📦 My Uploaded Catalogs</h4><div id="subCatList"></div>`;
         renderSellerCatalogStatus();
-        // Move container contents or re-render
       } else if(section === 'orders') {
         box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--primary);">🛒 Customer Orders</h4><div id="subOrdersList"></div>`;
         renderSellerOrdersStatus();
@@ -1057,7 +1062,7 @@
       `).join('');
     }
 
-    // --- ADMIN NAVIGATION & SUB-PAGES ---
+    // --- ADMIN APPROVAL & PAYMENT VERIFICATION FUNCTIONS ---
     function openAdminView(viewName) {
       document.getElementById('adminHomeMenu').classList.remove('active');
       let subBox = document.getElementById('adminSubPageView');
@@ -1114,8 +1119,10 @@
     }
 
     function closeAdminView() {
-      document.getElementById('adminSubPageView').classList.remove('active');
-      document.getElementById('adminHomeMenu').classList.add('active');
+      let subBox = document.getElementById('adminSubPageView');
+      let homeMenu = document.getElementById('adminHomeMenu');
+      if(subBox) subBox.classList.remove('active');
+      if(homeMenu) homeMenu.classList.add('active');
     }
 
     function renderAdminPendingCatalogs() {
@@ -1131,10 +1138,11 @@
           <div style="flex-grow:1;">
             <div style="font-weight:700; font-size:0.9rem;">${item.title}</div>
             <div style="font-size:0.78rem; color:#666;">Seller: ${item.sellerEmail} | Category: ${item.category} | Price: ₹${item.price} (MRP: ₹${item.mrp})</div>
+            <div style="font-size:0.75rem; color:#444; margin-top:2px;">Specs: Fabric: ${item.fabric} | Color: ${item.color} | Size: ${item.size}</div>
             <div style="margin-top:6px; display:flex; gap:6px;">
               <input type="text" id="feedback_${item.id}" placeholder="Correction feedback..." style="padding:6px; font-size:0.75rem; border:1px solid var(--border); border-radius:4px; flex-grow:1;">
               <button type="button" onclick="adminApproveCatalog(${item.id})" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Accept & Publish</button>
-              <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject</button>
+              <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject / Fix</button>
             </div>
           </div>
         </div>
@@ -1156,8 +1164,11 @@
             <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-top:4px;">🔑 UTR / Transaction ID: ${o.utr || 'N/A'}</div>
             <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Status: ${o.status}</div>
           </div>
-          <div>
-            ${o.status.includes('Pending') ? `<button type="button" onclick="adminConfirmPayment(${o.id})" style="background:var(--success); color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:bold;">Verify & Confirm Order ✓</button>` : '<span style="background:#e8f5e9; color:var(--success); padding:6px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>'}
+          <div style="display:flex; gap:6px;">
+            ${o.status.includes('Pending') ? `
+              <button type="button" onclick="adminConfirmPayment(${o.id})" style="background:var(--success); color:#fff; border:none; padding:8px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Accept ✓</button>
+              <button type="button" onclick="adminRejectPayment(${o.id})" style="background:var(--danger); color:#fff; border:none; padding:8px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject ✕</button>
+            ` : '<span style="background:#e8f5e9; color:var(--success); padding:6px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>'}
           </div>
         </div>
       `).join('');
@@ -1172,6 +1183,18 @@
         renderCustomerMyOrders();
         renderSellerOrdersStatus();
         showAlert("Payment verified and order confirmed successfully!", "Success", true);
+      }
+    }
+
+    function adminRejectPayment(orderId) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.status = 'Payment Rejected / Invalid UTR';
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        renderAdminPayments();
+        renderCustomerMyOrders();
+        renderSellerOrdersStatus();
+        showAlert("Payment rejected successfully.");
       }
     }
 
