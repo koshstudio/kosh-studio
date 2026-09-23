@@ -53,6 +53,12 @@
     .icon-btn { background: none; border: none; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: var(--text); font-weight: 600; padding: 2px 4px; }
     .badge-count { position: absolute; top: -4px; right: 0px; background: var(--accent); color: #000; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #fff; z-index: 2; }
 
+    /* Scrolling Banners Slider */
+    .banner-slider-container { display: flex; overflow-x: auto; gap: 10px; padding: 12px 10px; scrollbar-width: none; }
+    .banner-slider-container::-webkit-scrollbar { display: none; }
+    .banner-slide-item { flex: 0 0 100%; max-width: 100%; height: 150px; border-radius: 8px; overflow: hidden; background: #ddd; position: relative; box-shadow: var(--shadow); }
+    .banner-slide-item img { width: 100%; height: 100%; object-fit: cover; }
+
     .flash-banner { background: linear-gradient(135deg, #111, #333); color: #fff; padding: 14px 20px; margin: 12px 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
     .flash-timer { background: var(--accent); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; }
 
@@ -78,6 +84,16 @@
     .page-header { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); }
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 90px; }
+
+    .admin-menu-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 14px; margin-top: 10px; }
+    @media(min-width: 600px) { .admin-menu-grid { grid-template-columns: repeat(2, 1fr); } }
+    .admin-card-btn { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: left; cursor: pointer; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; }
+    .admin-card-btn .icon { font-size: 2rem; }
+    .admin-card-btn .title { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .admin-card-btn .desc { font-size: 0.78rem; color: #666; }
+
+    .admin-view-section { display: none; }
+    .admin-view-section.active { display: block; }
 
     .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #f1f3f6; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
@@ -130,6 +146,14 @@
 
     <div id="announcementBanner" style="background:#ff9800; color:#000; padding:8px 14px; font-size:0.8rem; font-weight:bold; text-align:center; display:none;"></div>
 
+    <!-- Scrolling Banners Slider -->
+    <div class="banner-slider-container" id="homeBannerSlider">
+      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+1" alt="Banner 1"></div>
+      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+2" alt="Banner 2"></div>
+      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+3" alt="Banner 3"></div>
+      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+4" alt="Banner 4"></div>
+    </div>
+
     <div class="flash-banner">
       <div>
         <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
@@ -157,6 +181,7 @@
     </main>
 
     <footer>
+      <!-- Footer with secret 5-click trigger for Admin Dashboard -->
       <p>© 2026 <span class="footer-copy" onclick="triggerAdminSecret()">Kosh Studio</span>. All rights reserved.</p>
     </footer>
   </div>
@@ -481,7 +506,7 @@
 
       <!-- Step 2 -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_5](start_span)[span_5](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_7](start_span)[span_7](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -708,6 +733,7 @@
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
+    let bannerConfig = JSON.parse(localStorage.getItem('kosh_banner_config')) || { announcement: '', banners: [] };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
@@ -734,6 +760,18 @@
           item.classList.remove('active');
         }
       });
+
+      // Apply dynamic banner config
+      if(bannerConfig.announcement) {
+        let b = document.getElementById('announcementBanner');
+        if(b) { b.innerText = "📢 Announcement: " + bannerConfig.announcement; b.style.display = 'block'; }
+      }
+      if(bannerConfig.banners && bannerConfig.banners.length > 0) {
+        let slider = document.getElementById('homeBannerSlider');
+        if(slider) {
+          slider.innerHTML = bannerConfig.banners.map(img => `<div class="banner-slide-item"><img src="${img}"></div>`).join('');
+        }
+      }
 
       navigateTo(savedPage, false);
       renderProducts(activeCategoryFilter);
@@ -1108,14 +1146,31 @@
         list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & UPI Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Dynamic Banners & Gateway Settings</h4>
+          <div class="form-group"><label>Announcement Banner Text</label><input type="text" id="setAnnounceText" placeholder="Mega Sale Live..."></div>
+          <div class="form-group"><label>Banner Image URL (Slider)</label><input type="text" id="setBannerImgUrl" placeholder="https://image-url.com"></div>
+          <button type="button" class="btn-solid" style="background:#55165b; margin-bottom:15px;" onclick="saveDynamicBanners()">Save Banner Settings</button>
+          
           <div class="form-group"><label>Gateway</label><select id="gatewaySelect" onchange="toggleGatewayFields()"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Manual UPI & Scanner</option></select></div>
           <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
           <div id="upiGatewayConfig" style="display:none;"><div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div><div class="form-group"><label>QR Code Scanner Image</label><input type="file" id="gwQrFile" accept="image/*"></div></div>
           <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
         `;
         loadPaymentSettingsToUI();
+        document.getElementById('setAnnounceText').value = bannerConfig.announcement || '';
       }
+    }
+
+    function saveDynamicBanners() {
+      let ann = document.getElementById('setAnnounceText').value.trim();
+      let img = document.getElementById('setBannerImgUrl').value.trim();
+      bannerConfig.announcement = ann;
+      if(img) {
+        if(!bannerConfig.banners) bannerConfig.banners = [];
+        bannerConfig.banners.push(img);
+      }
+      localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
+      showAlert("Banner settings saved successfully!", "Success", true);
     }
 
     function closeAdminView() {
