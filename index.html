@@ -469,7 +469,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_5](start_span)[span_5](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -534,7 +534,7 @@
             <div class="icon">💳</div>
             <div>
               <div class="title">Payment & UTR Check</div>
-              <div class="desc">Verify customer transaction references</div>
+              <div class="desc">Verify customer transaction references & delete orders</div>
             </div>
           </div>
           <div class="admin-card-btn" onclick="openAdminView('approvals')">
@@ -569,7 +569,7 @@
             <div class="icon">📦</div>
             <div>
               <div class="title">All Orders</div>
-              <div class="desc">View customer purchases and fulfillment</div>
+              <div class="desc">View customer purchases and fulfillment & delete orders</div>
             </div>
           </div>
           <div class="admin-card-btn" onclick="openAdminView('tickets')">
@@ -1049,7 +1049,7 @@
         reader.onload = function(e) { saveItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveReviewItem('https://via.placeholder.com/300');
+        saveItem('https://via.placeholder.com/300');
       }
     }
 
@@ -1124,7 +1124,7 @@
         `;
         renderAdminProductManager();
       } else if(viewName === 'orders') {
-        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📦 All Orders (Click order for details)</h4><div id="admOrdersList"></div>`;
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📦 All Orders (Click order for details & delete)</h4><div id="admOrdersList"></div>`;
         renderAdminAllOrders();
       } else if(viewName === 'tickets') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🛠️ Support Tickets</h4><div id="admTicketsList"></div>`;
@@ -1241,12 +1241,23 @@
         return;
       }
       list.innerHTML = ordersList.map(o => `
-        <div onclick="openAdminOrderDetail(${o.id})" style="padding:12px; border:1px solid var(--border); border-radius:6px; margin-bottom:8px; background:#fff; cursor:pointer; box-shadow:var(--shadow);">
-          <div style="font-weight:bold; font-size:0.9rem; color:var(--primary);">Order #${o.id} - ₹${o.total}</div>
-          <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | Status: <strong style="color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'};">${o.status}</strong></div>
-          <div style="font-size:0.7rem; color:#888; margin-top:2px;">Click to view full customer & payment details ↗</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid var(--border); border-radius:6px; margin-bottom:8px; background:#fff; box-shadow:var(--shadow);">
+          <div onclick="openAdminOrderDetail(${o.id})" style="flex-grow:1; cursor:pointer;">
+            <div style="font-weight:bold; font-size:0.9rem; color:var(--primary);">Order #${o.id} - ₹${o.total}</div>
+            <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | Status: <strong style="color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'};">${o.status}</strong></div>
+            <div style="font-size:0.7rem; color:#888; margin-top:2px;">Click to view full details ↗</div>
+          </div>
+          <button type="button" onclick="deleteAdminOrder(${o.id})" style="background:#ff5252; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Delete</button>
         </div>
       `).join('');
+    }
+
+    function deleteAdminOrder(id) {
+      ordersList = ordersList.filter(o => o.id !== id);
+      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      renderAdminAllOrders();
+      renderAdminPayments();
+      showAlert("Order deleted successfully to free space!");
     }
 
     function openAdminOrderDetail(orderId) {
@@ -1398,6 +1409,7 @@
               <button type="button" onclick="adminConfirmPayment(${o.id})" style="background:var(--success); color:#fff; border:none; padding:8px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Accept ✓</button>
               <button type="button" onclick="adminRejectPayment(${o.id})" style="background:var(--danger); color:#fff; border:none; padding:8px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject ✕</button>
             ` : '<span style="background:#e8f5e9; color:var(--success); padding:6px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>'}
+            <button type="button" onclick="deleteAdminOrder(${o.id})" style="background:#ff5252; color:#fff; border:none; padding:8px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Delete</button>
           </div>
         </div>
       `).join('');
