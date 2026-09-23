@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -40,7 +41,7 @@
 
     body { background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
 
-    .top-strip { background: var(--primary); color: #fff; text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; }
+    .top-strip { background: var(--primary); color: #fff; text-align: center; padding: 6px 12px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; }
     
     header { background: #ffffff; position: sticky; top: 0; z-index: 60; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: var(--shadow); }
     .header-top-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
@@ -112,12 +113,12 @@
     .nav-tab-item span.icon { font-size: 1.2rem; margin-bottom: 2px; }
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
-    .footer-copy { cursor: pointer; color: #fff; font-weight: 600; display: inline-block; padding: 4px 8px; }
   </style>
 </head>
 <body>
 
-  <div class="top-strip">⚡ KOSH STUDIO SELLER CENTRAL</div>
+  <!-- Top Strip with 5-click secret trigger for Admin Dashboard -->
+  <div class="top-strip" onclick="triggerAdminSecret()">⚡ KOSH STUDIO SELLER CENTRAL</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -171,7 +172,7 @@
     </main>
 
     <footer>
-      <p>© 2026 <span class="footer-copy" onclick="triggerAdminSecret()">Kosh Studio</span>. All rights reserved.</p>
+      <p>© 2026 Kosh Studio. All rights reserved.</p>
     </footer>
   </div>
 
@@ -1046,10 +1047,10 @@
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveItem(e.target.result); };
+        reader.onload = function(e) { saveReviewItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveItem('https://via.placeholder.com/300');
+        saveReviewItem('https://via.placeholder.com/300');
       }
     }
 
@@ -1079,10 +1080,12 @@
         activeAdminViewName = viewName;
         localStorage.setItem('kosh_admin_view_name', viewName);
       }
-      document.getElementById('adminHomeMenu').classList.remove('active');
+      let homeMenu = document.getElementById('adminHomeMenu');
+      if(homeMenu) homeMenu.classList.remove('active');
       let subBox = document.getElementById('adminSubPageView');
-      subBox.classList.add('active');
+      if(subBox) subBox.classList.add('active');
       let contentBox = document.getElementById('adminSubPageContentBox');
+      if(!contentBox) return;
 
       if(viewName === 'payments') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">💳 Customer Payments & UTR Verification</h4><div id="adminPaymentsList"></div>`;
@@ -1108,7 +1111,7 @@
       } else if(viewName === 'sellers') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🏪 Sellers & Performance Check</h4><div id="admSellersList">No sellers.</div>`;
         let list = document.getElementById('admSellersList');
-        list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
+        if(list) list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
       } else if(viewName === 'products') {
         contentBox.innerHTML = `
           <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager & Quick Add</h4>
@@ -1131,7 +1134,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Banners</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1148,11 +1151,16 @@
           <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         `;
         loadPaymentSettingsToUI();
-        document.getElementById('setSaleActiveChk').checked = saleConfig.active || false;
-        document.getElementById('setSaleTitleInput').value = saleConfig.title || '';
-        document.getElementById('setSaleTextInput').value = saleConfig.text || '';
-        document.getElementById('setSaleTimerInput').value = saleConfig.countdown || '05:42:18';
-        document.getElementById('setAnnounceText').value = bannerConfig.announcement || '';
+        let saleChk = document.getElementById('setSaleActiveChk');
+        if(saleChk) saleChk.checked = saleConfig.active || false;
+        let saleTitle = document.getElementById('setSaleTitleInput');
+        if(saleTitle) saleTitle.value = saleConfig.title || '';
+        let saleText = document.getElementById('setSaleTextInput');
+        if(saleText) saleText.value = saleConfig.text || '';
+        let saleTimer = document.getElementById('setSaleTimerInput');
+        if(saleTimer) saleTimer.value = saleConfig.countdown || '05:42:18';
+        let annText = document.getElementById('setAnnounceText');
+        if(annText) annText.value = bannerConfig.announcement || '';
       }
     }
 
@@ -1264,6 +1272,7 @@
       let o = ordersList.find(x => x.id === orderId);
       if(!o) return;
       let box = document.getElementById('adminSubPageContentBox');
+      if(!box) return;
       box.innerHTML = `
         <button type="button" onclick="openAdminView('orders')" style="background:#eee; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:12px;">← Back to Orders List</button>
         <h4 style="margin-bottom:10px; color:var(--primary);">📦 Order Details #${o.id}</h4>
