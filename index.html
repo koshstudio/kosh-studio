@@ -268,7 +268,6 @@
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
 
-        <!-- Variants Selector -->
         <div id="variantSelectorBox" style="margin-bottom:14px; display:none;">
           <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">Select Variant:</label>
           <select id="pVariantSelect" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;"></select>
@@ -1182,16 +1181,22 @@
           return;
         }
         let qrSrc = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
+        let upiIntentUrl = `upi://pay?pa=${paymentConfig.upiId}&pn=Kosh%20Studio&am=${total}&cu=INR&tr=${Date.now()}`;
+
         container.innerHTML = `
           <div style="text-align:center;">
-            <p style="font-size:0.88rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete payment.</p>
-            <img src="${qrSrc}" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px; margin-bottom:10px;">
-            <p style="font-size:0.9rem; font-weight:bold; margin-bottom:16px;">UPI ID: <span style="color:var(--accent);">${paymentConfig.upiId}</span></p>
+            <p style="font-size:0.88rem; color:#555; margin-bottom:12px;">Click below to pay automatically via your phone's UPI app (GPay, PhonePe, Paytm, etc.)</p>
+            <a href="${upiIntentUrl}" class="btn-solid" style="background:#00897b; color:#fff; display:block; text-decoration:none; margin-bottom:14px; padding:12px; border-radius:6px; font-weight:700;">📱 Pay ₹${total} via UPI App</a>
+            
+            <div style="margin-bottom:12px;">
+              <img src="${qrSrc}" alt="UPI QR" style="width:160px; height:160px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px;">
+            </div>
+            <p style="font-size:0.85rem; font-weight:bold; margin-bottom:12px;">UPI ID: <span style="color:var(--accent);">${paymentConfig.upiId}</span></p>
             <div class="form-group" style="text-align:left;">
               <label>Enter Transaction ID / UTR *</label>
               <input type="text" id="pageUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
             </div>
-            <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="verifyAndPlaceOrderFromPage()">Submit & Place Order</button>
+            <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="verifyAndPlaceOrderFromPage()">Submit & Verify Order</button>
           </div>
         `;
       } else {
@@ -1699,7 +1704,6 @@
         return;
       }
 
-      // Duplicate product check
       let isDuplicate = products.some(p => p.title.toLowerCase() === title.toLowerCase() && p.id != editId);
       if(isDuplicate) {
         showAlert("⚠️ Warning: Similar product title already exists in the catalog!");
