@@ -496,7 +496,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -782,7 +782,6 @@
     let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
     let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
 
-    // Live Countdown Timer Interval
     let globalTimerSeconds = 3 * 3600 + 42 * 60 + 56;
     setInterval(() => {
       if(globalTimerSeconds > 0) globalTimerSeconds--;
@@ -1147,6 +1146,24 @@
       container.appendChild(div);
     }
 
+    function addDsPhotoSlot() {
+      let container = document.getElementById('dsPhotoSlotsContainer');
+      let count = container.querySelectorAll('.ds-photo-input').length + 1;
+      let div = document.createElement('div');
+      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
+      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
+      container.appendChild(div);
+    }
+
+    function addAdmPhotoSlot() {
+      let container = document.getElementById('admPhotoSlotsContainer');
+      let count = container.querySelectorAll('.adm-photo-input').length + 1;
+      let div = document.createElement('div');
+      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
+      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="adm-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
+      container.appendChild(div);
+    }
+
     function submitCatalogForAdminReview() {
       let title = document.getElementById('wizTitle').value.trim();
       let category = document.getElementById('wizCategory').value;
@@ -1408,107 +1425,6 @@
       renderAdminProductManager();
       renderProducts(activeCategoryFilter);
       showAlert(`Sabhi products ke prices ${pct}% se badha diye gaye hain!`, "Success", true);
-    }
-
-    function addDsPhotoSlot() {
-      let container = document.getElementById('dsPhotoSlotsContainer');
-      let count = container.querySelectorAll('.ds-photo-input').length + 1;
-      let div = document.createElement('div');
-      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
-      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
-      container.appendChild(div);
-    }
-
-    function addAdmPhotoSlot() {
-      let container = document.getElementById('admPhotoSlotsContainer');
-      let count = container.querySelectorAll('.adm-photo-input').length + 1;
-      let div = document.createElement('div');
-      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
-      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="adm-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
-      container.appendChild(div);
-    }
-
-    function addNewDropshippingProduct() {
-      let title = document.getElementById('dsTitle').value.trim();
-      let category = document.getElementById('dsCategory').value;
-      let price = parseFloat(document.getElementById('dsPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('dsMrp').value) || price * 1.4;
-      let sourceName = document.getElementById('dsSourceWebsite').value.trim();
-      let sourceLink = document.getElementById('dsSourceLink').value.trim();
-      let desc = document.getElementById('dsDesc').value.trim();
-
-      let photoInputs = document.querySelectorAll('.ds-photo-input');
-      let filesList = [];
-      photoInputs.forEach(inp => {
-        if(inp.files && inp.files[0]) {
-          filesList.push(inp.files[0]);
-        }
-      });
-
-      let checkedSizes = [];
-      let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
-      sizeBoxes.forEach(b => checkedSizes.push(b.value));
-      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
-
-      if(!title || !price || !sourceName || !sourceLink) {
-        showAlert("Kripya Title, Selling Price, Source Website aur Source Link zaroor bharein.");
-        return;
-      }
-
-      let saveItem = (imgUrls) => {
-        let newItem = {
-          id: Date.now(),
-          title, category, price, mrp, desc,
-          sourceName,
-          sourceUrl: sourceLink,
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls
-        };
-
-        dropshippingList.unshift(newItem);
-        localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
-
-        products.unshift({
-          id: newItem.id,
-          title, category, price, mrp, desc,
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls
-        });
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-
-        showAlert("Dropshipping product successfully added!", "Success", true);
-        document.getElementById('dsTitle').value = '';
-        document.getElementById('dsPrice').value = '';
-        document.getElementById('dsMrp').value = '';
-        document.getElementById('dsSourceWebsite').value = '';
-        document.getElementById('dsSourceLink').value = '';
-        document.getElementById('dsDesc').value = '';
-        
-        renderAdminDropshippingList();
-        renderProducts(activeCategoryFilter);
-      };
-
-      if(filesList.length > 0) {
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<filesList.length; i++) {
-          let reader = new FileReader();
-          reader.onload = function(e) {
-            loaded.push(e.target.result);
-            count++;
-            if(count === filesList.length) {
-              saveItem(loaded);
-            }
-          };
-          reader.readAsDataURL(filesList[i]);
-        }
-      } else {
-        saveItem(['https://via.placeholder.com/300']);
-      }
     }
 
     function adminAddNewProductDirect() {
