@@ -132,6 +132,8 @@
       </div>
     </header>
 
+    <div id="announcementBanner" style="background:#ff9800; color:#000; padding:8px 14px; font-size:0.8rem; font-weight:bold; text-align:center; display:none;"></div>
+
     <div class="flash-banner">
       <div>
         <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
@@ -151,6 +153,11 @@
 
     <main class="container">
       <div class="products-grid" id="productGrid"></div>
+      
+      <div style="margin-top:40px;">
+        <h3 style="font-size:1.1rem; margin-bottom:12px; font-weight:bold;">🕒 Recently Viewed Products</h3>
+        <div class="products-grid" id="recentlyViewedGrid"></div>
+      </div>
     </main>
 
     <footer>
@@ -223,8 +230,13 @@
     <div class="page-content" style="max-width:500px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow); text-align:center;">
         <h3 style="margin-bottom:6px; font-size:1.2rem; color:var(--primary);">Complete Your Payment</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Total Payable Amount: <strong style="color:var(--primary); font-size:1.1rem;" id="payTotalAmount">₹0</strong></p>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px;">Total Payable Amount: <strong style="color:var(--primary); font-size:1.1rem;" id="payTotalAmount">₹0</strong></p>
         
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+          <input type="text" id="couponCodeInput" placeholder="Enter Coupon (e.g. KOSH20)" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
+          <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem; background:#333;" onclick="applyCouponCode()">Apply</button>
+        </div>
+
         <div id="paymentMethodContainer"></div>
       </div>
     </div>
@@ -248,6 +260,10 @@
         </div>
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn-solid" style="background:#2196f3; flex:1;" onclick="shareCurrentProduct()">🔗 Share Product</button>
+            <button type="button" class="btn-solid" style="background:#ff5252; flex:1;" onclick="openReportModal()">🚨 Report Product</button>
+          </div>
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
       </div>
@@ -322,6 +338,15 @@
     </div>
     <div class="page-content" style="max-width:1000px;">
       
+      <!-- Vacation Mode Toggle -->
+      <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px 16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h4 style="font-size:0.9rem; color:#e65100;">🏖️ Vacation Mode</h4>
+          <p style="font-size:0.75rem; color:#666;">Temporarily pause new orders while you are away.</p>
+        </div>
+        <input type="checkbox" id="vacationModeToggle" onchange="toggleVacationMode(this.checked)" style="width:20px; height:20px; cursor:pointer;">
+      </div>
+
       <!-- Summary Cards -->
       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin-bottom:20px;">
         <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
@@ -343,15 +368,15 @@
       </div>
 
       <div class="dash-tabs">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Product Add / Edit</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payout History & Commission</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products & Drafts</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management & Timeline</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payouts & Reports</button>
       </div>
 
-      <!-- Tab 1: Product Add / Edit -->
+      <!-- Tab 1: Products & Drafts -->
       <div id="sellerDashTabProducts" class="dash-tab-content active">
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Store Product</h4>
+          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Store Product / Draft</h4>
           <input type="hidden" id="sellerEditProdId" value="">
           <div class="form-group"><label>Product Title *</label><input type="text" id="sProdTitle" placeholder="Product Title"></div>
           <div class="form-group">
@@ -372,22 +397,25 @@
             <input type="file" id="sProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
           </div>
           <div class="form-group"><label>Description *</label><textarea id="sProdDesc" rows="2" placeholder="Product description..."></textarea></div>
-          <button type="button" class="btn-solid" style="background:#512da8; padding:12px;" onclick="saveSellerProduct()">Save Product</button>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <button type="button" class="btn-solid" style="background:#512da8; flex:1;" onclick="saveSellerProduct(false)">Publish Product</button>
+            <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="saveSellerProduct(true)">Save as Draft</button>
+          </div>
         </div>
 
-        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products & Drafts</h5>
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products added.</div>
       </div>
 
-      <!-- Tab 2: Order Management -->
+      <!-- Tab 2: Order Management & Timeline -->
       <div id="sellerDashTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders Workflow</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders & Timeline Workflow</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders received yet.</div>
       </div>
 
-      <!-- Tab 3: Payout History & Commission -->
+      <!-- Tab 3: Payouts & Reports -->
       <div id="sellerDashTabPayouts" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Order Earning & Kosh Commission Breakdown</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sales Reports & Earnings Breakdown</h5>
         <div id="sellerPayoutHistoryList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payout history.</div>
       </div>
 
@@ -577,6 +605,19 @@
     </div>
   </div>
 
+  <!-- REPORT PRODUCT MODAL -->
+  <div class="modal-overlay" id="reportProductModal">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem;">🚨 Report Product / Seller</h3>
+        <button type="button" onclick="document.getElementById('reportProductModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <div class="form-group"><label>Reason</label><select id="reportReason"><option value="Fake Product">Fake Product</option><option value="Inappropriate Content">Inappropriate Content</option><option value="Fraudulent Seller">Fraudulent Seller</option></select></div>
+      <div class="form-group"><label>Details</label><textarea id="reportDesc" rows="3" placeholder="Provide details..."></textarea></div>
+      <button type="button" class="btn-solid" style="background:var(--danger); margin-top:10px;" onclick="submitProductReport()">Submit Report</button>
+    </div>
+  </div>
+
   <!-- ADMIN MASTER DASHBOARD -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
@@ -627,7 +668,7 @@
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders & Audit Logs</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
       </div>
 
@@ -639,7 +680,7 @@
       <!-- Settings Tab with Flexible Payment Gateway Manager -->
       <div id="admTabSettings" class="dash-tab-content">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Manager</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & Broadcast Manager</h4>
           
           <div class="form-group">
             <label>Active Gateway</label>
@@ -666,7 +707,12 @@
             </div>
           </div>
 
-          <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
+          <div class="form-group" style="margin-top:15px;">
+            <label>📢 Broadcast Announcement to Sellers</label>
+            <input type="text" id="adminBroadcastInput" placeholder="Enter announcement text...">
+          </div>
+
+          <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway & Broadcast</button>
         </div>
       </div>
     </div>
@@ -770,6 +816,8 @@
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
+    let recentlyViewed = JSON.parse(localStorage.getItem('kosh_recently_viewed')) || [];
+    let broadcastMsg = localStorage.getItem('kosh_broadcast') || '';
     
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '' };
     
@@ -782,6 +830,7 @@
     let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
     let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
     let activeSellerDashTab = 'products';
+    let appliedDiscount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
@@ -789,6 +838,11 @@
       
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         toggleCartDrawer(true);
+      }
+
+      if(broadcastMsg) {
+        let b = document.getElementById('announcementBanner');
+        if(b) { b.innerText = "📢 Announcement: " + broadcastMsg; b.style.display = 'block'; }
       }
 
       document.querySelectorAll('.cat-item').forEach(i => {
@@ -801,6 +855,7 @@
 
       renderProducts();
       renderWishlist();
+      renderRecentlyViewed();
       updateCartUI();
       checkLoginStatus();
       loadPaymentSettingsToUI();
@@ -932,6 +987,14 @@
 
     function savePaymentSettings() {
       let fileInput = document.getElementById('gwQrFile');
+      let broadcastText = document.getElementById('adminBroadcastInput').value.trim();
+      if(broadcastText) {
+        localStorage.setItem('kosh_broadcast', broadcastText);
+        broadcastMsg = broadcastText;
+        let b = document.getElementById('announcementBanner');
+        if(b) { b.innerText = "📢 Announcement: " + broadcastMsg; b.style.display = 'block'; }
+      }
+
       let saveConfig = function(qrImgUrl) {
         paymentConfig = {
           gateway: document.getElementById('gatewaySelect').value,
@@ -940,7 +1003,7 @@
           qrImage: qrImgUrl || paymentConfig.qrImage || ''
         };
         localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
-        showAlert("Payment gateway configuration successfully save ho gayi hai!", "Success", true);
+        showAlert("Gateway & Broadcast settings successfully saved!", "Success", true);
       };
 
       if(fileInput.files && fileInput.files[0]) {
@@ -1023,6 +1086,17 @@
       navigateTo('checkout');
     }
 
+    function applyCouponCode() {
+      let code = document.getElementById('couponCodeInput').value.trim();
+      if(code === 'KOSH20') {
+        appliedDiscount = 20;
+        showAlert("Coupon applied successfully! Flat ₹20 OFF added.", "Success", true);
+        renderPaymentPage();
+      } else {
+        showAlert("Invalid coupon code.");
+      }
+    }
+
     function proceedToPaymentAfterAddress() {
       let fname = document.getElementById('chkFirstName').value.trim();
       let lname = document.getElementById('chkLastName').value.trim();
@@ -1050,7 +1124,8 @@
     }
 
     function renderPaymentPage() {
-      let total = cart.reduce((a,c) => a + c.finalPrice, 0);
+      let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
+      let total = Math.max(0, subtotal - appliedDiscount);
       document.getElementById('payTotalAmount').innerText = '₹' + total;
       let container = document.getElementById('paymentMethodContainer');
       container.innerHTML = '';
@@ -1089,12 +1164,30 @@
         showAlert("Kripya Transaction ID / UTR enter karein.");
         return;
       }
+      let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
+      let total = Math.max(0, subtotal - appliedDiscount);
       let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
-      ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: 'Manual UPI (UTR: ' + utr + ')', shipping, status: 'New', date: new Date().toLocaleDateString() });
+      
+      let newOrder = {
+        id: Date.now(),
+        items: [...cart],
+        total: total,
+        gateway: 'Manual UPI (UTR: ' + utr + ')',
+        shipping,
+        status: 'Order Placed',
+        timeline: [
+          { stage: 'Order Placed', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) },
+          { stage: 'Seller Notified', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+        ],
+        date: new Date().toLocaleDateString()
+      };
+
+      ordersList.unshift(newOrder);
       localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
       cart = [];
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       localStorage.removeItem('kosh_shipping_data');
+      appliedDiscount = 0;
       updateCartUI();
       showAlert("Payment verified & Order placed successfully!", "Success", true);
       navigateTo('home');
@@ -1103,16 +1196,57 @@
     function processAutoPayment(gw) {
       showAlert(`Processing secure payment via ${gw}...`, "Secure Checkout", true);
       setTimeout(() => {
+        let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
+        let total = Math.max(0, subtotal - appliedDiscount);
         let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
-        ordersList.unshift({ id: Date.now(), items: [...cart], total: cart.reduce((a,c)=>a+c.finalPrice,0), gateway: gw, shipping, status: 'New', date: new Date().toLocaleDateString() });
+        
+        let newOrder = {
+          id: Date.now(),
+          items: [...cart],
+          total: total,
+          gateway: gw,
+          shipping,
+          status: 'Order Placed',
+          timeline: [
+            { stage: 'Order Placed', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) },
+            { stage: 'Seller Notified', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+          ],
+          date: new Date().toLocaleDateString()
+        };
+
+        ordersList.unshift(newOrder);
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         cart = [];
         localStorage.setItem('kosh_cart', JSON.stringify(cart));
         localStorage.removeItem('kosh_shipping_data');
+        appliedDiscount = 0;
         updateCartUI();
         showAlert("Order successfully placed via " + gw + "!", "Success", true);
         navigateTo('home');
       }, 1500);
+    }
+
+    function shareCurrentProduct() {
+      if(!currentSelectedProduct) return;
+      if(navigator.share) {
+        navigator.share({ title: currentSelectedProduct.title, url: window.location.href }).catch(err => console.log(err));
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showAlert("Product link copied to clipboard!");
+      }
+    }
+
+    function openReportModal() {
+      document.getElementById('reportProductModal').style.display = 'flex';
+    }
+
+    function submitProductReport() {
+      let reason = document.getElementById('reportReason').value;
+      let desc = document.getElementById('reportDesc').value.trim();
+      if(!desc) { showAlert("Kripya details bharein."); return; }
+      document.getElementById('reportProductModal').style.display = 'none';
+      document.getElementById('reportDesc').value = '';
+      showAlert("Report submitted to Admin successfully.", "Success", true);
     }
 
     function toggleOtherMsgBox() {
@@ -1293,7 +1427,7 @@
       let newSeller = {
         uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
         fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, password: pass,
-        approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false,
+        approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false, vacationMode: false,
         panName: '', panNumber: '', accountNum: '', ifsc: '', bankName: '', branchName: ''
       };
 
@@ -1383,11 +1517,21 @@
       loadSellerDashboardData();
     }
 
+    function toggleVacationMode(isVacation) {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        seller.vacationMode = isVacation;
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        showAlert(isVacation ? "Vacation mode enabled. New orders paused." : "Vacation mode disabled.", "Notice", true);
+      }
+    }
+
     function loadSellerDashboardData() {
       let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
       if(!seller) return;
 
       document.getElementById('dashStoreTitle').innerText = seller.storeName;
+      document.getElementById('vacationModeToggle').checked = seller.vacationMode || false;
 
       let storeProducts = products.filter(p => p.category === seller.category);
       let prodContainer = document.getElementById('sellerProductsList');
@@ -1398,7 +1542,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
             <div style="display:flex; gap:10px; align-items:center;">
               <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-              <div><b>${p.title}</b><br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50}</small></div>
+              <div><b>${p.title}</b> ${p.isDraft ? '<span style="color:red; font-size:0.7rem;">(Draft)</span>' : ''}<br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50} ${p.stock <= 5 ? '<span style="color:red; font-weight:bold;">[Low Stock!]</span>' : ''}</small></div>
             </div>
             <button type="button" onclick="editSellerProduct(${p.id})" style="background:#512da8; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Edit</button>
           </div>
@@ -1415,22 +1559,25 @@
         payoutListHtml = 'No payout history.';
       } else {
         ordersListHtml = ordersList.map(o => {
-          let orderStatus = o.status || 'New';
+          let timelineHtml = (o.timeline || []).map(t => `<span style="font-size:0.7rem; background:#f1f3f6; padding:2px 6px; border-radius:4px; margin-right:4px;">${t.stage} (${t.time})</span>`).join(' → ');
           return `
             <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                 <b>Order #${o.id}</b>
                 <span style="font-weight:bold; color:var(--success);">₹${o.total}</span>
               </div>
-              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px;">Date: ${o.date} | Gateway: ${o.gateway}</div>
+              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:6px;">Date: ${o.date} | Customer: ${o.shipping?.phone || 'N/A'}</div>
+              <div style="margin-bottom:8px; font-size:0.75rem;"><b>Timeline:</b> ${timelineHtml}</div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <label style="font-size:0.75rem; font-weight:bold;">Status:</label>
-                <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid var(--border);">
-                  <option value="New" ${orderStatus==='New'?'selected':''}>New</option>
-                  <option value="Confirmed" ${orderStatus==='Confirmed'?'selected':''}>Confirmed</option>
-                  <option value="Shipped" ${orderStatus==='Shipped'?'selected':''}>Shipped</option>
-                  <option value="Delivered" ${orderStatus==='Delivered'?'selected':''}>Delivered</option>
-                  <option value="Cancelled/RTO" ${orderStatus==='Cancelled/RTO'?'selected':''}>Cancelled/RTO</option>
+                <label style="font-size:0.75rem; font-weight:bold;">Update Status:</label>
+                <select onchange="updateOrderTimeline(${o.id}, this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid var(--border);">
+                  <option value="Order Placed" ${o.status==='Order Placed'?'selected':''}>Order Placed</option>
+                  <option value="Seller Accepted" ${o.status==='Seller Accepted'?'selected':''}>Seller Accepted</option>
+                  <option value="Packed" ${o.status==='Packed'?'selected':''}>Packed</option>
+                  <option value="Picked Up" ${o.status==='Picked Up'?'selected':''}>Picked Up</option>
+                  <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+                  <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered (Payout Ready)</option>
+                  <option value="Cancelled/RTO" ${o.status==='Cancelled/RTO'?'selected':''}>Cancelled/RTO (Payout Held)</option>
                 </select>
               </div>
             </div>
@@ -1442,22 +1589,28 @@
           let koshCommission = Math.round(o.total * 0.10);
           totalSales += o.total;
 
+          let payoutStatus = '<span style="color:#ff9800">Pending (ETA: 3-5 days after delivery)</span>';
+          if(o.status === 'Delivered') {
+            payoutStatus = '<span style="color:var(--success)">Completed & Released</span>';
+          } else if(o.status === 'Cancelled/RTO') {
+            payoutStatus = '<span style="color:var(--danger)">Frozen / Hold due to Dispute/RTO</span>';
+          }
+
           payoutListHtml += `
             <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
               <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                 <b>Order #${o.id}</b>
-                <span style="color:var(--success); font-weight:bold;">Order Total: ₹${o.total}</span>
+                <span style="color:var(--success); font-weight:bold;">Total: ₹${o.total}</span>
               </div>
-              <div>Seller Earning (90%): <strong style="color:var(--primary);">₹${sellerEarning}</strong></div>
-              <div>Kosh Commission (10%): <strong style="color:#d32f2f;">₹${koshCommission}</strong></div>
-              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'New'}</b> | Payout: ${o.status === 'Delivered' ? '<span style="color:var(--success)">Completed</span>' : '<span style="color:#ff9800">Pending</span>'}</div>
+              <div>Product Earnings (90%): <b>₹${sellerEarning}</b> | Commission (10%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
+              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'Order Placed'}</b> | Payout Status: ${payoutStatus}</div>
             </div>
           `;
         });
       }
 
       let completedPayout = ordersList.filter(o => o.status === 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
-      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
+      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled/RTO').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
 
       document.getElementById('dashTotalSales').innerText = '₹' + totalSales;
       document.getElementById('dashTotalOrders').innerText = totalOrdersCount;
@@ -1468,17 +1621,20 @@
       document.getElementById('sellerPayoutHistoryList').innerHTML = payoutListHtml;
     }
 
-    function updateOrderStatus(orderId, newStatus) {
+    function updateOrderTimeline(orderId, newStage) {
       let order = ordersList.find(o => o.id == orderId);
       if(order) {
-        order.status = newStatus;
+        order.status = newStage;
+        if(!order.timeline) order.timeline = [];
+        order.timeline.push({ stage: newStage, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         loadSellerDashboardData();
-        showAlert("Order status updated successfully!", "Success", true);
+        if(isAdminLoggedIn) loadAdminMasterData();
+        showAlert("Order timeline & status updated!", "Success", true);
       }
     }
 
-    function saveSellerProduct() {
+    function saveSellerProduct(isDraft = false) {
       let title = document.getElementById('sProdTitle').value.trim();
       let category = document.getElementById('sProdCategory').value;
       let price = parseFloat(document.getElementById('sProdPrice').value) || 0;
@@ -1503,21 +1659,22 @@
             p.mrp = mrp;
             p.stock = stock;
             p.desc = desc;
+            p.isDraft = isDraft;
             if(imgUrl) p.image = imgUrl;
           }
           document.getElementById('sellerEditProdId').value = '';
-          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Store Product';
-          showAlert("Product successfully updated!", "Success", true);
+          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Store Product / Draft';
+          showAlert(isDraft ? "Product saved as draft!" : "Product published successfully!", "Success", true);
         } else {
           let newId = Date.now();
           products.unshift({
             id: newId,
             sku: `KOSH-${newId.toString().slice(-5)}`,
-            title, category, price, mrp, stock,
+            title, category, price, mrp, stock, isDraft,
             image: imgUrl || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
             desc: desc || "Premium quality product."
           });
-          showAlert("Product successfully added to store!", "Success", true);
+          showAlert(isDraft ? "Product saved as draft!" : "Product published successfully!", "Success", true);
         }
 
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
@@ -1555,80 +1712,378 @@
       window.scrollTo(0, 0);
     }
 
-    function renderAdminSellersList(query = '') {
-      let container = document.getElementById('admSellersList');
-      if(!container) return;
-
-      let filtered = sellersList;
-      if(query.trim()) {
-        let q = query.trim().toLowerCase();
-        filtered = sellersList.filter(s => s.uniqueId.toLowerCase().includes(q) || s.phone.toLowerCase().includes(q) || s.storeName.toLowerCase().includes(q));
+    function renderProducts(filterCat = null) {
+      if(filterCat !== null) {
+        activeCategoryFilter = filterCat;
+        localStorage.setItem('kosh_active_cat', filterCat);
+      }
+      
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      
+      let filtered = products.filter(p => !p.isDraft);
+      if(activeCategoryFilter !== 'All') {
+        filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
       }
 
-      if(filtered.length === 0) {
-        container.innerHTML = 'No sellers found.';
+      const searchKey = document.getElementById('searchInput').value.toLowerCase();
+      if(searchKey) {
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">No published products in store.</p>';
         return;
       }
 
-      container.innerHTML = filtered.map(s => `
-        <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem; background:${s.approvalStatus === 'Approved' ? '#f1f8e9' : '#fff3e0'}; border-radius:6px; margin-bottom:8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <b>Store:</b> ${s.storeName} (${s.uniqueId})
-            <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${s.approvalStatus === 'Approved' ? '#388e3c' : '#ff9800'}; color:#fff; font-weight:bold;">${s.approvalStatus}</span>
+      filtered.forEach(p => {
+        let isWishlisted = wishlist.some(item => item.id === p.id);
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+          <div class="product-info">
+            <span class="p-category">${p.category}</span>
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
           </div>
-          <div><b>Owner:</b> ${s.fullName} | <b>Phone (Login ID):</b> ${s.phone} | <b>Email:</b> ${s.email}</div>
-          <div><b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}</div>
-          <div><b>PAN Name:</b> ${s.panName || 'N/A'} | <b>PAN No:</b> ${s.panNumber || 'N/A'}</div>
-          <div><b>Bank A/C:</b> ${s.accountNum || 'N/A'} | <b>IFSC:</b> ${s.ifsc || 'N/A'} (${s.bankName || ''})</div>
-          <div style="margin-top:8px; display:flex; gap:8px;">
-            ${s.approvalStatus !== 'Approved' ? `<button type="button" onclick="approveSeller('${s.uniqueId}')" style="background:#388e3c; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Approve Seller</button>` : ''}
-            <button type="button" onclick="openAdminEditSeller('${s.uniqueId}')" style="background:#2196f3; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Edit / Correct KYC</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+        grid.appendChild(card);
+      });
+      document.getElementById('wishlistCount').innerText = wishlist.length;
     }
 
-    function approveSeller(uniqueId) {
-      let s = sellersList.find(item => item.uniqueId === uniqueId);
-      if(s) {
-        s.approvalStatus = 'Approved';
-        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-        renderAdminSellersList();
-        loadSellerKycData();
-        showAlert(`Seller ${s.storeName} approved successfully!`, "Success", true);
+    function renderWishlist() {
+      const grid = document.getElementById('wishlistGrid');
+      grid.innerHTML = '';
+      if(wishlist.length === 0) {
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">Your wishlist is empty.</p>';
+        return;
+      }
+      wishlist.forEach(p => {
+        let card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
+          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+          <div class="product-info">
+            <span class="p-category">${p.category}</span>
+            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
+            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderRecentlyViewed() {
+      let grid = document.getElementById('recentlyViewedGrid');
+      if(!grid) return;
+      grid.innerHTML = '';
+      if(recentlyViewed.length === 0) {
+        grid.innerHTML = '<p style="color:var(--muted); font-size:0.8rem;">No recently viewed products.</p>';
+        return;
+      }
+      recentlyViewed.slice(0, 4).forEach(p => {
+        grid.innerHTML += `
+          <div class="product-card">
+            <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
+            <div class="product-info">
+              <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
+              <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function toggleWishlist(id) {
+      let prod = products.find(p => p.id === id);
+      if(!prod) return;
+      let idx = wishlist.findIndex(item => item.id === id);
+      if(idx >= 0) { wishlist.splice(idx, 1); showAlert("Removed from Wishlist", "Wishlist", false); }
+      else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
+      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
+      renderProducts();
+      renderWishlist();
+    }
+
+    function navigateTo(pageId, save = true) {
+      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
+      let target = document.getElementById('page-' + pageId);
+      if(target) target.classList.add('active');
+      if(save) localStorage.setItem('kosh_active_page', pageId);
+      window.scrollTo(0, 0);
+      
+      if(pageId === 'wishlist') renderWishlist();
+      if(pageId === 'support') renderCustomerTickets();
+      if(pageId === 'seller-kyc') loadSellerKycData();
+      if(pageId === 'seller-dashboard') loadSellerDashboardData();
+      if(pageId === 'admin-dashboard') {
+        if(!isAdminLoggedIn) {
+          document.getElementById('adminLoginModal').style.display = 'flex';
+          return;
+        }
+        loadAdminMasterData();
+        switchAdminTab(activeAdminTab, false);
       }
     }
 
-    function openAdminEditSeller(uniqueId) {
-      let s = sellersList.find(item => item.uniqueId === uniqueId);
-      if(!s) return;
-      document.getElementById('editSellerId').value = s.uniqueId;
-      document.getElementById('editStoreName').value = s.storeName;
-      document.getElementById('editPanName').value = s.panName;
-      document.getElementById('editPanNumber').value = s.panNumber;
-      document.getElementById('editAccountNum').value = s.accountNum;
-      document.getElementById('editIfsc').value = s.ifsc;
-      document.getElementById('editBankName').value = s.bankName;
-      document.getElementById('editBranchName').value = s.branchName;
-      document.getElementById('adminSellerEditModal').style.display = 'flex';
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-item').forEach(i => {
+        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
+        else i.classList.remove('active');
+      });
+      renderProducts(cat);
     }
 
-    function saveAdminEditedSeller() {
-      let uid = document.getElementById('editSellerId').value;
-      let s = sellersList.find(item => item.uniqueId === uid);
-      if(!s) return;
-      s.storeName = document.getElementById('editStoreName').value.trim();
-      s.panName = document.getElementById('editPanName').value.trim();
-      s.panNumber = document.getElementById('editPanNumber').value.trim();
-      s.accountNum = document.getElementById('editAccountNum').value.trim();
-      s.ifsc = document.getElementById('editIfsc').value.trim();
-      s.bankName = document.getElementById('editBankName').value.trim();
-      s.branchName = document.getElementById('editBranchName').value.trim();
+    function handleSearch(val) { renderProducts(); }
 
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      document.getElementById('adminSellerEditModal').style.display = 'none';
+    function openProductDetail(id) {
+      currentSelectedProduct = products.find(item => item.id === id);
+      if(!currentSelectedProduct) return;
+      localStorage.setItem('kosh_selected_prod_id', id);
+      displayProductDetailData(currentSelectedProduct);
+      
+      // Add to recently viewed
+      if(!recentlyViewed.some(p => p.id === currentSelectedProduct.id)) {
+        recentlyViewed.unshift(currentSelectedProduct);
+        localStorage.setItem('kosh_recently_viewed', JSON.stringify(recentlyViewed));
+      }
+
+      navigateTo('product');
+    }
+
+    function displayProductDetailData(p) {
+      document.getElementById('pPageImg').src = p.image;
+      document.getElementById('pPageCategory').innerText = p.category;
+      document.getElementById('pPageTitle').innerText = p.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku}`;
+      document.getElementById('pPagePrice').innerText = '₹' + p.price;
+      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
+      document.getElementById('pPageDesc').innerText = p.desc;
+    }
+
+    function addCurrentProductToCart() {
+      if(!currentSelectedProduct) return;
+      addToCart(currentSelectedProduct.id);
+    }
+
+    function addToCart(id) {
+      let prod = products.find(p => p.id === id);
+      if(!prod) return;
+      let existing = cart.find(item => item.id === id);
+      if(existing) {
+        existing.qty = (existing.qty || 1) + 1;
+        existing.finalPrice = existing.price * existing.qty;
+      } else {
+        cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
+      }
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      updateCartUI();
+      showAlert(prod.title + " added to cart!", 'Cart', true);
+    }
+
+    function changeCartQty(id, delta) {
+      let item = cart.find(i => i.id === id);
+      if(!item) return;
+      item.qty += delta;
+      if(item.qty <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      } else {
+        item.finalPrice = item.price * item.qty;
+      }
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+      const container = document.getElementById('cartItemsContainer');
+      const priceBox = document.getElementById('cartPriceDetailsBox');
+      container.innerHTML = '';
+      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Cart is empty.</p>'; priceBox.style.display = 'none'; return; }
+      priceBox.style.display = 'block';
+      let subtotal = 0;
+      cart.forEach(item => {
+        subtotal += item.finalPrice;
+        container.innerHTML += `
+          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px; align-items:center;">
+            <img src="${item.image}" style="width:65px; height:65px; object-fit:cover; border-radius:4px;">
+            <div style="flex-grow:1;">
+              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
+              <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">₹${item.finalPrice}</div>
+              <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+                <button type="button" onclick="changeCartQty(${item.id}, -1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+                <span style="font-size:0.85rem; font-weight:bold;">${item.qty || 1}</span>
+                <button type="button" onclick="changeCartQty(${item.id}, 1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+              </div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('cartSubtotalPrice').innerText = '₹' + subtotal;
+      document.getElementById('cartTotalPrice').innerText = '₹' + subtotal;
+    }
+
+    function toggleCartDrawer(open) {
+      document.getElementById('cartDrawer').classList.toggle('open', open);
+      document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
+      localStorage.setItem('kosh_cart_open', open);
+    }
+
+    function clearAllProductsCompletely() {
+      showCustomConfirm("Kya aap saare products ko permanent delete karna chahte hain?", function(res) {
+        if(res) {
+          products = [];
+          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          renderProducts();
+          loadAdminMasterData();
+          showAlert("Saare products delete ho gaye hain!", "Success", true);
+        }
+      });
+    }
+
+    function addNewCustomProduct() {
+      let title = document.getElementById('newProdTitle').value.trim();
+      let category = document.getElementById('newProdCategory').value;
+      let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('newProdMrp').value) || price * 1.5;
+      let desc = document.getElementById('newProdDesc').value.trim();
+      let fileInput = document.getElementById('newProdFile');
+
+      if(!title || !price) {
+        showAlert("Kripya Product Title aur Price bharein.");
+        return;
+      }
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          saveProductWithImage(title, category, price, mrp, e.target.result, desc);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveProductWithImage(title, category, price, mrp, "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc);
+      }
+    }
+
+    function saveProductWithImage(title, category, price, mrp, image, desc) {
+      let newId = Date.now();
+      products.unshift({
+        id: newId,
+        sku: `KOSH-${newId.toString().slice(-5)}`,
+        title,
+        category,
+        price,
+        mrp,
+        stock: 50,
+        image,
+        desc: desc || "Premium quality product from Kosh Studio."
+      });
+
+      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      renderProducts();
+      loadAdminMasterData();
+      
+      document.getElementById('newProdTitle').value = '';
+      document.getElementById('newProdPrice').value = '';
+      document.getElementById('newProdMrp').value = '';
+      document.getElementById('newProdFile').value = '';
+      document.getElementById('newProdDesc').value = '';
+
+      showAlert("Naya product gallery image ke sath add ho gaya hai!", "Success", true);
+    }
+
+    function triggerAdminSecret() {
+      secretClickCount++;
+      if(secretClickCount >= 5) { 
+        secretClickCount = 0; 
+        if(isAdminLoggedIn) {
+          navigateTo('admin-dashboard');
+        } else {
+          document.getElementById('adminLoginModal').style.display = 'flex'; 
+        }
+      }
+    }
+
+    function verifyAdminPassword() {
+      let uid = document.getElementById('admUserInput').value.trim();
+      let pass = document.getElementById('admPassInput').value.trim();
+      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
+        isAdminLoggedIn = true;
+        localStorage.setItem('kosh_is_admin', 'true');
+        document.getElementById('adminLoginModal').style.display = 'none';
+        navigateTo('admin-dashboard');
+      } else { showAlert('Incorrect Admin ID or Password!'); }
+    }
+
+    function switchAdminTab(tab, save = true) {
+      if(save) {
+        activeAdminTab = tab;
+        localStorage.setItem('kosh_admin_tab', tab);
+      }
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
+      
+      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
+        if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
+      });
+      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      if(contentEl) contentEl.classList.add('active');
+    }
+
+    function loadAdminMasterData() {
       renderAdminSellersList();
-      showAlert("Seller details successfully updated by Admin!", "Success", true);
+      document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
+          <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+        </div>
+      `).join('');
+      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway}) - Status: ${o.status}</div>`).join('');
+      
+      let admTicketsContainer = document.getElementById('admTicketsList');
+      if(admTicketsContainer) {
+        if(ticketsList.length === 0) {
+          admTicketsContainer.innerHTML = 'No support tickets.';
+        } else {
+          admTicketsContainer.innerHTML = ticketsList.map(t => {
+            let isClosed = t.status === 'Closed';
+            let msgsHtml = t.messages.map(m => `
+              <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
+                <div style="display:inline-block; padding:6px 10px; border-radius:6px; background:${m.sender === 'admin' ? '#e8f5e9' : '#f1f3f6'}; font-size:0.8rem; max-width:85%; text-align:left;">
+                  <small style="display:block; font-weight:bold; color:${m.sender === 'admin' ? '#388e3c' : '#333'};">${m.sender === 'admin' ? 'Admin' : t.email}</small>
+                  ${m.text}
+                </div>
+              </div>
+            `).join('');
+
+            return `
+              <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                  <span style="font-size:0.85rem; font-weight:bold;">User: ${t.email} | Category: ${t.category}</span>
+                  <div>
+                    <span style="font-size:0.7rem; padding:2px 6px; border-radius:3px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold; margin-right:6px;">${t.status}</span>
+                    ${!isClosed ? `<button type="button" onclick="closeAdminTicket(${t.id})" style="background:#d32f2f; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Close Grievance</button>` : ''}
+                  </div>
+                </div>
+                <div style="max-height:140px; overflow-y:auto; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px; margin-bottom:6px;">
+                  ${msgsHtml}
+                </div>
+                ${isClosed ? '<p style="font-size:0.75rem; color:#d32f2f; font-style:italic;">Grievance closed.</p>' : `
+                  <div style="display:flex; gap:6px;">
+                    <input type="text" id="adminReplyInput_${t.id}" placeholder="Reply to customer..." style="flex-grow:1; padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px;">
+                    <button type="button" class="btn-solid" style="width:auto; padding:6px 12px; font-size:0.75rem; background:#388e3c;" onclick="sendAdminChatMessage(${t.id})">Reply</button>
+                  </div>
+                `}
+              </div>
+            `;
+          }).join('');
+        }
+      }
     }
   </script>
 </body>
