@@ -582,6 +582,15 @@
     let currentSelectedProduct = null;
 
     window.addEventListener('DOMContentLoaded', () => {
+      // 1. Instant Cart Restore without flashing/going to home page first
+      if(localStorage.getItem('kosh_cart_open') === 'true') {
+        let drawer = document.getElementById('cartDrawer');
+        drawer.style.transition = 'none';
+        drawer.classList.add('open');
+        document.getElementById('cartBackdrop').style.display = 'block';
+        setTimeout(() => { drawer.style.transition = ''; }, 50);
+      }
+
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       
       // Restore active category UI highlight
@@ -599,11 +608,6 @@
       checkLoginStatus();
       loadPaymentSettingsToUI();
       loadSellerKycData();
-
-      // Restore cart open state if it was open before refresh
-      if(localStorage.getItem('kosh_cart_open') === 'true') {
-        toggleCartDrawer(true);
-      }
     });
 
     function switchAuthTab(tab) {
