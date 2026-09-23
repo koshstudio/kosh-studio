@@ -262,6 +262,13 @@
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
+
+        <!-- Dynamic Size Selection Container -->
+        <div id="pPageSizesSection" style="margin-bottom:16px; display:none;">
+          <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:6px; display:block; color:#555;">Select Size:</label>
+          <div id="pPageSizesButtons" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+        </div>
+
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
         </div>
@@ -482,6 +489,21 @@
           <div class="form-group" style="flex:1;"><label>Net Quantity (N) *</label><select id="wizQty"><option value="1">1</option><option value="2">2</option></select></div>
           <div class="form-group" style="flex:1;"><label>Size *</label><select id="wizSize"><option value="XXXL">XXXL</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option></select></div>
         </div>
+
+        <!-- Available Sizes Selector for Catalog Wizard -->
+        <div class="form-group">
+          <label>Select Available Sizes for Customer *</label>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="wizSizesCheckboxes">
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+          </div>
+        </div>
+
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 500" required></div>
           <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="wizMrp" placeholder="e.g. 700" required></div>
@@ -679,6 +701,7 @@
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
     let appliedDiscount = parseFloat(localStorage.getItem('kosh_applied_discount')) || 0;
     let currentSelectedProduct = null;
+    let selectedProductSize = null;
     let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
     let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
 
@@ -1018,6 +1041,12 @@
       let size = document.getElementById('wizSize').value;
       let fileInput = document.getElementById('wizImgFile');
 
+      // Gather checked sizes from wizard
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#wizSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
       if(!title || !price) {
         showAlert("Please fill out Title and Price.");
         return;
@@ -1028,6 +1057,7 @@
           id: Date.now(),
           title, category, price, mrp, desc,
           weight, color, fabric, size,
+          availableSizes: checkedSizes,
           image: imgUrls[0],
           images: imgUrls,
           sellerEmail: currentUser || 'Unknown Seller',
@@ -1108,6 +1138,20 @@
           <div class="form-group"><label>Product Title *</label><input type="text" id="dsTitle" placeholder="Product Title"></div>
           <div class="form-group"><label>Category *</label><select id="dsCategory"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
           <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="dsPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="dsMrp" placeholder="MRP"></div></div>
+          
+          <div class="form-group">
+            <label>Select Available Sizes for Customer *</label>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="dsSizesCheckboxes">
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+            </div>
+          </div>
+
           <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress"></div>
           <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
           <div class="form-group"><label>Product Images (Select Multiple from Gallery) *</label><input type="file" id="dsFile" accept="image/*" multiple style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
@@ -1125,10 +1169,24 @@
         contentBox.innerHTML = `
           <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager & Quick Add</h4>
           <div style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid #ddd;">
-            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly (Multiple Photos Supported)</h5>
+            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly (Multiple Photos & Sizes)</h5>
             <div class="form-group"><label>Title *</label><input type="text" id="admNewTitle" placeholder="Product title"></div>
             <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Price *</label><input type="number" id="admNewPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP *</label><input type="number" id="admNewMrp" placeholder="MRP"></div></div>
             <div class="form-group"><label>Category *</label><select id="admNewCat"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
+            
+            <div class="form-group">
+              <label>Select Available Sizes *</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="admNewSizesCheckboxes">
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+              </div>
+            </div>
+
             <div class="form-group"><label>Product Images (Multiple from Gallery) *</label><input type="file" id="admNewImg" accept="image/*" multiple></div>
             <button type="button" class="btn-solid" style="background:var(--success); padding:10px;" onclick="adminAddNewProductDirect()">Add Product Now</button>
           </div>
@@ -1180,6 +1238,11 @@
       let category = document.getElementById('admNewCat').value;
       let fileInput = document.getElementById('admNewImg');
 
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#admNewSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
       if(!title || !price) {
         showAlert("Kripya Title aur Price bharein.");
         return;
@@ -1190,11 +1253,12 @@
           id: Date.now(),
           title, category, price, mrp,
           desc: 'Direct added by Admin',
+          availableSizes: checkedSizes,
           image: imgUrls[0],
           images: imgUrls
         });
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        showAlert("Product added successfully with multiple photos!", "Success", true);
+        showAlert("Product added successfully with sizes and photos!", "Success", true);
         renderAdminProductManager();
         renderProducts(activeCategoryFilter);
       };
@@ -1483,6 +1547,7 @@
           price: item.price,
           mrp: item.mrp,
           desc: item.desc,
+          availableSizes: item.availableSizes || ['S','M','L','XL','XXL','XXXL'],
           image: item.image,
           images: item.images
         });
@@ -1698,6 +1763,11 @@
       let desc = document.getElementById('dsDesc').value.trim();
       let fileInput = document.getElementById('dsFile');
 
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
       if(!title || !price || !sourceName || !sourceLink) {
         showAlert("Kripya Title, Selling Price, Source Website aur Source Link zaroor bharein.");
         return;
@@ -1709,6 +1779,7 @@
           title, category, price, mrp, desc,
           sourceName,
           sourceUrl: sourceLink,
+          availableSizes: checkedSizes,
           image: imgUrls[0],
           images: imgUrls
         };
@@ -1719,12 +1790,13 @@
         products.unshift({
           id: newItem.id,
           title, category, price, mrp, desc,
+          availableSizes: checkedSizes,
           image: imgUrls[0],
           images: imgUrls
         });
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
 
-        showAlert("Dropshipping product successfully added with multiple photos!", "Success", true);
+        showAlert("Dropshipping product successfully added with multiple photos & sizes!", "Success", true);
         document.getElementById('dsTitle').value = '';
         document.getElementById('dsPrice').value = '';
         document.getElementById('dsMrp').value = '';
@@ -1863,39 +1935,78 @@
       let p = products.find(item => item.id === id);
       if(p) {
         currentSelectedProduct = p;
+        selectedProductSize = null;
         document.getElementById('pPageImg').src = p.image;
         document.getElementById('pPageCategory').innerText = p.category;
         document.getElementById('pPageTitle').innerText = p.title;
         document.getElementById('pPagePrice').innerText = '₹' + p.price;
         document.getElementById('pPageMrp').innerText = '₹' + (p.mrp || p.price);
         document.getElementById('pPageDesc').innerText = p.desc || 'No description provided.';
+        
+        // Render available sizes dynamically
+        let sizesSec = document.getElementById('pPageSizesSection');
+        let sizesBtnBox = document.getElementById('pPageSizesButtons');
+        let sizes = p.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        
+        if(sizes.includes('Free Size') && sizes.length === 1) {
+          selectedProductSize = 'Free Size';
+          sizesSec.style.display = 'none';
+        } else {
+          sizesSec.style.display = 'block';
+          sizesBtnBox.innerHTML = sizes.map(sz => `
+            <button type="button" class="size-chip" onclick="selectProductSize('${sz}', this)" style="padding:8px 14px; border:1px solid var(--border); background:#fff; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.85rem;">${sz}</button>
+          `).join('');
+        }
+
         renderProductReviews(p.id);
         navigateTo('product');
       }
     }
 
+    function selectProductSize(sz, el) {
+      selectedProductSize = sz;
+      document.querySelectorAll('.size-chip').forEach(btn => {
+        btn.style.background = '#fff';
+        btn.style.color = '#212121';
+        btn.style.borderColor = 'var(--border)';
+      });
+      el.style.background = 'var(--primary)';
+      el.style.color = '#fff';
+      el.style.borderColor = 'var(--primary)';
+    }
+
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
-        let existing = cart.find(item => item.id === currentSelectedProduct.id);
+        let sizes = currentSelectedProduct.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        if(!(sizes.includes('Free Size') && sizes.length === 1) && !selectedProductSize) {
+          showAlert("Kripya pehle product ka size select karein!");
+          return;
+        }
+        let finalSz = selectedProductSize || 'Free Size';
+
+        let existing = cart.find(item => item.id === currentSelectedProduct.id && item.size === finalSz);
         if(existing) {
           existing.qty = (existing.qty || 1) + 1;
         } else {
-          cart.push({...currentSelectedProduct, finalPrice: currentSelectedProduct.price, qty: 1});
+          cart.push({...currentSelectedProduct, finalPrice: currentSelectedProduct.price, size: finalSz, qty: 1});
         }
         localStorage.setItem('kosh_cart', JSON.stringify(cart));
         updateCartUI();
-        showAlert("Added to cart!");
+        showAlert("Added to cart with size " + finalSz + "!");
       }
     }
 
     function addToCart(id) {
       let p = products.find(item => item.id === id);
       if(p) {
-        let existing = cart.find(item => item.id === id);
+        let sizes = p.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+        let finalSz = (sizes.includes('Free Size') && sizes.length === 1) ? 'Free Size' : sizes[0];
+
+        let existing = cart.find(item => item.id === id && item.size === finalSz);
         if(existing) {
           existing.qty = (existing.qty || 1) + 1;
         } else {
-          cart.push({...p, finalPrice: p.price, qty: 1});
+          cart.push({...p, finalPrice: p.price, size: finalSz, qty: 1});
         }
         localStorage.setItem('kosh_cart', JSON.stringify(cart));
         updateCartUI();
@@ -1949,7 +2060,7 @@
           <div style="flex-grow:1;">
             <div style="font-weight:700; font-size:0.85rem; color:#212121; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${i.title}</div>
             <div style="display:flex; gap:6px; margin:4px 0; font-size:0.75rem;">
-              <span style="background:#f1f3f6; padding:2px 6px; border-radius:4px; font-weight:bold;">Size: XXXL</span>
+              <span style="background:#f1f3f6; padding:2px 6px; border-radius:4px; font-weight:bold;">Size: ${i.size || 'Free Size'}</span>
               <span style="background:#f1f3f6; padding:2px 6px; border-radius:4px; font-weight:bold;">Qty: ${i.qty || 1}</span>
             </div>
             <div style="display:flex; align-items:baseline; gap:6px;">
