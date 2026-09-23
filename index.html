@@ -76,14 +76,14 @@
     .app-page.active { display: block; }
     .page-header { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); }
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
-    .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 80px; }
+    .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 90px; }
 
     .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 120; display: none; align-items: center; justify-content: center; padding: 10px; }
-    .modal-box { background: #fff; width: 100%; max-width: 400px; border-radius: 10px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; }
+    .modal-box { background: #fff; width: 100%; max-width: 450px; border-radius: 10px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.25); text-align: center; }
 
     .form-group { margin-bottom: 14px; display: block; width: 100%; text-align: left; }
     .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: #555; }
@@ -321,7 +321,7 @@
     </div>
   </div>
 
-  <!-- EXACT MEESHO STYLE SELLER DASHBOARD & CATALOG UPLOAD -->
+  <!-- EXACT MEESHO STYLE SELLER DASHBOARD -->
   <div id="page-seller-dashboard" class="app-page">
     <div class="page-header" style="background:#55165b; color:#fff; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -375,51 +375,12 @@
           </div>
           <span style="color:#888;">›</span>
         </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="showAlert('Opening catalog preparation guide...')">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="font-size:1.3rem;">▶️</span>
-            <div>
-              <div style="font-weight:700; font-size:0.88rem;">Prepare catalogs for meesho</div>
-            </div>
-          </div>
-          <span style="color:#888;">›</span>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="switchSellerDashTab('performance')">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="font-size:1.3rem;">📊</span>
-            <div>
-              <div style="font-weight:700; font-size:0.88rem;">Pricing & commission / Performance Score</div>
-            </div>
-          </div>
-          <span style="color:#888;">›</span>
-        </div>
-
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; cursor:pointer;" onclick="showAlert('Delivery & Returns info')">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <span style="font-size:1.3rem;">🚚</span>
-            <div>
-              <div style="font-weight:700; font-size:0.88rem;">Delivery & Returns</div>
-            </div>
-          </div>
-          <span style="color:#888;">›</span>
-        </div>
       </div>
 
-      <!-- Performance Score Card (Internal) -->
-      <div id="sellerPerformanceCard" style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📊 Internal Performance Scorecard</h4>
-        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
-          <div style="background:#f8f9fa; padding:10px; border-radius:6px;">
-            <div style="font-size:0.7rem; color:#666;">Health Score</div>
-            <div style="font-size:1.2rem; font-weight:bold; color:var(--success);">94 / 100</div>
-          </div>
-          <div style="background:#f8f9fa; padding:10px; border-radius:6px;">
-            <div style="font-size:0.7rem; color:#666;">Dispatch Time</div>
-            <div style="font-size:1.1rem; font-weight:bold; color:#111;">11.4 Hours</div>
-          </div>
-        </div>
+      <!-- Seller Upload Status Check -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📋 My Uploaded Catalogs & Review Status</h4>
+        <div id="sellerCatalogStatusList" style="font-size:0.85rem; color:#555;">No catalogs uploaded yet.</div>
       </div>
 
     </div>
@@ -449,69 +410,118 @@
     </div>
   </div>
 
-  <!-- CATALOG UPLOAD MULTI-STEP WIZARD MODAL -->
+  <!-- MEESHO 4-STEP CATALOG UPLOAD WIZARD MODAL -->
   <div class="modal-overlay" id="catalogUploadModal">
     <div class="modal-box" style="max-width:550px; text-align:left; padding:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:16px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">📦 Catalog Upload</h3>
+        <h3 style="font-size:1.1rem; color:var(--primary);">📦 Catalog Upload (Meesho Style)</h3>
         <button type="button" onclick="closeCatalogUploadModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
 
-      <!-- Wizard Steps Header -->
-      <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:bold; margin-bottom:16px; border-bottom:1px solid #eee; padding-bottom:8px;">
-        <span id="wizStep1Indicator" style="color:var(--primary);">1. Add Product</span>
-        <span id="wizStep2Indicator" style="color:#888;">2. Basic Details</span>
-        <span id="wizStep3Indicator" style="color:#888;">3. Pricing & Mfg</span>
+      <!-- Wizard 4 Steps Progress Header -->
+      <div style="display:flex; justify-content:space-between; font-size:0.7rem; font-weight:bold; margin-bottom:16px; border-bottom:1px solid #eee; padding-bottom:8px;">
+        <span id="wizStep1Ind" style="color:var(--primary);">1. Add Product</span>
+        <span id="wizStep2Ind" style="color:#888;">2. Basic Details</span>
+        <span id="wizStep3Ind" style="color:#888;">3. Additional</span>
+        <span id="wizStep4Ind" style="color:#888;">4. Review</span>
       </div>
 
       <!-- Step 1: Add Product -->
-      <div id="wizStep1Content">
+      <div id="wizStep1" class="wizard-step-content">
         <div class="form-group">
           <label>Select Category *</label>
-          <select id="catSelectWizard" style="background:#f9f9f9; font-weight:bold;">
-            <option value="Men Wear">Men Wear (Tshirts, Shirts, Jeans)</option>
-            <option value="Women Wear">Women Wear (Sarees, Kurtis, Tops)</option>
+          <select id="wizCategory" style="background:#f9f9f9; font-weight:bold;">
+            <option value="Men Wear">Men Wear</option>
+            <option value="Women Wear">Women Wear</option>
             <option value="Accessories">Accessories</option>
             <option value="Footwear">Footwear</option>
             <option value="Jewellery">Jewellery</option>
           </select>
         </div>
-
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:10px; border-radius:6px; font-size:0.8rem; color:#e65100; margin-bottom:14px;">
-          ⚠️ <b>Image Guideline:</b> Upload clear product images from different sides. Watermark, price or logo is not allowed.
-        </div>
-
         <div class="form-group">
           <label>Product Image *</label>
-          <input type="file" id="wizProductImg" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+          <input type="file" id="wizImgFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);" required>
         </div>
-
         <div class="form-group">
           <label>Product Name (Title) *</label>
-          <input type="text" id="wizProdTitle" placeholder="e.g. Trendy Cotton Men T-Shirt">
+          <input type="text" id="wizTitle" placeholder="e.g. Trendy Cotton Men T-Shirt" required>
         </div>
-
         <div class="form-group">
           <label>Product Description *</label>
-          <textarea id="wizProdDesc" rows="2" placeholder="Fabric details, fit type, high quality..."></textarea>
+          <textarea id="wizDesc" rows="2" placeholder="Fabric details, fit type..." required></textarea>
         </div>
-
-        <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="goToWizardStep(2)">Next: Basic Details →</button>
+        <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="nextWizardStep(2)">Next: Basic Details →</button>
       </div>
 
-      <!-- Step 2 & 3: Basic & Pricing Details -->
-      <div id="wizStep2Content" style="display:none;">
+      <!-- Step 2: Basic Details (Mandatory Prefilled/Dropdowns + Price) -->
+      <div id="wizStep2" class="wizard-step-content" style="display:none;">
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are required</div>
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 350"></div>
-          <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="wizMrp" placeholder="e.g. 700"></div>
+          <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
+          <div class="form-group" style="flex:1;">
+            <label>Color *</label>
+            <select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option><option value="White">White</option></select>
+          </div>
         </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Fabric *</label>
+            <select id="wizFabric"><option value="Chambray">Chambray</option><option value="Cotton">Cotton</option><option value="Polyester">Polyester</option></select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Fit/Shape *</label>
+            <select id="wizFit"><option value="Boxy">Boxy</option><option value="Regular">Regular</option><option value="Slim">Slim</option></select>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;">
+            <label>Net Quantity (N) *</label>
+            <select id="wizQty"><option value="1">1</option><option value="2">2</option></select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Size *</label>
+            <select id="wizSize"><option value="XXXL">XXXL</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option></select>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-group" style="flex:1;"><label>Meesho Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 500" required></div>
+          <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="wizMrp" placeholder="e.g. 700" required></div>
+        </div>
+        <div class="form-group"><label>Manufacturer Name *</label><input type="text" id="wizMfgName" value="Kosh Supplier" required></div>
+        <div class="form-group"><label>Manufacturer Pincode *</label><input type="text" id="wizMfgPin" value="835102" required></div>
 
-        <div class="form-group"><label>Country of Origin</label><input type="text" id="wizCountry" value="India"></div>
-        <div class="form-group"><label>Manufacturer / Packer Name</label><input type="text" id="wizManufacturer" placeholder="Manufacturer or brand name"></div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="nextWizardStep(1)">← Back</button>
+          <button type="button" class="btn-solid" style="background:var(--primary); flex:1;" onclick="nextWizardStep(3)">Next: Additional →</button>
+        </div>
+      </div>
 
-        <div style="display:flex; gap:10px; margin-top:14px;">
-          <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="goToWizardStep(1)">← Back</button>
-          <button type="button" class="btn-solid" style="background:var(--success); flex:1;" onclick="submitMeeshoCatalog()">Publish Catalog Now ✓</button>
+      <!-- Step 3: Additional Details -->
+      <div id="wizStep3" class="wizard-step-content" style="display:none;">
+        <div class="form-group"><label>Style Code / Product ID *</label><input type="text" id="wizStyleCode" value="KOSH-ST-01" required></div>
+        <div class="form-group">
+          <label>Hemline *</label>
+          <select id="wizHemline"><option value="Curved">Curved</option><option value="Straight">Straight</option></select>
+        </div>
+        <div class="form-group">
+          <label>Sleeve Styling *</label>
+          <select id="wizSleeve"><option value="Regular Sleeves">Regular Sleeves</option><option value="Short Sleeves">Short Sleeves</option></select>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="nextWizardStep(2)">← Back</button>
+          <button type="button" class="btn-solid" style="background:var(--primary); flex:1;" onclick="nextWizardStep(4)">Next: Review →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Review & Submit for Admin Approval -->
+      <div id="wizStep4" class="wizard-step-content" style="display:none;">
+        <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border); font-size:0.85rem; margin-bottom:14px;">
+          <h4 style="margin-bottom:6px; color:var(--primary);">📋 Review Catalog Details</h4>
+          <p>Please review your catalog before submitting to Admin for approval.</p>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="nextWizardStep(3)">← Back</button>
+          <button type="button" class="btn-solid" style="background:var(--success); flex:1;" onclick="submitCatalogForAdminReview()">Submit for Admin Review ✓</button>
         </div>
       </div>
 
@@ -526,7 +536,8 @@
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('dropshipping')">📦 Dropshipping</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('approvals')">📝 Seller Catalog Approvals</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('dropshipping')">📦 Dropshipping</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('sellers')">🏪 Sellers & Performance</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
@@ -534,8 +545,14 @@
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
+      <!-- Tab: Seller Catalog Approvals (Admin Review) -->
+      <div id="admTabApprovals" class="dash-tab-content active">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Pending Seller Catalogs For Review</h5>
+        <div id="adminPendingCatalogsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No pending catalogs.</div>
+      </div>
+
       <!-- Tab: Dropshipping -->
-      <div id="admTabDropshipping" class="dash-tab-content active">
+      <div id="admTabDropshipping" class="dash-tab-content">
         <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
           <h4 style="margin-bottom:12px; font-weight:bold; color:var(--primary);">📦 Add New Dropshipping Product</h4>
           <div class="form-group"><label>Product Title *</label><input type="text" id="dsTitle" placeholder="Product Title"></div>
@@ -664,6 +681,7 @@
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
     let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
+    let pendingCatalogs = JSON.parse(localStorage.getItem('kosh_pending_catalogs')) || [];
     let dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
@@ -676,12 +694,11 @@
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
-    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'dropshipping';
+    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'approvals';
     let appliedDiscount = 0;
     let currentSelectedProduct = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Instant Cart Restore
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         let drawer = document.getElementById('cartDrawer');
         drawer.style.transition = 'none';
@@ -706,6 +723,7 @@
       checkLoginStatus();
       loadPaymentSettingsToUI();
       loadSellerKycData();
+      renderSellerCatalogStatus();
     });
 
     function switchAuthTab(tab) {
@@ -823,65 +841,147 @@
       }
     }
 
-    // --- MEESHO SELLER CATALOG UPLOAD WIZARD FUNCTIONS ---
+    // --- MEESHO 4-STEP CATALOG UPLOAD WIZARD ---
     function openCatalogUploadModal() {
       document.getElementById('catalogUploadModal').style.display = 'flex';
-      goToWizardStep(1);
+      nextWizardStep(1);
     }
     function closeCatalogUploadModal() {
       document.getElementById('catalogUploadModal').style.display = 'none';
     }
 
-    function goToWizardStep(step) {
-      if(step === 1) {
-        document.getElementById('wizStep1Content').style.display = 'block';
-        document.getElementById('wizStep2Content').style.display = 'none';
-        document.getElementById('wizStep1Indicator').style.color = 'var(--primary)';
-        document.getElementById('wizStep2Indicator').style.color = '#888';
-      } else {
-        document.getElementById('wizStep1Content').style.display = 'none';
-        document.getElementById('wizStep2Content').style.display = 'block';
-        document.getElementById('wizStep1Indicator').style.color = '#888';
-        document.getElementById('wizStep2Indicator').style.color = 'var(--primary)';
+    function nextWizardStep(step) {
+      for(let i=1; i<=4; i++) {
+        document.getElementById('wizStep' + i).style.display = (i === step) ? 'block' : 'none';
+        let ind = document.getElementById('wizStep' + i + 'Ind');
+        if(ind) ind.style.color = (i === step) ? 'var(--primary)' : '#888';
       }
     }
 
-    function submitMeeshoCatalog() {
-      let title = document.getElementById('wizProdTitle').value.trim();
-      let category = document.getElementById('catSelectWizard').value;
+    function submitCatalogForAdminReview() {
+      let title = document.getElementById('wizTitle').value.trim();
+      let category = document.getElementById('wizCategory').value;
       let price = parseFloat(document.getElementById('wizPrice').value) || 0;
       let mrp = parseFloat(document.getElementById('wizMrp').value) || 0;
-      let desc = document.getElementById('wizProdDesc').value.trim();
-      let fileInput = document.getElementById('wizProductImg');
+      let desc = document.getElementById('wizDesc').value.trim();
+      let weight = document.getElementById('wizWeight').value;
+      let color = document.getElementById('wizColor').value;
+      let fabric = document.getElementById('wizFabric').value;
+      let size = document.getElementById('wizSize').value;
+      let fileInput = document.getElementById('wizImgFile');
 
       if(!title || !price) {
-        showAlert("Please enter Product Title and Selling Price.");
+        showAlert("Please fill out Title and Price.");
         return;
       }
 
-      let saveItem = (imgUrl) => {
-        let newItem = {
+      let saveReviewItem = (imgUrl) => {
+        let catalogItem = {
           id: Date.now(),
           title, category, price, mrp, desc,
-          sourceName: 'Meesho Seller Panel',
-          sourceUrl: '#',
-          image: imgUrl
+          weight, color, fabric, size,
+          image: imgUrl,
+          sellerEmail: currentUser || 'Unknown Seller',
+          status: 'Under Review',
+          adminFeedback: ''
         };
 
-        products.unshift(newItem);
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        pendingCatalogs.unshift(catalogItem);
+        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
 
-        showAlert("Catalog uploaded successfully and is now live!", "Success", true);
+        showAlert("Catalog submitted to Admin for review successfully!", "Success", true);
         closeCatalogUploadModal();
-        renderProducts(activeCategoryFilter);
+        renderSellerCatalogStatus();
       };
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveItem(e.target.result); };
+        reader.onload = function(e) { saveReviewItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveItem('https://via.placeholder.com/300');
+        saveReviewItem('https://via.placeholder.com/300');
+      }
+    }
+
+    function renderSellerCatalogStatus() {
+      let container = document.getElementById('sellerCatalogStatusList');
+      if(!container) return;
+      let myCatalogs = pendingCatalogs.filter(c => c.sellerEmail === currentUser || true);
+      if(myCatalogs.length === 0) {
+        container.innerHTML = 'No catalogs submitted yet.';
+        return;
+      }
+      container.innerHTML = myCatalogs.map(c => `
+        <div style="display:flex; gap:10px; align-items:center; padding:10px 0; border-bottom:1px solid #eee;">
+          <img src="${c.image}" style="width:45px; height:45px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
+          <div style="flex-grow:1;">
+            <div style="font-weight:bold; font-size:0.85rem;">${c.title}</div>
+            <div style="font-size:0.75rem; color:#666;">Price: ₹${c.price} | Status: <strong style="color:${c.status === 'Approved' ? 'var(--success)' : (c.status === 'Rejected' ? 'var(--danger)' : '#ff9800')};">${c.status}</strong></div>
+            ${c.adminFeedback ? `<div style="font-size:0.75rem; color:var(--danger); margin-top:2px;">⚠️ Admin Note: ${c.adminFeedback}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // --- ADMIN APPROVAL FUNCTIONS ---
+    function renderAdminPendingCatalogs() {
+      let container = document.getElementById('adminPendingCatalogsList');
+      if(!container) return;
+      if(pendingCatalogs.length === 0) {
+        container.innerHTML = 'No pending catalogs for review.';
+        return;
+      }
+      container.innerHTML = pendingCatalogs.map((item, index) => `
+        <div style="display:flex; gap:12px; align-items:center; padding:12px; border-bottom:1px solid #eee;">
+          <img src="${item.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
+          <div style="flex-grow:1;">
+            <div style="font-weight:700; font-size:0.9rem;">${item.title}</div>
+            <div style="font-size:0.78rem; color:#666;">Seller: ${item.sellerEmail} | Category: ${item.category} | Price: ₹${item.price} (MRP: ₹${item.mrp})</div>
+            <div style="font-size:0.75rem; color:#444; margin-top:2px;">Specs: Fabric: ${item.fabric} | Color: ${item.color} | Size: ${item.size}</div>
+            <div style="margin-top:6px; display:flex; gap:6px;">
+              <input type="text" id="feedback_${item.id}" placeholder="Correction feedback for seller..." style="padding:6px; font-size:0.75rem; border:1px solid var(--border); border-radius:4px; flex-grow:1;">
+              <button type="button" onclick="adminApproveCatalog(${item.id})" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Accept & Publish</button>
+              <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject / Fix</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function adminApproveCatalog(id) {
+      let item = pendingCatalogs.find(c => c.id === id);
+      if(item) {
+        item.status = 'Approved';
+        item.adminFeedback = '';
+        
+        // Push to live store products
+        products.unshift({
+          id: item.id,
+          title: item.title,
+          category: item.category,
+          price: item.price,
+          mrp: item.mrp,
+          desc: item.desc,
+          image: item.image
+        });
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+
+        renderAdminPendingCatalogs();
+        renderProducts(activeCategoryFilter);
+        showAlert("Catalog approved and published live!", "Success", true);
+      }
+    }
+
+    function adminRejectCatalog(id) {
+      let feedback = document.getElementById('feedback_' + id).value.trim();
+      let item = pendingCatalogs.find(c => c.id === id);
+      if(item) {
+        item.status = 'Rejected';
+        item.adminFeedback = feedback || 'Please update correct product image/details.';
+        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+        renderAdminPendingCatalogs();
+        showAlert("Catalog rejected and feedback sent to seller.");
       }
     }
 
@@ -1287,6 +1387,7 @@
       let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
       if(contentEl) contentEl.classList.add('active');
 
+      if(tab === 'approvals') renderAdminPendingCatalogs();
       if(tab === 'dropshipping') renderAdminDropshippingList();
       if(tab === 'sellers') {
         let list = document.getElementById('admSellersList');
