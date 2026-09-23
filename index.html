@@ -272,8 +272,8 @@
           <div id="pPageSizesButtons" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
-          <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;" id="pPageActionBox">
+          <button type="button" id="pPageAddToCartBtn" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
         </div>
         <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:20px;"></p>
         
@@ -479,7 +479,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_6](start_span)[span_6](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -493,24 +493,20 @@
           <div class="form-group" style="flex:1;"><label>Size *</label><select id="wizSize"><option value="XXXL">XXXL</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option></select></div>
         </div>
 
-        <!-- Available Sizes Selector for Catalog Wizard (Clothing + Footwear + Free Size) -->
         <div class="form-group">
           <label>Select Available Sizes for Customer *</label>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="wizSizesCheckboxes">
-            <!-- Clothing Sizes -->
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="S" checked> S</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="M" checked> M</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="L" checked> L</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XL" checked> XL</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXL" checked> XXL</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
-            <!-- Footwear Sizes -->
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="6"> 6</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="7"> 7</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="8"> 8</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="9"> 9</label>
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="10"> 10</label>
-            <!-- Free Size -->
             <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="Free Size"> Free Size</label>
           </div>
         </div>
@@ -595,7 +591,7 @@
             <div class="icon">🛍️</div>
             <div>
               <div class="title">Product Manager</div>
-              <div class="desc">Manage marketplace catalog & add products</div>
+              <div class="desc">Manage marketplace catalog, edit & add products</div>
             </div>
           </div>
           <div class="admin-card-btn" onclick="openAdminView('orders')">
@@ -627,6 +623,48 @@
         <div id="adminSubPageContentBox" style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);"></div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- EDIT PRODUCT MODAL -->
+  <div class="modal-overlay" id="editProductModal">
+    <div class="modal-box" style="text-align:left;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+        <h3 style="font-size:1.1rem; color:var(--primary);">✏️ Edit Product Details</h3>
+        <button type="button" onclick="document.getElementById('editProductModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+      <input type="hidden" id="editProdId">
+      <div class="form-group"><label>Product Title *</label><input type="text" id="editProdTitle"></div>
+      <div style="display:flex; gap:10px;">
+        <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="editProdPrice"></div>
+        <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="editProdMrp"></div>
+      </div>
+      <div class="form-group">
+        <label>Stock Status *</label>
+        <select id="editProdStock">
+          <option value="Available">Available</option>
+          <option value="Out of Stock">Out of Stock</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select Available Sizes *</label>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="editProdSizesCheckboxes">
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="S"> S</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="M"> M</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="L"> L</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XL"> XL</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXL"> XXL</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXXL"> XXXL</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="6"> 6</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="7"> 7</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="8"> 8</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="9"> 9</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="10"> 10</label>
+          <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Update Photos (Multiple from Gallery)</label><input type="file" id="editProdImgs" accept="image/*" multiple></div>
+      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="saveEditedProduct()">Save Changes ✓</button>
     </div>
   </div>
 
@@ -768,7 +806,6 @@
 
       navigateTo(savedPage, false);
 
-      // Restore product details page correctly if page is product
       let savedProdId = localStorage.getItem('kosh_selected_product_id');
       if(savedPage === 'product' && savedProdId) {
         let p = products.find(x => x.id == savedProdId);
@@ -906,7 +943,6 @@
       }
     }
 
-    // --- SELLER SUB-PAGE NAVIGATION ---
     function openSellerSubPage(section, save = true) {
       if(save) {
         activeSellerSubView = section;
@@ -1078,6 +1114,7 @@
           title, category, price, mrp, desc,
           weight, color, fabric, size,
           availableSizes: checkedSizes,
+          stockStatus: 'Available',
           image: imgUrls[0],
           images: imgUrls,
           sellerEmail: currentUser || 'Unknown Seller',
@@ -1133,7 +1170,7 @@
       `).join('');
     }
 
-    // --- ADMIN APPROVAL & VIEWS ---
+    // --- ADMIN VIEWS & PRODUCT MANAGER WITH EDIT ---
     function openAdminView(viewName, save = true) {
       if(save) {
         activeAdminViewName = viewName;
@@ -1231,7 +1268,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1284,6 +1321,7 @@
           title, category, price, mrp,
           desc: 'Direct added by Admin',
           availableSizes: checkedSizes,
+          stockStatus: 'Available',
           image: imgUrls[0],
           images: imgUrls
         });
@@ -1325,26 +1363,83 @@
           <img src="${p.image}" style="width:45px; height:45px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
           <div style="flex-grow:1;">
             <div style="font-weight:bold; font-size:0.88rem;">${p.title}</div>
-            <div style="font-size:0.75rem; color:#666;">Price: ₹${p.price} | Seller ID: <span style="color:var(--primary); font-weight:bold;">Admin</span></div>
+            <div style="font-size:0.75rem; color:#666;">Price: ₹${p.price} | Stock: <strong style="color:${p.stockStatus === 'Out of Stock' ? 'var(--danger)' : 'var(--success)'};">${p.stockStatus || 'Available'}</strong></div>
           </div>
-          <button type="button" onclick="editProduct(${p.id})" style="background:#2196f3; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Edit</button>
+          <button type="button" onclick="openEditProductModal(${p.id})" style="background:#2196f3; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Edit</button>
           <button type="button" onclick="deleteProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Delete</button>
         </div>
       `).join('');
     }
 
-    function editProduct(id) {
+    function openEditProductModal(id) {
       let p = products.find(x => x.id === id);
       if(!p) return;
-      let newTitle = prompt("Edit Product Title:", p.title);
-      let newPrice = prompt("Edit Selling Price:", p.price);
-      if(newTitle && newPrice) {
+      document.getElementById('editProdId').value = p.id;
+      document.getElementById('editProdTitle').value = p.title;
+      document.getElementById('editProdPrice').value = p.price;
+      document.getElementById('editProdMrp').value = p.mrp || p.price * 1.4;
+      document.getElementById('editProdStock').value = p.stockStatus || 'Available';
+
+      let sizeBoxes = document.querySelectorAll('#editProdSizesCheckboxes input[type="checkbox"]');
+      let currentSizes = p.availableSizes || ['S','M','L','XL','XXL','XXXL'];
+      sizeBoxes.forEach(box => {
+        box.checked = currentSizes.includes(box.value);
+      });
+
+      document.getElementById('editProductModal').style.display = 'flex';
+    }
+
+    function saveEditedProduct() {
+      let id = parseInt(document.getElementById('editProdId').value);
+      let p = products.find(x => x.id === id);
+      if(!p) return;
+
+      let newTitle = document.getElementById('editProdTitle').value.trim();
+      let newPrice = parseFloat(document.getElementById('editProdPrice').value) || p.price;
+      let newMrp = parseFloat(document.getElementById('editProdMrp').value) || p.mrp;
+      let newStock = document.getElementById('editProdStock').value;
+      let fileInput = document.getElementById('editProdImgs');
+
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#editProdSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
+      let updateValues = (newImages) => {
         p.title = newTitle;
-        p.price = parseFloat(newPrice) || p.price;
+        p.price = newPrice;
+        p.mrp = newMrp;
+        p.stockStatus = newStock;
+        p.availableSizes = checkedSizes;
+        if(newImages && newImages.length > 0) {
+          p.image = newImages[0];
+          p.images = newImages;
+        }
+
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        document.getElementById('editProductModal').style.display = 'none';
         renderAdminProductManager();
         renderProducts(activeCategoryFilter);
-        showAlert("Product updated successfully!");
+        showAlert("Product updated successfully!", "Success", true);
+      };
+
+      if(fileInput.files && fileInput.files.length > 0) {
+        let files = fileInput.files;
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<files.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === files.length) {
+              updateValues(loaded);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      } else {
+        updateValues(null);
       }
     }
 
@@ -1578,6 +1673,7 @@
           mrp: item.mrp,
           desc: item.desc,
           availableSizes: item.availableSizes || ['S','M','L','XL','XXL','XXXL'],
+          stockStatus: 'Available',
           image: item.image,
           images: item.images
         });
@@ -1783,115 +1879,6 @@
       `).join('');
     }
 
-    function addNewDropshippingProduct() {
-      let title = document.getElementById('dsTitle').value.trim();
-      let category = document.getElementById('dsCategory').value;
-      let price = parseFloat(document.getElementById('dsPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('dsMrp').value) || price * 1.4;
-      let sourceName = document.getElementById('dsSourceWebsite').value.trim();
-      let sourceLink = document.getElementById('dsSourceLink').value.trim();
-      let desc = document.getElementById('dsDesc').value.trim();
-      let fileInput = document.getElementById('dsFile');
-
-      let checkedSizes = [];
-      let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
-      sizeBoxes.forEach(b => checkedSizes.push(b.value));
-      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
-
-      if(!title || !price || !sourceName || !sourceLink) {
-        showAlert("Kripya Title, Selling Price, Source Website aur Source Link zaroor bharein.");
-        return;
-      }
-
-      let saveItem = (imgUrls) => {
-        let newItem = {
-          id: Date.now(),
-          title, category, price, mrp, desc,
-          sourceName,
-          sourceUrl: sourceLink,
-          availableSizes: checkedSizes,
-          image: imgUrls[0],
-          images: imgUrls
-        };
-
-        dropshippingList.unshift(newItem);
-        localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
-
-        products.unshift({
-          id: newItem.id,
-          title, category, price, mrp, desc,
-          availableSizes: checkedSizes,
-          image: imgUrls[0],
-          images: imgUrls
-        });
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-
-        showAlert("Dropshipping product successfully added with multiple photos & sizes!", "Success", true);
-        document.getElementById('dsTitle').value = '';
-        document.getElementById('dsPrice').value = '';
-        document.getElementById('dsMrp').value = '';
-        document.getElementById('dsSourceWebsite').value = '';
-        document.getElementById('dsSourceLink').value = '';
-        document.getElementById('dsDesc').value = '';
-        document.getElementById('dsFile').value = '';
-        
-        renderAdminDropshippingList();
-        renderProducts(activeCategoryFilter);
-      };
-
-      if(fileInput.files && fileInput.files.length > 0) {
-        let files = fileInput.files;
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<files.length; i++) {
-          let reader = new FileReader();
-          reader.onload = function(e) {
-            loaded.push(e.target.result);
-            count++;
-            if(count === files.length) {
-              saveItem(loaded);
-            }
-          };
-          reader.readAsDataURL(files[i]);
-        }
-      } else {
-        saveItem(['https://via.placeholder.com/300']);
-      }
-    }
-
-    function renderAdminDropshippingList() {
-      let container = document.getElementById('admDropshippingList');
-      if(!container) return;
-      if(dropshippingList.length === 0) {
-        container.innerHTML = 'No dropshipping products added.';
-        return;
-      }
-      container.innerHTML = dropshippingList.map(item => `
-        <div style="display:flex; gap:12px; align-items:center; padding:12px; border-bottom:1px solid #eee;">
-          <img src="${item.image}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
-          <div style="flex-grow:1;">
-            <div style="font-weight:700; font-size:0.9rem;">${item.title}</div>
-            <div style="font-size:0.78rem; color:#666;">Category: ${item.category} | Price: ₹${item.price}</div>
-            <div style="margin-top:6px; font-size:0.8rem; background:#f1f3f6; padding:6px 10px; border-radius:4px; display:inline-block;">
-              🌐 <b>Source Website:</b> <span style="color:#0d47a1; font-weight:bold;">${item.sourceName}</span> &nbsp;|&nbsp; 
-              🔗 <a href="${item.sourceUrl}" target="_blank" style="color:#d32f2f; font-weight:bold; text-decoration:underline;">Open Source Link ↗</a>
-            </div>
-          </div>
-          <button type="button" onclick="deleteDropshippingProduct(${item.id})" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Delete</button>
-        </div>
-      `).join('');
-    }
-
-    function deleteDropshippingProduct(id) {
-      dropshippingList = dropshippingList.filter(i => i.id !== id);
-      localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
-      products = products.filter(p => p.id !== id);
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-      renderAdminDropshippingList();
-      renderProducts(activeCategoryFilter);
-      showAlert("Deleted successfully!");
-    }
-
     function filterCategory(cat, el) {
       activeCategoryFilter = cat;
       localStorage.setItem('kosh_active_category', cat);
@@ -1914,13 +1901,17 @@
         return;
       }
       filtered.forEach(p => {
+        let isOut = p.stockStatus === 'Out of Stock';
         grid.innerHTML += `
-          <div class="product-card">
-            <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}"></div>
+          <div class="product-card" style="${isOut ? 'opacity:0.7;' : ''}">
+            <div class="product-img" onclick="openProductDetail(${p.id})">
+              <img src="${p.image}">
+              ${isOut ? '<div style="position:absolute; inset:0; background:rgba(0,0,0,0.5); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:0.85rem;">OUT OF STOCK</div>' : ''}
+            </div>
             <div class="product-info">
               <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
               <div class="p-price">₹${p.price}</div>
-              <button class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+              <button class="btn-add-cart" ${isOut ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''} onclick="addToCart(${p.id})">${isOut ? 'Out of Stock' : 'Add to Cart'}</button>
             </div>
           </div>`;
       });
@@ -1983,6 +1974,15 @@
         document.getElementById('pPageMrp').innerText = '₹' + (p.mrp || p.price);
         document.getElementById('pPageDesc').innerText = p.desc || 'No description provided.';
         
+        let actionBox = document.getElementById('pPageActionBox');
+        let isOut = p.stockStatus === 'Out of Stock';
+        
+        if(isOut) {
+          actionBox.innerHTML = `<button type="button" class="btn-solid" disabled style="background:#ccc; cursor:not-allowed;">Out of Stock</button>`;
+        } else {
+          actionBox.innerHTML = `<button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>`;
+        }
+
         let sizesSec = document.getElementById('pPageSizesSection');
         let sizesBtnBox = document.getElementById('pPageSizesButtons');
         let sizes = p.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
@@ -2016,6 +2016,10 @@
 
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
+        if(currentSelectedProduct.stockStatus === 'Out of Stock') {
+          showAlert("Yeh product Out of Stock hai!");
+          return;
+        }
         let sizes = currentSelectedProduct.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
         if(!(sizes.includes('Free Size') && sizes.length === 1) && !selectedProductSize) {
           showAlert("Kripya pehle product ka size select karein!");
@@ -2038,6 +2042,10 @@
     function addToCart(id) {
       let p = products.find(item => item.id === id);
       if(p) {
+        if(p.stockStatus === 'Out of Stock') {
+          showAlert("Yeh product Out of Stock hai!");
+          return;
+        }
         let sizes = p.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
         let finalSz = (sizes.includes('Free Size') && sizes.length === 1) ? 'Free Size' : sizes[0];
 
