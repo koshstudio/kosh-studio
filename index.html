@@ -139,12 +139,12 @@
     </div>
 
     <div class="categories-bar" id="categoriesBar">
-      <div class="cat-item active" onclick="filterCategory('All')">All Collection</div>
-      <div class="cat-item" onclick="filterCategory('Men Wear')">Men Wear</div>
-      <div class="cat-item" onclick="filterCategory('Women Wear')">Women Wear</div>
-      <div class="cat-item" onclick="filterCategory('Accessories')">Accessories</div>
-      <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
-      <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
+      <div class="cat-item active" onclick="filterCategory('All', this)">All Collection</div>
+      <div class="cat-item" onclick="filterCategory('Men Wear', this)">Men Wear</div>
+      <div class="cat-item" onclick="filterCategory('Women Wear', this)">Women Wear</div>
+      <div class="cat-item" onclick="filterCategory('Accessories', this)">Accessories</div>
+      <div class="cat-item" onclick="filterCategory('Footwear', this)">Footwear</div>
+      <div class="cat-item" onclick="filterCategory('Jewellery', this)">Jewellery</div>
     </div>
 
     <main class="container">
@@ -922,12 +922,23 @@
       showAlert("Deleted successfully!");
     }
 
+    function filterCategory(cat, el) {
+      activeCategoryFilter = cat;
+      document.querySelectorAll('.cat-item').forEach(item => item.classList.remove('active'));
+      if(el) el.classList.add('active');
+      renderProducts(cat);
+    }
+
     function renderProducts(filterCat = null) {
       if(filterCat !== null) activeCategoryFilter = filterCat;
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       let filtered = products;
       if(activeCategoryFilter !== 'All') filtered = filtered.filter(p => p.category === activeCategoryFilter);
+      if(filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: span 2; text-align:center; padding:30px; color:#888;">No products found in this category.</div>';
+        return;
+      }
       filtered.forEach(p => {
         grid.innerHTML += `
           <div class="product-card">
@@ -963,7 +974,6 @@
       }
     }
 
-    function filterCategory(cat) { renderProducts(cat); }
     function handleSearch(val) { renderProducts(); }
     function openProductDetail(id) {
       let p = products.find(item => item.id === id);
