@@ -295,7 +295,7 @@
 
         <!-- My Orders & Status Section -->
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow);">
-          <h4 style="font-size:1rem; margin-bottom:10px; color:var(--primary);">📦 My Orders & Tracking Status</h4>
+          <h4 style="font-size:1rem; margin-bottom:10px; color:var(--primary);">📦 My Orders & Approval Status</h4>
           <div id="customerMyOrdersList" style="font-size:0.85rem; color:#555;">No orders placed yet.</div>
         </div>
 
@@ -360,6 +360,12 @@
         <div style="padding:16px;">
           <button type="button" class="btn-solid" style="background:var(--primary); font-size:0.95rem; padding:14px;" onclick="openCatalogUploadModal()">Upload Catalog</button>
         </div>
+      </div>
+
+      <!-- Seller Orders Status Check -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📦 Customer Orders (Payment Status)</h4>
+        <div id="sellerOrdersStatusList" style="font-size:0.85rem; color:#555;">No orders received yet.</div>
       </div>
 
       <!-- Seller Upload Status Check -->
@@ -728,6 +734,7 @@
       loadPaymentSettingsToUI();
       loadSellerKycData();
       renderSellerCatalogStatus();
+      renderSellerOrdersStatus();
     });
 
     function switchAuthTab(tab) {
@@ -799,6 +806,7 @@
         document.getElementById('displayUserEmail').innerText = currentUser;
         loadSellerKycData();
         renderCustomerMyOrders();
+        renderSellerOrdersStatus();
       } else { 
         document.getElementById('userDashboardSection').style.display = 'none'; 
         document.getElementById('authContainer').style.display = 'block'; 
@@ -817,7 +825,23 @@
         <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
           <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id}</div>
           <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | Total: ₹${o.total}</div>
-          <div style="font-size:0.75rem; color:var(--success); font-weight:bold; margin-top:2px;">Status: ${o.status} | UTR: ${o.utr || 'N/A'}</div>
+          <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Status: ${o.status}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderSellerOrdersStatus() {
+      let container = document.getElementById('sellerOrdersStatusList');
+      if(!container) return;
+      if(ordersList.length === 0) {
+        container.innerHTML = 'No orders received yet.';
+        return;
+      }
+      container.innerHTML = ordersList.map(o => `
+        <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
+          <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
+          <div style="font-size:0.78rem; color:#666;">Customer UTR: ${o.utr}</div>
+          <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Payment Status: ${o.status}</div>
         </div>
       `).join('');
     }
@@ -982,11 +1006,26 @@
           <div>
             <div style="font-weight:bold; font-size:0.9rem;">Order #${o.id} - ₹${o.total}</div>
             <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | User: ${o.userEmail || 'Customer'}</div>
-            <div style="font-size:0.8rem; color:var(--success); font-weight:bold; margin-top:4px;">🔑 UTR / Transaction ID: ${o.utr || 'N/A'}</div>
+            <div style="font-size:0.8rem; color:var(--primary); font-weight:bold; margin-top:4px;">🔑 UTR / Transaction ID: ${o.utr || 'N/A'}</div>
+            <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Status: ${o.status}</div>
           </div>
-          <span style="background:#e8f5e9; color:var(--success); padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>
+          <div>
+            ${o.status.includes('Pending') ? `<button type="button" onclick="adminConfirmPayment(${o.id})" style="background:var(--success); color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; cursor:pointer; font-weight:bold;">Verify & Confirm Order ✓</button>` : '<span style="background:#e8f5e9; color:var(--success); padding:6px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>'}
+          </div>
         </div>
       `).join('');
+    }
+
+    function adminConfirmPayment(orderId) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.status = 'Order Confirmed & Payment Verified';
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        renderAdminPayments();
+        renderCustomerMyOrders();
+        renderSellerOrdersStatus();
+        showAlert("Payment verified and order confirmed successfully!", "Success", true);
+      }
     }
 
     function adminApproveCatalog(id) {
@@ -1154,7 +1193,7 @@
           total: total,
           utr: utrInput.value.trim(),
           userEmail: currentUser || 'Guest Customer',
-          status: 'Order Placed & Payment Verified',
+          status: 'Pending Admin Verification',
           date: new Date().toLocaleDateString()
         };
         ordersList.unshift(newOrder);
@@ -1163,7 +1202,7 @@
         localStorage.setItem('kosh_cart', JSON.stringify(cart));
         localStorage.removeItem('kosh_cart_open');
         updateCartUI();
-        showAlert("Payment verified and Order placed successfully!", "Success", true);
+        showAlert("Order placed! Pending Admin Payment Verification.", "Success", true);
         navigateTo('home');
       }, 1000);
     }
@@ -1315,6 +1354,7 @@
         if(seller) {
           document.getElementById('dashStoreTitle').innerText = 'Welcome back, ' + seller.storeName + '!';
         }
+        renderSellerOrdersStatus();
       }
       if(pageId === 'profile') {
         checkLoginStatus();
