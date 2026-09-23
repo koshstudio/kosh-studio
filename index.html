@@ -263,9 +263,9 @@
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
 
-        <!-- Dynamic Size Selection Container -->
+        <!-- Dynamic Size Selection Container (Strict Single-Select) -->
         <div id="pPageSizesSection" style="margin-bottom:16px; display:none;">
-          <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:6px; display:block; color:#555;">Select Size:</label>
+          <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:6px; display:block; color:#555;">Select Size (Select Any One):</label>
           <div id="pPageSizesButtons" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
         </div>
 
@@ -476,7 +476,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_5](start_span)[span_5](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -490,17 +490,25 @@
           <div class="form-group" style="flex:1;"><label>Size *</label><select id="wizSize"><option value="XXXL">XXXL</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option></select></div>
         </div>
 
-        <!-- Available Sizes Selector for Catalog Wizard -->
+        <!-- Available Sizes Selector for Catalog Wizard (Clothing + Footwear + Free Size) -->
         <div class="form-group">
           <label>Select Available Sizes for Customer *</label>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="wizSizesCheckboxes">
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
-            <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+            <!-- Clothing Sizes -->
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="S" checked> S</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="M" checked> M</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="L" checked> L</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XL" checked> XL</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+            <!-- Footwear Sizes -->
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="6"> 6</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="7"> 7</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="8"> 8</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="9"> 9</label>
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="10"> 10</label>
+            <!-- Free Size -->
+            <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="Free Size"> Free Size</label>
           </div>
         </div>
 
@@ -1041,7 +1049,7 @@
       let size = document.getElementById('wizSize').value;
       let fileInput = document.getElementById('wizImgFile');
 
-      // Gather checked sizes from wizard
+      // Gather checked sizes from wizard (clothing + footwear + free size)
       let checkedSizes = [];
       let sizeBoxes = document.querySelectorAll('#wizSizesCheckboxes input[type="checkbox"]:checked');
       sizeBoxes.forEach(b => checkedSizes.push(b.value));
@@ -1142,13 +1150,21 @@
           <div class="form-group">
             <label>Select Available Sizes for Customer *</label>
             <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="dsSizesCheckboxes">
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
-              <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+              <!-- Clothing -->
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="S" checked> S</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="M" checked> M</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="L" checked> L</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XL" checked> XL</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+              <!-- Footwear -->
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="6"> 6</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="7"> 7</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="8"> 8</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="9"> 9</label>
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="10"> 10</label>
+              <!-- Free Size -->
+              <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="Free Size"> Free Size</label>
             </div>
           </div>
 
@@ -1177,13 +1193,21 @@
             <div class="form-group">
               <label>Select Available Sizes *</label>
               <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;" id="admNewSizesCheckboxes">
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="S" checked> S</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="M" checked> M</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="L" checked> L</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XL" checked> XL</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXL" checked> XXL</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
-                <label style="font-weight:normal; font-size:0.85rem;"><input type="checkbox" value="Free Size"> Free Size</label>
+                <!-- Clothing -->
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="S" checked> S</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="M" checked> M</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="L" checked> L</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XL" checked> XL</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXL" checked> XXL</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="XXXL" checked> XXXL</label>
+                <!-- Footwear -->
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="6"> 6</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="7"> 7</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="8"> 8</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="9"> 9</label>
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="10"> 10</label>
+                <!-- Free Size -->
+                <label style="font-weight:normal; font-size:0.82rem;"><input type="checkbox" value="Free Size"> Free Size</label>
               </div>
             </div>
 
@@ -1201,7 +1225,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Banners</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1763,6 +1787,7 @@
       let desc = document.getElementById('dsDesc').value.trim();
       let fileInput = document.getElementById('dsFile');
 
+      // Gather checked sizes from dropshipping form
       let checkedSizes = [];
       let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
       sizeBoxes.forEach(b => checkedSizes.push(b.value));
@@ -1931,6 +1956,7 @@
     }
 
     function handleSearch(val) { renderProducts(activeCategoryFilter); }
+
     function openProductDetail(id) {
       let p = products.find(item => item.id === id);
       if(p) {
@@ -1943,7 +1969,7 @@
         document.getElementById('pPageMrp').innerText = '₹' + (p.mrp || p.price);
         document.getElementById('pPageDesc').innerText = p.desc || 'No description provided.';
         
-        // Render available sizes dynamically
+        // Render available sizes dynamically with strict single select
         let sizesSec = document.getElementById('pPageSizesSection');
         let sizesBtnBox = document.getElementById('pPageSizesButtons');
         let sizes = p.availableSizes || ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
@@ -1954,7 +1980,7 @@
         } else {
           sizesSec.style.display = 'block';
           sizesBtnBox.innerHTML = sizes.map(sz => `
-            <button type="button" class="size-chip" onclick="selectProductSize('${sz}', this)" style="padding:8px 14px; border:1px solid var(--border); background:#fff; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.85rem;">${sz}</button>
+            <button type="button" class="size-chip" onclick="selectProductSize('${sz}', this)" style="padding:8px 14px; border:1px solid var(--border); background:#fff; color:#212121; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.85rem;">${sz}</button>
           `).join('');
         }
 
@@ -1963,13 +1989,16 @@
       }
     }
 
+    // Customer Single-select size logic
     function selectProductSize(sz, el) {
       selectedProductSize = sz;
+      // Deselect all previous chips
       document.querySelectorAll('.size-chip').forEach(btn => {
         btn.style.background = '#fff';
         btn.style.color = '#212121';
         btn.style.borderColor = 'var(--border)';
       });
+      // Highlight the tapped chip only
       el.style.background = 'var(--primary)';
       el.style.color = '#fff';
       el.style.borderColor = 'var(--primary)';
