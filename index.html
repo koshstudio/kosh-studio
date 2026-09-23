@@ -14,12 +14,13 @@
       --card-bg: #ffffff;
       --text: #212121;
       --muted: #878787;
-      --primary: #55165b; /* Meesho Purple Theme */
+      --primary: #55165b;
       --accent: #d4af37;
       --border: #e0e0e0;
       --shadow: 0 2px 8px rgba(0,0,0,0.06);
       --success: #388e3c;
       --danger: #d32f2f;
+      --pro-pink: #ff3b6f;
     }
 
     * { 
@@ -78,7 +79,8 @@
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 90px; }
 
-    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #fff; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
+    /* Professional Cart Drawer */
+    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #f1f3f6; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
 
@@ -90,7 +92,6 @@
     .form-group input, .form-group textarea, .form-group select { width: 100%; display: block; padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; background: #fff; }
     .btn-solid { width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-    /* Meesho Seller Bottom Nav */
     .meesho-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 50; }
     .nav-tab-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #666; font-weight: 600; cursor: pointer; background: none; border: none; }
     .nav-tab-item.active { color: var(--primary); }
@@ -410,11 +411,11 @@
     </div>
   </div>
 
-  <!-- MEESHO 4-STEP CATALOG UPLOAD WIZARD MODAL -->
+  <!-- MEESHO 4-STEP CATALOG UPLOAD WIZARD -->
   <div class="modal-overlay" id="catalogUploadModal">
     <div class="modal-box" style="max-width:550px; text-align:left; padding:20px;">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:16px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">📦 Catalog Upload (Meesho Style)</h3>
+        <h3 style="font-size:1.1rem; color:var(--primary);">📦 Catalog Upload (4-Step Wizard)</h3>
         <button type="button" onclick="closeCatalogUploadModal()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
       </div>
 
@@ -430,7 +431,7 @@
       <div id="wizStep1" class="wizard-step-content">
         <div class="form-group">
           <label>Select Category *</label>
-          <select id="wizCategory" style="background:#f9f9f9; font-weight:bold;">
+          <select id="wizCategory" style="background:#f9f9f9; font-weight:bold;" required>
             <option value="Men Wear">Men Wear</option>
             <option value="Women Wear">Women Wear</option>
             <option value="Accessories">Accessories</option>
@@ -453,14 +454,14 @@
         <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="nextWizardStep(2)">Next: Basic Details →</button>
       </div>
 
-      <!-- Step 2: Basic Details (Mandatory Prefilled/Dropdowns + Price) -->
+      <!-- Step 2: Basic Details (Prefilled & Mandatory) -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are required[span_3](start_span)[span_3](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_9](start_span)[span_9](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
             <label>Color *</label>
-            <select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option><option value="White">White</option></select>
+            <select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select>
           </div>
         </div>
         <div style="display:flex; gap:10px;">
@@ -470,7 +471,7 @@
           </div>
           <div class="form-group" style="flex:1;">
             <label>Fit/Shape *</label>
-            <select id="wizFit"><option value="Boxy">Boxy</option><option value="Regular">Regular</option><option value="Slim">Slim</option></select>
+            <select id="wizFit"><option value="Boxy">Boxy</option><option value="Regular">Regular</option></select>
           </div>
         </div>
         <div style="display:flex; gap:10px;">
@@ -513,7 +514,7 @@
         </div>
       </div>
 
-      <!-- Step 4: Review & Submit for Admin Approval -->
+      <!-- Step 4: Review & Submit -->
       <div id="wizStep4" class="wizard-step-content" style="display:none;">
         <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border); font-size:0.85rem; margin-bottom:14px;">
           <h4 style="margin-bottom:6px; color:var(--primary);">📋 Review Catalog Details</h4>
@@ -545,9 +546,9 @@
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
-      <!-- Tab: Seller Catalog Approvals (Admin Review) -->
+      <!-- Tab: Seller Catalog Approvals (Admin Preview & Accept/Reject) -->
       <div id="admTabApprovals" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Pending Seller Catalogs For Review</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Pending Seller Catalogs For Review & Acceptance</h5>
         <div id="adminPendingCatalogsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No pending catalogs.</div>
       </div>
 
@@ -645,17 +646,33 @@
     </div>
   </div>
 
-  <!-- CART DRAWER (MEESHO STYLE) -->
+  <!-- PROFESSIONAL CART DRAWER (MYNTRA/NYKAA STYLE) -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
-    <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:1rem; font-weight:700;">YOUR SHOPPING CART</h3>
-      <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
+    <!-- Top Savings Banner -->
+    <div style="background:#e8f5e9; color:#2e7d32; padding:10px 16px; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #c8e6c9;">
+      <span>🎉 You're saving ₹70 on this order</span>
+      <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.1rem; cursor:pointer;">✕</button>
     </div>
-    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
+
+    <!-- Bag Header -->
+    <div style="padding:12px 16px; background:#fff; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:0.95rem; font-weight:800; text-transform:uppercase;">Your Bag</h3>
+      <span style="font-size:0.8rem; font-weight:bold; color:var(--pro-pink);" id="cartBagCountIndicator">1/1 Items Selected</span>
+    </div>
+
+    <!-- Cart Items Scrollable Container -->
+    <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:12px 16px; background:#f1f3f6;"></div>
+
+    <!-- Price Details Breakdown & Checkout Box -->
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:block;">
-      <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
-      <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="goToCheckoutPage()">Proceed to Checkout</button>
+      <div style="font-size:0.85rem; font-weight:800; margin-bottom:8px; color:#212121;">Price Details</div>
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--muted);"><span>Total MRP</span><span id="cartTotalMrp">₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);"><span>Discount on MRP</span><span>- ₹70</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px; color:var(--muted);"><span>Platform Fee</span><span>₹23</span></div>
+      <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.95rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Total Amount</span><span id="cartTotalPrice" style="color:var(--pro-pink);">₹0</span></div>
+      
+      <button type="button" class="btn-solid" style="background:var(--pro-pink); font-size:0.95rem; padding:14px; border-radius:6px;" onclick="goToCheckoutPage()">Place Order</button>
     </div>
   </div>
 
@@ -954,7 +971,6 @@
         item.status = 'Approved';
         item.adminFeedback = '';
         
-        // Push to live store products
         products.unshift({
           id: item.id,
           title: item.title,
@@ -1069,7 +1085,7 @@
 
     function renderPaymentPage() {
       let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-      let total = Math.max(0, subtotal - appliedDiscount);
+      let total = Math.max(0, subtotal - 70 + 23); // Reflecting Nykaa style calculation
       document.getElementById('payTotalAmount').innerText = '₹' + total;
       
       let container = document.getElementById('paymentMethodContainer');
@@ -1093,7 +1109,7 @@
     function processAutoPayment() {
       setTimeout(() => {
         let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-        let total = Math.max(0, subtotal - appliedDiscount);
+        let total = Math.max(0, subtotal - 70 + 23);
         let newOrder = {
           id: Date.now(),
           items: [...cart],
@@ -1324,29 +1340,45 @@
     }
 
     function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((a,c) => a + (c.qty || 1), 0);
-      let totalAmount = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-      document.getElementById('cartTotalPrice').innerText = '₹' + totalAmount;
+      let totalQty = cart.reduce((a,c) => a + (c.qty || 1), 0);
+      document.getElementById('cartCount').innerText = totalQty;
+      document.getElementById('cartBagCountIndicator').innerText = `${totalQty}/${totalQty} Items Selected`;
+      
+      let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
+      let totalMrp = cart.reduce((a,c) => a + ((c.mrp || c.finalPrice * 1.5) * (c.qty || 1)), 0);
+      let grandTotal = Math.max(0, subtotal - 70 + 23);
+      
+      document.getElementById('cartTotalMrp').innerText = '₹' + Math.round(totalMrp);
+      document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
       
       let container = document.getElementById('cartItemsContainer');
       if(cart.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#888; padding:30px 0;">Your cart is empty</div>';
+        container.innerHTML = '<div style="text-align:center; color:#888; padding:30px 0;">Your bag is empty</div>';
         return;
       }
       
       container.innerHTML = cart.map(i => `
-        <div style="display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid #eee;">
-          <img src="${i.image}" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #ddd;">
+        <div style="background:#fff; border-radius:8px; padding:12px; margin-bottom:10px; border:1px solid var(--border); display:flex; gap:12px; position:relative;">
+          <input type="checkbox" checked style="accent-color:var(--pro-pink); cursor:pointer;">
+          <img src="${i.image}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid #ddd;">
           <div style="flex-grow:1;">
-            <div style="font-weight:600; font-size:0.85rem; color:#212121; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${i.title}</div>
-            <div style="font-weight:700; font-size:0.9rem; margin-top:2px;">₹${i.finalPrice}</div>
-            <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+            <div style="font-weight:700; font-size:0.85rem; color:#212121; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${i.title}</div>
+            <div style="display:flex; gap:6px; margin:4px 0; font-size:0.75rem;">
+              <span style="background:#f1f3f6; padding:2px 6px; border-radius:4px; font-weight:bold;">Size: XXXL</span>
+              <span style="background:#f1f3f6; padding:2px 6px; border-radius:4px; font-weight:bold;">Qty: ${i.qty || 1}</span>
+            </div>
+            <div style="display:flex; align-items:baseline; gap:6px;">
+              <span style="font-weight:800; font-size:0.95rem; color:#111;">₹${i.finalPrice}</span>
+              <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${i.mrp || Math.round(i.finalPrice * 1.5)}</span>
+              <span style="font-size:0.7rem; color:var(--success); font-weight:bold;">28% OFF</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
               <button type="button" onclick="updateCartQty(${i.id}, -1)" style="width:24px; height:24px; background:#f1f3f6; border:1px solid #ccc; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
               <span style="font-size:0.85rem; font-weight:600;">${i.qty || 1}</span>
               <button type="button" onclick="updateCartQty(${i.id}, 1)" style="width:24px; height:24px; background:#f1f3f6; border:1px solid #ccc; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
             </div>
           </div>
-          <button type="button" onclick="removeFromCart(${i.id})" style="background:none; border:none; color:#ff5252; font-size:1.1rem; cursor:pointer; padding:4px;">🗑️</button>
+          <button type="button" onclick="removeFromCart(${i.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; color:#888; font-size:1rem; cursor:pointer;">✕</button>
         </div>
       `).join('');
     }
