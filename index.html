@@ -146,10 +146,7 @@
     <div id="announcementBanner" style="background:#ff9800; color:#000; padding:8px 14px; font-size:0.8rem; font-weight:bold; text-align:center; display:none;"></div>
 
     <div class="banner-slider-container" id="homeBannerSlider">
-      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+1" alt="Banner 1"></div>
-      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+2" alt="Banner 2"></div>
-      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+3" alt="Banner 3"></div>
-      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Banner+4" alt="Banner 4"></div>
+      <div class="banner-slide-item"><img src="https://via.placeholder.com/800x300?text=Kosh+Studio+Banner" alt="Banner"></div>
     </div>
 
     <div class="flash-banner" id="customSaleBanner">
@@ -465,14 +462,14 @@
 
       <div id="wizStep1" class="wizard-step-content">
         <div class="form-group"><label>Select Category *</label><select id="wizCategory" style="background:#f9f9f9; font-weight:bold;" required><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
-        <div class="form-group"><label>Product Image *</label><input type="file" id="wizImgFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);" required></div>
+        <div class="form-group"><label>Product Image (Select from Gallery) *</label><input type="file" id="wizImgFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);" required></div>
         <div class="form-group"><label>Product Name (Title) *</label><input type="text" id="wizTitle" placeholder="e.g. Trendy Cotton Men T-Shirt" required></div>
         <div class="form-group"><label>Product Description *</label><textarea id="wizDesc" rows="2" placeholder="Fabric details, fit type..." required></textarea></div>
         <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="nextWizardStep(2)">Next: Basic Details →</button>
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_8](start_span)[span_8](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_5](start_span)[span_5](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -565,7 +562,7 @@
             <div class="icon">🛍️</div>
             <div>
               <div class="title">Product Manager</div>
-              <div class="desc">Manage marketplace catalog</div>
+              <div class="desc">Manage marketplace catalog & add products</div>
             </div>
           </div>
           <div class="admin-card-btn" onclick="openAdminView('orders')">
@@ -586,7 +583,7 @@
             <div class="icon">⚙️</div>
             <div>
               <div class="title">Gateway & Sale Settings</div>
-              <div class="desc">Configure Manual UPI and Live Sale Banner</div>
+              <div class="desc">Configure Manual UPI, Countdown & Gallery Banners</div>
             </div>
           </div>
         </div>
@@ -609,7 +606,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER -->
+  <!-- PROFESSIONAL CART DRAWER -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div id="cartSavingsBanner" style="background:#e8f5e9; color:#2e7d32; padding:10px 16px; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #c8e6c9;">
@@ -673,7 +670,7 @@
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
-    let saleConfig = JSON.parse(localStorage.getItem('kosh_sale_config')) || { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF' };
+    let saleConfig = JSON.parse(localStorage.getItem('kosh_sale_config')) || { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF', countdown: '05:42:18' };
     let bannerConfig = JSON.parse(localStorage.getItem('kosh_banner_config')) || { announcement: '', banners: [] };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -682,6 +679,8 @@
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
     let appliedDiscount = parseFloat(localStorage.getItem('kosh_applied_discount')) || 0;
     let currentSelectedProduct = null;
+    let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
+    let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
 
     window.addEventListener('DOMContentLoaded', () => {
       // Auto-cleanup rejected orders older than 7 days
@@ -717,6 +716,7 @@
       if(saleConfig.active) {
         document.getElementById('saleBannerTitle').innerText = saleConfig.title;
         document.getElementById('saleBannerText').innerText = saleConfig.text;
+        document.getElementById('flashTimer').innerText = saleConfig.countdown || '05:42:18';
         saleDiv.style.display = 'flex';
       } else {
         saleDiv.style.display = 'none';
@@ -741,6 +741,14 @@
       loadSellerKycData();
       renderSellerCatalogStatus();
       renderSellerOrdersStatus();
+
+      // Restore Admin or Seller sub-views if saved in localStorage
+      if(savedPage === 'admin-dashboard' && activeAdminViewName) {
+        openAdminView(activeAdminViewName, false);
+      }
+      if(savedPage === 'seller-dashboard' && activeSellerSubView) {
+        openSellerSubPage(activeSellerSubView, false);
+      }
     });
 
     function switchAuthTab(tab) {
@@ -856,7 +864,12 @@
       }
     }
 
-    function openSellerSubPage(section) {
+    // --- SELLER SUB-PAGE NAVIGATION ---
+    function openSellerSubPage(section, save = true) {
+      if(save) {
+        activeSellerSubView = section;
+        localStorage.setItem('kosh_seller_sub_view', section);
+      }
       document.getElementById('sellerHomeMenu').style.display = 'none';
       let box = document.getElementById('sellerSubPageContentBox');
       document.getElementById('sellerSubPageView').style.display = 'block';
@@ -877,6 +890,8 @@
     }
 
     function closeSellerSubPage() {
+      activeSellerSubView = null;
+      localStorage.removeItem('kosh_seller_sub_view');
       document.getElementById('sellerSubPageView').style.display = 'none';
       document.getElementById('sellerHomeMenu').style.display = 'block';
     }
@@ -1031,7 +1046,7 @@
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveReviewItem(e.target.result); };
+        reader.onload = function(e) { saveItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
         saveReviewItem('https://via.placeholder.com/300');
@@ -1058,8 +1073,12 @@
       `).join('');
     }
 
-    // --- ADMIN VIEWS & SUB-PAGES ---
-    function openAdminView(viewName) {
+    // --- ADMIN APPROVAL & VIEWS ---
+    function openAdminView(viewName, save = true) {
+      if(save) {
+        activeAdminViewName = viewName;
+        localStorage.setItem('kosh_admin_view_name', viewName);
+      }
       document.getElementById('adminHomeMenu').classList.remove('active');
       let subBox = document.getElementById('adminSubPageView');
       subBox.classList.add('active');
@@ -1079,7 +1098,7 @@
           <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="dsPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="dsMrp" placeholder="MRP"></div></div>
           <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress"></div>
           <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
-          <div class="form-group"><label>Product Image *</label><input type="file" id="dsFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
+          <div class="form-group"><label>Product Image (Select from Gallery) *</label><input type="file" id="dsFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
           <div class="form-group"><label>Description</label><textarea id="dsDesc" rows="2" placeholder="Product details..."></textarea></div>
           <button type="button" class="btn-solid" style="background:#673ab7; margin-top:10px;" onclick="addNewDropshippingProduct()">Add Dropshipping Product</button>
           <h5 style="margin:20px 0 10px; font-weight:bold;">Sourced Dropshipping Products</h5>
@@ -1091,7 +1110,18 @@
         let list = document.getElementById('admSellersList');
         list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
       } else if(viewName === 'products') {
-        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager</h4><div id="admProductsList"></div>`;
+        contentBox.innerHTML = `
+          <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager & Quick Add</h4>
+          <div style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid #ddd;">
+            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly</h5>
+            <div class="form-group"><label>Title *</label><input type="text" id="admNewTitle" placeholder="Product title"></div>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Price *</label><input type="number" id="admNewPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP *</label><input type="number" id="admNewMrp" placeholder="MRP"></div></div>
+            <div class="form-group"><label>Category *</label><select id="admNewCat"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
+            <div class="form-group"><label>Product Image (Gallery) *</label><input type="file" id="admNewImg" accept="image/*"></div>
+            <button type="button" class="btn-solid" style="background:var(--success); padding:10px;" onclick="adminAddNewProductDirect()">Add Product Now</button>
+          </div>
+          <div id="admProductsList"></div>
+        `;
         renderAdminProductManager();
       } else if(viewName === 'orders') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📦 All Orders (Click order for details)</h4><div id="admOrdersList"></div>`;
@@ -1101,30 +1131,65 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Banners</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
+          <div class="form-group"><label>Countdown Timer (e.g. 05:42:18)</label><input type="text" id="setSaleTimerInput" placeholder="05:42:18"></div>
           <button type="button" class="btn-solid" style="background:#55165b; margin-bottom:15px;" onclick="saveSaleConfig()">Save Sale Settings</button>
 
           <div class="form-group"><label>Announcement Banner Text</label><input type="text" id="setAnnounceText" placeholder="Mega Sale Live..."></div>
-          <div class="form-group"><label>Banner Image URL (Slider)</label><input type="text" id="setBannerImgUrl" placeholder="https://image-url.com"></div>
-          <button type="button" class="btn-solid" style="background:#333; margin-bottom:15px;" onclick="saveDynamicBanners()">Save Banner Image</button>
+          <div class="form-group"><label>Banner Images (Select Multiple from Gallery)</label><input type="file" id="setBannerFiles" accept="image/*" multiple style="padding:10px; background:#fff; border:1px dashed var(--border);"></div>
+          <button type="button" class="btn-solid" style="background:#333; margin-bottom:15px;" onclick="saveDynamicGalleryBanners()">Save Gallery Banners</button>
           
           <div class="form-group"><label>Gateway</label><select id="gatewaySelect" onchange="toggleGatewayFields()"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Manual UPI & Scanner</option></select></div>
           <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
-          <div id="upiGatewayConfig" style="display:none;"><div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div><div class="form-group"><label>QR Code Scanner Image</label><input type="file" id="gwQrFile" accept="image/*"></div></div>
+          <div id="upiGatewayConfig" style="display:none;"><div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div><div class="form-group"><label>QR Code Scanner Image (Gallery)</label><input type="file" id="gwQrFile" accept="image/*"></div></div>
           <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway Settings</button>
         `;
         loadPaymentSettingsToUI();
         document.getElementById('setSaleActiveChk').checked = saleConfig.active || false;
         document.getElementById('setSaleTitleInput').value = saleConfig.title || '';
         document.getElementById('setSaleTextInput').value = saleConfig.text || '';
+        document.getElementById('setSaleTimerInput').value = saleConfig.countdown || '05:42:18';
         document.getElementById('setAnnounceText').value = bannerConfig.announcement || '';
       }
     }
 
-    // Product Manager Row-by-Row rendering
+    function adminAddNewProductDirect() {
+      let title = document.getElementById('admNewTitle').value.trim();
+      let price = parseFloat(document.getElementById('admNewPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('admNewMrp').value) || price * 1.4;
+      let category = document.getElementById('admNewCat').value;
+      let fileInput = document.getElementById('admNewImg');
+
+      if(!title || !price) {
+        showAlert("Kripya Title aur Price bharein.");
+        return;
+      }
+
+      let saveItem = (imgUrl) => {
+        products.unshift({
+          id: Date.now(),
+          title, category, price, mrp,
+          desc: 'Direct added by Admin',
+          image: imgUrl
+        });
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        showAlert("Product added successfully!", "Success", true);
+        renderAdminProductManager();
+        renderProducts(activeCategoryFilter);
+      };
+
+      if(fileInput.files && fileInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) { saveItem(e.target.result); };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        saveItem('https://via.placeholder.com/300');
+      }
+    }
+
     function renderAdminProductManager() {
       let list = document.getElementById('admProductsList');
       if(!list) return;
@@ -1168,7 +1233,6 @@
       showAlert("Product deleted!");
     }
 
-    // All Orders Clickable List & Detail View
     function renderAdminAllOrders() {
       let list = document.getElementById('admOrdersList');
       if(!list) return;
@@ -1208,7 +1272,6 @@
       `;
     }
 
-    // Support Tickets with Reply & Close options
     function renderAdminTickets() {
       let list = document.getElementById('admTicketsList');
       if(!list) return;
@@ -1250,24 +1313,41 @@
       let active = document.getElementById('setSaleActiveChk').checked;
       let title = document.getElementById('setSaleTitleInput').value.trim();
       let text = document.getElementById('setSaleTextInput').value.trim();
-      saleConfig = { active, title, text };
+      let countdown = document.getElementById('setSaleTimerInput').value.trim();
+      saleConfig = { active, title, text, countdown };
       localStorage.setItem('kosh_sale_config', JSON.stringify(saleConfig));
-      showAlert("Sale banner settings saved successfully!", "Success", true);
+      showAlert("Sale settings saved successfully!", "Success", true);
     }
 
-    function saveDynamicBanners() {
+    function saveDynamicGalleryBanners() {
       let ann = document.getElementById('setAnnounceText').value.trim();
-      let img = document.getElementById('setBannerImgUrl').value.trim();
+      let files = document.getElementById('setBannerFiles').files;
       bannerConfig.announcement = ann;
-      if(img) {
+
+      if(files && files.length > 0) {
         if(!bannerConfig.banners) bannerConfig.banners = [];
-        bannerConfig.banners.push(img);
+        let loadedCount = 0;
+        for(let i=0; i<files.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            bannerConfig.banners.push(e.target.result);
+            loadedCount++;
+            if(loadedCount === files.length) {
+              localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
+              showAlert("Gallery banners added successfully!", "Success", true);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      } else {
+        localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
+        showAlert("Announcement saved!", "Success", true);
       }
-      localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
-      showAlert("Banner image added successfully!", "Success", true);
     }
 
     function closeAdminView() {
+      activeAdminViewName = null;
+      localStorage.removeItem('kosh_admin_view_name');
       let subBox = document.getElementById('adminSubPageView');
       let homeMenu = document.getElementById('adminHomeMenu');
       if(subBox) subBox.classList.remove('active');
@@ -1704,14 +1784,14 @@
       window.scrollTo(0, 0);
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
-        closeAdminView();
+        if(!activeAdminViewName) closeAdminView();
       }
       if(pageId === 'seller-dashboard') {
         let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
         if(seller) {
           document.getElementById('dashStoreTitle').innerText = 'Welcome back, ' + seller.storeName + '!';
         }
-        closeSellerSubPage();
+        if(!activeSellerSubView) closeSellerSubPage();
       }
       if(pageId === 'profile') {
         checkLoginStatus();
