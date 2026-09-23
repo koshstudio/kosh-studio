@@ -528,7 +528,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -1372,7 +1372,7 @@
           <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
           
           <div class="form-group">
-            <label>Product Photos (1st Photo, 2nd Photo...) *</label>
+            <label>Product Photos (1st Photo = Cover) *</label>
             <div id="dsPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
               <div style="display:flex; align-items:center; gap:8px;">
                 <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
@@ -1428,7 +1428,7 @@
             </div>
 
             <div class="form-group">
-              <label>Product Photos (1st Photo, 2nd Photo...) *</label>
+              <label>Product Photos (1st Photo = Cover) *</label>
               <div id="admPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
                 <div style="display:flex; align-items:center; gap:8px;">
                   <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
@@ -1472,7 +1472,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
