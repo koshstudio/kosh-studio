@@ -599,6 +599,11 @@
       checkLoginStatus();
       loadPaymentSettingsToUI();
       loadSellerKycData();
+
+      // Restore cart open state if it was open before refresh
+      if(localStorage.getItem('kosh_cart_open') === 'true') {
+        toggleCartDrawer(true);
+      }
     });
 
     function switchAuthTab(tab) {
@@ -1086,6 +1091,8 @@
 
     function toggleCartDrawer(open) {
       document.getElementById('cartDrawer').classList.toggle('open', open);
+      document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
+      localStorage.setItem('kosh_cart_open', open);
     }
 
     function triggerAdminSecret() {
