@@ -958,7 +958,13 @@
       }
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
       let targetPage = document.getElementById('page-' + pageId);
-      if(targetPage) targetPage.classList.add('active');
+      if(targetPage) {
+        targetPage.classList.add('active');
+      } else {
+        pageId = 'home';
+        document.getElementById('page-home').classList.add('active');
+        localStorage.setItem('kosh_active_page', 'home');
+      }
       window.scrollTo(0, 0);
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
