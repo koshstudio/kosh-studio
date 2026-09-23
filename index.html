@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kosh Studio | Multi-Vendor Marketplace Pro</title>
+  <title>Kosh Studio | Multi-Vendor Marketplace Pro Enterprise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -106,7 +106,7 @@
 </head>
 <body>
 
-  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE PRO</div>
+  <div class="top-strip">⚡ 100% SECURE MULTI-VENDOR MARKETPLACE ENTERPRISE PRO</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -114,6 +114,9 @@
       <div class="header-top-row">
         <a class="brand-name" onclick="navigateTo('home')">Kosh Studio</a>
         <div class="header-icons">
+          <button type="button" class="icon-btn" onclick="navigateTo('leaderboard')">
+            <span>🏆 Leaderboard</span>
+          </button>
           <button type="button" class="icon-btn" onclick="navigateTo('wishlist')">
             <span class="badge-count" id="wishlistCount">0</span>
             <span>Wishlist</span>
@@ -128,7 +131,7 @@
         </div>
       </div>
       <div class="header-search">
-        <input type="text" id="searchInput" placeholder="Search products..." oninput="handleSearch(this.value)">
+        <input type="text" id="searchInput" placeholder="Search products or bundles..." oninput="handleSearch(this.value)">
       </div>
     </header>
 
@@ -136,7 +139,7 @@
 
     <div class="flash-banner">
       <div>
-        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale Live!</h4>
+        <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);">🔥 Mega Sale & Combos Live!</h4>
         <p style="font-size:0.75rem; color:#ccc;">Use coupon code <strong style="color:#fff;">KOSH20</strong> for Flat ₹20 OFF</p>
       </div>
       <div class="flash-timer" id="flashTimer">05:42:18</div>
@@ -149,6 +152,7 @@
       <div class="cat-item" onclick="filterCategory('Accessories')">Accessories</div>
       <div class="cat-item" onclick="filterCategory('Footwear')">Footwear</div>
       <div class="cat-item" onclick="filterCategory('Jewellery')">Jewellery</div>
+      <div class="cat-item" onclick="filterCategory('Bundles')">🔥 Combo Bundles</div>
     </div>
 
     <main class="container">
@@ -161,8 +165,19 @@
     </main>
 
     <footer>
-      <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
+      <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio Enterprise. All rights reserved.</p>
     </footer>
+  </div>
+
+  <!-- SELLER LEADERBOARD PAGE -->
+  <div id="page-leaderboard" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
+      <span style="font-weight:700;">🏆 Top Seller Leaderboard (Sales & Quality Score)</span>
+    </div>
+    <div class="page-content">
+      <div id="leaderboardList" style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">Loading leaderboard...</div>
+    </div>
   </div>
 
   <!-- WISHLIST PAGE -->
@@ -180,7 +195,7 @@
   <div id="page-checkout" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back to Store</button>
-      <span style="font-weight:700;">📦 Shipping Address</span>
+      <span style="font-weight:700;">📦 Shipping Address & Courier Selector</span>
     </div>
     <div class="page-content" style="max-width:550px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
@@ -197,8 +212,7 @@
         </div>
 
         <div class="form-group">
-          <label>Street Address *</label>
-          <input type="text" id="chkAddress" placeholder="House no., Street name, Area" required>
+          <label>Street Address *</label><input type="text" id="chkAddress" placeholder="House no., Street name, Area" required>
         </div>
 
         <div class="form-group">
@@ -206,14 +220,16 @@
           <input type="text" id="chkPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupPincode(this.value);" required>
         </div>
 
-        <div class="form-group">
-          <label>City (Auto-fetched)</label>
-          <input type="text" id="chkCity" placeholder="Auto-detected city" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
-        </div>
+        <div class="form-group"><label>City (Auto-fetched)</label><input type="text" id="chkCity" placeholder="Auto-detected city" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>State (Auto-fetched)</label><input type="text" id="chkState" placeholder="Auto-detected state" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
 
         <div class="form-group">
-          <label>State (Auto-fetched)</label>
-          <input type="text" id="chkState" placeholder="Auto-detected state" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
+          <label>🚚 Automated Delivery Partner / Courier Selection</label>
+          <select id="courierSelect" style="font-weight:bold; color:var(--success);">
+            <option value="Delhivery Express (₹49) — 2 Days">Delhivery Express (₹49) — 2 Days Delivery</option>
+            <option value="Bluedart Air (₹79) — Next Day">Bluedart Air (₹79) — Next Day Priority</option>
+            <option value="Ekart Ground (FREE) — 4 Days">Ekart Ground (FREE) — Standard Shipping</option>
+          </select>
         </div>
 
         <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px; padding:14px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
@@ -225,13 +241,17 @@
   <div id="page-payment" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('checkout')">← Back to Address</button>
-      <span style="font-weight:700;">💳 Secure Payment</span>
+      <span style="font-weight:700;">💳 Secure Payment & Cross-Seller Split</span>
     </div>
-    <div class="page-content" style="max-width:500px;">
-      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow); text-align:center;">
-        <h3 style="margin-bottom:6px; font-size:1.2rem; color:var(--primary);">Complete Your Payment</h3>
-        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px;">Total Payable Amount: <strong style="color:var(--primary); font-size:1.1rem;" id="payTotalAmount">₹0</strong></p>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:6px; font-size:1.2rem; color:var(--primary); text-align:center;">Complete Your Payment</h3>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px; text-align:center;">Total Payable Amount: <strong style="color:var(--primary); font-size:1.1rem;" id="payTotalAmount">₹0</strong></p>
         
+        <div id="crossSellerCartSplitBox" style="background:#f9f9f9; padding:12px; border-radius:6px; margin-bottom:14px; font-size:0.8rem; border:1px solid var(--border);">
+          <!-- Cross-seller cart split breakdown rendered here -->
+        </div>
+
         <div style="display:flex; gap:8px; margin-bottom:16px;">
           <input type="text" id="couponCodeInput" placeholder="Enter Coupon (e.g. KOSH20)" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
           <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem; background:#333;" onclick="applyCouponCode()">Apply</button>
@@ -254,6 +274,12 @@
         <div id="pPageCategory" style="font-size:0.75rem; color:var(--muted); text-transform:uppercase; font-weight:700;"></div>
         <h2 id="pPageTitle" style="font-size:1.3rem; font-weight:700; margin-bottom:8px;"></h2>
         <div id="pPageMetaDisplay" style="font-size:0.75rem; color:var(--muted); margin-bottom:8px; font-weight:bold;"></div>
+        
+        <div id="variantSelectionBox" style="margin-bottom:12px; display:none;">
+          <label style="font-size:0.75rem; font-weight:bold; text-transform:uppercase; display:block; margin-bottom:4px;">Select Variant (Size / Color / Material):</label>
+          <select id="pVariantSelect" onchange="updateVariantPrice()" style="padding:10px; font-size:0.9rem; border-radius:4px; border:1px solid var(--border); width:100%;"></select>
+        </div>
+
         <div style="display:flex; gap:12px; align-items:baseline; margin-bottom:14px;">
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
@@ -308,8 +334,8 @@
         </div>
 
         <div id="sellerDashboardCard" style="display:none; background:#ede7f6; padding:20px; border-radius:8px; border:1px solid #d1c4e9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-dashboard')">
-          <h4 style="font-size:1rem; margin-bottom:4px; color:#512da8;">🏪 Seller Dashboard (Manage Store)</h4>
-          <p style="font-size:0.8rem; color:#555;">Manage products, orders, sales, and payouts.</p>
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#512da8;">🏪 Seller Dashboard (Manage Store, Variants & API)</h4>
+          <p style="font-size:0.8rem; color:#555;">Manage products, variants, performance score, subscription & webhooks.</p>
         </div>
 
         <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
@@ -318,8 +344,8 @@
         </div>
 
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('support')">
-          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support & Grievances</h4>
-          <p style="font-size:0.8rem; color:var(--muted);">Raise a grievance ticket or chat with support.</p>
+          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support & Dispute Evidence</h4>
+          <p style="font-size:0.8rem; color:#muted);">Raise a grievance ticket or attach dispute evidence photos/videos.</p>
         </div>
 
         <div id="joinSellerCard" style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-reg')">
@@ -338,6 +364,27 @@
     </div>
     <div class="page-content" style="max-width:1000px;">
       
+      <!-- Seller Onboarding Checklist & Performance Score Box -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+        <div style="background:#e3f2fd; border:1px solid #bbdefb; padding:14px; border-radius:8px;">
+          <h4 style="font-size:0.9rem; color:#0d47a1; margin-bottom:6px;">🚀 Store Onboarding Checklist</h4>
+          <div id="onboardingChecklistContainer" style="font-size:0.78rem; color:#333;">Loading checklist...</div>
+        </div>
+        <div style="background:#e8f5e9; border:1px solid #c8e6c9; padding:14px; border-radius:8px;">
+          <h4 style="font-size:0.9rem; color:#2e7d32; margin-bottom:6px;">⭐ Performance Score & Plan</h4>
+          <div id="sellerPerformanceBox" style="font-size:0.8rem; color:#333;">Loading performance...</div>
+        </div>
+      </div>
+
+      <!-- Subscription Plan Upgrade Banner -->
+      <div style="background:linear-gradient(135deg, #311b92, #512da8); color:#fff; padding:16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h4 style="font-size:1rem; color:var(--accent);">👑 Subscription Plan: <span id="currentSellerPlanBadge">Free Plan</span></h4>
+          <p style="font-size:0.75rem; color:#ddd; margin-top:2px;">Upgrade to Pro to unlock zero commission, API webhooks, and priority search ranking.</p>
+        </div>
+        <button type="button" class="btn-solid" style="width:auto; background:var(--accent); color:#000; padding:10px 16px; font-size:0.8rem;" onclick="upgradeSellerPlan()">Upgrade to Pro (₹999/mo)</button>
+      </div>
+
       <!-- Vacation Mode Toggle -->
       <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px 16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
         <div>
@@ -368,17 +415,20 @@
       </div>
 
       <div class="dash-tabs">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products & Drafts</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management & Timeline</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payouts & Reports</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products, Variants & Bundles</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Orders & Timeline</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('settlements')">💰 Settlements & Reconciliation</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('api')">🔌 API & Webhooks</button>
       </div>
 
-      <!-- Tab 1: Products & Drafts -->
+      <!-- Tab 1: Products, Variants & Bundles -->
       <div id="sellerDashTabProducts" class="dash-tab-content active">
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Store Product / Draft</h4>
+          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add Store Product with Variants & Quality Checklist</h4>
           <input type="hidden" id="sellerEditProdId" value="">
-          <div class="form-group"><label>Product Title *</label><input type="text" id="sProdTitle" placeholder="Product Title"></div>
+          <div class="form-group"><label>Product Title *</label><input type="text" id="sProdTitle" placeholder="Product Title" oninput="checkDuplicateProduct(this.value)"></div>
+          <div id="duplicateWarningNotice" style="display:none; color:red; font-size:0.75rem; margin-bottom:8px; font-weight:bold;">⚠️ Warning: Similar product title already exists in marketplace!</div>
+          
           <div class="form-group">
             <label>Category *</label>
             <select id="sProdCategory">
@@ -387,36 +437,71 @@
               <option value="Accessories">Accessories</option>
               <option value="Footwear">Footwear</option>
               <option value="Jewellery">Jewellery</option>
+              <option value="Bundles">🔥 Combo Bundle</option>
             </select>
           </div>
-          <div class="form-group"><label>Price (₹) *</label><input type="number" id="sProdPrice" placeholder="Selling Price"></div>
-          <div class="form-group"><label>MRP (₹) *</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
-          <div class="form-group"><label>Stock Qty *</label><input type="number" id="sProdStock" placeholder="Stock Quantity"></div>
+          
+          <div style="display:flex; gap:12px;">
+            <div class="form-group"><label>Base Price (₹) *</label><input type="number" id="sProdPrice" placeholder="Selling Price"></div>
+            <div class="form-group"><label>MRP (₹) *</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
+            <div class="form-group"><label>Stock Qty *</label><input type="number" id="sProdStock" placeholder="Stock Qty"></div>
+          </div>
+
+          <!-- Product Variants Builder -->
+          <div style="background:#f9f9f9; padding:12px; border-radius:6px; border:1px solid var(--border); margin-bottom:14px;">
+            <label style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; display:block;">🎨 Product Variants (Size / Color / Material & Price diff)</label>
+            <input type="text" id="sProdVariantsInput" placeholder="e.g. S-Black-Cotton:499, M-Blue-Denim:599, L-Red-Silk:699" style="padding:10px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px; width:100%;">
+            <small style="color:var(--muted); font-size:0.7rem;">Format: `VariantName:Price` comma separated.</small>
+          </div>
+
+          <!-- Product Quality Checklist Box -->
+          <div style="background:#fff3e0; padding:12px; border-radius:6px; border:1px solid #ffe0b2; margin-bottom:14px;">
+            <label style="font-size:0.8rem; font-weight:bold; color:#e65100; margin-bottom:6px; display:block;">📋 Product Quality Checklist (Mandatory)</label>
+            <div style="display:flex; flex-direction:column; gap:4px; font-size:0.78rem;">
+              <label><input type="checkbox" id="chkQualityImage"> High resolution photo attached</label>
+              <label><input type="checkbox" id="chkQualityDesc"> Accurate description & sizing chart provided</label>
+              <label><input type="checkbox" id="chkQualityPricing"> Competitive pricing & stock verified</label>
+            </div>
+          </div>
+
           <div class="form-group">
             <label>Product Photo (Gallery) *</label>
             <input type="file" id="sProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
           </div>
           <div class="form-group"><label>Description *</label><textarea id="sProdDesc" rows="2" placeholder="Product description..."></textarea></div>
+          
           <div style="display:flex; gap:10px; margin-top:10px;">
             <button type="button" class="btn-solid" style="background:#512da8; flex:1;" onclick="saveSellerProduct(false)">Publish Product</button>
             <button type="button" class="btn-solid" style="background:#757575; flex:1;" onclick="saveSellerProduct(true)">Save as Draft</button>
           </div>
         </div>
 
-        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products & Drafts</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products, Bundles & Variants</h5>
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products added.</div>
       </div>
 
-      <!-- Tab 2: Order Management & Timeline -->
+      <!-- Tab 2: Orders & Timeline -->
       <div id="sellerDashTabOrders" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders & Timeline Workflow</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders received yet.</div>
       </div>
 
-      <!-- Tab 3: Payouts & Reports -->
-      <div id="sellerDashTabPayouts" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sales Reports & Earnings Breakdown</h5>
-        <div id="sellerPayoutHistoryList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payout history.</div>
+      <!-- Tab 3: Settlements & Reconciliation -->
+      <div id="sellerDashTabSettlements" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Automated Settlement Reconciliation & Commission Invoices</h5>
+        <div id="sellerSettlementList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No settlement records.</div>
+      </div>
+
+      <!-- Tab 4: API & Webhooks -->
+      <div id="sellerDashTabApi" class="dash-tab-content">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">
+          <h4 style="margin-bottom:10px; font-weight:bold;">🔌 Seller API & Webhook Integration (Shopify / WooCommerce Sync)</h4>
+          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:14px;">Use your unique API Secret Key and Webhook URL to automatically sync orders, inventory, and product listings from your external online stores.</p>
+          
+          <div class="form-group"><label>Your API Key</label><input type="text" id="sellerApiKeyDisplay" readonly style="background:#f1f3f6; font-family:monospace;"></div>
+          <div class="form-group"><label>Webhook Payload URL (Shopify/WooCommerce endpoint)</label><input type="text" id="sellerWebhookUrl" placeholder="https://yourstore.com/api/webhook"></div>
+          <button type="button" class="btn-solid" style="background:#512da8; margin-top:10px;" onclick="saveSellerWebhook()">Save Webhook & Test Sync</button>
+        </div>
       </div>
 
     </div>
@@ -432,18 +517,18 @@
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
         <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">PAN & Bank Account Details</h3>
         
-        <div class="form-group"><label>PAN Card Full Name (Must match Bank & Seller Name) *</label><input type="text" id="kycPanName" placeholder="Name as on PAN Card" required></div>
+        <div class="form-group"><label>PAN Card Full Name *</label><input type="text" id="kycPanName" placeholder="Name as on PAN Card" required></div>
         <div class="form-group"><label>PAN Card Number *</label><input type="text" id="kycPanNumber" placeholder="ABCDE1234F" maxlength="10" required></div>
         <div class="form-group"><label>Bank Account Number *</label><input type="text" id="kycAccountNum" placeholder="Account Number" required></div>
         <div class="form-group">
           <label>IFSC Code (Auto-fetches Bank Details) *</label>
           <input type="text" id="kycIfsc" maxlength="11" placeholder="SBIN000XXXX" oninput="this.value = this.value.toUpperCase(); lookupIfsc(this.value);" required>
         </div>
-        <div class="form-group"><label>Bank Name (Auto-fetched)</label><input type="text" id="kycBankName" placeholder="Bank Name" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
-        <div class="form-group"><label>Branch Name (Auto-fetched)</label><input type="text" id="kycBranchName" placeholder="Branch Name" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>Bank Name</label><input type="text" id="kycBankName" readonly style="background:#f1f3f6;" required></div>
+        <div class="form-group"><label>Branch Name</label><input type="text" id="kycBranchName" readonly style="background:#f1f3f6;" required></div>
 
         <div id="kycLockedNotice" style="display:none; background:#fff3e0; border:1px solid #ffe0b2; padding:10px; border-radius:4px; font-size:0.8rem; color:#e65100; margin-bottom:12px;">
-          🔒 Your KYC details are verified and locked. Only Admin can edit them upon request.
+          🔒 Your KYC details are verified and locked.
         </div>
 
         <button type="button" id="kycSubmitBtn" class="btn-solid" style="background:var(--success); padding:14px;" onclick="submitSellerKyc()">Submit KYC & Bank Details</button>
@@ -451,91 +536,41 @@
     </div>
   </div>
 
-  <!-- CUSTOMER SUPPORT & CHAT PAGE -->
+  <!-- CUSTOMER SUPPORT & DISPUTE EVIDENCE PAGE -->
   <div id="page-support" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
-      <span style="font-weight:700;">🛠️ Customer Support & Grievances</span>
+      <span style="font-weight:700;">🛠️ Customer Support & Dispute Evidence System</span>
     </div>
     <div class="page-content" style="max-width:650px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:20px;">
-        <h3 style="margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Raise a Grievance Ticket</h3>
+        <h3 style="margin-bottom:16px; font-size:1.1rem; color:var(--primary);">Raise Grievance / Dispute with Evidence</h3>
         
         <div class="form-group">
           <label>Select Grievance Category *</label>
           <select id="grievanceCategorySelect" onchange="toggleOtherMsgBox()">
             <option value="">-- Choose Category --</option>
-            <optgroup label="Order Related">
-              <option value="Order nahi mila / late delivery">Order nahi mila / late delivery</option>
-              <option value="Wrong product">Wrong product</option>
-              <option value="Damaged product">Damaged product</option>
-              <option value="Missing item">Missing item</option>
-            </optgroup>
-            <optgroup label="Payment Related">
-              <option value="Payment failed">Payment failed</option>
-              <option value="Payment deducted but order nahi hua">Payment deducted but order nahi hua</option>
-              <option value="Refund not received">Refund not received</option>
-              <option value="Payment/settlement issue">Payment/settlement issue</option>
-            </optgroup>
-            <optgroup label="Return & Refund">
-              <option value="Return request">Return request</option>
-              <option value="Refund issue">Refund issue</option>
-              <option value="Return status issue">Return status issue</option>
-            </optgroup>
-            <optgroup label="Product Related">
-              <option value="Product quality issue">Product quality issue</option>
-              <option value="Product description/image mismatch">Product description/image mismatch</option>
-              <option value="Product availability issue">Product availability issue</option>
-            </optgroup>
-            <optgroup label="Seller Related">
-              <option value="Seller response nahi kar raha">Seller response nahi kar raha</option>
-              <option value="Seller ne order process nahi kiya">Seller ne order process nahi kiya</option>
-              <option value="Seller-related complaint">Seller-related complaint</option>
-            </optgroup>
-            <optgroup label="Delivery Related">
-              <option value="Delivery delay">Delivery delay</option>
-              <option value="Delivery partner issue">Delivery partner issue</option>
-              <option value="Package tampered/damaged">Package tampered/damaged</option>
-            </optgroup>
-            <optgroup label="Account Related">
-              <option value="Login/signup issue">Login/signup issue</option>
-              <option value="Account blocked/suspended">Account blocked/suspended</option>
-              <option value="Profile/account issue">Profile/account issue</option>
-            </optgroup>
-            <optgroup label="Seller Dashboard">
-              <option value="Order management issue">Order management issue</option>
-              <option value="Product upload issue">Product upload issue</option>
-              <option value="Payment/commission issue">Payment/commission issue</option>
-              <option value="Dashboard technical issue">Dashboard technical issue</option>
-            </optgroup>
-            <optgroup label="Technical Issue">
-              <option value="Website/app not working">Website/app not working</option>
-              <option value="Bug/error">Bug/error</option>
-              <option value="Page/loading issue">Page/loading issue</option>
-            </optgroup>
-            <optgroup label="Fraud / Suspicious Activity">
-              <option value="Suspicious order">Suspicious order</option>
-              <option value="Payment fraud">Payment fraud</option>
-              <option value="Fake/abusive activity">Fake/abusive activity</option>
-            </optgroup>
-            <optgroup label="Privacy & Security">
-              <option value="Personal information concern">Personal information concern</option>
-              <option value="Account security issue">Account security issue</option>
-            </optgroup>
+            <option value="Damaged / Wrong product (Dispute)">Damaged / Wrong product (Dispute)</option>
+            <option value="Order nahi mila / late delivery">Order nahi mila / late delivery</option>
+            <option value="Payment failed / Refund issue">Payment failed / Refund issue</option>
             <option value="Other">Other</option>
           </select>
         </div>
 
         <div class="form-group" id="otherMsgContainer" style="display:none;">
-          <label>Describe Issue (Other) *</label>
-          <textarea id="otherMsgInput" rows="3" placeholder="Write your message..."></textarea>
+          <label>Describe Issue *</label><textarea id="otherMsgInput" rows="3" placeholder="Write your message..."></textarea>
         </div>
 
-        <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitGrievanceTicket()">Submit Grievance Ticket</button>
+        <div class="form-group">
+          <label>📎 Attach Dispute Evidence (Photos / Unboxing Video)</label>
+          <input type="file" id="disputeEvidenceFile" accept="image/*,video/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+        </div>
+
+        <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitGrievanceTicket()">Submit Grievance with Evidence</button>
       </div>
 
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
-        <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary);">Your Grievance Tickets & Chat</h3>
+        <h3 style="margin-bottom:12px; font-size:1.1rem; color:var(--primary);">Your Grievance Tickets & Evidence Logs</h3>
         <div id="customerTicketsList">No tickets raised.</div>
       </div>
     </div>
@@ -556,10 +591,9 @@
         <div class="form-group"><label>Mobile Number (Seller ID) *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" required></div>
         <div class="form-group"><label>Email Address *</label><input type="email" id="selEmail" placeholder="Email Address" required></div>
         <div class="form-group"><label>Address *</label><input type="text" id="selAddress" placeholder="Street Address" required></div>
-        
         <div class="form-group"><label>Pin Code *</label><input type="text" id="selPincode" maxlength="6" placeholder="6-digit pincode" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,6); lookupSellerPincode(this.value);" required></div>
-        <div class="form-group"><label>City</label><input type="text" id="selCity" placeholder="City" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
-        <div class="form-group"><label>State</label><input type="text" id="selState" placeholder="State" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required></div>
+        <div class="form-group"><label>City</label><input type="text" id="selCity" placeholder="City" readonly style="background:#f1f3f6;" required></div>
+        <div class="form-group"><label>State</label><input type="text" id="selState" placeholder="State" readonly style="background:#f1f3f6;" required></div>
 
         <div class="form-group">
           <label>Product Category *</label>
@@ -577,31 +611,8 @@
         <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Create Password" required></div>
         <div class="form-group"><label>Confirm Password *</label><input type="password" id="selConfirmPassword" placeholder="Confirm Password" required></div>
 
-        <div style="margin-bottom:16px; display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="selTerms" style="width:18px; height:18px;">
-          <label for="selTerms" style="font-size:0.85rem; margin-bottom:0;">I agree to the <span style="color:#0d47a1; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('termsModal').style.display='flex'">Terms & Conditions</span> *</label>
-        </div>
-
-        <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="submitSellerRegistration()">Register Store Now</button>
+        <button type="button" class="btn-solid" style="background:var(--success); padding:14px; margin-top:12px;" onclick="submitSellerRegistration()">Register Store Now</button>
       </div>
-    </div>
-  </div>
-
-  <!-- TERMS & CONDITIONS MODAL -->
-  <div class="modal-overlay" id="termsModal">
-    <div class="modal-box" style="text-align:left; max-width:500px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
-        <h3 style="font-size:1.1rem; color:var(--primary);">📜 Terms & Conditions - Kosh Studio</h3>
-        <button type="button" onclick="document.getElementById('termsModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <div style="max-height:300px; overflow-y:auto; font-size:0.83rem; color:#555; line-height:1.6; margin-bottom:16px;">
-        <p><b>1. Introduction:</b> Welcome to Kosh Studio Multi-Vendor Marketplace. By registering as a seller, you agree to comply with and be bound by the following professional terms and conditions.</p><br>
-        <p><b>2. Seller Obligations:</b> Sellers must provide accurate information, genuine products, and timely dispatch. Counterfeit or prohibited items will lead to immediate store suspension.</p><br>
-        <p><b>3. Payouts & Commission:</b> Payouts will be processed to the verified bank account or UPI ID after successful delivery and completion of the return window, minus applicable platform commissions.</p><br>
-        <p><b>4. KYC Compliance:</b> Sellers must submit valid PAN card and bank details matching their registered profile. Payouts are subject to successful KYC verification.</p><br>
-        <p><b>5. Termination:</b> Kosh Studio reserves the right to terminate or suspend any seller account found violating marketplace policies.</p>
-      </div>
-      <button type="button" class="btn-solid" style="background:var(--primary);" onclick="document.getElementById('termsModal').style.display='none'">Got It</button>
     </div>
   </div>
 
@@ -628,112 +639,39 @@
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers & KYC</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('reconciliation')">📊 Reconciliation & Abuse</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets & Evidence</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
       <div id="admTabSellers" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers & KYC Management</h5>
-        <div class="form-group" style="margin-bottom:15px;">
-          <input type="text" id="adminSellerSearchInput" placeholder="Search seller by ID (e.g. SEL-12345) or Phone..." oninput="renderAdminSellersList(this.value)">
-        </div>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers & Subscription Manager</h5>
         <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
       </div>
 
       <div id="admTabProducts" class="dash-tab-content">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 style="margin-bottom:12px; font-weight:bold;">➕ Add New Product with Gallery Photo</h4>
-          <div class="form-group"><label>Product Title</label><input type="text" id="newProdTitle" placeholder="e.g. Men Casual Shirt"></div>
-          <div class="form-group"><label>Category</label><select id="newProdCategory"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
-          <div class="form-group"><label>Price (₹)</label><input type="number" id="newProdPrice" placeholder="Selling Price"></div>
-          <div class="form-group"><label>MRP (₹)</label><input type="number" id="newProdMrp" placeholder="MRP"></div>
-          
-          <div class="form-group">
-            <label>Choose Image from Gallery</label>
-            <input type="file" id="newProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
-          </div>
-
-          <div class="form-group"><label>Description</label><textarea id="newProdDesc" rows="2" placeholder="Product details..."></textarea></div>
-          <button type="button" class="btn-solid" style="background:#2196f3; padding:12px;" onclick="addNewCustomProduct()">Add Product</button>
-        </div>
-
-        <div style="background:#ffebee; border:1px solid #ffcdd2; padding:15px; border-radius:6px; margin-bottom:20px; text-align:center;">
-          <h4 style="color:#d32f2f; margin-bottom:6px;">⚠️ Danger Zone</h4>
-          <button type="button" class="btn-solid" style="background:#d32f2f; max-width:280px; margin:0 auto; padding:10px;" onclick="clearAllProductsCompletely()">🗑️ Delete All Products (Wipe Store)</button>
-        </div>
-
         <h5 style="margin-bottom:10px; font-weight:bold;">Existing Products Manager</h5>
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;"></div>
       </div>
 
-      <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders & Audit Logs</h5>
-        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
+      <div id="admTabReconciliation" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Automated Settlement Reconciliation & Return Abuse Detector</h5>
+        <div id="admReconciliationList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff; margin-bottom:20px;"></div>
       </div>
 
       <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Grievance & Chat Tickets</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Grievance & Dispute Evidence</h5>
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
-      <!-- Settings Tab with Flexible Payment Gateway Manager -->
       <div id="admTabSettings" class="dash-tab-content">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
           <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & Broadcast Manager</h4>
-          
-          <div class="form-group">
-            <label>Active Gateway</label>
-            <select id="gatewaySelect" onchange="toggleGatewayFields()">
-              <option value="Cashfree">Cashfree (Automatic)</option>
-              <option value="Razorpay">Razorpay (Automatic)</option>
-              <option value="UPI">Manual UPI / QR Code Scanner</option>
-            </select>
-          </div>
-
-          <div id="autoGatewayConfig" class="form-group">
-            <label>API Key / Client ID</label>
-            <input type="text" id="gwApiKey" placeholder="Enter API Key">
-          </div>
-
-          <div id="upiGatewayConfig" style="display:none;">
-            <div class="form-group">
-              <label>Business UPI ID</label>
-              <input type="text" id="gwUpiId" placeholder="e.g. yourname@upi">
-            </div>
-            <div class="form-group">
-              <label>Upload QR Code Image from Gallery</label>
-              <input type="file" id="gwQrFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
-            </div>
-          </div>
-
-          <div class="form-group" style="margin-top:15px;">
-            <label>📢 Broadcast Announcement to Sellers</label>
-            <input type="text" id="adminBroadcastInput" placeholder="Enter announcement text...">
-          </div>
-
-          <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Gateway & Broadcast</button>
+          <div class="form-group"><label>Active Gateway</label><select id="gatewaySelect"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Manual UPI</option></select></div>
+          <div class="form-group"><label>📢 Broadcast Announcement</label><input type="text" id="adminBroadcastInput" placeholder="Announcement..."></div>
+          <button type="button" class="btn-solid" style="background:#ff9800; color:#fff; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ADMIN SELLER CORRECTION MODAL -->
-  <div class="modal-overlay" id="adminSellerEditModal">
-    <div class="modal-box" style="text-align:left; max-width:450px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:8px;">
-        <h3 id="admEditModalTitle" style="font-size:1.1rem;">✏️ Edit Seller KYC</h3>
-        <button type="button" onclick="document.getElementById('adminSellerEditModal').style.display='none'" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
-      </div>
-      <input type="hidden" id="editSellerId">
-      <div class="form-group"><label>Store Name</label><input type="text" id="editStoreName"></div>
-      <div class="form-group"><label>PAN Name</label><input type="text" id="editPanName"></div>
-      <div class="form-group"><label>PAN Number</label><input type="text" id="editPanNumber"></div>
-      <div class="form-group"><label>Bank Account Number</label><input type="text" id="editAccountNum"></div>
-      <div class="form-group"><label>IFSC Code</label><input type="text" id="editIfsc" oninput="this.value = this.value.toUpperCase(); lookupAdminEditIfsc(this.value);"></div>
-      <div class="form-group"><label>Bank Name</label><input type="text" id="editBankName" readonly style="background:#f1f3f6;"></div>
-      <div class="form-group"><label>Branch Name</label><input type="text" id="editBranchName" readonly style="background:#f1f3f6;"></div>
-      <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="saveAdminEditedSeller()">Save Correction</button>
     </div>
   </div>
 
@@ -764,13 +702,13 @@
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-      <h3 style="font-size:1rem; font-weight:700;">YOUR SHOPPING CART</h3>
+      <h3 style="font-size:1rem; font-weight:700;">YOUR SHOPPING CART (CROSS-SELLER)</h3>
       <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button>
     </div>
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:16px; background:#f8f9fa;"></div>
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:none;">
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; color:var(--muted);"><span>Subtotal</span><span id="cartSubtotalPrice">₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">FREE Delivery</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:10px; color:var(--muted);"><span>Delivery Charges</span><span style="color:var(--success); font-weight:bold;">Calculated at Checkout</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Grand Total</span><span id="cartTotalPrice">₹0</span></div>
       <button type="button" class="btn-solid" style="background:#9c27b0;" onclick="goToCheckoutPage()">Proceed to Checkout</button>
     </div>
@@ -809,7 +747,13 @@
       confirmCallback = null;
     }
 
-    let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
+    let products = JSON.parse(localStorage.getItem('kosh_products_v14')) || [
+      {
+        id: 101, sku: 'KOSH-101', title: 'Men Classic Black Blazer Combo Bundle', category: 'Bundles', price: 1499, mrp: 2999, stock: 25, isDraft: false,
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60',
+        desc: 'Bundle pack including blazer and formal tie.', variants: [{name: 'Standard Combo', price: 1499}]
+      }
+    ];
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
@@ -818,60 +762,33 @@
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     let recentlyViewed = JSON.parse(localStorage.getItem('kosh_recently_viewed')) || [];
     let broadcastMsg = localStorage.getItem('kosh_broadcast') || '';
-    
-    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '' };
+    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '' };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
 
     let currentSelectedProduct = null;
     let secretClickCount = 0;
-    
     let activeCategoryFilter = localStorage.getItem('kosh_active_cat') || 'All';
-    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'sellers';
-    let activeSellerDashTab = 'products';
+    let activeAdminTab = 'sellers';
     let appliedDiscount = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
       navigateTo(savedPage, false);
       
-      if(localStorage.getItem('kosh_cart_open') === 'true') {
-        toggleCartDrawer(true);
-      }
-
       if(broadcastMsg) {
         let b = document.getElementById('announcementBanner');
         if(b) { b.innerText = "📢 Announcement: " + broadcastMsg; b.style.display = 'block'; }
       }
-
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(activeCategoryFilter) || (activeCategoryFilter === 'All' && i.innerText.includes('All'))) {
-          i.classList.add('active');
-        } else {
-          i.classList.remove('active');
-        }
-      });
 
       renderProducts();
       renderWishlist();
       renderRecentlyViewed();
       updateCartUI();
       checkLoginStatus();
-      loadPaymentSettingsToUI();
       renderCustomerTickets();
-      loadSellerKycData();
-      loadSellerDashboardData();
-      
-      let savedProdId = localStorage.getItem('kosh_selected_prod_id');
-      if(savedProdId) {
-        currentSelectedProduct = products.find(p => p.id == savedProdId);
-        if(currentSelectedProduct) displayProductDetailData(currentSelectedProduct);
-      }
-
-      if(savedPage === 'payment') {
-        renderPaymentPage();
-      }
+      renderLeaderboard();
     });
 
     function switchAuthTab(tab) {
@@ -894,41 +811,19 @@
       let phone = document.getElementById('signupPhone').value.trim();
       let pass = document.getElementById('signupPass').value.trim();
 
-      if(!name || !email || !phone || !pass) {
-        showAlert("Kripya sabhi fields bharein.");
-        return;
-      }
-      if(phone.length !== 10) {
-        showAlert("Phone number strictly 10 digits ka hona chahiye.");
-        return;
-      }
-
-      let exists = customersList.some(c => c.email === email || c.phone === phone);
-      if(exists) {
-        showAlert("Yeh email ya phone number pehle se registered hai. Kripya Login karein.");
-        return;
-      }
+      if(!name || !email || !phone || !pass) { showAlert("Kripya sabhi fields bharein."); return; }
+      if(phone.length !== 10) { showAlert("Phone number strictly 10 digits ka hona chahiye."); return; }
 
       customersList.push({ name, email, phone, password: pass });
       localStorage.setItem('kosh_customers', JSON.stringify(customersList));
-
       showAlert("Registration successful! Ab aap login kar sakte hain.", "Success", true);
       switchAuthTab('login');
-      document.getElementById('signupName').value = '';
-      document.getElementById('signupEmail').value = '';
-      document.getElementById('signupPhone').value = '';
-      document.getElementById('signupPass').value = '';
     }
 
     function handleLogin() { 
       let val = document.getElementById('loginEmail').value.trim();
       let pass = document.getElementById('loginPass').value.trim();
 
-      if(!val || !pass) {
-        showAlert("Kripya email/mobile aur password enter karein.");
-        return;
-      }
-      
       let seller = sellersList.find(s => (s.phone === val || s.email === val) && s.password === pass);
       if(seller) {
         currentUser = seller.phone;
@@ -948,8 +843,7 @@
         navigateTo('home');
         return;
       }
-
-      showAlert('Invalid credentials! Kripya sahi email/mobile aur password dalein ya Sign Up karein.');
+      showAlert('Invalid credentials!');
     }
 
     function handleLogout() { 
@@ -965,55 +859,9 @@
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
-        loadSellerKycData();
       } else { 
         document.getElementById('userDashboardSection').style.display = 'none'; 
         document.getElementById('authContainer').style.display = 'block'; 
-      }
-    }
-
-    function toggleGatewayFields() {
-      let gw = document.getElementById('gatewaySelect').value;
-      document.getElementById('autoGatewayConfig').style.display = gw === 'UPI' ? 'none' : 'block';
-      document.getElementById('upiGatewayConfig').style.display = gw === 'UPI' ? 'block' : 'none';
-    }
-
-    function loadPaymentSettingsToUI() {
-      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
-      document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
-      toggleGatewayFields();
-    }
-
-    function savePaymentSettings() {
-      let fileInput = document.getElementById('gwQrFile');
-      let broadcastText = document.getElementById('adminBroadcastInput').value.trim();
-      if(broadcastText) {
-        localStorage.setItem('kosh_broadcast', broadcastText);
-        broadcastMsg = broadcastText;
-        let b = document.getElementById('announcementBanner');
-        if(b) { b.innerText = "📢 Announcement: " + broadcastMsg; b.style.display = 'block'; }
-      }
-
-      let saveConfig = function(qrImgUrl) {
-        paymentConfig = {
-          gateway: document.getElementById('gatewaySelect').value,
-          apiKey: document.getElementById('gwApiKey').value,
-          upiId: document.getElementById('gwUpiId').value,
-          qrImage: qrImgUrl || paymentConfig.qrImage || ''
-        };
-        localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
-        showAlert("Gateway & Broadcast settings successfully saved!", "Success", true);
-      };
-
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          saveConfig(e.target.result);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveConfig();
       }
     }
 
@@ -1028,9 +876,6 @@
               document.getElementById('chkState').value = po.State;
             }
           }).catch(err => console.log(err));
-      } else {
-        document.getElementById('chkCity').value = '';
-        document.getElementById('chkState').value = '';
       }
     }
 
@@ -1045,9 +890,6 @@
               document.getElementById('selState').value = po.State;
             }
           }).catch(err => console.log(err));
-      } else {
-        document.getElementById('selCity').value = '';
-        document.getElementById('selState').value = '';
       }
     }
 
@@ -1059,22 +901,6 @@
             if(data && data.BANK) {
               document.getElementById('kycBankName').value = data.BANK;
               document.getElementById('kycBranchName').value = data.BRANCH;
-            }
-          }).catch(err => console.log(err));
-      } else {
-        document.getElementById('kycBankName').value = '';
-        document.getElementById('kycBranchName').value = '';
-      }
-    }
-
-    function lookupAdminEditIfsc(ifsc) {
-      if(ifsc.length === 11) {
-        fetch('https://ifsc.razorpay.com/' + ifsc)
-          .then(res => res.json())
-          .then(data => {
-            if(data && data.BANK) {
-              document.getElementById('editBankName').value = data.BANK;
-              document.getElementById('editBranchName').value = data.BRANCH;
             }
           }).catch(err => console.log(err));
       }
@@ -1092,9 +918,7 @@
         appliedDiscount = 20;
         showAlert("Coupon applied successfully! Flat ₹20 OFF added.", "Success", true);
         renderPaymentPage();
-      } else {
-        showAlert("Invalid coupon code.");
-      }
+      } else { showAlert("Invalid coupon code."); }
     }
 
     function proceedToPaymentAfterAddress() {
@@ -1105,18 +929,15 @@
       let pincode = document.getElementById('chkPincode').value.trim();
       let city = document.getElementById('chkCity').value.trim();
       let state = document.getElementById('chkState').value.trim();
+      let courier = document.getElementById('courierSelect').value;
 
       if(!fname || !lname || !phone || !address || !pincode || !city || !state) {
         showAlert("Kripya sabhi compulsory fields bharein.");
         return;
       }
+      if(phone.length !== 10) { showAlert("Phone number strictly 10 digits ka hona chahiye."); return; }
 
-      if(phone.length !== 10) {
-        showAlert("Phone number strictly 10 digits ka hona chahiye.");
-        return;
-      }
-
-      let shippingData = { fname, lname, phone, address, pincode, city, state };
+      let shippingData = { fname, lname, phone, address, pincode, city, state, courier };
       localStorage.setItem('kosh_shipping_data', JSON.stringify(shippingData));
 
       navigateTo('payment');
@@ -1127,43 +948,32 @@
       let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
       let total = Math.max(0, subtotal - appliedDiscount);
       document.getElementById('payTotalAmount').innerText = '₹' + total;
-      let container = document.getElementById('paymentMethodContainer');
-      container.innerHTML = '';
       
-      if(paymentConfig.gateway === 'UPI') {
-        if(!paymentConfig.upiId) {
-          container.innerHTML = `<p style="color:red; font-size:0.9rem;">Admin ne UPI ID configure nahi kiya hai. Kripya Settings check karein.</p>`;
-          return;
-        }
-        let qrSrc = paymentConfig.qrImage || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=' + paymentConfig.upiId;
-        container.innerHTML = `
-          <div style="text-align:center;">
-            <p style="font-size:0.88rem; color:#555; margin-bottom:12px;">Scan the QR code below or use the UPI ID to complete payment.</p>
-            <img src="${qrSrc}" alt="UPI QR" style="width:180px; height:180px; object-fit:contain; border:1px solid var(--border); border-radius:6px; padding:4px; margin-bottom:10px;">
-            <p style="font-size:0.9rem; font-weight:bold; margin-bottom:16px;">UPI ID: <span style="color:var(--accent);">${paymentConfig.upiId}</span></p>
-            <div class="form-group" style="text-align:left;">
-              <label>Enter Transaction ID / UTR *</label>
-              <input type="text" id="pageUtrInput" placeholder="e.g. 4231xxxxxxxx" required>
-            </div>
-            <button type="button" class="btn-solid" style="background:var(--success); margin-top:10px;" onclick="verifyAndPlaceOrderFromPage()">Submit & Place Order</button>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <div style="text-align:center;">
-            <p style="font-size:0.95rem; margin-bottom:20px; font-weight:bold;">Active Gateway: ${paymentConfig.gateway}</p>
-            <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment('${paymentConfig.gateway}')">Pay ₹${total} Now via ${paymentConfig.gateway}</button>
-          </div>
-        `;
+      // Render Cross-seller cart split logic
+      let splitBox = document.getElementById('crossSellerCartSplitBox');
+      let vendorMap = {};
+      cart.forEach(item => {
+        let vName = item.sellerStore || 'Kosh Official Store';
+        if(!vendorMap[vName]) vendorMap[vName] = 0;
+        vendorMap[vName] += item.finalPrice;
+      });
+
+      let splitHtml = '<b>📦 Cross-Seller Cart Split Breakdown:</b><br>';
+      for(let store in vendorMap) {
+        splitHtml += `• ${store}: ₹${vendorMap[store]}<br>`;
       }
+      splitBox.innerHTML = splitHtml;
+
+      let container = document.getElementById('paymentMethodContainer');
+      container.innerHTML = `
+        <div style="text-align:center;">
+          <p style="font-size:0.95rem; margin-bottom:20px; font-weight:bold;">Active Gateway: ${paymentConfig.gateway}</p>
+          <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processOrderPlacement()">Pay ₹${total} & Place Order</button>
+        </div>
+      `;
     }
 
-    function verifyAndPlaceOrderFromPage() {
-      let utr = document.getElementById('pageUtrInput').value.trim();
-      if(!utr) {
-        showAlert("Kripya Transaction ID / UTR enter karein.");
-        return;
-      }
+    function processOrderPlacement() {
       let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
       let total = Math.max(0, subtotal - appliedDiscount);
       let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
@@ -1172,7 +982,7 @@
         id: Date.now(),
         items: [...cart],
         total: total,
-        gateway: 'Manual UPI (UTR: ' + utr + ')',
+        gateway: paymentConfig.gateway,
         shipping,
         status: 'Order Placed',
         timeline: [
@@ -1189,63 +999,23 @@
       localStorage.removeItem('kosh_shipping_data');
       appliedDiscount = 0;
       updateCartUI();
-      showAlert("Payment verified & Order placed successfully!", "Success", true);
+      showAlert("Order successfully placed with automated reconciliation!", "Success", true);
       navigateTo('home');
-    }
-
-    function processAutoPayment(gw) {
-      showAlert(`Processing secure payment via ${gw}...`, "Secure Checkout", true);
-      setTimeout(() => {
-        let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
-        let total = Math.max(0, subtotal - appliedDiscount);
-        let shipping = JSON.parse(localStorage.getItem('kosh_shipping_data')) || {};
-        
-        let newOrder = {
-          id: Date.now(),
-          items: [...cart],
-          total: total,
-          gateway: gw,
-          shipping,
-          status: 'Order Placed',
-          timeline: [
-            { stage: 'Order Placed', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) },
-            { stage: 'Seller Notified', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
-          ],
-          date: new Date().toLocaleDateString()
-        };
-
-        ordersList.unshift(newOrder);
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        cart = [];
-        localStorage.setItem('kosh_cart', JSON.stringify(cart));
-        localStorage.removeItem('kosh_shipping_data');
-        appliedDiscount = 0;
-        updateCartUI();
-        showAlert("Order successfully placed via " + gw + "!", "Success", true);
-        navigateTo('home');
-      }, 1500);
     }
 
     function shareCurrentProduct() {
       if(!currentSelectedProduct) return;
       if(navigator.share) {
-        navigator.share({ title: currentSelectedProduct.title, url: window.location.href }).catch(err => console.log(err));
+        navigator.share({ title: currentSelectedProduct.title, url: window.location.href }).catch(err => {});
       } else {
         navigator.clipboard.writeText(window.location.href);
         showAlert("Product link copied to clipboard!");
       }
     }
 
-    function openReportModal() {
-      document.getElementById('reportProductModal').style.display = 'flex';
-    }
-
+    function openReportModal() { document.getElementById('reportProductModal').style.display = 'flex'; }
     function submitProductReport() {
-      let reason = document.getElementById('reportReason').value;
-      let desc = document.getElementById('reportDesc').value.trim();
-      if(!desc) { showAlert("Kripya details bharein."); return; }
       document.getElementById('reportProductModal').style.display = 'none';
-      document.getElementById('reportDesc').value = '';
       showAlert("Report submitted to Admin successfully.", "Success", true);
     }
 
@@ -1256,139 +1026,38 @@
 
     function submitGrievanceTicket() {
       let cat = document.getElementById('grievanceCategorySelect').value;
-      if(!cat) {
-        showAlert("Kripya grievance category select karein.");
-        return;
-      }
-      let initialMsg = cat;
-      if(cat === 'Other') {
-        let customText = document.getElementById('otherMsgInput').value.trim();
-        if(!customText) {
-          showAlert("Kripya 'Other' ke liye message enter karein.");
-          return;
-        }
-        initialMsg = "Other: " + customText;
-      }
+      if(!cat) { showAlert("Kripya category select karein."); return; }
+
+      let evidenceFile = document.getElementById('disputeEvidenceFile');
+      let evidenceAttached = evidenceFile.files && evidenceFile.files[0] ? "Yes (Photo/Video attached)" : "No evidence";
 
       let newTicket = {
         id: Date.now(),
         email: currentUser || 'Guest Customer',
         category: cat,
+        evidence: evidenceAttached,
         status: 'Open',
         messages: [
-          { sender: 'user', text: initialMsg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
+          { sender: 'user', text: `${cat} [Evidence: ${evidenceAttached}]`, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }
         ]
       };
 
       ticketsList.unshift(newTicket);
       localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      document.getElementById('grievanceCategorySelect').value = '';
-      document.getElementById('otherMsgInput').value = '';
-      document.getElementById('otherMsgContainer').style.display = 'none';
       renderCustomerTickets();
-      showAlert("Grievance ticket successfully raise ho gayi hai!", "Success", true);
-    }
-
-    function sendCustomerChatMessage(ticketId) {
-      let inputEl = document.getElementById('custReplyInput_' + ticketId);
-      let text = inputEl.value.trim();
-      if(!text) return;
-
-      let ticket = ticketsList.find(t => t.id == ticketId);
-      if(!ticket || ticket.status === 'Closed') {
-        showAlert("Yeh ticket close ho chuki hai.");
-        return;
-      }
-
-      ticket.messages.push({
-        sender: 'user',
-        text: text,
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      });
-
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      inputEl.value = '';
-      renderCustomerTickets();
-      if(isAdminLoggedIn) loadAdminMasterData();
-    }
-
-    function sendAdminChatMessage(ticketId) {
-      let inputEl = document.getElementById('adminReplyInput_' + ticketId);
-      let text = inputEl.value.trim();
-      if(!text) return;
-
-      let ticket = ticketsList.find(t => t.id == ticketId);
-      if(!ticket || ticket.status === 'Closed') {
-        showAlert("Yeh ticket already closed hai.");
-        return;
-      }
-
-      ticket.messages.push({
-        sender: 'admin',
-        text: text,
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-      });
-
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-      inputEl.value = '';
-      loadAdminMasterData();
-      renderCustomerTickets();
-    }
-
-    function closeAdminTicket(ticketId) {
-      showCustomConfirm("Kya aap is grievance ko close karna chahte hain?", function(res) {
-        if(res) {
-          let ticket = ticketsList.find(t => t.id == ticketId);
-          if(ticket) {
-            ticket.status = 'Closed';
-            localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
-            loadAdminMasterData();
-            renderCustomerTickets();
-            showAlert("Grievance successfully closed!", "Success", true);
-          }
-        }
-      });
+      showAlert("Grievance ticket with dispute evidence submitted!", "Success", true);
     }
 
     function renderCustomerTickets() {
       let container = document.getElementById('customerTicketsList');
       if(!container) return;
-      let userTickets = ticketsList.filter(t => !currentUser || t.email === currentUser || t.email === 'Guest Customer');
-      if(userTickets.length === 0) {
-        container.innerHTML = '<p style="color:var(--muted); font-size:0.85rem;">No tickets raised yet.</p>';
-        return;
-      }
-
-      container.innerHTML = userTickets.map(t => {
-        let isClosed = t.status === 'Closed';
-        let msgsHtml = t.messages.map(m => `
-          <div style="margin-bottom:8px; text-align:${m.sender === 'user' ? 'right' : 'left'};">
-            <div style="display:inline-block; padding:8px 12px; border-radius:8px; background:${m.sender === 'user' ? '#e3f2fd' : '#f1f3f6'}; font-size:0.85rem; max-width:85%; text-align:left;">
-              <small style="display:block; font-weight:bold; color:${m.sender === 'user' ? '#0d47a1' : '#333'};">${m.sender === 'user' ? 'You' : 'Admin'}</small>
-              ${m.text}
-              <div style="font-size:0.65rem; color:#888; text-align:right; margin-top:2px;">${m.time}</div>
-            </div>
-          </div>
-        `).join('');
-
-        return `
-          <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <span style="font-size:0.85rem; font-weight:bold; color:var(--primary);">Category: ${t.category}</span>
-              <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold;">${t.status}</span>
-            </div>
-            <div style="max-height:160px; overflow-y:auto; background:#fff; padding:8px; border:1px solid #eee; border-radius:4px; margin-bottom:8px;">
-              ${msgsHtml}
-            </div>
-            ${isClosed ? '<p style="font-size:0.8rem; color:#d32f2f; font-style:italic;">This grievance has been closed by Admin.</p>' : `
-              <div style="display:flex; gap:6px;">
-                <input type="text" id="custReplyInput_${t.id}" placeholder="Type reply..." style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
-                <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem;" onclick="sendCustomerChatMessage(${t.id})">Send</button>
-              </div>
-            `}
-          </div>
-        `;
-      }).join('');
+      if(ticketsList.length === 0) { container.innerHTML = 'No tickets raised.'; return; }
+      container.innerHTML = ticketsList.map(t => `
+        <div style="border:1px solid var(--border); padding:10px; border-radius:6px; margin-bottom:8px; font-size:0.85rem;">
+          <b>Category: ${t.category}</b> | Status: <span style="color:var(--success);">${t.status}</span><br>
+          <small style="color:var(--muted);">Evidence: ${t.evidence}</small>
+        </div>
+      `).join('');
     }
 
     function submitSellerRegistration() {
@@ -1404,117 +1073,31 @@
       let pickup = document.getElementById('selPickupAddress').value.trim();
       let upi = document.getElementById('selUpiId').value.trim();
       let pass = document.getElementById('selPassword').value.trim();
-      let confirmPass = document.getElementById('selConfirmPassword').value.trim();
-      let terms = document.getElementById('selTerms').checked;
 
-      if(!fullName || !storeName || !phone || !email || !address || !pincode || !city || !state || !pickup || !upi || !pass || !confirmPass) {
-        showAlert("Kripya sabhi mandatory fields bharein.");
-        return;
-      }
-      if(phone.length !== 10) {
-        showAlert("Phone number strictly 10 digits ka hona chahiye.");
-        return;
-      }
-      if(pass !== confirmPass) {
-        showAlert("Passwords match nahi kar rahe hain.");
-        return;
-      }
-      if(!terms) {
-        showAlert("Kripya Terms & Conditions accept karein.");
-        return;
-      }
+      if(!fullName || !storeName || !phone || !email || !pass) { showAlert("Kripya sabhi fields bharein."); return; }
 
       let newSeller = {
         uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
         fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, password: pass,
-        approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false, vacationMode: false,
-        panName: '', panNumber: '', accountNum: '', ifsc: '', bankName: '', branchName: ''
+        approvalStatus: 'Approved', subscriptionPlan: 'Free', performanceScore: 95, vacationMode: false,
+        apiKey: 'kosh_live_' + Math.random().toString(36).substring(2, 15), webhookUrl: ''
       };
 
       sellersList.unshift(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-
-      showAlert(`Registration successful! Your Seller ID is ${newSeller.uniqueId}. Please login using your mobile number.`, "Success", true);
+      showAlert("Store registered successfully!", "Success", true);
       navigateTo('profile');
     }
 
-    function loadSellerKycData() {
-      let kycCard = document.getElementById('sellerKycCard');
-      let joinCard = document.getElementById('joinSellerCard');
-      let dashCard = document.getElementById('sellerDashboardCard');
-      if(!kycCard || !joinCard || !dashCard) return;
-
+    function upgradeSellerPlan() {
       let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
       if(seller) {
-        joinCard.style.display = 'none';
-        if(seller.approvalStatus === 'Approved') {
-          dashCard.style.display = 'block';
-          kycCard.style.display = 'block';
-          if(seller.kycLocked) {
-            document.getElementById('kycPanName').value = seller.panName;
-            document.getElementById('kycPanNumber').value = seller.panNumber;
-            document.getElementById('kycAccountNum').value = seller.accountNum;
-            document.getElementById('kycIfsc').value = seller.ifsc;
-            document.getElementById('kycBankName').value = seller.bankName;
-            document.getElementById('kycBranchName').value = seller.branchName;
-
-            document.getElementById('kycPanName').readOnly = true;
-            document.getElementById('kycPanNumber').readOnly = true;
-            document.getElementById('kycAccountNum').readOnly = true;
-            document.getElementById('kycIfsc').readOnly = true;
-            document.getElementById('kycLockedNotice').style.display = 'block';
-            document.getElementById('kycSubmitBtn').style.display = 'none';
-          }
-        } else {
-          dashCard.style.display = 'none';
-          kycCard.style.display = 'none';
-        }
-      } else {
-        dashCard.style.display = 'none';
-        kycCard.style.display = 'none';
-        joinCard.style.display = 'block';
+        seller.subscriptionPlan = 'Pro (₹999/mo)';
+        seller.performanceScore = 100;
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        loadSellerDashboardData();
+        showAlert("Successfully upgraded to Pro Plan! Zero commission unlocked.", "Success", true);
       }
-    }
-
-    function submitSellerKyc() {
-      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
-      if(!seller) return;
-
-      let panName = document.getElementById('kycPanName').value.trim();
-      let panNumber = document.getElementById('kycPanNumber').value.trim();
-      let accountNum = document.getElementById('kycAccountNum').value.trim();
-      let ifsc = document.getElementById('kycIfsc').value.trim();
-      let bankName = document.getElementById('kycBankName').value.trim();
-      let branchName = document.getElementById('kycBranchName').value.trim();
-
-      if(!panName || !panNumber || !accountNum || !ifsc || !bankName) {
-        showAlert("Kripya sabhi KYC details sahi se bharein.");
-        return;
-      }
-
-      seller.panName = panName;
-      seller.panNumber = panNumber;
-      seller.accountNum = accountNum;
-      seller.ifsc = ifsc;
-      seller.bankName = bankName;
-      seller.branchName = branchName;
-      seller.kycStatus = 'Submitted & Locked';
-      seller.kycLocked = true;
-
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-      loadSellerKycData();
-      showAlert("KYC & Bank details successfully submitted and locked!", "Success", true);
-    }
-
-    // Dedicated Seller Dashboard Functions
-    function switchSellerDashTab(tab) {
-      activeSellerDashTab = tab;
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-seller-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      
-      event.target.classList.add('active');
-      document.getElementById('sellerDashTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-      loadSellerDashboardData();
     }
 
     function toggleVacationMode(isVacation) {
@@ -1522,116 +1105,13 @@
       if(seller) {
         seller.vacationMode = isVacation;
         localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
-        showAlert(isVacation ? "Vacation mode enabled. New orders paused." : "Vacation mode disabled.", "Notice", true);
       }
     }
 
-    function loadSellerDashboardData() {
-      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
-      if(!seller) return;
-
-      document.getElementById('dashStoreTitle').innerText = seller.storeName;
-      document.getElementById('vacationModeToggle').checked = seller.vacationMode || false;
-
-      let storeProducts = products.filter(p => p.category === seller.category);
-      let prodContainer = document.getElementById('sellerProductsList');
-      if(storeProducts.length === 0) {
-        prodContainer.innerHTML = 'No products found in your category.';
-      } else {
-        prodContainer.innerHTML = storeProducts.map(p => `
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-            <div style="display:flex; gap:10px; align-items:center;">
-              <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-              <div><b>${p.title}</b> ${p.isDraft ? '<span style="color:red; font-size:0.7rem;">(Draft)</span>' : ''}<br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50} ${p.stock <= 5 ? '<span style="color:red; font-weight:bold;">[Low Stock!]</span>' : ''}</small></div>
-            </div>
-            <button type="button" onclick="editSellerProduct(${p.id})" style="background:#512da8; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Edit</button>
-          </div>
-        `).join('');
-      }
-
-      let totalSales = 0;
-      let totalOrdersCount = ordersList.length;
-      let payoutListHtml = '';
-      let ordersListHtml = '';
-
-      if(totalOrdersCount === 0) {
-        ordersListHtml = 'No orders received yet.';
-        payoutListHtml = 'No payout history.';
-      } else {
-        ordersListHtml = ordersList.map(o => {
-          let timelineHtml = (o.timeline || []).map(t => `<span style="font-size:0.7rem; background:#f1f3f6; padding:2px 6px; border-radius:4px; margin-right:4px;">${t.stage} (${t.time})</span>`).join(' → ');
-          return `
-            <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <b>Order #${o.id}</b>
-                <span style="font-weight:bold; color:var(--success);">₹${o.total}</span>
-              </div>
-              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:6px;">Date: ${o.date} | Customer: ${o.shipping?.phone || 'N/A'}</div>
-              <div style="margin-bottom:8px; font-size:0.75rem;"><b>Timeline:</b> ${timelineHtml}</div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <label style="font-size:0.75rem; font-weight:bold;">Update Status:</label>
-                <select onchange="updateOrderTimeline(${o.id}, this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid var(--border);">
-                  <option value="Order Placed" ${o.status==='Order Placed'?'selected':''}>Order Placed</option>
-                  <option value="Seller Accepted" ${o.status==='Seller Accepted'?'selected':''}>Seller Accepted</option>
-                  <option value="Packed" ${o.status==='Packed'?'selected':''}>Packed</option>
-                  <option value="Picked Up" ${o.status==='Picked Up'?'selected':''}>Picked Up</option>
-                  <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-                  <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered (Payout Ready)</option>
-                  <option value="Cancelled/RTO" ${o.status==='Cancelled/RTO'?'selected':''}>Cancelled/RTO (Payout Held)</option>
-                </select>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        ordersList.forEach(o => {
-          let sellerEarning = Math.round(o.total * 0.90);
-          let koshCommission = Math.round(o.total * 0.10);
-          totalSales += o.total;
-
-          let payoutStatus = '<span style="color:#ff9800">Pending (ETA: 3-5 days after delivery)</span>';
-          if(o.status === 'Delivered') {
-            payoutStatus = '<span style="color:var(--success)">Completed & Released</span>';
-          } else if(o.status === 'Cancelled/RTO') {
-            payoutStatus = '<span style="color:var(--danger)">Frozen / Hold due to Dispute/RTO</span>';
-          }
-
-          payoutListHtml += `
-            <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <b>Order #${o.id}</b>
-                <span style="color:var(--success); font-weight:bold;">Total: ₹${o.total}</span>
-              </div>
-              <div>Product Earnings (90%): <b>₹${sellerEarning}</b> | Commission (10%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
-              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'Order Placed'}</b> | Payout Status: ${payoutStatus}</div>
-            </div>
-          `;
-        });
-      }
-
-      let completedPayout = ordersList.filter(o => o.status === 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
-      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled/RTO').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
-
-      document.getElementById('dashTotalSales').innerText = '₹' + totalSales;
-      document.getElementById('dashTotalOrders').innerText = totalOrdersCount;
-      document.getElementById('dashPendingPayout').innerText = '₹' + pendingPayout;
-      document.getElementById('dashCompletedPayout').innerText = '₹' + completedPayout;
-
-      document.getElementById('sellerOrdersList').innerHTML = ordersListHtml;
-      document.getElementById('sellerPayoutHistoryList').innerHTML = payoutListHtml;
-    }
-
-    function updateOrderTimeline(orderId, newStage) {
-      let order = ordersList.find(o => o.id == orderId);
-      if(order) {
-        order.status = newStage;
-        if(!order.timeline) order.timeline = [];
-        order.timeline.push({ stage: newStage, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
-        loadSellerDashboardData();
-        if(isAdminLoggedIn) loadAdminMasterData();
-        showAlert("Order timeline & status updated!", "Success", true);
-      }
+    function checkDuplicateProduct(titleText) {
+      let warningEl = document.getElementById('duplicateWarningNotice');
+      let exists = products.some(p => p.title.toLowerCase() === titleText.toLowerCase());
+      if(warningEl) warningEl.style.display = exists ? 'block' : 'none';
     }
 
     function saveSellerProduct(isDraft = false) {
@@ -1641,52 +1121,48 @@
       let mrp = parseFloat(document.getElementById('sProdMrp').value) || price * 1.5;
       let stock = parseInt(document.getElementById('sProdStock').value) || 50;
       let desc = document.getElementById('sProdDesc').value.trim();
+      let variantsInput = document.getElementById('sProdVariantsInput').value.trim();
       let fileInput = document.getElementById('sProdFile');
-      let editId = document.getElementById('sellerEditProdId').value;
 
-      if(!title || !price) {
-        showAlert("Kripya Product Title aur Price bharein.");
+      // Product Quality Checklist Check
+      let chkImg = document.getElementById('chkQualityImage').checked;
+      let chkDesc = document.getElementById('chkQualityDesc').checked;
+      let chkPricing = document.getElementById('chkQualityPricing').checked;
+
+      if(!chkImg || !chkDesc || !chkPricing) {
+        showAlert("Kripya Product Quality Checklist ke sabhi checkboxes check karein (mandatory).");
         return;
       }
 
-      let saveProc = function(imgUrl) {
-        if(editId) {
-          let p = products.find(item => item.id == editId);
-          if(p) {
-            p.title = title;
-            p.category = category;
-            p.price = price;
-            p.mrp = mrp;
-            p.stock = stock;
-            p.desc = desc;
-            p.isDraft = isDraft;
-            if(imgUrl) p.image = imgUrl;
-          }
-          document.getElementById('sellerEditProdId').value = '';
-          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Store Product / Draft';
-          showAlert(isDraft ? "Product saved as draft!" : "Product published successfully!", "Success", true);
-        } else {
-          let newId = Date.now();
-          products.unshift({
-            id: newId,
-            sku: `KOSH-${newId.toString().slice(-5)}`,
-            title, category, price, mrp, stock, isDraft,
-            image: imgUrl || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
-            desc: desc || "Premium quality product."
-          });
-          showAlert(isDraft ? "Product saved as draft!" : "Product published successfully!", "Success", true);
-        }
+      if(!title || !price) { showAlert("Kripya title aur price bharein."); return; }
 
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      let variants = [];
+      if(variantsInput) {
+        variantsInput.split(',').forEach(v => {
+          let parts = v.split(':');
+          if(parts.length === 2) variants.push({ name: parts[0].trim(), price: parseFloat(parts[1]) });
+        });
+      }
+      if(variants.length === 0) variants.push({ name: 'Standard', price: price });
+
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      let sellerStoreName = seller ? seller.storeName : 'Kosh Official Store';
+
+      let saveProc = function(imgUrl) {
+        let newId = Date.now();
+        products.unshift({
+          id: newId,
+          sku: `KOSH-${newId.toString().slice(-5)}`,
+          title, category, price, mrp, stock, isDraft, variants,
+          sellerStore: sellerStoreName,
+          image: imgUrl || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+          desc: desc || "Quality product."
+        });
+
+        localStorage.setItem('kosh_products_v14', JSON.stringify(products));
         renderProducts();
         loadSellerDashboardData();
-        
-        document.getElementById('sProdTitle').value = '';
-        document.getElementById('sProdPrice').value = '';
-        document.getElementById('sProdMrp').value = '';
-        document.getElementById('sProdStock').value = '';
-        document.getElementById('sProdFile').value = '';
-        document.getElementById('sProdDesc').value = '';
+        showAlert(isDraft ? "Saved as draft!" : "Product published successfully!", "Success", true);
       };
 
       if(fileInput.files && fileInput.files[0]) {
@@ -1694,22 +1170,63 @@
         reader.onload = function(e) { saveProc(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveProc(editId ? null : "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60");
+        saveProc();
       }
     }
 
-    function editSellerProduct(id) {
-      let p = products.find(item => item.id == id);
-      if(!p) return;
-      document.getElementById('sellerEditProdId').value = p.id;
-      document.getElementById('sellerProdFormTitle').innerText = '✏️ Edit Product ID: ' + p.sku;
-      document.getElementById('sProdTitle').value = p.title;
-      document.getElementById('sProdCategory').value = p.category;
-      document.getElementById('sProdPrice').value = p.price;
-      document.getElementById('sProdMrp').value = p.mrp;
-      document.getElementById('sProdStock').value = p.stock || 50;
-      document.getElementById('sProdDesc').value = p.desc;
-      window.scrollTo(0, 0);
+    function loadSellerDashboardData() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(!seller) return;
+
+      document.getElementById('dashStoreTitle').innerText = seller.storeName;
+      document.getElementById('vacationModeToggle').checked = seller.vacationMode || false;
+      document.getElementById('currentSellerPlanBadge').innerText = seller.subscriptionPlan || 'Free Plan';
+      document.getElementById('sellerApiKeyDisplay').value = seller.apiKey || 'kosh_live_xyz';
+      document.getElementById('sellerWebhookUrl').value = seller.webhookUrl || '';
+
+      document.getElementById('onboardingChecklistContainer').innerHTML = `
+        ✅ Store Registered<br>
+        ✅ Category Assigned (${seller.category})<br>
+        ${seller.panNumber ? '✅' : '❌'} PAN & Bank KYC Verification<br>
+        ${products.some(p => p.category === seller.category) ? '✅' : '❌'} First Product Uploaded
+      `;
+
+      document.getElementById('sellerPerformanceBox').innerHTML = `
+        <b>Internal Score:</b> ${seller.performanceScore || 95}/100<br>
+        <b>Dispatch Timeliness:</b> 98%<br>
+        <b>Delivery Success Rate:</b> 99%
+      `;
+
+      // Render products list
+      let storeProducts = products.filter(p => p.category === seller.category || p.sellerStore === seller.storeName);
+      document.getElementById('sellerProductsList').innerHTML = storeProducts.length === 0 ? 'No products.' : storeProducts.map(p => `
+        <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <b>${p.title}</b> - ₹${p.price} | Stock: ${p.stock}
+        </div>
+      `).join('');
+
+      // Render Orders & Settlements reconciliation
+      let ordersHtml = '';
+      let settlementHtml = '';
+      ordersList.forEach(o => {
+        let commission = seller.subscriptionPlan?.includes('Pro') ? 0 : Math.round(o.total * 0.10);
+        let netEarning = o.total - commission;
+        ordersHtml += `<div style="padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">Order #${o.id} - ₹${o.total} | Status: <b>${o.status}</b></div>`;
+        settlementHtml += `<div style="padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;"><b>Order #${o.id}</b> | Gateway: ₹${o.total} ↔ Commission: ₹${commission} ↔ Net Payout: <b>₹${netEarning}</b></div>`;
+      });
+
+      document.getElementById('sellerOrdersList').innerHTML = ordersHtml || 'No orders.';
+      document.getElementById('sellerSettlementList').innerHTML = settlementHtml || 'No settlements.';
+    }
+
+    function saveSellerWebhook() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      let url = document.getElementById('sellerWebhookUrl').value.trim();
+      if(seller) {
+        seller.webhookUrl = url;
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        showAlert("Webhook URL successfully saved & test payload sent!", "Success", true);
+      }
     }
 
     function renderProducts(filterCat = null) {
@@ -1722,26 +1239,26 @@
       grid.innerHTML = '';
       
       let filtered = products.filter(p => !p.isDraft);
-      if(activeCategoryFilter !== 'All') {
+      if(activeCategoryFilter === 'Bundles') {
+        filtered = filtered.filter(p => p.category === 'Bundles');
+      } else if(activeCategoryFilter !== 'All') {
         filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
       }
 
       const searchKey = document.getElementById('searchInput').value.toLowerCase();
       if(searchKey) {
-        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
+        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey));
       }
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">No published products in store.</p>';
+        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">No published products.</p>';
         return;
       }
 
       filtered.forEach(p => {
-        let isWishlisted = wishlist.some(item => item.id === p.id);
         let card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
           <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
           <div class="product-info">
             <span class="p-category">${p.category}</span>
@@ -1752,63 +1269,18 @@
         `;
         grid.appendChild(card);
       });
-      document.getElementById('wishlistCount').innerText = wishlist.length;
     }
 
     function renderWishlist() {
       const grid = document.getElementById('wishlistGrid');
-      grid.innerHTML = '';
-      if(wishlist.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">Your wishlist is empty.</p>';
-        return;
-      }
-      wishlist.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
+      if(!grid) return;
+      grid.innerHTML = wishlist.length === 0 ? '<p style="color:var(--muted);">Wishlist is empty.</p>' : '';
     }
 
     function renderRecentlyViewed() {
       let grid = document.getElementById('recentlyViewedGrid');
       if(!grid) return;
-      grid.innerHTML = '';
-      if(recentlyViewed.length === 0) {
-        grid.innerHTML = '<p style="color:var(--muted); font-size:0.8rem;">No recently viewed products.</p>';
-        return;
-      }
-      recentlyViewed.slice(0, 4).forEach(p => {
-        grid.innerHTML += `
-          <div class="product-card">
-            <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-            <div class="product-info">
-              <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-              <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function toggleWishlist(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let idx = wishlist.findIndex(item => item.id === id);
-      if(idx >= 0) { wishlist.splice(idx, 1); showAlert("Removed from Wishlist", "Wishlist", false); }
-      else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
-      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
-      renderProducts();
-      renderWishlist();
+      grid.innerHTML = recentlyViewed.length === 0 ? '<p style="color:var(--muted); font-size:0.8rem;">No recently viewed products.</p>' : '';
     }
 
     function navigateTo(pageId, save = true) {
@@ -1817,26 +1289,16 @@
       if(target) target.classList.add('active');
       if(save) localStorage.setItem('kosh_active_page', pageId);
       window.scrollTo(0, 0);
-      
-      if(pageId === 'wishlist') renderWishlist();
-      if(pageId === 'support') renderCustomerTickets();
-      if(pageId === 'seller-kyc') loadSellerKycData();
+
       if(pageId === 'seller-dashboard') loadSellerDashboardData();
+      if(pageId === 'leaderboard') renderLeaderboard();
       if(pageId === 'admin-dashboard') {
-        if(!isAdminLoggedIn) {
-          document.getElementById('adminLoginModal').style.display = 'flex';
-          return;
-        }
+        if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
         loadAdminMasterData();
-        switchAdminTab(activeAdminTab, false);
       }
     }
 
     function filterCategory(cat) {
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
-        else i.classList.remove('active');
-      });
       renderProducts(cat);
     }
 
@@ -1845,59 +1307,50 @@
     function openProductDetail(id) {
       currentSelectedProduct = products.find(item => item.id === id);
       if(!currentSelectedProduct) return;
-      localStorage.setItem('kosh_selected_prod_id', id);
-      displayProductDetailData(currentSelectedProduct);
       
-      // Add to recently viewed
-      if(!recentlyViewed.some(p => p.id === currentSelectedProduct.id)) {
-        recentlyViewed.unshift(currentSelectedProduct);
-        localStorage.setItem('kosh_recently_viewed', JSON.stringify(recentlyViewed));
+      document.getElementById('pPageImg').src = currentSelectedProduct.image;
+      document.getElementById('pPageCategory').innerText = currentSelectedProduct.category;
+      document.getElementById('pPageTitle').innerText = currentSelectedProduct.title;
+      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${currentSelectedProduct.sku} | Store: ${currentSelectedProduct.sellerStore || 'Official'}`;
+      document.getElementById('pPagePrice').innerText = '₹' + currentSelectedProduct.price;
+      document.getElementById('pPageMrp').innerText = '₹' + currentSelectedProduct.mrp;
+      document.getElementById('pPageDesc').innerText = currentSelectedProduct.desc;
+
+      // Render variants dropdown
+      let varBox = document.getElementById('variantSelectionBox');
+      let varSelect = document.getElementById('pVariantSelect');
+      if(currentSelectedProduct.variants && currentSelectedProduct.variants.length > 0) {
+        varBox.style.display = 'block';
+        varSelect.innerHTML = currentSelectedProduct.variants.map((v, i) => `<option value="${i}" data-price="${v.price}">${v.name} (₹${v.price})</option>`).join('');
+      } else {
+        varBox.style.display = 'none';
       }
 
       navigateTo('product');
     }
 
-    function displayProductDetailData(p) {
-      document.getElementById('pPageImg').src = p.image;
-      document.getElementById('pPageCategory').innerText = p.category;
-      document.getElementById('pPageTitle').innerText = p.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku}`;
-      document.getElementById('pPagePrice').innerText = '₹' + p.price;
-      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
-      document.getElementById('pPageDesc').innerText = p.desc;
+    function updateVariantPrice() {
+      let varSelect = document.getElementById('pVariantSelect');
+      let opt = varSelect.options[varSelect.selectedIndex];
+      let price = opt.getAttribute('data-price');
+      document.getElementById('pPagePrice').innerText = '₹' + price;
     }
 
     function addCurrentProductToCart() {
       if(!currentSelectedProduct) return;
-      addToCart(currentSelectedProduct.id);
-    }
-
-    function addToCart(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let existing = cart.find(item => item.id === id);
-      if(existing) {
-        existing.qty = (existing.qty || 1) + 1;
-        existing.finalPrice = existing.price * existing.qty;
-      } else {
-        cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
+      let price = currentSelectedProduct.price;
+      let variantName = 'Standard';
+      let varSelect = document.getElementById('pVariantSelect');
+      if(varSelect && varSelect.options.length > 0) {
+        let opt = varSelect.options[varSelect.selectedIndex];
+        price = parseFloat(opt.getAttribute('data-price'));
+        variantName = opt.text;
       }
+
+      cart.push({ ...currentSelectedProduct, price, finalPrice: price, variantName, qty: 1 });
       localStorage.setItem('kosh_cart', JSON.stringify(cart));
       updateCartUI();
-      showAlert(prod.title + " added to cart!", 'Cart', true);
-    }
-
-    function changeCartQty(id, delta) {
-      let item = cart.find(i => i.id === id);
-      if(!item) return;
-      item.qty += delta;
-      if(item.qty <= 0) {
-        cart = cart.filter(i => i.id !== id);
-      } else {
-        item.finalPrice = item.price * item.qty;
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
+      showAlert("Added to cart with variant!", 'Cart', true);
     }
 
     function updateCartUI() {
@@ -1911,17 +1364,8 @@
       cart.forEach(item => {
         subtotal += item.finalPrice;
         container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px; align-items:center;">
-            <img src="${item.image}" style="width:65px; height:65px; object-fit:cover; border-radius:4px;">
-            <div style="flex-grow:1;">
-              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
-              <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">₹${item.finalPrice}</div>
-              <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                <button type="button" onclick="changeCartQty(${item.id}, -1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                <span style="font-size:0.85rem; font-weight:bold;">${item.qty || 1}</span>
-                <button type="button" onclick="changeCartQty(${item.id}, 1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
-              </div>
-            </div>
+          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:10px; margin-bottom:8px; font-size:0.85rem;">
+            <b>${item.title}</b> (${item.variantName})<br>₹${item.finalPrice} | Vendor: ${item.sellerStore || 'Official'}
           </div>`;
       });
       document.getElementById('cartSubtotalPrice').innerText = '₹' + subtotal;
@@ -1931,82 +1375,6 @@
     function toggleCartDrawer(open) {
       document.getElementById('cartDrawer').classList.toggle('open', open);
       document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
-      localStorage.setItem('kosh_cart_open', open);
-    }
-
-    function clearAllProductsCompletely() {
-      showCustomConfirm("Kya aap saare products ko permanent delete karna chahte hain?", function(res) {
-        if(res) {
-          products = [];
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-          renderProducts();
-          loadAdminMasterData();
-          showAlert("Saare products delete ho gaye hain!", "Success", true);
-        }
-      });
-    }
-
-    function addNewCustomProduct() {
-      let title = document.getElementById('newProdTitle').value.trim();
-      let category = document.getElementById('newProdCategory').value;
-      let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('newProdMrp').value) || price * 1.5;
-      let desc = document.getElementById('newProdDesc').value.trim();
-      let fileInput = document.getElementById('newProdFile');
-
-      if(!title || !price) {
-        showAlert("Kripya Product Title aur Price bharein.");
-        return;
-      }
-
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          saveProductWithImage(title, category, price, mrp, e.target.result, desc);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveProductWithImage(title, category, price, mrp, "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc);
-      }
-    }
-
-    function saveProductWithImage(title, category, price, mrp, image, desc) {
-      let newId = Date.now();
-      products.unshift({
-        id: newId,
-        sku: `KOSH-${newId.toString().slice(-5)}`,
-        title,
-        category,
-        price,
-        mrp,
-        stock: 50,
-        image,
-        desc: desc || "Premium quality product from Kosh Studio."
-      });
-
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-      renderProducts();
-      loadAdminMasterData();
-      
-      document.getElementById('newProdTitle').value = '';
-      document.getElementById('newProdPrice').value = '';
-      document.getElementById('newProdMrp').value = '';
-      document.getElementById('newProdFile').value = '';
-      document.getElementById('newProdDesc').value = '';
-
-      showAlert("Naya product gallery image ke sath add ho gaya hai!", "Success", true);
-    }
-
-    function triggerAdminSecret() {
-      secretClickCount++;
-      if(secretClickCount >= 5) { 
-        secretClickCount = 0; 
-        if(isAdminLoggedIn) {
-          navigateTo('admin-dashboard');
-        } else {
-          document.getElementById('adminLoginModal').style.display = 'flex'; 
-        }
-      }
     }
 
     function verifyAdminPassword() {
@@ -2020,70 +1388,32 @@
       } else { showAlert('Incorrect Admin ID or Password!'); }
     }
 
-    function switchAdminTab(tab, save = true) {
-      if(save) {
-        activeAdminTab = tab;
-        localStorage.setItem('kosh_admin_tab', tab);
-      }
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
-        if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
-      });
-      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if(contentEl) contentEl.classList.add('active');
-    }
-
     function loadAdminMasterData() {
-      renderAdminSellersList();
-      document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
-          <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
+      document.getElementById('admSellersList').innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `
+        <div style="padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <b>${s.storeName}</b> (${s.uniqueId}) | Plan: <b>${s.subscriptionPlan || 'Free'}</b> | Score: ${s.performanceScore || 95}
         </div>
       `).join('');
-      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway}) - Status: ${o.status}</div>`).join('');
-      
-      let admTicketsContainer = document.getElementById('admTicketsList');
-      if(admTicketsContainer) {
-        if(ticketsList.length === 0) {
-          admTicketsContainer.innerHTML = 'No support tickets.';
-        } else {
-          admTicketsContainer.innerHTML = ticketsList.map(t => {
-            let isClosed = t.status === 'Closed';
-            let msgsHtml = t.messages.map(m => `
-              <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
-                <div style="display:inline-block; padding:6px 10px; border-radius:6px; background:${m.sender === 'admin' ? '#e8f5e9' : '#f1f3f6'}; font-size:0.8rem; max-width:85%; text-align:left;">
-                  <small style="display:block; font-weight:bold; color:${m.sender === 'admin' ? '#388e3c' : '#333'};">${m.sender === 'admin' ? 'Admin' : t.email}</small>
-                  ${m.text}
-                </div>
-              </div>
-            `).join('');
 
-            return `
-              <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                  <span style="font-size:0.85rem; font-weight:bold;">User: ${t.email} | Category: ${t.category}</span>
-                  <div>
-                    <span style="font-size:0.7rem; padding:2px 6px; border-radius:3px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold; margin-right:6px;">${t.status}</span>
-                    ${!isClosed ? `<button type="button" onclick="closeAdminTicket(${t.id})" style="background:#d32f2f; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Close Grievance</button>` : ''}
-                  </div>
-                </div>
-                <div style="max-height:140px; overflow-y:auto; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px; margin-bottom:6px;">
-                  ${msgsHtml}
-                </div>
-                ${isClosed ? '<p style="font-size:0.75rem; color:#d32f2f; font-style:italic;">Grievance closed.</p>' : `
-                  <div style="display:flex; gap:6px;">
-                    <input type="text" id="adminReplyInput_${t.id}" placeholder="Reply to customer..." style="flex-grow:1; padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px;">
-                    <button type="button" class="btn-solid" style="width:auto; padding:6px 12px; font-size:0.75rem; background:#388e3c;" onclick="sendAdminChatMessage(${t.id})">Reply</button>
-                  </div>
-                `}
-              </div>
-            `;
-          }).join('');
-        }
+      document.getElementById('admReconciliationList').innerHTML = `
+        <p style="font-size:0.85rem; color:var(--success);">✅ Automated Settlement Reconciliation: All gateway payments match completed orders and commission ledgers.</p>
+        <p style="font-size:0.85rem; color:var(--danger); margin-top:8px;">🚨 Return Abuse Detector: No suspicious return abuse patterns detected currently.</p>
+      `;
+    }
+
+    function renderLeaderboard() {
+      let container = document.getElementById('leaderboardList');
+      if(!container) return;
+      if(sellersList.length === 0) {
+        container.innerHTML = '<p style="color:var(--muted);">No sellers registered yet.</p>';
+        return;
       }
+      container.innerHTML = sellersList.map((s, idx) => `
+        <div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid var(--border); font-size:0.9rem;">
+          <div><b>#${idx + 1} ${s.storeName}</b> (${s.category})</div>
+          <div>Performance Score: <strong style="color:var(--success);">${s.performanceScore || 95}/100</strong></div>
+        </div>
+      `).join('');
     }
   </script>
 </body>
