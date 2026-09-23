@@ -458,6 +458,41 @@
     </div>
   </div>
 
+  <!-- SELLER REGISTRATION PAGE -->
+  <div id="page-seller-reg" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button>
+      <span style="font-weight:700;">🏪 Register as Seller</span>
+    </div>
+    <div class="page-content" style="max-width:450px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Seller Store Registration</h3>
+        <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Your Name" required></div>
+        <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name" required></div>
+        <div class="form-group"><label>Phone Number *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile" required></div>
+        <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Password" required></div>
+        <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px;" onclick="submitSellerRegistration()">Register Store Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPORT PAGE -->
+  <div id="page-support" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button>
+      <span style="font-weight:700;">🛠️ Customer Support & Grievances</span>
+    </div>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Raise a Support Ticket</h3>
+        <div class="form-group"><label>Describe your issue / Grievance *</label><textarea id="supportQueryText" rows="4" placeholder="Write your issue here..." required></textarea></div>
+        <button type="button" class="btn-solid" style="background:var(--primary); margin-top:12px;" onclick="submitSupportTicket()">Submit Ticket</button>
+        <h4 style="margin-top:20px; font-size:1rem; font-weight:bold; margin-bottom:10px;">My Support Tickets</h4>
+        <div id="customerSupportTicketsList" style="font-size:0.85rem; color:#555;">No tickets raised yet.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- CATALOG UPLOAD MODAL -->
   <div class="modal-overlay" id="catalogUploadModal">
     <div class="modal-box" style="max-width:550px; text-align:left; padding:20px;">
@@ -477,7 +512,7 @@
         <div class="form-group"><label>Select Category *</label><select id="wizCategory" style="background:#f9f9f9; font-weight:bold;" required><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
         
         <div class="form-group">
-          <label>Product Photos (1st Photo, 2nd Photo...) *</label>
+          <label>Product Photos (1st Photo = Cover) *</label>
           <div id="wizPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
@@ -493,7 +528,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -686,7 +721,7 @@
       </div>
       
       <div class="form-group">
-        <label>Update Photos (1st Photo, 2nd Photo...)</label>
+        <label>Update Photos (1st Photo = Cover)</label>
         <div id="editPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
@@ -990,6 +1025,39 @@
         renderSellerOrdersStatus();
         showAlert("Return request submitted successfully!");
       }
+    }
+
+    function submitSupportTicket() {
+      let query = document.getElementById('supportQueryText').value.trim();
+      if(!query) {
+        showAlert("Kripya apna issue describe karein.");
+        return;
+      }
+      ticketsList.unshift({
+        id: Math.floor(100000 + Math.random() * 900000),
+        query,
+        user: currentUser || 'Customer',
+        status: 'Open'
+      });
+      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      document.getElementById('supportQueryText').value = '';
+      showAlert("Support ticket raised successfully!", "Success", true);
+      renderCustomerSupportTickets();
+    }
+
+    function renderCustomerSupportTickets() {
+      let container = document.getElementById('customerSupportTicketsList');
+      if(!container) return;
+      if(ticketsList.length === 0) {
+        container.innerHTML = 'No tickets raised yet.';
+        return;
+      }
+      container.innerHTML = ticketsList.map(t => `
+        <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee; font-size:0.82rem;">
+          <div><b>Ticket #${t.id}</b> — <span style="color:var(--primary);">${t.status}</span></div>
+          <div style="color:#555; margin-top:2px;">${t.query}</div>
+        </div>
+      `).join('');
     }
 
     // --- SELLER SUB-PAGE NAVIGATION ---
@@ -1678,8 +1746,8 @@
             <div style="font-weight:bold; font-size:0.88rem;">${p.title}</div>
             <div style="font-size:0.75rem; color:#666;">Price: ₹${p.price} | Stock: <strong style="color:${p.stockStatus === 'Out of Stock' ? 'var(--danger)' : 'var(--success)'};">${p.stockStatus || 'Available'}</strong></div>
           </div>
-          <button type="button" onclick="openEditProductModal(${p.id})" style="background:#2196f3; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Edit</button>
-          <button type="button" onclick="deleteProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Delete</button>
+          <button type="button" onclick="openEditProductModal(${p.id})" style="background:#2196f3; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Edit</button>
+          <button type="button" onclick="deleteProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Delete</button>
         </div>
       `).join('');
     }
