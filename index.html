@@ -599,11 +599,6 @@
       checkLoginStatus();
       loadPaymentSettingsToUI();
       loadSellerKycData();
-
-      // Restore cart drawer state if it was open
-      if(localStorage.getItem('kosh_cart_open') === 'true') {
-        toggleCartDrawer(true);
-      }
     });
 
     function switchAuthTab(tab) {
@@ -1091,7 +1086,6 @@
 
     function toggleCartDrawer(open) {
       document.getElementById('cartDrawer').classList.toggle('open', open);
-      localStorage.setItem('kosh_cart_open', open);
     }
 
     function triggerAdminSecret() {
