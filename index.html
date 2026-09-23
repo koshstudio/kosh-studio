@@ -8,6 +8,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --bg: #f8f9fa;
@@ -548,7 +552,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -812,6 +816,19 @@
   </div>
 
   <script>
+    // Firebase Initialization with provided config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEwcdKacBZ25r_xvE8xxB-Dasb6u6GZw",
+      authDomain: "koshstudio-40e17.firebaseapp.com",
+      projectId: "koshstudio-40e17",
+      storageBucket: "koshstudio-40e17.appspot.com",
+      messagingSenderId: "520749374423",
+      appId: "1:520749374423:web:ee1f371aaf7bf44883c992",
+      measurementId: "G-41VNCZMQY6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     function showAlert(message, title = "Kosh Studio", isSuccess = false) {
       document.getElementById('customAlertTitle').innerText = title;
       document.getElementById('customAlertMsg').innerText = message;
@@ -819,19 +836,19 @@
     }
     function closeCustomAlert() { document.getElementById('customAlertModal').style.display = 'none'; }
 
-    let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
-    let pendingCatalogs = JSON.parse(localStorage.getItem('kosh_pending_catalogs')) || [];
-    let dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
-    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
-    let customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
-    let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
-    let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
+    let products = [];
+    let pendingCatalogs = [];
+    let dropshippingList = [];
+    let sellersList = [];
+    let customersList = [];
+    let ordersList = [];
+    let ticketsList = [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
-    let productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
-    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
-    let saleConfig = JSON.parse(localStorage.getItem('kosh_sale_config')) || { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF', countdown: '05:42:18' };
-    let bannerConfig = JSON.parse(localStorage.getItem('kosh_banner_config')) || { announcement: '', banners: [] };
-    let customCoupons = JSON.parse(localStorage.getItem('kosh_custom_coupons')) || [{code: 'KOSH20', type: 'flat', value: 20, minOrder: 0}];
+    let productReviews = {};
+    let paymentConfig = { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
+    let saleConfig = { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF', countdown: '05:42:18' };
+    let bannerConfig = { announcement: '', banners: [] };
+    let customCoupons = [{code: 'KOSH20', type: 'flat', value: 20, minOrder: 0}];
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
@@ -844,6 +861,50 @@
     let selectedProductSize = null;
     let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
     let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
+
+    // Cloud Sync Function
+    function saveToCloud() {
+      let storeData = {
+        products,
+        pendingCatalogs,
+        dropshippingList,
+        sellers: sellersList,
+        customers: customersList,
+        orders: ordersList,
+        tickets: ticketsList,
+        productReviews,
+        paymentConfig,
+        saleConfig,
+        bannerConfig,
+        customCoupons
+      };
+      db.collection('kosh_store').doc('master_data').set(storeData).catch(err => console.log(err));
+    }
+
+    // Real-time Firestore Sync Listener
+    db.collection('kosh_store').doc('master_data').onSnapshot((doc) => {
+      if (doc.exists) {
+        let data = doc.data();
+        products = data.products || [];
+        pendingCatalogs = data.pendingCatalogs || [];
+        dropshippingList = data.dropshippingList || [];
+        sellersList = data.sellers || [];
+        customersList = data.customers || [];
+        ordersList = data.orders || [];
+        ticketsList = data.tickets || [];
+        productReviews = data.productReviews || {};
+        paymentConfig = data.paymentConfig || paymentConfig;
+        saleConfig = data.saleConfig || saleConfig;
+        bannerConfig = data.bannerConfig || bannerConfig;
+        customCoupons = data.customCoupons || customCoupons;
+
+        renderProducts(activeCategoryFilter);
+        updateCartUI();
+        checkLoginStatus();
+      } else {
+        saveToCloud();
+      }
+    });
 
     let globalTimerSeconds = 3 * 3600 + 42 * 60 + 56;
     setInterval(() => {
@@ -868,7 +929,7 @@
         }
         return true;
       });
-      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      saveToCloud();
 
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         let drawer = document.getElementById('cartDrawer');
@@ -959,7 +1020,7 @@
       if(exists) { showAlert("Yeh email ya phone pehle se registered hai."); return; }
 
       customersList.push({ name, email, phone, password: pass });
-      localStorage.setItem('kosh_customers', JSON.stringify(customersList));
+      saveToCloud();
       showAlert("Registration successful!", "Success", true);
       switchAuthTab('login');
     }
@@ -1040,7 +1101,7 @@
       let order = ordersList.find(o => o.id === orderId);
       if(order) {
         order.returnStatus = 'Requested (Pending Admin/Seller approval)';
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        saveToCloud();
         renderCustomerMyOrders();
         renderSellerOrdersStatus();
         showAlert("Return request submitted successfully!");
@@ -1059,7 +1120,7 @@
         user: currentUser || 'Customer',
         status: 'Open'
       });
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      saveToCloud();
       document.getElementById('supportQueryText').value = '';
       showAlert("Support ticket raised successfully!", "Success", true);
       renderCustomerSupportTickets();
@@ -1160,7 +1221,7 @@
       let order = ordersList.find(o => o.id === orderId);
       if(order) {
         order.returnStatus = 'Approved & Refund Processed';
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        saveToCloud();
         renderSellerOrdersStatus();
         renderCustomerMyOrders();
         showAlert("Return approved and refund processed!");
@@ -1189,7 +1250,7 @@
       };
 
       sellersList.unshift(newSeller);
-      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      saveToCloud();
       currentUser = phone;
       localStorage.setItem('kosh_logged_email', currentUser);
       showAlert("Store registered & PAN KYC submitted successfully!", "Success", true);
@@ -1209,7 +1270,7 @@
       let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
       if(seller) {
         seller.bankDetails = { accName, accNum, ifsc };
-        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        saveToCloud();
         showAlert("Bank details saved successfully for payouts!", "Success", true);
         navigateTo('profile');
       } else {
@@ -1340,7 +1401,7 @@
           };
 
           pendingCatalogs.unshift(catalogItem);
-          localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+          saveToCloud();
 
           showAlert("Catalog submitted to Admin for review successfully!", "Success", true);
           closeCatalogUploadModal();
@@ -1561,7 +1622,7 @@
       }
 
       customCoupons.push({ code, type, value: val, minOrder });
-      localStorage.setItem('kosh_custom_coupons', JSON.stringify(customCoupons));
+      saveToCloud();
       showAlert("Coupon successfully generated!", "Success", true);
       renderAdminCouponsList();
       document.getElementById('newCouCode').value = '';
@@ -1585,7 +1646,7 @@
 
     function deleteCoupon(code) {
       customCoupons = customCoupons.filter(c => c.code !== code);
-      localStorage.setItem('kosh_custom_coupons', JSON.stringify(customCoupons));
+      saveToCloud();
       renderAdminCouponsList();
       showAlert("Coupon deleted!");
     }
@@ -1600,7 +1661,7 @@
         p.price = Math.round(p.price * (1 + pct / 100));
         if(p.mrp) p.mrp = Math.round(p.mrp * (1 + pct / 100));
       });
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      saveToCloud();
       renderAdminProductManager();
       renderProducts(activeCategoryFilter);
       showAlert(`Sabhi products ke prices ${pct}% se badha diye gaye hain!`, "Success", true);
@@ -1655,8 +1716,6 @@
           };
 
           dropshippingList.unshift(newItem);
-          localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
-
           products.unshift({
             id: newItem.id,
             title, category, price, mrp, desc,
@@ -1665,7 +1724,7 @@
             image: finalImgs[0],
             images: finalImgs
           });
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          saveToCloud();
 
           showAlert("Dropshipping product successfully added!", "Success", true);
           document.getElementById('dsTitle').value = '';
@@ -1718,9 +1777,8 @@
 
     function deleteDropshippingProduct(id) {
       dropshippingList = dropshippingList.filter(i => i.id !== id);
-      localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
       products = products.filter(p => p.id !== id);
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      saveToCloud();
       renderAdminDropshippingList();
       renderProducts(activeCategoryFilter);
       showAlert("Deleted successfully!");
@@ -1769,7 +1827,7 @@
             image: finalImgs[0],
             images: finalImgs
           });
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          saveToCloud();
           showAlert("Product added successfully with sizes and photos!", "Success", true);
           renderAdminProductManager();
           renderProducts(activeCategoryFilter);
@@ -1867,7 +1925,7 @@
             p.images = loaded;
           }
 
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          saveToCloud();
           document.getElementById('editProductModal').style.display = 'none';
           renderAdminProductManager();
           renderProducts(activeCategoryFilter);
@@ -1880,7 +1938,7 @@
 
     function deleteProduct(id) {
       products = products.filter(p => p.id !== id);
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      saveToCloud();
       renderAdminProductManager();
       renderProducts(activeCategoryFilter);
       showAlert("Product deleted!");
@@ -1907,7 +1965,7 @@
 
     function deleteAdminOrder(id) {
       ordersList = ordersList.filter(o => o.id !== id);
-      localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+      saveToCloud();
       renderAdminAllOrders();
       renderAdminPayments();
       showAlert("Order deleted successfully to free space!");
@@ -1969,7 +2027,7 @@
 
     function closeTicket(id) {
       ticketsList = ticketsList.filter(t => t.id !== id);
-      localStorage.setItem('kosh_tickets', JSON.stringify(ticketsList));
+      saveToCloud();
       renderAdminTickets();
       showAlert("Support ticket closed successfully!");
     }
@@ -1980,7 +2038,7 @@
       let text = document.getElementById('setSaleTextInput').value.trim();
       let countdown = document.getElementById('setSaleTimerInput').value.trim();
       saleConfig = { active, title, text, countdown };
-      localStorage.setItem('kosh_sale_config', JSON.stringify(saleConfig));
+      saveToCloud();
       showAlert("Sale settings saved successfully!", "Success", true);
     }
 
@@ -1998,14 +2056,14 @@
             bannerConfig.banners.push(e.target.result);
             loadedCount++;
             if(loadedCount === files.length) {
-              localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
+              saveToCloud();
               showAlert("Gallery banners added successfully!", "Success", true);
             }
           };
           reader.readAsDataURL(files[i]);
         }
       } else {
-        localStorage.setItem('kosh_banner_config', JSON.stringify(bannerConfig));
+        saveToCloud();
         showAlert("Announcement saved!", "Success", true);
       }
     }
@@ -2073,7 +2131,7 @@
       let order = ordersList.find(o => o.id === orderId);
       if(order) {
         order.status = 'Order Confirmed & Payment Verified';
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        saveToCloud();
         renderAdminPayments();
         renderCustomerMyOrders();
         renderSellerOrdersStatus();
@@ -2086,7 +2144,7 @@
       if(order) {
         order.status = 'Payment Rejected / Invalid UTR';
         order.rejectTime = Date.now();
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        saveToCloud();
         renderAdminPayments();
         renderCustomerMyOrders();
         renderSellerOrdersStatus();
@@ -2112,8 +2170,7 @@
           image: item.image,
           images: item.images
         });
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+        saveToCloud();
 
         renderAdminPendingCatalogs();
         renderProducts(activeCategoryFilter);
@@ -2127,7 +2184,7 @@
       if(item) {
         item.status = 'Rejected';
         item.adminFeedback = feedback || 'Please update correct product image/details.';
-        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+        saveToCloud();
         renderAdminPendingCatalogs();
         showAlert("Catalog rejected and feedback sent to seller.");
       }
@@ -2168,7 +2225,7 @@
           qrImage: qrImg || paymentConfig.qrImage || '',
           autoFetch: autoFetch
         };
-        localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+        saveToCloud();
         showAlert("Settings successfully saved!", "Success", true);
       };
 
@@ -2283,7 +2340,7 @@
           date: new Date().toLocaleDateString()
         };
         ordersList.unshift(newOrder);
-        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        saveToCloud();
         cart = [];
         localStorage.setItem('kosh_cart', JSON.stringify(cart));
         localStorage.removeItem('kosh_cart_open');
@@ -2303,7 +2360,7 @@
         productReviews[currentSelectedProduct.id] = [];
       }
       productReviews[currentSelectedProduct.id].unshift({ rating, text, user: currentUser || 'Guest' });
-      localStorage.setItem('kosh_product_reviews', JSON.stringify(productReviews));
+      saveToCloud();
       document.getElementById('newReviewText').value = '';
       showAlert("Review submitted successfully!", "Success", true);
       renderProductReviews(currentSelectedProduct.id);
