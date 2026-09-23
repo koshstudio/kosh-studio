@@ -154,7 +154,7 @@
         <h4 style="font-size:0.95rem; font-weight:800; color:var(--accent);" id="saleBannerTitle">🔥 Mega Sale Live!</h4>
         <p style="font-size:0.75rem; color:#ccc;" id="saleBannerText">Use coupon code KOSH20 for Flat ₹20 OFF</p>
       </div>
-      <div class="flash-timer" id="flashTimer">05:42:18</div>
+      <div class="flash-timer" id="flashTimer">03:42:56</div>
     </div>
 
     <div class="categories-bar" id="categoriesBar">
@@ -496,7 +496,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_4](start_span)[span_4](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -607,8 +607,8 @@
           <div class="admin-card-btn" onclick="openAdminView('products')">
             <div class="icon">🛍️</div>
             <div>
-              <div class="title">Product Manager</div>
-              <div class="desc">Manage marketplace catalog, edit & add products</div>
+              <div class="title">Product Manager & Price Hike</div>
+              <div class="desc">Manage catalog, increase price by % & add products</div>
             </div>
           </div>
           <div class="admin-card-btn" onclick="openAdminView('orders')">
@@ -782,6 +782,21 @@
     let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
     let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
 
+    // Live Countdown Timer Interval
+    let globalTimerSeconds = 3 * 3600 + 42 * 60 + 56;
+    setInterval(() => {
+      if(globalTimerSeconds > 0) globalTimerSeconds--;
+      let h = String(Math.floor(globalTimerSeconds / 3600)).padStart(2, '0');
+      let m = String(Math.floor((globalTimerSeconds % 3600) / 60)).padStart(2, '0');
+      let s = String(globalTimerSeconds % 60).padStart(2, '0');
+      let timeStr = `${h}:${m}:${s}`;
+      
+      let t1 = document.getElementById('flashTimer');
+      let t2 = document.getElementById('pPageTimerVal');
+      if(t1) t1.innerText = timeStr;
+      if(t2) t2.innerText = timeStr;
+    }, 1000);
+
     window.addEventListener('DOMContentLoaded', () => {
       let now = Date.now();
       let sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
@@ -815,7 +830,6 @@
       if(saleConfig.active) {
         document.getElementById('saleBannerTitle').innerText = saleConfig.title;
         document.getElementById('saleBannerText').innerText = saleConfig.text;
-        document.getElementById('flashTimer').innerText = saleConfig.countdown || '05:42:18';
         saleDiv.style.display = 'flex';
       } else {
         saleDiv.style.display = 'none';
@@ -1269,7 +1283,18 @@
 
           <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress"></div>
           <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
-          <div class="form-group"><label>Product Images (Select Multiple from Gallery) *</label><input type="file" id="dsFile" accept="image/*" multiple style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
+          
+          <div class="form-group">
+            <label>Product Photos (1st Photo, 2nd Photo...) *</label>
+            <div id="dsPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
+                <input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;" required>
+              </div>
+            </div>
+            <button type="button" onclick="addDsPhotoSlot()" style="background:#333; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer; margin-top:6px; font-weight:bold;">+ Add New Photo Slot</button>
+          </div>
+
           <div class="form-group"><label>Description</label><textarea id="dsDesc" rows="2" placeholder="Product details..."></textarea></div>
           <button type="button" class="btn-solid" style="background:#673ab7; margin-top:10px;" onclick="addNewDropshippingProduct()">Add Dropshipping Product</button>
           <h5 style="margin:20px 0 10px; font-weight:bold;">Sourced Dropshipping Products</h5>
@@ -1282,9 +1307,17 @@
         if(list) list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
       } else if(viewName === 'products') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager & Quick Add</h4>
+          <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager, Price Hike & Quick Add</h4>
+          <div style="background:#f1f3f6; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border);">
+            <h5 style="margin-bottom:8px; font-size:0.9rem; color:var(--primary);">⚡ Global Price Hike (Increase all product prices by %)</h5>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="globalPriceIncInput" placeholder="e.g. 10 (for 10% increase)" style="flex-grow:1;">
+              <button type="button" class="btn-solid" style="width:auto; padding:10px 16px; background:var(--success);" onclick="applyGlobalPriceHike()">Increase Prices</button>
+            </div>
+          </div>
+
           <div style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid #ddd;">
-            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly (Multiple Photos & Sizes)</h5>
+            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly</h5>
             <div class="form-group"><label>Title *</label><input type="text" id="admNewTitle" placeholder="Product title"></div>
             <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Price *</label><input type="number" id="admNewPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP *</label><input type="number" id="admNewMrp" placeholder="MRP"></div></div>
             <div class="form-group"><label>Category *</label><select id="admNewCat"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
@@ -1307,7 +1340,17 @@
               </div>
             </div>
 
-            <div class="form-group"><label>Product Images (Multiple from Gallery) *</label><input type="file" id="admNewImg" accept="image/*" multiple></div>
+            <div class="form-group">
+              <label>Product Photos (1st Photo, 2nd Photo...) *</label>
+              <div id="admPhotoSlotsContainer" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
+                  <input type="file" class="adm-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;" required>
+                </div>
+              </div>
+              <button type="button" onclick="addAdmPhotoSlot()" style="background:#333; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer; margin-top:6px; font-weight:bold;">+ Add New Photo Slot</button>
+            </div>
+
             <button type="button" class="btn-solid" style="background:var(--success); padding:10px;" onclick="adminAddNewProductDirect()">Add Product Now</button>
           </div>
           <div id="admProductsList"></div>
@@ -1321,7 +1364,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1351,12 +1394,136 @@
       }
     }
 
+    function applyGlobalPriceHike() {
+      let pct = parseFloat(document.getElementById('globalPriceIncInput').value);
+      if(isNaN(pct) || pct <= 0) {
+        showAlert("Kripya valid percentage enter karein.");
+        return;
+      }
+      products.forEach(p => {
+        p.price = Math.round(p.price * (1 + pct / 100));
+        if(p.mrp) p.mrp = Math.round(p.mrp * (1 + pct / 100));
+      });
+      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      renderAdminProductManager();
+      renderProducts(activeCategoryFilter);
+      showAlert(`Sabhi products ke prices ${pct}% se badha diye gaye hain!`, "Success", true);
+    }
+
+    function addDsPhotoSlot() {
+      let container = document.getElementById('dsPhotoSlotsContainer');
+      let count = container.querySelectorAll('.ds-photo-input').length + 1;
+      let div = document.createElement('div');
+      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
+      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
+      container.appendChild(div);
+    }
+
+    function addAdmPhotoSlot() {
+      let container = document.getElementById('admPhotoSlotsContainer');
+      let count = container.querySelectorAll('.adm-photo-input').length + 1;
+      let div = document.createElement('div');
+      div.style.cssText = "display:flex; align-items:center; gap:8px; margin-top:4px;";
+      div.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; width:70px;">${count === 2 ? '2nd' : (count === 3 ? '3rd' : count + 'th')} Photo:</span><input type="file" class="adm-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;">`;
+      container.appendChild(div);
+    }
+
+    function addNewDropshippingProduct() {
+      let title = document.getElementById('dsTitle').value.trim();
+      let category = document.getElementById('dsCategory').value;
+      let price = parseFloat(document.getElementById('dsPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('dsMrp').value) || price * 1.4;
+      let sourceName = document.getElementById('dsSourceWebsite').value.trim();
+      let sourceLink = document.getElementById('dsSourceLink').value.trim();
+      let desc = document.getElementById('dsDesc').value.trim();
+
+      let photoInputs = document.querySelectorAll('.ds-photo-input');
+      let filesList = [];
+      photoInputs.forEach(inp => {
+        if(inp.files && inp.files[0]) {
+          filesList.push(inp.files[0]);
+        }
+      });
+
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
+      if(!title || !price || !sourceName || !sourceLink) {
+        showAlert("Kripya Title, Selling Price, Source Website aur Source Link zaroor bharein.");
+        return;
+      }
+
+      let saveItem = (imgUrls) => {
+        let newItem = {
+          id: Date.now(),
+          title, category, price, mrp, desc,
+          sourceName,
+          sourceUrl: sourceLink,
+          availableSizes: checkedSizes,
+          stockStatus: 'Available',
+          image: imgUrls[0],
+          images: imgUrls
+        };
+
+        dropshippingList.unshift(newItem);
+        localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
+
+        products.unshift({
+          id: newItem.id,
+          title, category, price, mrp, desc,
+          availableSizes: checkedSizes,
+          stockStatus: 'Available',
+          image: imgUrls[0],
+          images: imgUrls
+        });
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+
+        showAlert("Dropshipping product successfully added!", "Success", true);
+        document.getElementById('dsTitle').value = '';
+        document.getElementById('dsPrice').value = '';
+        document.getElementById('dsMrp').value = '';
+        document.getElementById('dsSourceWebsite').value = '';
+        document.getElementById('dsSourceLink').value = '';
+        document.getElementById('dsDesc').value = '';
+        
+        renderAdminDropshippingList();
+        renderProducts(activeCategoryFilter);
+      };
+
+      if(filesList.length > 0) {
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<filesList.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === filesList.length) {
+              saveItem(loaded);
+            }
+          };
+          reader.readAsDataURL(filesList[i]);
+        }
+      } else {
+        saveItem(['https://via.placeholder.com/300']);
+      }
+    }
+
     function adminAddNewProductDirect() {
       let title = document.getElementById('admNewTitle').value.trim();
       let price = parseFloat(document.getElementById('admNewPrice').value) || 0;
       let mrp = parseFloat(document.getElementById('admNewMrp').value) || price * 1.4;
       let category = document.getElementById('admNewCat').value;
-      let fileInput = document.getElementById('admNewImg');
+
+      let photoInputs = document.querySelectorAll('.adm-photo-input');
+      let filesList = [];
+      photoInputs.forEach(inp => {
+        if(inp.files && inp.files[0]) {
+          filesList.push(inp.files[0]);
+        }
+      });
 
       let checkedSizes = [];
       let sizeBoxes = document.querySelectorAll('#admNewSizesCheckboxes input[type="checkbox"]:checked');
@@ -1384,20 +1551,19 @@
         renderProducts(activeCategoryFilter);
       };
 
-      if(fileInput.files && fileInput.files.length > 0) {
-        let files = fileInput.files;
+      if(filesList.length > 0) {
         let loaded = [];
         let count = 0;
-        for(let i=0; i<files.length; i++) {
+        for(let i=0; i<filesList.length; i++) {
           let reader = new FileReader();
           reader.onload = function(e) {
             loaded.push(e.target.result);
             count++;
-            if(count === files.length) {
+            if(count === filesList.length) {
               saveItem(loaded);
             }
           };
-          reader.readAsDataURL(files[i]);
+          reader.readAsDataURL(filesList[i]);
         }
       } else {
         saveItem(['https://via.placeholder.com/300']);
@@ -1439,7 +1605,6 @@
         box.checked = currentSizes.includes(box.value);
       });
 
-      // Reset edit photo slots
       let slotContainer = document.getElementById('editPhotoSlotsContainer');
       slotContainer.innerHTML = `
         <div style="display:flex; align-items:center; gap:8px;">
