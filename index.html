@@ -67,9 +67,12 @@
     .product-card { background: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
     .product-img { width: 100%; padding-top: 100%; position: relative; background: #f9f9f9; cursor: pointer; }
     .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .wishlist-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.85); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 5; }
     .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
     .p-title { font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em; }
+    .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
     .p-price { font-size: 1rem; font-weight: 700; color: #111; }
+    .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
     .btn-add-cart { width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
     .app-page { display: none; }
@@ -310,8 +313,10 @@
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('dropshipping')">📦 Dropshipping</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('sellers')">🏪 Sellers & Performance</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
@@ -348,6 +353,12 @@
         <div id="admDropshippingList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No dropshipping products added.</div>
       </div>
 
+      <!-- Tab: Sellers -->
+      <div id="admTabSellers" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers & Performance Check</h5>
+        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
+      </div>
+
       <!-- Tab: Product Manager -->
       <div id="admTabProducts" class="dash-tab-content">
         <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products.</div>
@@ -357,6 +368,12 @@
       <div id="admTabOrders" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">All Orders</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
+      </div>
+
+      <!-- Tab: Tickets -->
+      <div id="admTabTickets" class="dash-tab-content">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
+        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
       <!-- Tab: Settings -->
@@ -386,7 +403,7 @@
     </div>
   </div>
 
-  <!-- CART DRAWER -->
+  <!-- CART DRAWER (MEESHO STYLE) -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
     <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
@@ -423,7 +440,9 @@
 
     let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
     let dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
+    let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
+    let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree' };
     
@@ -533,7 +552,7 @@
     }
 
     function renderPaymentPage() {
-      let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
+      let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
       let total = Math.max(0, subtotal - appliedDiscount);
       document.getElementById('payTotalAmount').innerText = '₹' + total;
       document.getElementById('paymentMethodContainer').innerHTML = `
@@ -543,7 +562,7 @@
 
     function processAutoPayment() {
       setTimeout(() => {
-        let subtotal = cart.reduce((a,c) => a + c.finalPrice, 0);
+        let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
         let total = Math.max(0, subtotal - appliedDiscount);
         let newOrder = {
           id: Date.now(),
@@ -590,7 +609,6 @@
         dropshippingList.unshift(newItem);
         localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
 
-        // Add to main catalog so customers can view/buy
         products.unshift({
           id: newItem.id,
           title, category, price, mrp, desc,
@@ -673,8 +691,12 @@
     }
 
     function navigateTo(pageId, save = true) {
+      if(save) {
+        localStorage.setItem('kosh_active_page', pageId);
+      }
       document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + pageId).classList.add('active');
+      let targetPage = document.getElementById('page-' + pageId);
+      if(targetPage) targetPage.classList.add('active');
       window.scrollTo(0, 0);
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
@@ -700,7 +722,13 @@
 
     function addCurrentProductToCart() {
       if(currentSelectedProduct) {
-        cart.push({...currentSelectedProduct, finalPrice: currentSelectedProduct.price, qty: 1});
+        let existing = cart.find(item => item.id === currentSelectedProduct.id);
+        if(existing) {
+          existing.qty = (existing.qty || 1) + 1;
+        } else {
+          cart.push({...currentSelectedProduct, finalPrice: currentSelectedProduct.price, qty: 1});
+        }
+        localStorage.setItem('kosh_cart', JSON.stringify(cart));
         updateCartUI();
         showAlert("Added to cart!");
       }
@@ -708,13 +736,63 @@
 
     function addToCart(id) {
       let p = products.find(item => item.id === id);
-      if(p) { cart.push({...p, finalPrice: p.price, qty: 1}); updateCartUI(); showAlert("Added to cart!"); }
+      if(p) {
+        let existing = cart.find(item => item.id === id);
+        if(existing) {
+          existing.qty = (existing.qty || 1) + 1;
+        } else {
+          cart.push({...p, finalPrice: p.price, qty: 1});
+        }
+        localStorage.setItem('kosh_cart', JSON.stringify(cart));
+        updateCartUI();
+        showAlert("Added to cart!");
+      }
+    }
+
+    function updateCartQty(id, change) {
+      let item = cart.find(i => i.id === id);
+      if(item) {
+        item.qty = (item.qty || 1) + change;
+        if(item.qty <= 0) {
+          cart = cart.filter(i => i.id !== id);
+        }
+        localStorage.setItem('kosh_cart', JSON.stringify(cart));
+        updateCartUI();
+      }
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      localStorage.setItem('kosh_cart', JSON.stringify(cart));
+      updateCartUI();
     }
 
     function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.length;
-      document.getElementById('cartTotalPrice').innerText = '₹' + cart.reduce((a,c) => a + c.finalPrice, 0);
-      document.getElementById('cartItemsContainer').innerHTML = cart.map(i => `<div style="padding:8px 0; border-bottom:1px solid #eee;">${i.title} - ₹${i.finalPrice}</div>`).join('');
+      document.getElementById('cartCount').innerText = cart.reduce((a,c) => a + (c.qty || 1), 0);
+      let totalAmount = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
+      document.getElementById('cartTotalPrice').innerText = '₹' + totalAmount;
+      
+      let container = document.getElementById('cartItemsContainer');
+      if(cart.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#888; padding:30px 0;">Your cart is empty</div>';
+        return;
+      }
+      
+      container.innerHTML = cart.map(i => `
+        <div style="display:flex; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid #eee;">
+          <img src="${i.image}" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #ddd;">
+          <div style="flex-grow:1;">
+            <div style="font-weight:600; font-size:0.85rem; color:#212121; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;">${i.title}</div>
+            <div style="font-weight:700; font-size:0.9rem; margin-top:2px;">₹${i.finalPrice}</div>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+              <button type="button" onclick="updateCartQty(${i.id}, -1)" style="width:24px; height:24px; background:#f1f3f6; border:1px solid #ccc; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
+              <span style="font-size:0.85rem; font-weight:600;">${i.qty || 1}</span>
+              <button type="button" onclick="updateCartQty(${i.id}, 1)" style="width:24px; height:24px; background:#f1f3f6; border:1px solid #ccc; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
+            </div>
+          </div>
+          <button type="button" onclick="removeFromCart(${i.id})" style="background:none; border:none; color:#ff5252; font-size:1.1rem; cursor:pointer; padding:4px;">🗑️</button>
+        </div>
+      `).join('');
     }
 
     function toggleCartDrawer(open) { document.getElementById('cartDrawer').classList.toggle('open', open); }
@@ -745,12 +823,15 @@
       document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
       
-      // Highlight matching button
       event && event.target && event.target.classList.add('active');
       let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
       if(contentEl) contentEl.classList.add('active');
 
       if(tab === 'dropshipping') renderAdminDropshippingList();
+      if(tab === 'sellers') {
+        let list = document.getElementById('admSellersList');
+        list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
+      }
       if(tab === 'products') {
         let list = document.getElementById('admProductsList');
         list.innerHTML = products.length === 0 ? 'No products.' : products.map(p => `<div><b>${p.title}</b> - ₹${p.price}</div>`).join('');
@@ -758,6 +839,10 @@
       if(tab === 'orders') {
         let list = document.getElementById('admOrdersList');
         list.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div>Order #${o.id} - ₹${o.total}</div>`).join('');
+      }
+      if(tab === 'tickets') {
+        let list = document.getElementById('admTicketsList');
+        list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
       }
     }
   </script>
