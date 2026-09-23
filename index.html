@@ -1201,45 +1201,39 @@
         return;
       }
 
-      let saveReviewItem = (imgUrls) => {
-        let catalogItem = {
-          id: Date.now(),
-          title, category, price, mrp, desc,
-          weight, color, fabric, size,
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls,
-          sellerEmail: currentUser || 'Unknown Seller',
-          status: 'Under Review',
-          adminFeedback: ''
-        };
-
-        pendingCatalogs.unshift(catalogItem);
-        localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
-
-        showAlert("Catalog submitted to Admin for review successfully!", "Success", true);
-        closeCatalogUploadModal();
-        renderSellerCatalogStatus();
-      };
-
-      if(filesList.length > 0) {
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<filesList.length; i++) {
+      let processFiles = (index, loaded) => {
+        if(index < filesList.length) {
           let reader = new FileReader();
           reader.onload = function(e) {
             loaded.push(e.target.result);
-            count++;
-            if(count === filesList.length) {
-              saveReviewItem(loaded);
-            }
+            processFiles(index + 1, loaded);
           };
-          reader.readAsDataURL(filesList[i]);
+          reader.readAsDataURL(filesList[index]);
+        } else {
+          let finalImgs = loaded.length > 0 ? loaded : ['https://via.placeholder.com/300'];
+          let catalogItem = {
+            id: Date.now(),
+            title, category, price, mrp, desc,
+            weight, color, fabric, size,
+            availableSizes: checkedSizes,
+            stockStatus: 'Available',
+            image: finalImgs[0],
+            images: finalImgs,
+            sellerEmail: currentUser || 'Unknown Seller',
+            status: 'Under Review',
+            adminFeedback: ''
+          };
+
+          pendingCatalogs.unshift(catalogItem);
+          localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
+
+          showAlert("Catalog submitted to Admin for review successfully!", "Success", true);
+          closeCatalogUploadModal();
+          renderSellerCatalogStatus();
         }
-      } else {
-        saveReviewItem(['https://via.placeholder.com/300']);
-      }
+      };
+
+      processFiles(0, []);
     }
 
     function renderSellerCatalogStatus() {
@@ -1524,70 +1518,64 @@
         return;
       }
 
-      let saveItem = (imgUrls) => {
-        let newItem = {
-          id: Date.now(),
-          title, category, price, mrp, desc,
-          sourceName,
-          sourceUrl: sourceLink,
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls
-        };
-
-        dropshippingList.unshift(newItem);
-        localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
-
-        products.unshift({
-          id: newItem.id,
-          title, category, price, mrp, desc,
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls
-        });
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-
-        showAlert("Dropshipping product successfully added!", "Success", true);
-        document.getElementById('dsTitle').value = '';
-        document.getElementById('dsPrice').value = '';
-        document.getElementById('dsMrp').value = '';
-        document.getElementById('dsSourceWebsite').value = '';
-        document.getElementById('dsSourceLink').value = '';
-        document.getElementById('dsDesc').value = '';
-        
-        let slotContainer = document.getElementById('dsPhotoSlotsContainer');
-        if(slotContainer) {
-          slotContainer.innerHTML = `
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
-              <input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;" required>
-            </div>
-          `;
-        }
-
-        renderAdminDropshippingList();
-        renderProducts(activeCategoryFilter);
-      };
-
-      if(filesList.length > 0) {
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<filesList.length; i++) {
+      let processFiles = (index, loaded) => {
+        if(index < filesList.length) {
           let reader = new FileReader();
           reader.onload = function(e) {
             loaded.push(e.target.result);
-            count++;
-            if(count === filesList.length) {
-              saveItem(loaded);
-            }
+            processFiles(index + 1, loaded);
           };
-          reader.readAsDataURL(filesList[i]);
+          reader.readAsDataURL(filesList[index]);
+        } else {
+          let finalImgs = loaded.length > 0 ? loaded : ['https://via.placeholder.com/300'];
+          let newItem = {
+            id: Date.now(),
+            title, category, price, mrp, desc,
+            sourceName,
+            sourceUrl: sourceLink,
+            availableSizes: checkedSizes,
+            stockStatus: 'Available',
+            image: finalImgs[0],
+            images: finalImgs
+          };
+
+          dropshippingList.unshift(newItem);
+          localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
+
+          products.unshift({
+            id: newItem.id,
+            title, category, price, mrp, desc,
+            availableSizes: checkedSizes,
+            stockStatus: 'Available',
+            image: finalImgs[0],
+            images: finalImgs
+          });
+          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+
+          showAlert("Dropshipping product successfully added!", "Success", true);
+          document.getElementById('dsTitle').value = '';
+          document.getElementById('dsPrice').value = '';
+          document.getElementById('dsMrp').value = '';
+          document.getElementById('dsSourceWebsite').value = '';
+          document.getElementById('dsSourceLink').value = '';
+          document.getElementById('dsDesc').value = '';
+          
+          let slotContainer = document.getElementById('dsPhotoSlotsContainer');
+          if(slotContainer) {
+            slotContainer.innerHTML = `
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
+                <input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;" required>
+              </div>
+            `;
+          }
+
+          renderAdminDropshippingList();
+          renderProducts(activeCategoryFilter);
         }
-      } else {
-        saveItem(['https://via.placeholder.com/300']);
-      }
+      };
+
+      processFiles(0, []);
     }
 
     function renderAdminDropshippingList() {
@@ -1647,39 +1635,33 @@
         return;
       }
 
-      let saveItem = (imgUrls) => {
-        products.unshift({
-          id: Date.now(),
-          title, category, price, mrp,
-          desc: 'Direct added by Admin',
-          availableSizes: checkedSizes,
-          stockStatus: 'Available',
-          image: imgUrls[0],
-          images: imgUrls
-        });
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        showAlert("Product added successfully with sizes and photos!", "Success", true);
-        renderAdminProductManager();
-        renderProducts(activeCategoryFilter);
-      };
-
-      if(filesList.length > 0) {
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<filesList.length; i++) {
+      let processFiles = (index, loaded) => {
+        if(index < filesList.length) {
           let reader = new FileReader();
           reader.onload = function(e) {
             loaded.push(e.target.result);
-            count++;
-            if(count === filesList.length) {
-              saveItem(loaded);
-            }
+            processFiles(index + 1, loaded);
           };
-          reader.readAsDataURL(filesList[i]);
+          reader.readAsDataURL(filesList[index]);
+        } else {
+          let finalImgs = loaded.length > 0 ? loaded : ['https://via.placeholder.com/300'];
+          products.unshift({
+            id: Date.now(),
+            title, category, price, mrp,
+            desc: 'Direct added by Admin',
+            availableSizes: checkedSizes,
+            stockStatus: 'Available',
+            image: finalImgs[0],
+            images: finalImgs
+          });
+          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          showAlert("Product added successfully with sizes and photos!", "Success", true);
+          renderAdminProductManager();
+          renderProducts(activeCategoryFilter);
         }
-      } else {
-        saveItem(['https://via.placeholder.com/300']);
-      }
+      };
+
+      processFiles(0, []);
     }
 
     function renderAdminProductManager() {
@@ -1751,41 +1733,34 @@
       sizeBoxes.forEach(b => checkedSizes.push(b.value));
       if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
 
-      let updateValues = (newImages) => {
-        p.title = newTitle;
-        p.price = newPrice;
-        p.mrp = newMrp;
-        p.stockStatus = newStock;
-        p.availableSizes = checkedSizes;
-        if(newImages && newImages.length > 0) {
-          p.image = newImages[0];
-          p.images = newImages;
-        }
-
-        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        document.getElementById('editProductModal').style.display = 'none';
-        renderAdminProductManager();
-        renderProducts(activeCategoryFilter);
-        showAlert("Product updated successfully!", "Success", true);
-      };
-
-      if(filesList.length > 0) {
-        let loaded = [];
-        let count = 0;
-        for(let i=0; i<filesList.length; i++) {
+      let processFiles = (index, loaded) => {
+        if(index < filesList.length) {
           let reader = new FileReader();
           reader.onload = function(e) {
             loaded.push(e.target.result);
-            count++;
-            if(count === filesList.length) {
-              updateValues(loaded);
-            }
+            processFiles(index + 1, loaded);
           };
-          reader.readAsDataURL(filesList[i]);
+          reader.readAsDataURL(filesList[index]);
+        } else {
+          p.title = newTitle;
+          p.price = newPrice;
+          p.mrp = newMrp;
+          p.stockStatus = newStock;
+          p.availableSizes = checkedSizes;
+          if(loaded.length > 0) {
+            p.image = loaded[0];
+            p.images = loaded;
+          }
+
+          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+          document.getElementById('editProductModal').style.display = 'none';
+          renderAdminProductManager();
+          renderProducts(activeCategoryFilter);
+          showAlert("Product updated successfully!", "Success", true);
         }
-      } else {
-        updateValues(null);
-      }
+      };
+
+      processFiles(0, []);
     }
 
     function deleteProduct(id) {
