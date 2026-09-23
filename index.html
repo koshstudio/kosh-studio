@@ -576,19 +576,34 @@
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
-    let activeCategoryFilter = 'All';
+    let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
     let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'dropshipping';
     let appliedDiscount = 0;
     let currentSelectedProduct = null;
 
     window.addEventListener('DOMContentLoaded', () => {
       let savedPage = localStorage.getItem('kosh_active_page') || 'home';
+      
+      // Restore active category UI highlight
+      document.querySelectorAll('.cat-item').forEach(item => {
+        if(item.innerText.trim() === activeCategoryFilter) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
       navigateTo(savedPage, false);
-      renderProducts();
+      renderProducts(activeCategoryFilter);
       updateCartUI();
       checkLoginStatus();
       loadPaymentSettingsToUI();
       loadSellerKycData();
+
+      // Restore cart drawer state if it was open
+      if(localStorage.getItem('kosh_cart_open') === 'true') {
+        toggleCartDrawer(true);
+      }
     });
 
     function switchAuthTab(tab) {
@@ -877,7 +892,7 @@
         document.getElementById('dsFile').value = '';
         
         renderAdminDropshippingList();
-        renderProducts();
+        renderProducts(activeCategoryFilter);
       };
 
       if(fileInput.files && fileInput.files[0]) {
@@ -918,19 +933,23 @@
       products = products.filter(p => p.id !== id);
       localStorage.setItem('kosh_products_v13', JSON.stringify(products));
       renderAdminDropshippingList();
-      renderProducts();
+      renderProducts(activeCategoryFilter);
       showAlert("Deleted successfully!");
     }
 
     function filterCategory(cat, el) {
       activeCategoryFilter = cat;
+      localStorage.setItem('kosh_active_category', cat);
       document.querySelectorAll('.cat-item').forEach(item => item.classList.remove('active'));
       if(el) el.classList.add('active');
       renderProducts(cat);
     }
 
     function renderProducts(filterCat = null) {
-      if(filterCat !== null) activeCategoryFilter = filterCat;
+      if(filterCat !== null) {
+        activeCategoryFilter = filterCat;
+        localStorage.setItem('kosh_active_category', filterCat);
+      }
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       let filtered = products;
@@ -980,7 +999,7 @@
       }
     }
 
-    function handleSearch(val) { renderProducts(); }
+    function handleSearch(val) { renderProducts(activeCategoryFilter); }
     function openProductDetail(id) {
       let p = products.find(item => item.id === id);
       if(p) {
@@ -1070,7 +1089,10 @@
       `).join('');
     }
 
-    function toggleCartDrawer(open) { document.getElementById('cartDrawer').classList.toggle('open', open); }
+    function toggleCartDrawer(open) {
+      document.getElementById('cartDrawer').classList.toggle('open', open);
+      localStorage.setItem('kosh_cart_open', open);
+    }
 
     function triggerAdminSecret() {
       secretClickCount++;
