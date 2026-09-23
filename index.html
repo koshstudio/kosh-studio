@@ -462,14 +462,14 @@
 
       <div id="wizStep1" class="wizard-step-content">
         <div class="form-group"><label>Select Category *</label><select id="wizCategory" style="background:#f9f9f9; font-weight:bold;" required><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
-        <div class="form-group"><label>Product Image (Select from Gallery) *</label><input type="file" id="wizImgFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);" required></div>
+        <div class="form-group"><label>Product Images (Select Multiple from Gallery) *</label><input type="file" id="wizImgFile" accept="image/*" multiple style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);" required></div>
         <div class="form-group"><label>Product Name (Title) *</label><input type="text" id="wizTitle" placeholder="e.g. Trendy Cotton Men T-Shirt" required></div>
         <div class="form-group"><label>Product Description *</label><textarea id="wizDesc" rows="2" placeholder="Fabric details, fit type..." required></textarea></div>
         <button type="button" class="btn-solid" style="background:var(--primary); margin-top:10px;" onclick="nextWizardStep(2)">Next: Basic Details →</button>
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_6](start_span)[span_6](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -683,7 +683,6 @@
     let activeSellerSubView = localStorage.getItem('kosh_seller_sub_view') || null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Auto-cleanup rejected orders older than 7 days
       let now = Date.now();
       let sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
       ordersList = ordersList.filter(o => {
@@ -742,7 +741,6 @@
       renderSellerCatalogStatus();
       renderSellerOrdersStatus();
 
-      // Restore Admin or Seller sub-views if saved in localStorage
       if(savedPage === 'admin-dashboard' && activeAdminViewName) {
         openAdminView(activeAdminViewName, false);
       }
@@ -1025,12 +1023,13 @@
         return;
       }
 
-      let saveReviewItem = (imgUrl) => {
+      let saveReviewItem = (imgUrls) => {
         let catalogItem = {
           id: Date.now(),
           title, category, price, mrp, desc,
           weight, color, fabric, size,
-          image: imgUrl,
+          image: imgUrls[0],
+          images: imgUrls,
           sellerEmail: currentUser || 'Unknown Seller',
           status: 'Under Review',
           adminFeedback: ''
@@ -1044,12 +1043,23 @@
         renderSellerCatalogStatus();
       };
 
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) { saveReviewItem(e.target.result); };
-        reader.readAsDataURL(fileInput.files[0]);
+      if(fileInput.files && fileInput.files.length > 0) {
+        let files = fileInput.files;
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<files.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === files.length) {
+              saveReviewItem(loaded);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
       } else {
-        saveReviewItem('https://via.placeholder.com/300');
+        saveReviewItem(['https://via.placeholder.com/300']);
       }
     }
 
@@ -1100,7 +1110,7 @@
           <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="dsPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="dsMrp" placeholder="MRP"></div></div>
           <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress"></div>
           <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
-          <div class="form-group"><label>Product Image (Select from Gallery) *</label><input type="file" id="dsFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
+          <div class="form-group"><label>Product Images (Select Multiple from Gallery) *</label><input type="file" id="dsFile" accept="image/*" multiple style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
           <div class="form-group"><label>Description</label><textarea id="dsDesc" rows="2" placeholder="Product details..."></textarea></div>
           <button type="button" class="btn-solid" style="background:#673ab7; margin-top:10px;" onclick="addNewDropshippingProduct()">Add Dropshipping Product</button>
           <h5 style="margin:20px 0 10px; font-weight:bold;">Sourced Dropshipping Products</h5>
@@ -1115,11 +1125,11 @@
         contentBox.innerHTML = `
           <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager & Quick Add</h4>
           <div style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid #ddd;">
-            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly</h5>
+            <h5 style="margin-bottom:8px; font-size:0.9rem;">Add New Product directly (Multiple Photos Supported)</h5>
             <div class="form-group"><label>Title *</label><input type="text" id="admNewTitle" placeholder="Product title"></div>
             <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Price *</label><input type="number" id="admNewPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP *</label><input type="number" id="admNewMrp" placeholder="MRP"></div></div>
             <div class="form-group"><label>Category *</label><select id="admNewCat"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
-            <div class="form-group"><label>Product Image (Gallery) *</label><input type="file" id="admNewImg" accept="image/*"></div>
+            <div class="form-group"><label>Product Images (Multiple from Gallery) *</label><input type="file" id="admNewImg" accept="image/*" multiple></div>
             <button type="button" class="btn-solid" style="background:var(--success); padding:10px;" onclick="adminAddNewProductDirect()">Add Product Now</button>
           </div>
           <div id="admProductsList"></div>
@@ -1133,7 +1143,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Banners</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1175,25 +1185,37 @@
         return;
       }
 
-      let saveItem = (imgUrl) => {
+      let saveItem = (imgUrls) => {
         products.unshift({
           id: Date.now(),
           title, category, price, mrp,
           desc: 'Direct added by Admin',
-          image: imgUrl
+          image: imgUrls[0],
+          images: imgUrls
         });
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-        showAlert("Product added successfully!", "Success", true);
+        showAlert("Product added successfully with multiple photos!", "Success", true);
         renderAdminProductManager();
         renderProducts(activeCategoryFilter);
       };
 
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) { saveItem(e.target.result); };
-        reader.readAsDataURL(fileInput.files[0]);
+      if(fileInput.files && fileInput.files.length > 0) {
+        let files = fileInput.files;
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<files.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === files.length) {
+              saveItem(loaded);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
       } else {
-        saveItem('https://via.placeholder.com/300');
+        saveItem(['https://via.placeholder.com/300']);
       }
     }
 
@@ -1461,7 +1483,8 @@
           price: item.price,
           mrp: item.mrp,
           desc: item.desc,
-          image: item.image
+          image: item.image,
+          images: item.images
         });
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
         localStorage.setItem('kosh_pending_catalogs', JSON.stringify(pendingCatalogs));
@@ -1680,13 +1703,14 @@
         return;
       }
 
-      let saveItem = (imgUrl) => {
+      let saveItem = (imgUrls) => {
         let newItem = {
           id: Date.now(),
           title, category, price, mrp, desc,
           sourceName,
           sourceUrl: sourceLink,
-          image: imgUrl
+          image: imgUrls[0],
+          images: imgUrls
         };
 
         dropshippingList.unshift(newItem);
@@ -1695,11 +1719,12 @@
         products.unshift({
           id: newItem.id,
           title, category, price, mrp, desc,
-          image: imgUrl
+          image: imgUrls[0],
+          images: imgUrls
         });
         localStorage.setItem('kosh_products_v13', JSON.stringify(products));
 
-        showAlert("Dropshipping product successfully added!", "Success", true);
+        showAlert("Dropshipping product successfully added with multiple photos!", "Success", true);
         document.getElementById('dsTitle').value = '';
         document.getElementById('dsPrice').value = '';
         document.getElementById('dsMrp').value = '';
@@ -1712,12 +1737,23 @@
         renderProducts(activeCategoryFilter);
       };
 
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) { saveItem(e.target.result); };
-        reader.readAsDataURL(fileInput.files[0]);
+      if(fileInput.files && fileInput.files.length > 0) {
+        let files = fileInput.files;
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<files.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === files.length) {
+              saveItem(loaded);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
       } else {
-        saveItem('https://via.placeholder.com/300');
+        saveItem(['https://via.placeholder.com/300']);
       }
     }
 
