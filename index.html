@@ -116,8 +116,8 @@
 </head>
 <body>
 
-  <!-- Top Strip with 5-click secret trigger for Admin Dashboard -->
-  <div class="top-strip" onclick="triggerAdminSecret()">⚡ KOSH STUDIO SELLER CENTRAL</div>
+  <!-- Top Strip with Strict 5-click secret trigger for Admin Dashboard -->
+  <div class="top-strip" onclick="triggerAdminSecret()">KOSH STUDIO</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="app-page">
@@ -493,7 +493,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_1](start_span)[span_1](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -726,7 +726,7 @@
 
     <div style="background:#fff; padding:12px 16px; border-top:1px solid var(--border);">
       <div style="display:flex; gap:8px;">
-        <input type="text" id="cartCouponInput" placeholder="Enter Coupon" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
+        <input type="text" id="cartCouponInput" placeholder="Coupon" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
         <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem; background:#333;" onclick="applyCartCoupon()">Apply</button>
       </div>
     </div>
@@ -781,6 +781,7 @@
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
+    let secretResetTimer = null;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
     let appliedDiscount = 0;
     let appliedCouponCode = null;
@@ -1409,7 +1410,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -2499,10 +2500,18 @@
 
     function triggerAdminSecret() {
       secretClickCount++;
-      if(secretClickCount >= 5) {
+      if(secretResetTimer) clearTimeout(secretResetTimer);
+      secretResetTimer = setTimeout(() => {
         secretClickCount = 0;
-        if(isAdminLoggedIn) navigateTo('admin-dashboard');
-        else document.getElementById('adminLoginModal').style.display = 'flex';
+      }, 1500);
+
+      if(secretClickCount === 5) {
+        secretClickCount = 0;
+        if(isAdminLoggedIn) {
+          navigateTo('admin-dashboard');
+        } else {
+          document.getElementById('adminLoginModal').style.display = 'flex';
+        }
       }
     }
 
