@@ -101,7 +101,7 @@
     .dash-tab-content.active { display: block; }
 
     footer { background: #111; color: #888; padding: 30px 16px; font-size: 0.8rem; margin-top: 40px; text-align: center; }
-    .footer-copy { cursor: pointer; color: #fff; font-weight: 600; }
+    .footer-copy { cursor: pointer; color: #fff; font-weight: 600; display: inline-block; padding: 4px 8px; }
   </style>
 </head>
 <body>
@@ -161,7 +161,11 @@
     </main>
 
     <footer>
-      <p class="footer-copy" onclick="triggerAdminSecret()">© 2026 Kosh Studio. All rights reserved.</p>
+      <p>
+        © 2026 
+        <span class="footer-copy" onclick="triggerAdminSecret()" title="Click 5 times for Admin Panel">Kosh Studio</span>
+        . All rights reserved. (Admin Panel: Click Kosh Studio tag 5 times)
+      </p>
     </footer>
   </div>
 
@@ -309,7 +313,7 @@
 
         <div id="sellerDashboardCard" style="display:none; background:#ede7f6; padding:20px; border-radius:8px; border:1px solid #d1c4e9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-dashboard')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:#512da8;">🏪 Seller Dashboard (Manage Store)</h4>
-          <p style="font-size:0.8rem; color:#555;">Manage products, orders, sales, and payouts.</p>
+          <p style="font-size:0.8rem; color:#555;">Manage products, orders, sales, subscriptions, and payouts.</p>
         </div>
 
         <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
@@ -369,7 +373,9 @@
 
       <div class="dash-tabs">
         <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products & Drafts</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management & Timeline</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('bulk')">📂 Bulk Upload (CSV/Excel)</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Orders & Timeline</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('subscription')">⭐ Subscription & Pro</button>
         <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payouts & Reports</button>
       </div>
 
@@ -407,13 +413,48 @@
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products added.</div>
       </div>
 
-      <!-- Tab 2: Order Management & Timeline -->
+      <!-- Tab 2: Bulk Upload (CSV/Excel) -->
+      <div id="sellerDashTabBulk" class="dash-tab-content">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
+          <h4 style="margin-bottom:8px; font-weight:bold; color:#512da8;">📂 Bulk Product Upload (CSV / Excel)</h4>
+          <p style="font-size:0.8rem; color:#666; margin-bottom:14px;">Upload multiple products instantly using a CSV file. (Requires Pro Plan for unlimited batch size).</p>
+          <div class="form-group">
+            <label>Upload CSV File *</label>
+            <input type="file" id="bulkCsvFile" accept=".csv" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
+          </div>
+          <button type="button" class="btn-solid" style="background:#512da8; margin-top:10px;" onclick="processBulkCsvUpload()">Upload & Import Products</button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Order Management & Timeline -->
       <div id="sellerDashTabOrders" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders & Timeline Workflow</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders received yet.</div>
       </div>
 
-      <!-- Tab 3: Payouts & Reports -->
+      <!-- Tab 4: Subscription & Pro Tools -->
+      <div id="sellerDashTabSubscription" class="dash-tab-content">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+          <h4 style="margin-bottom:8px; font-weight:bold; color:var(--primary);">⭐ Seller Subscription Plans</h4>
+          <p style="font-size:0.85rem; color:#666; margin-bottom:20px;">Current Plan Status: <strong id="currentPlanBadge" style="color:#512da8;">Free Plan</strong></p>
+
+          <div style="display:grid; grid-template-columns:repeat(1, 1fr); gap:16px; margin-bottom:20px;">
+            <div style="border:2px solid var(--border); padding:20px; border-radius:8px; background:#fafafa;">
+              <h5 style="font-size:1.1rem; margin-bottom:6px;">🚀 Pro Seller Plan (Paid)</h5>
+              <p style="font-size:1.2rem; font-weight:800; color:var(--primary); margin-bottom:10px;">₹499 <span style="font-size:0.75rem; color:#666; font-weight:normal;">/ month</span></p>
+              <ul style="font-size:0.83rem; color:#555; padding-left:18px; line-height:1.6; margin-bottom:16px;">
+                <li>Lower Marketplace Commission (Only 5% instead of 10%)</li>
+                <li>Unlimited Bulk CSV Product Uploads</li>
+                <li>Priority Store & Product Placement</li>
+                <li>Advanced Sales Analytics & Earnings Breakdown</li>
+              </ul>
+              <button type="button" id="upgradePlanBtn" class="btn-solid" style="background:var(--accent); color:#000;" onclick="upgradeToProPlan()">Upgrade to Pro Plan Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Payouts & Reports -->
       <div id="sellerDashTabPayouts" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Sales Reports & Earnings Breakdown</h5>
         <div id="sellerPayoutHistoryList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payout history.</div>
@@ -1428,6 +1469,7 @@
         uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
         fullName, storeName, phone, email, address, pincode, city, state, category, pickup, upi, password: pass,
         approvalStatus: 'Pending', kycStatus: 'Not Submitted', kycLocked: false, vacationMode: false,
+        subscriptionPlan: 'Free',
         panName: '', panNumber: '', accountNum: '', ifsc: '', bankName: '', branchName: ''
       };
 
@@ -1526,12 +1568,77 @@
       }
     }
 
+    function upgradeToProPlan() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        seller.subscriptionPlan = 'Pro (Paid)';
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        loadSellerDashboardData();
+        showAlert("Congratulations! You have successfully upgraded to the Pro Seller Plan (₹499/mo). All extra tools & lower commission unlocked!", "Success", true);
+      }
+    }
+
+    function processBulkCsvUpload() {
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(!seller) return;
+      let fileInput = document.getElementById('bulkCsvFile');
+      if(!fileInput.files || !fileInput.files[0]) {
+        showAlert("Kripya CSV file select karein.");
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        let text = e.target.result;
+        let lines = text.split('\n');
+        let count = 0;
+        for(let i=1; i<lines.length; i++) {
+          let line = lines[i].trim();
+          if(!line) continue;
+          let cols = line.split(',');
+          if(cols.length >= 4) {
+            let title = cols[0].trim();
+            let price = parseFloat(cols[1]) || 299;
+            let mrp = parseFloat(cols[2]) || price * 1.5;
+            let desc = cols[3].trim() || 'Bulk imported product.';
+            let newId = Date.now() + i;
+            products.unshift({
+              id: newId,
+              sku: `KOSH-${newId.toString().slice(-5)}`,
+              title,
+              category: seller.category,
+              price,
+              mrp,
+              stock: 100,
+              isDraft: false,
+              image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+              desc
+            });
+            count++;
+          }
+        }
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+        renderProducts();
+        loadSellerDashboardData();
+        showAlert(`${count} products successfully uploaded via CSV!`, "Success", true);
+      };
+      reader.readAsText(fileInput.files[0]);
+    }
+
     function loadSellerDashboardData() {
       let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
       if(!seller) return;
 
       document.getElementById('dashStoreTitle').innerText = seller.storeName;
       document.getElementById('vacationModeToggle').checked = seller.vacationMode || false;
+
+      let currentPlan = seller.subscriptionPlan || 'Free';
+      document.getElementById('currentPlanBadge').innerText = currentPlan;
+      if(currentPlan.includes('Pro')) {
+        document.getElementById('upgradePlanBtn').innerText = 'Active Plan (Pro)';
+        document.getElementById('upgradePlanBtn').style.background = '#388e3c';
+        document.getElementById('upgradePlanBtn').style.color = '#fff';
+      }
 
       let storeProducts = products.filter(p => p.category === seller.category);
       let prodContainer = document.getElementById('sellerProductsList');
@@ -1553,6 +1660,9 @@
       let totalOrdersCount = ordersList.length;
       let payoutListHtml = '';
       let ordersListHtml = '';
+
+      let commissionRate = currentPlan.includes('Pro') ? 0.05 : 0.10;
+      let sellerRate = 1 - commissionRate;
 
       if(totalOrdersCount === 0) {
         ordersListHtml = 'No orders received yet.';
@@ -1585,8 +1695,8 @@
         }).join('');
 
         ordersList.forEach(o => {
-          let sellerEarning = Math.round(o.total * 0.90);
-          let koshCommission = Math.round(o.total * 0.10);
+          let sellerEarning = Math.round(o.total * sellerRate);
+          let koshCommission = Math.round(o.total * commissionRate);
           totalSales += o.total;
 
           let payoutStatus = '<span style="color:#ff9800">Pending (ETA: 3-5 days after delivery)</span>';
@@ -1602,15 +1712,15 @@
                 <b>Order #${o.id}</b>
                 <span style="color:var(--success); font-weight:bold;">Total: ₹${o.total}</span>
               </div>
-              <div>Product Earnings (90%): <b>₹${sellerEarning}</b> | Commission (10%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
+              <div>Product Earnings (${Math.round(sellerRate*100)}%): <b>₹${sellerEarning}</b> | Commission (${Math.round(commissionRate*100)}%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
               <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'Order Placed'}</b> | Payout Status: ${payoutStatus}</div>
             </div>
           `;
         });
       }
 
-      let completedPayout = ordersList.filter(o => o.status === 'Delivered').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
-      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled/RTO').reduce((a,c) => a + Math.round(c.total * 0.90), 0);
+      let completedPayout = ordersList.filter(o => o.status === 'Delivered').reduce((a,c) => a + Math.round(c.total * sellerRate), 0);
+      let pendingPayout = ordersList.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled/RTO').reduce((a,c) => a + Math.round(c.total * sellerRate), 0);
 
       document.getElementById('dashTotalSales').innerText = '₹' + totalSales;
       document.getElementById('dashTotalOrders').innerText = totalOrdersCount;
@@ -1848,7 +1958,6 @@
       localStorage.setItem('kosh_selected_prod_id', id);
       displayProductDetailData(currentSelectedProduct);
       
-      // Add to recently viewed
       if(!recentlyViewed.some(p => p.id === currentSelectedProduct.id)) {
         recentlyViewed.unshift(currentSelectedProduct);
         localStorage.setItem('kosh_recently_viewed', JSON.stringify(recentlyViewed));
