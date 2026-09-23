@@ -216,6 +216,15 @@
           <input type="text" id="chkState" placeholder="Auto-detected state" readonly style="background:#f1f3f6; color:#555; cursor:not-allowed;" required>
         </div>
 
+        <div class="form-group">
+          <label>Select Logistics Partner (Shipping Abstraction)</label>
+          <select id="logisticsPartnerSelect">
+            <option value="Standard Express (Free)">Standard Express (Free - 3-5 Days)</option>
+            <option value="Express Air (+₹50)">Express Air (+₹50 - 1-2 Days)</option>
+            <option value="Kosh Priority (+₹99)">Kosh Priority (+₹99 - Next Day)</option>
+          </select>
+        </div>
+
         <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px; padding:14px;" onclick="proceedToPaymentAfterAddress()">Continue to Payment</button>
       </div>
     </div>
@@ -258,6 +267,13 @@
           <span id="pPagePrice" style="font-size:1.5rem; font-weight:800;">₹0</span>
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
+
+        <!-- Variants Selector -->
+        <div id="variantSelectorBox" style="margin-bottom:14px; display:none;">
+          <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; display:block; margin-bottom:4px;">Select Variant:</label>
+          <select id="pVariantSelect" style="width:100%; padding:10px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;"></select>
+        </div>
+
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
           <div style="display:flex; gap:10px;">
@@ -338,6 +354,16 @@
     </div>
     <div class="page-content" style="max-width:1000px;">
       
+      <!-- Onboarding Checklist & Performance Score -->
+      <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border); margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; margin-bottom:8px; color:var(--primary);">🚀 Seller Onboarding & Performance Score</h4>
+        <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:6px;">
+          <span>Onboarding Progress: <b>100% (Store Launched)</b></span>
+          <span>Performance Score: <strong style="color:var(--success);" id="sellerPerfScore">98/100 (Pro Tier)</strong></span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--muted);">Subscription Plan: <b style="color:var(--primary);" id="sellerPlanBadge">Pro Plan (Active)</b></div>
+      </div>
+
       <!-- Vacation Mode Toggle -->
       <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px 16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
         <div>
@@ -368,15 +394,15 @@
       </div>
 
       <div class="dash-tabs">
-        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products & Drafts</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Order Management & Timeline</button>
-        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Payouts & Reports</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products & Variants</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('orders')">📦 Orders & Timeline</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('payouts')">💰 Settlement & Invoices</button>
       </div>
 
-      <!-- Tab 1: Products & Drafts -->
+      <!-- Tab 1: Products & Variants -->
       <div id="sellerDashTabProducts" class="dash-tab-content active">
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Store Product / Draft</h4>
+          <h4 id="sellerProdFormTitle" style="margin-bottom:12px; font-weight:bold;">➕ Add New Product / Variant / Bundle</h4>
           <input type="hidden" id="sellerEditProdId" value="">
           <div class="form-group"><label>Product Title *</label><input type="text" id="sProdTitle" placeholder="Product Title"></div>
           <div class="form-group">
@@ -392,6 +418,12 @@
           <div class="form-group"><label>Price (₹) *</label><input type="number" id="sProdPrice" placeholder="Selling Price"></div>
           <div class="form-group"><label>MRP (₹) *</label><input type="number" id="sProdMrp" placeholder="MRP"></div>
           <div class="form-group"><label>Stock Qty *</label><input type="number" id="sProdStock" placeholder="Stock Quantity"></div>
+          
+          <div class="form-group">
+            <label>Variants (e.g. Size: S, M, L / Color: Red, Blue)</label>
+            <input type="text" id="sProdVariants" placeholder="Comma separated variants">
+          </div>
+
           <div class="form-group">
             <label>Product Photo (Gallery) *</label>
             <input type="file" id="sProdFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
@@ -403,19 +435,19 @@
           </div>
         </div>
 
-        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products & Drafts</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">My Store Products</h5>
         <div id="sellerProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products added.</div>
       </div>
 
-      <!-- Tab 2: Order Management & Timeline -->
+      <!-- Tab 2: Orders & Timeline -->
       <div id="sellerDashTabOrders" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Customer Orders & Timeline Workflow</h5>
         <div id="sellerOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders received yet.</div>
       </div>
 
-      <!-- Tab 3: Payouts & Reports -->
+      <!-- Tab 3: Settlement & Invoices -->
       <div id="sellerDashTabPayouts" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sales Reports & Earnings Breakdown</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Settlement Reconciliation & Commission Invoices</h5>
         <div id="sellerPayoutHistoryList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payout history.</div>
       </div>
 
@@ -531,6 +563,11 @@
           <textarea id="otherMsgInput" rows="3" placeholder="Write your message..."></textarea>
         </div>
 
+        <div class="form-group">
+          <label>Dispute Evidence (Upload Photos/Videos/Timestamps)</label>
+          <input type="file" id="disputeEvidenceFile" style="padding:8px; background:#f9f9f9; border:1px dashed var(--border);">
+        </div>
+
         <button type="button" class="btn-solid" style="background:#2196f3; margin-top:10px;" onclick="submitGrievanceTicket()">Submit Grievance Ticket</button>
       </div>
 
@@ -628,8 +665,8 @@
       <div class="dash-tabs" style="margin-top:10px;">
         <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('sellers')">🏪 Sellers & KYC</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders & Reconciliation</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets & Disputes</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
@@ -668,12 +705,12 @@
       </div>
 
       <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders & Audit Logs</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders, Audit Logs & Settlement Ledger</h5>
         <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
       </div>
 
       <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Grievance & Chat Tickets</h5>
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Grievance & Dispute Evidence Tickets</h5>
         <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
       </div>
 
@@ -818,6 +855,7 @@
     let wishlist = JSON.parse(localStorage.getItem('kosh_wishlist')) || [];
     let recentlyViewed = JSON.parse(localStorage.getItem('kosh_recently_viewed')) || [];
     let broadcastMsg = localStorage.getItem('kosh_broadcast') || '';
+    let auditLogs = JSON.parse(localStorage.getItem('kosh_audit_logs')) || [];
     
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '' };
     
@@ -873,6 +911,11 @@
         renderPaymentPage();
       }
     });
+
+    function logAudit(action) {
+      auditLogs.unshift({ action, time: new Date().toLocaleString() });
+      localStorage.setItem('kosh_audit_logs', JSON.stringify(auditLogs));
+    }
 
     function switchAuthTab(tab) {
       if(tab === 'login') {
@@ -993,6 +1036,7 @@
         broadcastMsg = broadcastText;
         let b = document.getElementById('announcementBanner');
         if(b) { b.innerText = "📢 Announcement: " + broadcastMsg; b.style.display = 'block'; }
+        logAudit('Broadcast announcement updated');
       }
 
       let saveConfig = function(qrImgUrl) {
@@ -1003,6 +1047,7 @@
           qrImage: qrImgUrl || paymentConfig.qrImage || ''
         };
         localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+        logAudit('Payment gateway settings updated');
         showAlert("Gateway & Broadcast settings successfully saved!", "Success", true);
       };
 
@@ -1105,6 +1150,7 @@
       let pincode = document.getElementById('chkPincode').value.trim();
       let city = document.getElementById('chkCity').value.trim();
       let state = document.getElementById('chkState').value.trim();
+      let logistics = document.getElementById('logisticsPartnerSelect').value;
 
       if(!fname || !lname || !phone || !address || !pincode || !city || !state) {
         showAlert("Kripya sabhi compulsory fields bharein.");
@@ -1116,7 +1162,7 @@
         return;
       }
 
-      let shippingData = { fname, lname, phone, address, pincode, city, state };
+      let shippingData = { fname, lname, phone, address, pincode, city, state, logistics };
       localStorage.setItem('kosh_shipping_data', JSON.stringify(shippingData));
 
       navigateTo('payment');
@@ -1433,6 +1479,7 @@
 
       sellersList.unshift(newSeller);
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      logAudit(`New seller registered: ${storeName} (${newSeller.uniqueId})`);
 
       showAlert(`Registration successful! Your Seller ID is ${newSeller.uniqueId}. Please login using your mobile number.`, "Success", true);
       navigateTo('profile');
@@ -1503,10 +1550,10 @@
 
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       loadSellerKycData();
+      logAudit(`KYC submitted & locked for seller: ${seller.storeName}`);
       showAlert("KYC & Bank details successfully submitted and locked!", "Success", true);
     }
 
-    // Dedicated Seller Dashboard Functions
     function switchSellerDashTab(tab) {
       activeSellerDashTab = tab;
       document.querySelectorAll('#page-seller-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1542,7 +1589,7 @@
           <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
             <div style="display:flex; gap:10px; align-items:center;">
               <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
-              <div><b>${p.title}</b> ${p.isDraft ? '<span style="color:red; font-size:0.7rem;">(Draft)</span>' : ''}<br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50} ${p.stock <= 5 ? '<span style="color:red; font-weight:bold;">[Low Stock!]</span>' : ''}</small></div>
+              <div><b>${p.title}</b> ${p.isDraft ? '<span style="color:red; font-size:0.7rem;">(Draft)</span>' : ''}<br><small style="color:var(--muted);">₹${p.price} | Stock: ${p.stock || 50} ${p.stock <= 5 ? '<span style="color:red; font-weight:bold;">[Low Stock Alert!]</span>' : ''}</small></div>
             </div>
             <button type="button" onclick="editSellerProduct(${p.id})" style="background:#512da8; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">Edit</button>
           </div>
@@ -1556,9 +1603,10 @@
 
       if(totalOrdersCount === 0) {
         ordersListHtml = 'No orders received yet.';
-        payoutListHtml = 'No payout history.';
+        payoutListHtml = 'No settlement history.';
       } else {
         ordersListHtml = ordersList.map(o => {
+          let orderStatus = o.status || 'Order Placed';
           let timelineHtml = (o.timeline || []).map(t => `<span style="font-size:0.7rem; background:#f1f3f6; padding:2px 6px; border-radius:4px; margin-right:4px;">${t.stage} (${t.time})</span>`).join(' → ');
           return `
             <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
@@ -1566,18 +1614,19 @@
                 <b>Order #${o.id}</b>
                 <span style="font-weight:bold; color:var(--success);">₹${o.total}</span>
               </div>
-              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:6px;">Date: ${o.date} | Customer: ${o.shipping?.phone || 'N/A'}</div>
+              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:6px;">Date: ${o.date} | Shipping: ${o.shipping?.logistics || 'Standard'}</div>
               <div style="margin-bottom:8px; font-size:0.75rem;"><b>Timeline:</b> ${timelineHtml}</div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <label style="font-size:0.75rem; font-weight:bold;">Update Status:</label>
+                <label style="font-size:0.75rem; font-weight:bold;">Update Stage:</label>
                 <select onchange="updateOrderTimeline(${o.id}, this.value)" style="padding:4px 8px; font-size:0.8rem; border-radius:4px; border:1px solid var(--border);">
-                  <option value="Order Placed" ${o.status==='Order Placed'?'selected':''}>Order Placed</option>
-                  <option value="Seller Accepted" ${o.status==='Seller Accepted'?'selected':''}>Seller Accepted</option>
-                  <option value="Packed" ${o.status==='Packed'?'selected':''}>Packed</option>
-                  <option value="Picked Up" ${o.status==='Picked Up'?'selected':''}>Picked Up</option>
-                  <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-                  <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered (Payout Ready)</option>
-                  <option value="Cancelled/RTO" ${o.status==='Cancelled/RTO'?'selected':''}>Cancelled/RTO (Payout Held)</option>
+                  <option value="Order Placed" ${orderStatus==='Order Placed'?'selected':''}>Order Placed</option>
+                  <option value="Seller Notified" ${orderStatus==='Seller Notified'?'selected':''}>Seller Notified</option>
+                  <option value="Seller Accepted" ${orderStatus==='Seller Accepted'?'selected':''}>Seller Accepted</option>
+                  <option value="Packed" ${orderStatus==='Packed'?'selected':''}>Packed</option>
+                  <option value="Picked Up" ${orderStatus==='Picked Up'?'selected':''}>Picked Up</option>
+                  <option value="Shipped" ${orderStatus==='Shipped'?'selected':''}>Shipped</option>
+                  <option value="Delivered" ${orderStatus==='Delivered'?'selected':''}>Delivered (Auto Payout Release)</option>
+                  <option value="Cancelled/RTO" ${orderStatus==='Cancelled/RTO'?'selected':''}>Cancelled/RTO (Payout Freeze)</option>
                 </select>
               </div>
             </div>
@@ -1589,21 +1638,21 @@
           let koshCommission = Math.round(o.total * 0.10);
           totalSales += o.total;
 
-          let payoutStatus = '<span style="color:#ff9800">Pending (ETA: 3-5 days after delivery)</span>';
+          let settlementStatus = '<span style="color:#ff9800">Pending (ETA: 3-5 days after delivery)</span>';
           if(o.status === 'Delivered') {
-            payoutStatus = '<span style="color:var(--success)">Completed & Released</span>';
+            settlementStatus = '<span style="color:var(--success)">Completed & Reconciled</span>';
           } else if(o.status === 'Cancelled/RTO') {
-            payoutStatus = '<span style="color:var(--danger)">Frozen / Hold due to Dispute/RTO</span>';
+            settlementStatus = '<span style="color:var(--danger)">Frozen / Hold due to Dispute/RTO</span>';
           }
 
           payoutListHtml += `
             <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem;">
               <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                 <b>Order #${o.id}</b>
-                <span style="color:var(--success); font-weight:bold;">Total: ₹${o.total}</span>
+                <span style="color:var(--success); font-weight:bold;">Order Total: ₹${o.total}</span>
               </div>
-              <div>Product Earnings (90%): <b>₹${sellerEarning}</b> | Commission (10%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
-              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'Order Placed'}</b> | Payout Status: ${payoutStatus}</div>
+              <div>Seller Net Earning (90%): <b>₹${sellerEarning}</b> | Platform Commission Invoice (10%): <span style="color:#d32f2f;">₹${koshCommission}</span></div>
+              <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Status: <b>${o.status || 'Order Placed'}</b> | Settlement: ${settlementStatus}</div>
             </div>
           `;
         });
@@ -1630,7 +1679,7 @@
         localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
         loadSellerDashboardData();
         if(isAdminLoggedIn) loadAdminMasterData();
-        showAlert("Order timeline & status updated!", "Success", true);
+        showAlert("Order workflow timeline updated!", "Success", true);
       }
     }
 
@@ -1640,6 +1689,7 @@
       let price = parseFloat(document.getElementById('sProdPrice').value) || 0;
       let mrp = parseFloat(document.getElementById('sProdMrp').value) || price * 1.5;
       let stock = parseInt(document.getElementById('sProdStock').value) || 50;
+      let variants = document.getElementById('sProdVariants').value.trim();
       let desc = document.getElementById('sProdDesc').value.trim();
       let fileInput = document.getElementById('sProdFile');
       let editId = document.getElementById('sellerEditProdId').value;
@@ -1647,6 +1697,12 @@
       if(!title || !price) {
         showAlert("Kripya Product Title aur Price bharein.");
         return;
+      }
+
+      // Duplicate product check
+      let isDuplicate = products.some(p => p.title.toLowerCase() === title.toLowerCase() && p.id != editId);
+      if(isDuplicate) {
+        showAlert("⚠️ Warning: Similar product title already exists in the catalog!");
       }
 
       let saveProc = function(imgUrl) {
@@ -1658,19 +1714,20 @@
             p.price = price;
             p.mrp = mrp;
             p.stock = stock;
+            p.variants = variants;
             p.desc = desc;
             p.isDraft = isDraft;
             if(imgUrl) p.image = imgUrl;
           }
           document.getElementById('sellerEditProdId').value = '';
-          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Store Product / Draft';
+          document.getElementById('sellerProdFormTitle').innerText = '➕ Add New Product / Variant / Bundle';
           showAlert(isDraft ? "Product saved as draft!" : "Product published successfully!", "Success", true);
         } else {
           let newId = Date.now();
           products.unshift({
             id: newId,
             sku: `KOSH-${newId.toString().slice(-5)}`,
-            title, category, price, mrp, stock, isDraft,
+            title, category, price, mrp, stock, variants, isDraft,
             image: imgUrl || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
             desc: desc || "Premium quality product."
           });
@@ -1685,6 +1742,7 @@
         document.getElementById('sProdPrice').value = '';
         document.getElementById('sProdMrp').value = '';
         document.getElementById('sProdStock').value = '';
+        document.getElementById('sProdVariants').value = '';
         document.getElementById('sProdFile').value = '';
         document.getElementById('sProdDesc').value = '';
       };
@@ -1708,382 +1766,87 @@
       document.getElementById('sProdPrice').value = p.price;
       document.getElementById('sProdMrp').value = p.mrp;
       document.getElementById('sProdStock').value = p.stock || 50;
+      document.getElementById('sProdVariants').value = p.variants || '';
       document.getElementById('sProdDesc').value = p.desc;
       window.scrollTo(0, 0);
     }
 
-    function renderProducts(filterCat = null) {
-      if(filterCat !== null) {
-        activeCategoryFilter = filterCat;
-        localStorage.setItem('kosh_active_cat', filterCat);
-      }
-      
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '';
-      
-      let filtered = products.filter(p => !p.isDraft);
-      if(activeCategoryFilter !== 'All') {
-        filtered = filtered.filter(p => p.category.toLowerCase() === activeCategoryFilter.toLowerCase());
+    function renderAdminSellersList(query = '') {
+      let container = document.getElementById('admSellersList');
+      if(!container) return;
+
+      let filtered = sellersList;
+      if(query.trim()) {
+        let q = query.trim().toLowerCase();
+        filtered = sellersList.filter(s => s.uniqueId.toLowerCase().includes(q) || s.phone.toLowerCase().includes(q) || s.storeName.toLowerCase().includes(q));
       }
 
-      const searchKey = document.getElementById('searchInput').value.toLowerCase();
-      if(searchKey) {
-        filtered = filtered.filter(p => p.title.toLowerCase().includes(searchKey) || p.category.toLowerCase().includes(searchKey));
-      }
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">No published products in store.</p>';
+      if(filtered.length === 0) {
+        container.innerHTML = 'No sellers found.';
         return;
       }
 
-      filtered.forEach(p => {
-        let isWishlisted = wishlist.some(item => item.id === p.id);
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">${isWishlisted ? '❤️' : '🤍'}</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+      container.innerHTML = filtered.map(s => `
+        <div style="padding:12px; border-bottom:1px solid #eee; font-size:0.85rem; background:${s.approvalStatus === 'Approved' ? '#f1f8e9' : '#fff3e0'}; border-radius:6px; margin-bottom:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <b>Store:</b> ${s.storeName} (${s.uniqueId})
+            <span style="font-size:0.75rem; padding:2px 8px; border-radius:4px; background:${s.approvalStatus === 'Approved' ? '#388e3c' : '#ff9800'}; color:#fff; font-weight:bold;">${s.approvalStatus}</span>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-      document.getElementById('wishlistCount').innerText = wishlist.length;
-    }
-
-    function renderWishlist() {
-      const grid = document.getElementById('wishlistGrid');
-      grid.innerHTML = '';
-      if(wishlist.length === 0) {
-        grid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--muted); padding:40px;">Your wishlist is empty.</p>';
-        return;
-      }
-      wishlist.forEach(p => {
-        let card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <button type="button" class="wishlist-btn" onclick="toggleWishlist(${p.id})">❤️</button>
-          <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-          <div class="product-info">
-            <span class="p-category">${p.category}</span>
-            <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-            <div class="p-price-row"><span class="p-price">₹${p.price}</span><span class="p-mrp">₹${p.mrp}</span></div>
-            <button type="button" class="btn-add-cart" onclick="addToCart(${p.id})">Add to Cart</button>
+          <div><b>Owner:</b> ${s.fullName} | <b>Phone (Login ID):</b> ${s.phone} | <b>Email:</b> ${s.email}</div>
+          <div><b>Location:</b> ${s.city}, ${s.state} - ${s.pincode} | <b>Category:</b> ${s.category}</div>
+          <div><b>PAN Name:</b> ${s.panName || 'N/A'} | <b>PAN No:</b> ${s.panNumber || 'N/A'}</div>
+          <div><b>Bank A/C:</b> ${s.accountNum || 'N/A'} | <b>IFSC:</b> ${s.ifsc || 'N/A'} (${s.bankName || ''})</div>
+          <div style="margin-top:8px; display:flex; gap:8px;">
+            ${s.approvalStatus !== 'Approved' ? `<button type="button" onclick="approveSeller('${s.uniqueId}')" style="background:#388e3c; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Approve Seller</button>` : ''}
+            <button type="button" onclick="openAdminEditSeller('${s.uniqueId}')" style="background:#2196f3; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Edit / Correct KYC</button>
           </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function renderRecentlyViewed() {
-      let grid = document.getElementById('recentlyViewedGrid');
-      if(!grid) return;
-      grid.innerHTML = '';
-      if(recentlyViewed.length === 0) {
-        grid.innerHTML = '<p style="color:var(--muted); font-size:0.8rem;">No recently viewed products.</p>';
-        return;
-      }
-      recentlyViewed.slice(0, 4).forEach(p => {
-        grid.innerHTML += `
-          <div class="product-card">
-            <div class="product-img" onclick="openProductDetail(${p.id})"><img src="${p.image}" alt="${p.title}"></div>
-            <div class="product-info">
-              <div class="p-title" onclick="openProductDetail(${p.id})">${p.title}</div>
-              <div class="p-price-row"><span class="p-price">₹${p.price}</span></div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function toggleWishlist(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let idx = wishlist.findIndex(item => item.id === id);
-      if(idx >= 0) { wishlist.splice(idx, 1); showAlert("Removed from Wishlist", "Wishlist", false); }
-      else { wishlist.push(prod); showAlert("Added to Wishlist!", "Wishlist", true); }
-      localStorage.setItem('kosh_wishlist', JSON.stringify(wishlist));
-      renderProducts();
-      renderWishlist();
-    }
-
-    function navigateTo(pageId, save = true) {
-      document.querySelectorAll('.app-page').forEach(p => p.classList.remove('active'));
-      let target = document.getElementById('page-' + pageId);
-      if(target) target.classList.add('active');
-      if(save) localStorage.setItem('kosh_active_page', pageId);
-      window.scrollTo(0, 0);
-      
-      if(pageId === 'wishlist') renderWishlist();
-      if(pageId === 'support') renderCustomerTickets();
-      if(pageId === 'seller-kyc') loadSellerKycData();
-      if(pageId === 'seller-dashboard') loadSellerDashboardData();
-      if(pageId === 'admin-dashboard') {
-        if(!isAdminLoggedIn) {
-          document.getElementById('adminLoginModal').style.display = 'flex';
-          return;
-        }
-        loadAdminMasterData();
-        switchAdminTab(activeAdminTab, false);
-      }
-    }
-
-    function filterCategory(cat) {
-      document.querySelectorAll('.cat-item').forEach(i => {
-        if(i.innerText.includes(cat) || (cat === 'All' && i.innerText.includes('All'))) i.classList.add('active');
-        else i.classList.remove('active');
-      });
-      renderProducts(cat);
-    }
-
-    function handleSearch(val) { renderProducts(); }
-
-    function openProductDetail(id) {
-      currentSelectedProduct = products.find(item => item.id === id);
-      if(!currentSelectedProduct) return;
-      localStorage.setItem('kosh_selected_prod_id', id);
-      displayProductDetailData(currentSelectedProduct);
-      
-      // Add to recently viewed
-      if(!recentlyViewed.some(p => p.id === currentSelectedProduct.id)) {
-        recentlyViewed.unshift(currentSelectedProduct);
-        localStorage.setItem('kosh_recently_viewed', JSON.stringify(recentlyViewed));
-      }
-
-      navigateTo('product');
-    }
-
-    function displayProductDetailData(p) {
-      document.getElementById('pPageImg').src = p.image;
-      document.getElementById('pPageCategory').innerText = p.category;
-      document.getElementById('pPageTitle').innerText = p.title;
-      document.getElementById('pPageMetaDisplay').innerText = `SKU: ${p.sku}`;
-      document.getElementById('pPagePrice').innerText = '₹' + p.price;
-      document.getElementById('pPageMrp').innerText = '₹' + p.mrp;
-      document.getElementById('pPageDesc').innerText = p.desc;
-    }
-
-    function addCurrentProductToCart() {
-      if(!currentSelectedProduct) return;
-      addToCart(currentSelectedProduct.id);
-    }
-
-    function addToCart(id) {
-      let prod = products.find(p => p.id === id);
-      if(!prod) return;
-      let existing = cart.find(item => item.id === id);
-      if(existing) {
-        existing.qty = (existing.qty || 1) + 1;
-        existing.finalPrice = existing.price * existing.qty;
-      } else {
-        cart.push({ ...prod, finalPrice: prod.price, qty: 1 });
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-      showAlert(prod.title + " added to cart!", 'Cart', true);
-    }
-
-    function changeCartQty(id, delta) {
-      let item = cart.find(i => i.id === id);
-      if(!item) return;
-      item.qty += delta;
-      if(item.qty <= 0) {
-        cart = cart.filter(i => i.id !== id);
-      } else {
-        item.finalPrice = item.price * item.qty;
-      }
-      localStorage.setItem('kosh_cart', JSON.stringify(cart));
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
-      const container = document.getElementById('cartItemsContainer');
-      const priceBox = document.getElementById('cartPriceDetailsBox');
-      container.innerHTML = '';
-      if(cart.length === 0) { container.innerHTML = '<p style="color:var(--muted); text-align:center; padding:40px;">Cart is empty.</p>'; priceBox.style.display = 'none'; return; }
-      priceBox.style.display = 'block';
-      let subtotal = 0;
-      cart.forEach(item => {
-        subtotal += item.finalPrice;
-        container.innerHTML += `
-          <div style="background:#fff; border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; display:flex; gap:12px; align-items:center;">
-            <img src="${item.image}" style="width:65px; height:65px; object-fit:cover; border-radius:4px;">
-            <div style="flex-grow:1;">
-              <div style="font-size:0.85rem; font-weight:600; margin-bottom:4px;">${item.title}</div>
-              <div style="font-size:0.9rem; font-weight:800; color:var(--primary);">₹${item.finalPrice}</div>
-              <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
-                <button type="button" onclick="changeCartQty(${item.id}, -1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">-</button>
-                <span style="font-size:0.85rem; font-weight:bold;">${item.qty || 1}</span>
-                <button type="button" onclick="changeCartQty(${item.id}, 1)" style="width:24px; height:24px; background:#eee; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">+</button>
-              </div>
-            </div>
-          </div>`;
-      });
-      document.getElementById('cartSubtotalPrice').innerText = '₹' + subtotal;
-      document.getElementById('cartTotalPrice').innerText = '₹' + subtotal;
-    }
-
-    function toggleCartDrawer(open) {
-      document.getElementById('cartDrawer').classList.toggle('open', open);
-      document.getElementById('cartBackdrop').style.display = open ? 'block' : 'none';
-      localStorage.setItem('kosh_cart_open', open);
-    }
-
-    function clearAllProductsCompletely() {
-      showCustomConfirm("Kya aap saare products ko permanent delete karna chahte hain?", function(res) {
-        if(res) {
-          products = [];
-          localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-          renderProducts();
-          loadAdminMasterData();
-          showAlert("Saare products delete ho gaye hain!", "Success", true);
-        }
-      });
-    }
-
-    function addNewCustomProduct() {
-      let title = document.getElementById('newProdTitle').value.trim();
-      let category = document.getElementById('newProdCategory').value;
-      let price = parseFloat(document.getElementById('newProdPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('newProdMrp').value) || price * 1.5;
-      let desc = document.getElementById('newProdDesc').value.trim();
-      let fileInput = document.getElementById('newProdFile');
-
-      if(!title || !price) {
-        showAlert("Kripya Product Title aur Price bharein.");
-        return;
-      }
-
-      if(fileInput.files && fileInput.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-          saveProductWithImage(title, category, price, mrp, e.target.result, desc);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveProductWithImage(title, category, price, mrp, "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60", desc);
-      }
-    }
-
-    function saveProductWithImage(title, category, price, mrp, image, desc) {
-      let newId = Date.now();
-      products.unshift({
-        id: newId,
-        sku: `KOSH-${newId.toString().slice(-5)}`,
-        title,
-        category,
-        price,
-        mrp,
-        stock: 50,
-        image,
-        desc: desc || "Premium quality product from Kosh Studio."
-      });
-
-      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
-      renderProducts();
-      loadAdminMasterData();
-      
-      document.getElementById('newProdTitle').value = '';
-      document.getElementById('newProdPrice').value = '';
-      document.getElementById('newProdMrp').value = '';
-      document.getElementById('newProdFile').value = '';
-      document.getElementById('newProdDesc').value = '';
-
-      showAlert("Naya product gallery image ke sath add ho gaya hai!", "Success", true);
-    }
-
-    function triggerAdminSecret() {
-      secretClickCount++;
-      if(secretClickCount >= 5) { 
-        secretClickCount = 0; 
-        if(isAdminLoggedIn) {
-          navigateTo('admin-dashboard');
-        } else {
-          document.getElementById('adminLoginModal').style.display = 'flex'; 
-        }
-      }
-    }
-
-    function verifyAdminPassword() {
-      let uid = document.getElementById('admUserInput').value.trim();
-      let pass = document.getElementById('admPassInput').value.trim();
-      if(uid === 'rohitku316' && pass === 'Rohit@2006') {
-        isAdminLoggedIn = true;
-        localStorage.setItem('kosh_is_admin', 'true');
-        document.getElementById('adminLoginModal').style.display = 'none';
-        navigateTo('admin-dashboard');
-      } else { showAlert('Incorrect Admin ID or Password!'); }
-    }
-
-    function switchAdminTab(tab, save = true) {
-      if(save) {
-        activeAdminTab = tab;
-        localStorage.setItem('kosh_admin_tab', tab);
-      }
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(btn => {
-        if(btn.getAttribute('onclick')?.includes(tab)) btn.classList.add('active');
-      });
-      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if(contentEl) contentEl.classList.add('active');
-    }
-
-    function loadAdminMasterData() {
-      renderAdminSellersList();
-      document.getElementById('admProductsList').innerHTML = products.length === 0 ? 'No products in store.' : products.map(p => `
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee; font-size:0.85rem;">
-          <div><b>[${p.sku}]</b> ${p.title} - ₹${p.price} <br><small style="color:var(--muted);">Category: ${p.category}</small></div>
-          <button type="button" onclick="deleteAdminProduct(${p.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>
         </div>
       `).join('');
-      document.getElementById('admOrdersList').innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div style="padding:8px 0; border-bottom:1px solid #eee;"><b>Order #${o.id}</b> - ₹${o.total} (${o.gateway}) - Status: ${o.status}</div>`).join('');
-      
-      let admTicketsContainer = document.getElementById('admTicketsList');
-      if(admTicketsContainer) {
-        if(ticketsList.length === 0) {
-          admTicketsContainer.innerHTML = 'No support tickets.';
-        } else {
-          admTicketsContainer.innerHTML = ticketsList.map(t => {
-            let isClosed = t.status === 'Closed';
-            let msgsHtml = t.messages.map(m => `
-              <div style="margin-bottom:6px; text-align:${m.sender === 'admin' ? 'right' : 'left'};">
-                <div style="display:inline-block; padding:6px 10px; border-radius:6px; background:${m.sender === 'admin' ? '#e8f5e9' : '#f1f3f6'}; font-size:0.8rem; max-width:85%; text-align:left;">
-                  <small style="display:block; font-weight:bold; color:${m.sender === 'admin' ? '#388e3c' : '#333'};">${m.sender === 'admin' ? 'Admin' : t.email}</small>
-                  ${m.text}
-                </div>
-              </div>
-            `).join('');
+    }
 
-            return `
-              <div style="border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:#fafafa;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                  <span style="font-size:0.85rem; font-weight:bold;">User: ${t.email} | Category: ${t.category}</span>
-                  <div>
-                    <span style="font-size:0.7rem; padding:2px 6px; border-radius:3px; background:${isClosed ? '#ffebee' : '#e8f5e9'}; color:${isClosed ? '#d32f2f' : '#388e3c'}; font-weight:bold; margin-right:6px;">${t.status}</span>
-                    ${!isClosed ? `<button type="button" onclick="closeAdminTicket(${t.id})" style="background:#d32f2f; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Close Grievance</button>` : ''}
-                  </div>
-                </div>
-                <div style="max-height:140px; overflow-y:auto; background:#fff; padding:6px; border:1px solid #eee; border-radius:4px; margin-bottom:6px;">
-                  ${msgsHtml}
-                </div>
-                ${isClosed ? '<p style="font-size:0.75rem; color:#d32f2f; font-style:italic;">Grievance closed.</p>' : `
-                  <div style="display:flex; gap:6px;">
-                    <input type="text" id="adminReplyInput_${t.id}" placeholder="Reply to customer..." style="flex-grow:1; padding:6px 10px; font-size:0.8rem; border:1px solid var(--border); border-radius:4px;">
-                    <button type="button" class="btn-solid" style="width:auto; padding:6px 12px; font-size:0.75rem; background:#388e3c;" onclick="sendAdminChatMessage(${t.id})">Reply</button>
-                  </div>
-                `}
-              </div>
-            `;
-          }).join('');
-        }
+    function approveSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(s) {
+        s.approvalStatus = 'Approved';
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        renderAdminSellersList();
+        loadSellerKycData();
+        logAudit(`Admin approved seller: ${s.storeName} (${s.uniqueId})`);
+        showAlert(`Seller ${s.storeName} approved successfully!`, "Success", true);
       }
+    }
+
+    function openAdminEditSeller(uniqueId) {
+      let s = sellersList.find(item => item.uniqueId === uniqueId);
+      if(!s) return;
+      document.getElementById('editSellerId').value = s.uniqueId;
+      document.getElementById('editStoreName').value = s.storeName;
+      document.getElementById('editPanName').value = s.panName;
+      document.getElementById('editPanNumber').value = s.panNumber;
+      document.getElementById('editAccountNum').value = s.accountNum;
+      document.getElementById('editIfsc').value = s.ifsc;
+      document.getElementById('editBankName').value = s.bankName;
+      document.getElementById('editBranchName').value = s.branchName;
+      document.getElementById('adminSellerEditModal').style.display = 'flex';
+    }
+
+    function saveAdminEditedSeller() {
+      let uid = document.getElementById('editSellerId').value;
+      let s = sellersList.find(item => item.uniqueId === uid);
+      if(!s) return;
+      s.storeName = document.getElementById('editStoreName').value.trim();
+      s.panName = document.getElementById('editPanName').value.trim();
+      s.panNumber = document.getElementById('editPanNumber').value.trim();
+      s.accountNum = document.getElementById('editAccountNum').value.trim();
+      s.ifsc = document.getElementById('editIfsc').value.trim();
+      s.bankName = document.getElementById('editBankName').value.trim();
+      s.branchName = document.getElementById('editBranchName').value.trim();
+
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      document.getElementById('adminSellerEditModal').style.display = 'none';
+      renderAdminSellersList();
+      logAudit(`Admin updated KYC/Bank details for seller: ${s.uniqueId}`);
+      showAlert("Seller details successfully updated by Admin!", "Success", true);
     }
   </script>
 </body>
