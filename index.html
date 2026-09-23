@@ -456,7 +456,7 @@
 
       <!-- Step 2: Basic Details (Prefilled & Mandatory) -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_9](start_span)[span_9](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -485,7 +485,7 @@
           </div>
         </div>
         <div style="display:flex; gap:10px;">
-          <div class="form-group" style="flex:1;"><label>Meesho Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 500" required></div>
+          <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="wizPrice" placeholder="e.g. 500" required></div>
           <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="wizMrp" placeholder="e.g. 700" required></div>
         </div>
         <div class="form-group"><label>Manufacturer Name *</label><input type="text" id="wizMfgName" value="Kosh Supplier" required></div>
@@ -649,9 +649,9 @@
   <!-- PROFESSIONAL CART DRAWER (MYNTRA/NYKAA STYLE) -->
   <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer(false)"></div>
   <div class="cart-drawer" id="cartDrawer">
-    <!-- Top Savings Banner -->
-    <div style="background:#e8f5e9; color:#2e7d32; padding:10px 16px; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #c8e6c9;">
-      <span>🎉 You're saving ₹70 on this order</span>
+    <!-- Top Dynamic Savings Banner -->
+    <div id="cartSavingsBanner" style="background:#e8f5e9; color:#2e7d32; padding:10px 16px; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #c8e6c9;">
+      <span id="cartSavingsText">🎉 You're saving ₹0 on this order</span>
       <button type="button" onclick="toggleCartDrawer(false)" style="background:none; border:none; font-size:1.1rem; cursor:pointer;">✕</button>
     </div>
 
@@ -664,11 +664,11 @@
     <!-- Cart Items Scrollable Container -->
     <div id="cartItemsContainer" style="flex-grow:1; overflow-y:auto; padding:12px 16px; background:#f1f3f6;"></div>
 
-    <!-- Price Details Breakdown & Checkout Box -->
+    <!-- Dynamic Price Details Breakdown & Checkout Box -->
     <div id="cartPriceDetailsBox" style="background:#fff; border-top:1px solid var(--border); padding:16px; display:block;">
       <div style="font-size:0.85rem; font-weight:800; margin-bottom:8px; color:#212121;">Price Details</div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--muted);"><span>Total MRP</span><span id="cartTotalMrp">₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);"><span>Discount on MRP</span><span>- ₹70</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);"><span>Discount on MRP</span><span id="cartDiscountMrp">- ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px; color:var(--muted);"><span>Platform Fee</span><span>₹23</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.95rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Total Amount</span><span id="cartTotalPrice" style="color:var(--pro-pink);">₹0</span></div>
       
@@ -879,7 +879,7 @@
       let title = document.getElementById('wizTitle').value.trim();
       let category = document.getElementById('wizCategory').value;
       let price = parseFloat(document.getElementById('wizPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('wizMrp').value) || 0;
+      let mrp = parseFloat(document.getElementById('wizMrp').value) || price * 1.4;
       let desc = document.getElementById('wizDesc').value.trim();
       let weight = document.getElementById('wizWeight').value;
       let color = document.getElementById('wizColor').value;
@@ -913,7 +913,7 @@
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveReviewItem(e.target.result); };
+        reader.onload = function(e) { saveItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
         saveReviewItem('https://via.placeholder.com/300');
@@ -1085,7 +1085,9 @@
 
     function renderPaymentPage() {
       let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-      let total = Math.max(0, subtotal - 70 + 23); // Reflecting Nykaa style calculation
+      let totalMrp = cart.reduce((a,c) => a + ((parseFloat(c.mrp) || c.finalPrice * 1.4) * (c.qty || 1)), 0);
+      let discountOnMrp = Math.max(0, totalMrp - subtotal);
+      let total = Math.max(0, subtotal + 23 - (appliedDiscount || 0));
       document.getElementById('payTotalAmount').innerText = '₹' + total;
       
       let container = document.getElementById('paymentMethodContainer');
@@ -1109,7 +1111,7 @@
     function processAutoPayment() {
       setTimeout(() => {
         let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-        let total = Math.max(0, subtotal - 70 + 23);
+        let total = Math.max(0, subtotal + 23 - (appliedDiscount || 0));
         let newOrder = {
           id: Date.now(),
           items: [...cart],
@@ -1132,7 +1134,7 @@
       let title = document.getElementById('dsTitle').value.trim();
       let category = document.getElementById('dsCategory').value;
       let price = parseFloat(document.getElementById('dsPrice').value) || 0;
-      let mrp = parseFloat(document.getElementById('dsMrp').value) || 0;
+      let mrp = parseFloat(document.getElementById('dsMrp').value) || price * 1.4;
       let sourceName = document.getElementById('dsSourceWebsite').value.trim();
       let sourceLink = document.getElementById('dsSourceLink').value.trim();
       let desc = document.getElementById('dsDesc').value.trim();
@@ -1345,10 +1347,13 @@
       document.getElementById('cartBagCountIndicator').innerText = `${totalQty}/${totalQty} Items Selected`;
       
       let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-      let totalMrp = cart.reduce((a,c) => a + ((c.mrp || c.finalPrice * 1.5) * (c.qty || 1)), 0);
-      let grandTotal = Math.max(0, subtotal - 70 + 23);
+      let totalMrp = cart.reduce((a,c) => a + ((parseFloat(c.mrp) || c.finalPrice * 1.4) * (c.qty || 1)), 0);
+      let discountOnMrp = Math.max(0, totalMrp - subtotal);
+      let grandTotal = Math.max(0, subtotal + 23);
       
       document.getElementById('cartTotalMrp').innerText = '₹' + Math.round(totalMrp);
+      document.getElementById('cartDiscountMrp').innerText = '- ₹' + Math.round(discountOnMrp);
+      document.getElementById('cartSavingsText').innerText = `🎉 You're saving ₹${Math.round(discountOnMrp)} on this order`;
       document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
       
       let container = document.getElementById('cartItemsContainer');
@@ -1369,7 +1374,7 @@
             </div>
             <div style="display:flex; align-items:baseline; gap:6px;">
               <span style="font-weight:800; font-size:0.95rem; color:#111;">₹${i.finalPrice}</span>
-              <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${i.mrp || Math.round(i.finalPrice * 1.5)}</span>
+              <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;">₹${i.mrp || Math.round(i.finalPrice * 1.4)}</span>
               <span style="font-size:0.7rem; color:var(--success); font-weight:bold;">28% OFF</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
