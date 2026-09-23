@@ -293,7 +293,7 @@
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
 
-        <!-- My Orders Section inside Account -->
+        <!-- My Orders & Status Section -->
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow);">
           <h4 style="font-size:1rem; margin-bottom:10px; color:var(--primary);">📦 My Orders & Tracking Status</h4>
           <div id="customerMyOrdersList" style="font-size:0.85rem; color:#555;">No orders placed yet.</div>
@@ -439,7 +439,7 @@
 
       <!-- Step 2 -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -520,7 +520,8 @@
     </div>
     <div class="page-content" style="max-width:1100px;">
       <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('approvals')">📝 Seller Catalog Approvals</button>
+        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('payments')">💳 Payment & UTR Check</button>
+        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('approvals')">📝 Catalog Approvals</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('dropshipping')">📦 Dropshipping</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('sellers')">🏪 Sellers & Performance</button>
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
@@ -529,7 +530,13 @@
         <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
       </div>
 
-      <div id="admTabApprovals" class="dash-tab-content active">
+      <!-- Tab: Payment Verification & UTR Check -->
+      <div id="admTabPayments" class="dash-tab-content active">
+        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Payments & UTR Verification</h5>
+        <div id="adminPaymentsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payments recorded yet.</div>
+      </div>
+
+      <div id="admTabApprovals" class="dash-tab-content">
         <h5 style="margin-bottom:10px; font-weight:bold;">Pending Seller Catalogs For Review & Acceptance</h5>
         <div id="adminPendingCatalogsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No pending catalogs.</div>
       </div>
@@ -649,7 +656,6 @@
       <div style="font-size:0.85rem; font-weight:800; margin-bottom:8px; color:#212121;">Price Details</div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--muted);"><span>Total MRP</span><span id="cartTotalMrp">₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);"><span>Discount on MRP</span><span id="cartDiscountMrp">- ₹0</span></div>
-      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);" id="couponDiscountRow" style="display:none;"><span>Coupon Discount</span><span id="cartCouponDiscountText">- ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px; color:var(--muted);"><span>Platform Fee</span><span>₹23</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.95rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Total Amount</span><span id="cartTotalPrice" style="color:var(--pro-pink);">₹0</span></div>
       
@@ -692,7 +698,7 @@
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
-    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'approvals';
+    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'payments';
     let appliedDiscount = parseFloat(localStorage.getItem('kosh_applied_discount')) || 0;
     let currentSelectedProduct = null;
 
@@ -802,15 +808,16 @@
     function renderCustomerMyOrders() {
       let container = document.getElementById('customerMyOrdersList');
       if(!container) return;
-      if(ordersList.length === 0) {
+      let myOrders = ordersList.filter(o => o.userEmail === currentUser || true);
+      if(myOrders.length === 0) {
         container.innerHTML = 'No orders placed yet.';
         return;
       }
-      container.innerHTML = ordersList.map(o => `
+      container.innerHTML = myOrders.map(o => `
         <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
           <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id}</div>
           <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | Total: ₹${o.total}</div>
-          <div style="font-size:0.75rem; color:var(--success); font-weight:bold; margin-top:2px;">Status: ${o.status} (UTR Verified)</div>
+          <div style="font-size:0.75rem; color:var(--success); font-weight:bold; margin-top:2px;">Status: ${o.status} | UTR: ${o.utr || 'N/A'}</div>
         </div>
       `).join('');
     }
@@ -938,7 +945,7 @@
       `).join('');
     }
 
-    // --- ADMIN APPROVAL FUNCTIONS ---
+    // --- ADMIN APPROVAL & PAYMENT VERIFICATION FUNCTIONS ---
     function renderAdminPendingCatalogs() {
       let container = document.getElementById('adminPendingCatalogsList');
       if(!container) return;
@@ -959,6 +966,25 @@
               <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject / Fix</button>
             </div>
           </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminPayments() {
+      let container = document.getElementById('adminPaymentsList');
+      if(!container) return;
+      if(ordersList.length === 0) {
+        container.innerHTML = 'No payment transactions recorded yet.';
+        return;
+      }
+      container.innerHTML = ordersList.map(o => `
+        <div style="padding:12px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:bold; font-size:0.9rem;">Order #${o.id} - ₹${o.total}</div>
+            <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | User: ${o.userEmail || 'Customer'}</div>
+            <div style="font-size:0.8rem; color:var(--success); font-weight:bold; margin-top:4px;">🔑 UTR / Transaction ID: ${o.utr || 'N/A'}</div>
+          </div>
+          <span style="background:#e8f5e9; color:var(--success); padding:4px 10px; border-radius:4px; font-size:0.75rem; font-weight:bold;">Verified ✓</span>
         </div>
       `).join('');
     }
@@ -1105,6 +1131,10 @@
         `;
       } else {
         container.innerHTML = `
+          <div class="form-group" style="text-align:left; margin-bottom:12px;">
+            <label>Enter Transaction Reference ID *</label>
+            <input type="text" id="upiUtrInput" placeholder="Transaction ID" required style="padding:10px; font-size:0.9rem;">
+          </div>
           <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="verifyAndPayOrder(${total})">Pay ₹${total} Now (${paymentConfig.gateway})</button>
         `;
       }
@@ -1112,11 +1142,9 @@
 
     function verifyAndPayOrder(total) {
       let utrInput = document.getElementById('upiUtrInput');
-      if(paymentConfig.gateway === 'UPI') {
-        if(!utrInput || utrInput.value.trim().length < 12) {
-          showAlert("Kripya valid 12-digit UPI UTR / Transaction ID enter karein taaki payment verify ho sake!");
-          return;
-        }
+      if(!utrInput || utrInput.value.trim().length < 5) {
+        showAlert("Kripya valid UTR / Transaction ID enter karein taaki payment verify ho sake!");
+        return;
       }
 
       setTimeout(() => {
@@ -1124,7 +1152,9 @@
           id: Date.now(),
           items: [...cart],
           total: total,
-          status: 'Order Placed & Verified',
+          utr: utrInput.value.trim(),
+          userEmail: currentUser || 'Guest Customer',
+          status: 'Order Placed & Payment Verified',
           date: new Date().toLocaleDateString()
         };
         ordersList.unshift(newOrder);
@@ -1436,6 +1466,7 @@
       let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
       if(contentEl) contentEl.classList.add('active');
 
+      if(tab === 'payments') renderAdminPayments();
       if(tab === 'approvals') renderAdminPendingCatalogs();
       if(tab === 'dropshipping') renderAdminDropshippingList();
       if(tab === 'sellers') {
