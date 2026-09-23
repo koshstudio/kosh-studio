@@ -233,7 +233,7 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAILS PAGE -->
+  <!-- PRODUCT DETAILS PAGE WITH RATINGS & REVIEWS -->
   <div id="page-product" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -251,12 +251,24 @@
         <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
           <button type="button" class="btn-solid" style="background:var(--accent); color:#000;" onclick="addCurrentProductToCart()">Add to Cart</button>
         </div>
-        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6;"></p>
+        <p id="pPageDesc" style="font-size:0.9rem; color:#555; line-height:1.6; margin-bottom:20px;"></p>
+        
+        <!-- Reviews & Ratings Section -->
+        <div style="background:#fff; padding:16px; border-radius:8px; border:1px solid var(--border);">
+          <h4 style="font-size:1rem; margin-bottom:10px;">⭐ Customer Ratings & Reviews</h4>
+          <div id="productReviewsContainer" style="font-size:0.85rem; color:#666; margin-bottom:14px;">No reviews yet. Be the first to review!</div>
+          <div style="border-top:1px solid #eee; padding-top:12px;">
+            <div class="form-group"><label>Rating (1 to 5 Stars)</label><select id="newReviewRating"><option value="5">⭐⭐⭐⭐⭐ (5/5)</option><option value="4">⭐⭐⭐⭐ (4/5)</option><option value="3">⭐⭐⭐ (3/5)</option></select></div>
+            <div class="form-group"><label>Write Review</label><textarea id="newReviewText" rows="2" placeholder="Write your feedback..."></textarea></div>
+            <button type="button" class="btn-solid" style="background:#333; font-size:0.8rem; padding:10px;" onclick="submitProductReview()">Submit Review</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- PROFILE PAGE WITH LOGIN & SIGNUP & MY ORDERS -->
+  <!-- PROFILE PAGE WITH LOGIN & SIGNUP & MY ORDERS & RETURN WORKFLOW -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -293,9 +305,9 @@
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
 
-        <!-- My Orders & Status Section -->
+        <!-- My Orders with Timeline & Return Workflow -->
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow);">
-          <h4 style="font-size:1rem; margin-bottom:10px; color:var(--primary);">📦 My Orders & Approval Status</h4>
+          <h4 style="font-size:1rem; margin-bottom:10px; color:var(--primary);">📦 My Orders, Live Tracking & Returns</h4>
           <div id="customerMyOrdersList" style="font-size:0.85rem; color:#555;">No orders placed yet.</div>
         </div>
 
@@ -322,7 +334,7 @@
     </div>
   </div>
 
-  <!-- EXACT MEESHO STYLE SELLER DASHBOARD -->
+  <!-- EXACT MEESHO STYLE SELLER DASHBOARD WITH PAYOUT LEDGER -->
   <div id="page-seller-dashboard" class="app-page">
     <div class="page-header" style="background:#55165b; color:#fff; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -362,9 +374,21 @@
         </div>
       </div>
 
+      <!-- Seller Payout & Commission Ledger -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">💰 Payout & Commission Ledger (10% Cut)</h4>
+        <div id="sellerPayoutLedger" style="font-size:0.85rem; color:#555;">Calculating earnings...</div>
+      </div>
+
+      <!-- Seller Return / Refund Requests -->
+      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--danger);">🔄 Return & Refund Requests</h4>
+        <div id="sellerReturnRequestsList" style="font-size:0.85rem; color:#555;">No return requests.</div>
+      </div>
+
       <!-- Seller Orders Status Check -->
       <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📦 Customer Orders (Payment Status)</h4>
+        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📦 Customer Orders & Verification Status</h4>
         <div id="sellerOrdersStatusList" style="font-size:0.85rem; color:#555;">No orders received yet.</div>
       </div>
 
@@ -698,6 +722,7 @@
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
+    let productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
@@ -822,28 +847,89 @@
         return;
       }
       container.innerHTML = myOrders.map(o => `
-        <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
-          <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id}</div>
-          <div style="font-size:0.78rem; color:#666;">Date: ${o.date} | Total: ₹${o.total}</div>
-          <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Status: ${o.status}</div>
+        <div style="background:#f9f9f9; padding:12px; border-radius:6px; margin-bottom:10px; border:1px solid #eee;">
+          <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
+          <div style="font-size:0.78rem; color:#666; margin-bottom:6px;">Date: ${o.date} | UTR: ${o.utr}</div>
+          
+          <!-- Live Timeline Progress Bar -->
+          <div style="font-size:0.72rem; font-weight:bold; color:var(--primary); margin-bottom:6px;">
+            Status: ${o.status}
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:#888; background:#eee; height:6px; border-radius:3px; margin-bottom:8px; overflow:hidden;">
+            <div style="background:var(--success); width:${o.status.includes('Confirmed') ? '100%' : '50%'};"></div>
+          </div>
+
+          ${o.status.includes('Confirmed') ? `<button type="button" onclick="requestReturn(${o.id})" style="background:#ff5252; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Return / Refund Request</button>` : ''}
+          ${o.returnStatus ? `<div style="font-size:0.75rem; color:var(--danger); font-weight:bold; margin-top:4px;">Return Status: ${o.returnStatus}</div>` : ''}
         </div>
       `).join('');
     }
 
+    function requestReturn(orderId) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.returnStatus = 'Requested (Pending Admin/Seller approval)';
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        renderCustomerMyOrders();
+        renderSellerOrdersStatus();
+        showAlert("Return request submitted successfully!");
+      }
+    }
+
     function renderSellerOrdersStatus() {
       let container = document.getElementById('sellerOrdersStatusList');
+      let payoutContainer = document.getElementById('sellerPayoutLedger');
+      let returnContainer = document.getElementById('sellerReturnRequestsList');
       if(!container) return;
+
       if(ordersList.length === 0) {
         container.innerHTML = 'No orders received yet.';
+        if(payoutContainer) payoutContainer.innerHTML = 'Total Sales: ₹0 | Commission (10%): ₹0 | Payout: ₹0';
+        if(returnContainer) returnContainer.innerHTML = 'No return requests.';
         return;
       }
+
+      let totalSales = ordersList.reduce((a,c) => a + c.total, 0);
+      let commission = Math.round(totalSales * 0.10);
+      let netPayout = totalSales - commission;
+
+      if(payoutContainer) {
+        payoutContainer.innerHTML = `
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;"><span>Total Store Sales:</span><b>₹${totalSales}</b></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px; color:var(--danger);"><span>Platform Commission (10%):</span><b>- ₹${commission}</b></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.9rem; font-weight:bold; color:var(--success); border-top:1px solid #eee; padding-top:4px;"><span>Net Payable Payout:</span><span>₹${netPayout}</span></div>
+        `;
+      }
+
       container.innerHTML = ordersList.map(o => `
         <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
           <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
-          <div style="font-size:0.78rem; color:#666;">Customer UTR: ${o.utr}</div>
+          <div style="font-size:0.78rem; color:#666;">UTR: ${o.utr}</div>
           <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Payment Status: ${o.status}</div>
         </div>
       `).join('');
+
+      let returns = ordersList.filter(o => o.returnStatus);
+      if(returnContainer) {
+        returnContainer.innerHTML = returns.length === 0 ? 'No return requests.' : returns.map(o => `
+          <div style="background:#fff3e0; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #ffe0b2;">
+            <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} Refund Request</div>
+            <div style="font-size:0.75rem; color:#e65100; margin:4px 0;">Status: ${o.returnStatus}</div>
+            <button type="button" onclick="approveReturn(${o.id})" style="background:var(--success); color:#fff; border:none; padding:4px 10px; border-radius:4px; font-size:0.7rem; cursor:pointer; font-weight:bold;">Approve Refund</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function approveReturn(orderId) {
+      let order = ordersList.find(o => o.id === orderId);
+      if(order) {
+        order.returnStatus = 'Approved & Refund Processed';
+        localStorage.setItem('kosh_orders', JSON.stringify(ordersList));
+        renderSellerOrdersStatus();
+        renderCustomerMyOrders();
+        showAlert("Return approved and refund processed!");
+      }
     }
 
     function submitSellerRegistration() {
@@ -942,10 +1028,10 @@
 
       if(fileInput.files && fileInput.files[0]) {
         let reader = new FileReader();
-        reader.onload = function(e) { saveReviewItem(e.target.result); };
+        reader.onload = function(e) { saveItem(e.target.result); };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        saveReviewItem('https://via.placeholder.com/300');
+        saveItem('https://via.placeholder.com/300');
       }
     }
 
@@ -1207,6 +1293,39 @@
       }, 1000);
     }
 
+    // --- PRODUCT REVIEWS & RATINGS ---
+    function submitProductReview() {
+      if(!currentSelectedProduct) return;
+      let rating = document.getElementById('newReviewRating').value;
+      let text = document.getElementById('newReviewText').value.trim();
+      if(!text) { showAlert("Kripya review likhein."); return; }
+
+      if(!productReviews[currentSelectedProduct.id]) {
+        productReviews[currentSelectedProduct.id] = [];
+      }
+      productReviews[currentSelectedProduct.id].unshift({ rating, text, user: currentUser || 'Guest' });
+      localStorage.setItem('kosh_product_reviews', JSON.stringify(productReviews));
+      document.getElementById('newReviewText').value = '';
+      showAlert("Review submitted successfully!", "Success", true);
+      renderProductReviews(currentSelectedProduct.id);
+    }
+
+    function renderProductReviews(productId) {
+      let container = document.getElementById('productReviewsContainer');
+      if(!container) return;
+      let reviews = productReviews[productId] || [];
+      if(reviews.length === 0) {
+        container.innerHTML = 'No reviews yet. Be the first to review!';
+        return;
+      }
+      container.innerHTML = reviews.map(r => `
+        <div style="padding:8px 0; border-bottom:1px solid #eee;">
+          <div><b>${r.user}</b> - ${'⭐'.repeat(r.rating)}</div>
+          <div style="color:#555; margin-top:2px;">${r.text}</div>
+        </div>
+      `).join('');
+    }
+
     // --- DROPSHIPPING ADMIN FUNCTIONS ---
     function addNewDropshippingProduct() {
       let title = document.getElementById('dsTitle').value.trim();
@@ -1372,6 +1491,7 @@
         document.getElementById('pPagePrice').innerText = '₹' + p.price;
         document.getElementById('pPageMrp').innerText = '₹' + (p.mrp || p.price);
         document.getElementById('pPageDesc').innerText = p.desc || 'No description provided.';
+        renderProductReviews(p.id);
         navigateTo('product');
       }
     }
