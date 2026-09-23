@@ -79,6 +79,18 @@
     .back-btn { background: none; border: none; font-size: 1rem; cursor: pointer; font-weight: 700; color: var(--primary); }
     .page-content { max-width: 900px; margin: 20px auto; padding: 0 16px; padding-bottom: 90px; }
 
+    /* Big Card Buttons for Admin & Seller Dashboards */
+    .admin-menu-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 14px; margin-top: 10px; }
+    @media(min-width: 600px) { .admin-menu-grid { grid-template-columns: repeat(2, 1fr); } }
+    .admin-card-btn { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: left; cursor: pointer; box-shadow: var(--shadow); transition: transform 0.1s ease; display: flex; align-items: center; gap: 16px; }
+    .admin-card-btn:active { transform: scale(0.98); }
+    .admin-card-btn .icon { font-size: 2rem; }
+    .admin-card-btn .title { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .admin-card-btn .desc { font-size: 0.78rem; color: #666; }
+
+    .admin-view-section { display: none; }
+    .admin-view-section.active { display: block; }
+
     .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 440px; background: #f1f3f6; z-index: 110; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; box-shadow: -5px 0 25px rgba(0,0,0,0.15); }
     .cart-drawer.open { transform: translateX(0); }
     .cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 105; display: none; }
@@ -268,7 +280,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE WITH LOGIN & SIGNUP & MY ORDERS & RETURN WORKFLOW -->
+  <!-- PROFILE PAGE WITH LOGIN & SIGNUP -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -334,7 +346,7 @@
     </div>
   </div>
 
-  <!-- EXACT MEESHO STYLE SELLER DASHBOARD WITH PAYOUT LEDGER -->
+  <!-- EXACT MEESHO STYLE SELLER DASHBOARD WITH DEDICATED SUB-PAGES -->
   <div id="page-seller-dashboard" class="app-page">
     <div class="page-header" style="background:#55165b; color:#fff; justify-content:space-between;">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -344,27 +356,8 @@
       <span style="font-size:1.2rem; cursor:pointer;" onclick="showAlert('Help & Support')">❓</span>
     </div>
 
-    <!-- Step Progress Bar -->
-    <div style="background:#fff; padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-around; text-align:center;">
-      <div>
-        <div style="width:28px; height:28px; background:var(--primary); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">1</div>
-        <span style="font-size:0.75rem; font-weight:700; color:var(--primary);">Upload catalogs</span>
-      </div>
-      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
-      <div>
-        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">2</div>
-        <span style="font-size:0.75rem; color:#666;">Catalogs go live</span>
-      </div>
-      <div style="border-top:2px dashed #ccc; width:40px; margin-top:14px;"></div>
-      <div>
-        <div style="width:28px; height:28px; background:#e0e0e0; color:#666; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; margin:0 auto 4px;">3</div>
-        <span style="font-size:0.75rem; color:#666;">Get first order</span>
-      </div>
-    </div>
-
-    <div class="page-content" style="max-width:700px; padding-bottom:90px;">
-      
-      <!-- Banner Video Card -->
+    <!-- Seller Main Menu (Big Cards) -->
+    <div id="sellerHomeMenu" class="page-content" style="max-width:700px; padding-bottom:90px;">
       <div style="background:#fff; border-radius:8px; border:1px solid var(--border); overflow:hidden; margin-bottom:16px; box-shadow:var(--shadow);">
         <div style="position:relative; background:#000; height:180px; display:flex; align-items:center; justify-content:center;">
           <span style="font-size:3rem; color:#ff0000; cursor:pointer;" onclick="showAlert('Playing tutorial video...')">▶️</span>
@@ -374,30 +367,43 @@
         </div>
       </div>
 
-      <!-- Seller Payout & Commission Ledger -->
-      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">💰 Payout & Commission Ledger (10% Cut)</h4>
-        <div id="sellerPayoutLedger" style="font-size:0.85rem; color:#555;">Calculating earnings...</div>
+      <h4 style="font-size:1rem; font-weight:800; margin-bottom:12px; color:var(--primary);">📌 Seller Central Navigation</h4>
+      <div class="admin-menu-grid">
+        <div class="admin-card-btn" onclick="openSellerSubPage('catalog')">
+          <div class="icon">📦</div>
+          <div>
+            <div class="title">Catalog Status</div>
+            <div class="desc">Check uploaded items and review status</div>
+          </div>
+        </div>
+        <div class="admin-card-btn" onclick="openSellerSubPage('orders')">
+          <div class="icon">🛒</div>
+          <div>
+            <div class="title">Customer Orders</div>
+            <div class="desc">Track payment status and order flow</div>
+          </div>
+        </div>
+        <div class="admin-card-btn" onclick="openSellerSubPage('payouts')">
+          <div class="icon">💰</div>
+          <div>
+            <div class="title">Payout & Commission</div>
+            <div class="desc">View sales ledger and net earnings</div>
+          </div>
+        </div>
+        <div class="admin-card-btn" onclick="openSellerSubPage('returns')">
+          <div class="icon">🔄</div>
+          <div>
+            <div class="title">Return Requests</div>
+            <div class="desc">Manage customer refunds and returns</div>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <!-- Seller Return / Refund Requests -->
-      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--danger);">🔄 Return & Refund Requests</h4>
-        <div id="sellerReturnRequestsList" style="font-size:0.85rem; color:#555;">No return requests.</div>
-      </div>
-
-      <!-- Seller Orders Status Check -->
-      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📦 Customer Orders & Verification Status</h4>
-        <div id="sellerOrdersStatusList" style="font-size:0.85rem; color:#555;">No orders received yet.</div>
-      </div>
-
-      <!-- Seller Upload Status Check -->
-      <div style="background:#fff; border-radius:8px; border:1px solid var(--border); padding:16px; margin-bottom:16px; box-shadow:var(--shadow);">
-        <h4 style="font-size:0.95rem; font-weight:800; margin-bottom:10px; color:var(--primary);">📋 My Uploaded Catalogs & Review Status</h4>
-        <div id="sellerCatalogStatusList" style="font-size:0.85rem; color:#555;">No catalogs uploaded yet.</div>
-      </div>
-
+    <!-- Seller Sub-Pages Containers -->
+    <div id="sellerSubPageView" class="page-content" style="max-width:700px; padding-bottom:90px; display:none;">
+      <button type="button" onclick="closeSellerSubPage()" style="background:#eee; border:none; padding:8px 14px; border-radius:6px; font-weight:bold; cursor:pointer; margin-bottom:14px;">← Back to Seller Menu</button>
+      <div id="sellerSubPageContentBox" style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);"></div>
     </div>
 
     <!-- Meesho Bottom Navigation Bar -->
@@ -469,7 +475,7 @@
 
       <!-- Step 2 -->
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_6](start_span)[span_6](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;">
@@ -542,111 +548,83 @@
     </div>
   </div>
 
-  <!-- ADMIN MASTER DASHBOARD -->
+  <!-- ADMIN MASTER DASHBOARD WITH DEDICATED FULL PAGES/VIEWS -->
   <div id="page-admin-dashboard" class="app-page">
     <div class="page-header" style="background:#111; color:#fff;">
       <button type="button" class="back-btn" onclick="navigateTo('home')" style="color:#fff;">← Exit Admin</button>
       <span style="font-weight:700; color:var(--accent);">🔒 Master Admin Dashboard (rohitku316)</span>
     </div>
     <div class="page-content" style="max-width:1100px;">
-      <div class="dash-tabs" style="margin-top:10px;">
-        <button type="button" class="dash-tab-btn active" onclick="switchAdminTab('payments')">💳 Payment & UTR Check</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('approvals')">📝 Catalog Approvals</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('dropshipping')">📦 Dropshipping</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('sellers')">🏪 Sellers & Performance</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('products')">🛍️ Product Manager</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('orders')">📦 Orders</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('tickets')">🛠️ Tickets</button>
-        <button type="button" class="dash-tab-btn" onclick="switchAdminTab('settings')">⚙️ Settings</button>
-      </div>
-
-      <!-- Tab: Payment Verification & UTR Check -->
-      <div id="admTabPayments" class="dash-tab-content active">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Customer Payments & UTR Verification</h5>
-        <div id="adminPaymentsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No payments recorded yet.</div>
-      </div>
-
-      <div id="admTabApprovals" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Pending Seller Catalogs For Review & Acceptance</h5>
-        <div id="adminPendingCatalogsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No pending catalogs.</div>
-      </div>
-
-      <div id="admTabDropshipping" class="dash-tab-content">
-        <div style="background:#fff; padding:20px; border-radius:6px; border:1px solid var(--border); margin-bottom:20px;">
-          <h4 style="margin-bottom:12px; font-weight:bold; color:var(--primary);">📦 Add New Dropshipping Product</h4>
-          <div class="form-group"><label>Product Title *</label><input type="text" id="dsTitle" placeholder="Product Title"></div>
-          <div class="form-group">
-            <label>Category *</label>
-            <select id="dsCategory">
-              <option value="Men Wear">Men Wear</option>
-              <option value="Women Wear">Women Wear</option>
-              <option value="Accessories">Accessories</option>
-              <option value="Footwear">Footwear</option>
-              <option value="Jewellery">Jewellery</option>
-            </select>
-          </div>
-          <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="dsPrice" placeholder="Price"></div>
-            <div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="dsMrp" placeholder="MRP"></div>
-          </div>
-          <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress, 1688"></div>
-          <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier-website.com/product/123"></div>
-          <div class="form-group">
-            <label>Product Image *</label>
-            <input type="file" id="dsFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);">
-          </div>
-          <div class="form-group"><label>Description</label><textarea id="dsDesc" rows="2" placeholder="Product details..."></textarea></div>
-          <button type="button" class="btn-solid" style="background:#673ab7; margin-top:10px;" onclick="addNewDropshippingProduct()">Add Dropshipping Product</button>
-        </div>
-
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sourced Dropshipping Products</h5>
-        <div id="admDropshippingList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No dropshipping products added.</div>
-      </div>
-
-      <div id="admTabSellers" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Sellers & Performance Check</h5>
-        <div id="admSellersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No sellers.</div>
-      </div>
-
-      <div id="admTabProducts" class="dash-tab-content">
-        <div id="admProductsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No products.</div>
-      </div>
-
-      <div id="admTabOrders" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">All Orders</h5>
-        <div id="admOrdersList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No orders.</div>
-      </div>
-
-      <div id="admTabTickets" class="dash-tab-content">
-        <h5 style="margin-bottom:10px; font-weight:bold;">Support Tickets</h5>
-        <div id="admTicketsList" style="border:1px solid var(--border); padding:15px; border-radius:6px; background:#fff;">No tickets.</div>
-      </div>
-
-      <div id="admTabSettings" class="dash-tab-content">
-        <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & UPI Settings</h4>
-          <div class="form-group">
-            <label>Gateway</label>
-            <select id="gatewaySelect" onchange="toggleGatewayFields()">
-              <option value="Cashfree">Cashfree</option>
-              <option value="Razorpay">Razorpay</option>
-              <option value="UPI">Manual UPI & Scanner</option>
-            </select>
-          </div>
-          <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
-          <div id="upiGatewayConfig" style="display:none;">
-            <div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div>
-            <div class="form-group">
-              <label>QR Code Scanner Image</label>
-              <input type="file" id="gwQrFile" accept="image/*" style="padding:10px; background:#fff; border:1px dashed var(--border);">
-            </div>
-            <div class="form-group">
-              <label><input type="checkbox" id="gwAutoFetch" style="width:auto; margin-right:6px;"> Enable Auto Payment Fetch System</label>
+      
+      <!-- Admin Menu Grid (Big Cards) -->
+      <div id="adminHomeMenu" class="admin-view-section active">
+        <h3 style="margin-bottom:14px; font-weight:800; font-size:1.1rem; color:var(--primary);">Admin Dashboard Navigation</h3>
+        <div class="admin-menu-grid">
+          <div class="admin-card-btn" onclick="openAdminView('payments')">
+            <div class="icon">💳</div>
+            <div>
+              <div class="title">Payment & UTR Check</div>
+              <div class="desc">Verify customer transaction references</div>
             </div>
           </div>
-          <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
+          <div class="admin-card-btn" onclick="openAdminView('approvals')">
+            <div class="icon">📝</div>
+            <div>
+              <div class="title">Catalog Approvals</div>
+              <div class="desc">Review and accept seller products</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('dropshipping')">
+            <div class="icon">📦</div>
+            <div>
+              <div class="title">Dropshipping Manager</div>
+              <div class="desc">Add source links & manage suppliers</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('sellers')">
+            <div class="icon">🏪</div>
+            <div>
+              <div class="title">Sellers & Performance</div>
+              <div class="desc">Monitor store health and metrics</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('products')">
+            <div class="icon">🛍️</div>
+            <div>
+              <div class="title">Product Manager</div>
+              <div class="desc">Manage marketplace catalog</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('orders')">
+            <div class="icon">📦</div>
+            <div>
+              <div class="title">All Orders</div>
+              <div class="desc">View customer purchases and fulfillment</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('tickets')">
+            <div class="icon">🛠️</div>
+            <div>
+              <div class="title">Support Tickets</div>
+              <div class="desc">Handle customer and seller grievances</div>
+            </div>
+          </div>
+          <div class="admin-card-btn" onclick="openAdminView('settings')">
+            <div class="icon">⚙️</div>
+            <div>
+              <div class="title">Gateway Settings</div>
+              <div class="desc">Configure Manual UPI and QR scanners</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Admin Dedicated Sub-Page Container -->
+      <div id="adminSubPageView" class="admin-view-section">
+        <button type="button" onclick="closeAdminView()" style="background:#eee; border:none; padding:8px 14px; border-radius:6px; font-weight:bold; cursor:pointer; margin-bottom:14px;">← Back to Admin Menu</button>
+        <div id="adminSubPageContentBox" style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);"></div>
+      </div>
+
     </div>
   </div>
 
@@ -729,7 +707,6 @@
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
-    let activeAdminTab = localStorage.getItem('kosh_admin_tab') || 'payments';
     let appliedDiscount = parseFloat(localStorage.getItem('kosh_applied_discount')) || 0;
     let currentSelectedProduct = null;
 
@@ -851,7 +828,6 @@
           <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
           <div style="font-size:0.78rem; color:#666; margin-bottom:6px;">Date: ${o.date} | UTR: ${o.utr}</div>
           
-          <!-- Live Timeline Progress Bar -->
           <div style="font-size:0.72rem; font-weight:bold; color:var(--primary); margin-bottom:6px;">
             Status: ${o.status}
           </div>
@@ -876,16 +852,40 @@
       }
     }
 
-    function renderSellerOrdersStatus() {
-      let container = document.getElementById('sellerOrdersStatusList');
-      let payoutContainer = document.getElementById('sellerPayoutLedger');
-      let returnContainer = document.getElementById('sellerReturnRequestsList');
-      if(!container) return;
+    // --- SELLER SUB-PAGE NAVIGATION ---
+    function openSellerSubPage(section) {
+      document.getElementById('sellerHomeMenu').style.display = 'none';
+      let box = document.getElementById('sellerSubPageContentBox');
+      document.getElementById('sellerSubPageView').style.display = 'block';
 
+      if(section === 'catalog') {
+        box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--primary);">📦 My Uploaded Catalogs</h4><div id="subCatList"></div>`;
+        renderSellerCatalogStatus();
+        // Move container contents or re-render
+      } else if(section === 'orders') {
+        box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--primary);">🛒 Customer Orders</h4><div id="subOrdersList"></div>`;
+        renderSellerOrdersStatus();
+      } else if(section === 'payouts') {
+        box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--primary);">💰 Payout & Commission Ledger</h4><div id="subPayoutList"></div>`;
+        renderSellerOrdersStatus();
+      } else if(section === 'returns') {
+        box.innerHTML = `<h4 style="margin-bottom:10px; color:var(--danger);">🔄 Return & Refund Requests</h4><div id="subReturnList"></div>`;
+        renderSellerOrdersStatus();
+      }
+    }
+
+    function closeSellerSubPage() {
+      document.getElementById('sellerSubPageView').style.display = 'none';
+      document.getElementById('sellerHomeMenu').style.display = 'block';
+    }
+
+    function renderSellerOrdersStatus() {
+      let payoutContainer = document.getElementById('sellerPayoutLedger') || document.getElementById('subPayoutList');
+      let returnContainer = document.getElementById('sellerReturnRequestsList') || document.getElementById('subReturnList');
+      let orderContainer = document.getElementById('sellerOrdersStatusList') || document.getElementById('subOrdersList');
+      
       if(ordersList.length === 0) {
-        container.innerHTML = 'No orders received yet.';
-        if(payoutContainer) payoutContainer.innerHTML = 'Total Sales: ₹0 | Commission (10%): ₹0 | Payout: ₹0';
-        if(returnContainer) returnContainer.innerHTML = 'No return requests.';
+        if(orderContainer) orderContainer.innerHTML = 'No orders received yet.';
         return;
       }
 
@@ -901,13 +901,15 @@
         `;
       }
 
-      container.innerHTML = ordersList.map(o => `
-        <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
-          <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
-          <div style="font-size:0.78rem; color:#666;">UTR: ${o.utr}</div>
-          <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Payment Status: ${o.status}</div>
-        </div>
-      `).join('');
+      if(orderContainer) {
+        orderContainer.innerHTML = ordersList.map(o => `
+          <div style="background:#f9f9f9; padding:10px; border-radius:6px; margin-bottom:8px; border:1px solid #eee;">
+            <div style="font-weight:bold; font-size:0.85rem;">Order #${o.id} - ₹${o.total}</div>
+            <div style="font-size:0.78rem; color:#666;">UTR: ${o.utr}</div>
+            <div style="font-size:0.75rem; color:${o.status.includes('Confirmed') ? 'var(--success)' : '#ff9800'}; font-weight:bold; margin-top:2px;">Payment Status: ${o.status}</div>
+          </div>
+        `).join('');
+      }
 
       let returns = ordersList.filter(o => o.returnStatus);
       if(returnContainer) {
@@ -1036,7 +1038,7 @@
     }
 
     function renderSellerCatalogStatus() {
-      let container = document.getElementById('sellerCatalogStatusList');
+      let container = document.getElementById('sellerCatalogStatusList') || document.getElementById('subCatList');
       if(!container) return;
       let myCatalogs = pendingCatalogs.filter(c => c.sellerEmail === currentUser || true);
       if(myCatalogs.length === 0) {
@@ -1055,7 +1057,67 @@
       `).join('');
     }
 
-    // --- ADMIN APPROVAL & PAYMENT VERIFICATION FUNCTIONS ---
+    // --- ADMIN NAVIGATION & SUB-PAGES ---
+    function openAdminView(viewName) {
+      document.getElementById('adminHomeMenu').classList.remove('active');
+      let subBox = document.getElementById('adminSubPageView');
+      subBox.classList.add('active');
+      let contentBox = document.getElementById('adminSubPageContentBox');
+
+      if(viewName === 'payments') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">💳 Customer Payments & UTR Verification</h4><div id="adminPaymentsList"></div>`;
+        renderAdminPayments();
+      } else if(viewName === 'approvals') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📝 Catalog Approvals</h4><div id="adminPendingCatalogsList"></div>`;
+        renderAdminPendingCatalogs();
+      } else if(viewName === 'dropshipping') {
+        contentBox.innerHTML = `
+          <h4 style="margin-bottom:12px; font-weight:bold; color:var(--primary);">📦 Add New Dropshipping Product</h4>
+          <div class="form-group"><label>Product Title *</label><input type="text" id="dsTitle" placeholder="Product Title"></div>
+          <div class="form-group"><label>Category *</label><select id="dsCategory"><option value="Men Wear">Men Wear</option><option value="Women Wear">Women Wear</option><option value="Accessories">Accessories</option><option value="Footwear">Footwear</option><option value="Jewellery">Jewellery</option></select></div>
+          <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>Selling Price (₹) *</label><input type="number" id="dsPrice" placeholder="Price"></div><div class="form-group" style="flex:1;"><label>MRP (₹) *</label><input type="number" id="dsMrp" placeholder="MRP"></div></div>
+          <div class="form-group"><label>Source Website Name *</label><input type="text" id="dsSourceWebsite" placeholder="e.g. Meesho, AliExpress"></div>
+          <div class="form-group"><label>Source Product Link (URL) *</label><input type="url" id="dsSourceLink" placeholder="https://supplier.com/product/123"></div>
+          <div class="form-group"><label>Product Image *</label><input type="file" id="dsFile" accept="image/*" style="padding:10px; background:#f9f9f9; border:1px dashed var(--border);"></div>
+          <div class="form-group"><label>Description</label><textarea id="dsDesc" rows="2" placeholder="Product details..."></textarea></div>
+          <button type="button" class="btn-solid" style="background:#673ab7; margin-top:10px;" onclick="addNewDropshippingProduct()">Add Dropshipping Product</button>
+          <h5 style="margin:20px 0 10px; font-weight:bold;">Sourced Dropshipping Products</h5>
+          <div id="admDropshippingList"></div>
+        `;
+        renderAdminDropshippingList();
+      } else if(viewName === 'sellers') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🏪 Sellers & Performance Check</h4><div id="admSellersList">No sellers.</div>`;
+        let list = document.getElementById('admSellersList');
+        list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
+      } else if(viewName === 'products') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager</h4><div id="admProductsList"></div>`;
+        let list = document.getElementById('admProductsList');
+        list.innerHTML = products.length === 0 ? 'No products.' : products.map(p => `<div><b>${p.title}</b> - ₹${p.price}</div>`).join('');
+      } else if(viewName === 'orders') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📦 All Orders</h4><div id="admOrdersList"></div>`;
+        let list = document.getElementById('admOrdersList');
+        list.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div>Order #${o.id} - ₹${o.total}</div>`).join('');
+      } else if(viewName === 'tickets') {
+        contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🛠️ Support Tickets</h4><div id="admTicketsList"></div>`;
+        let list = document.getElementById('admTicketsList');
+        list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
+      } else if(viewName === 'settings') {
+        contentBox.innerHTML = `
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & UPI Settings</h4>
+          <div class="form-group"><label>Gateway</label><select id="gatewaySelect" onchange="toggleGatewayFields()"><option value="Cashfree">Cashfree</option><option value="Razorpay">Razorpay</option><option value="UPI">Manual UPI & Scanner</option></select></div>
+          <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
+          <div id="upiGatewayConfig" style="display:none;"><div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div><div class="form-group"><label>QR Code Scanner Image</label><input type="file" id="gwQrFile" accept="image/*"></div></div>
+          <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
+        `;
+        loadPaymentSettingsToUI();
+      }
+    }
+
+    function closeAdminView() {
+      document.getElementById('adminSubPageView').classList.remove('active');
+      document.getElementById('adminHomeMenu').classList.add('active');
+    }
+
     function renderAdminPendingCatalogs() {
       let container = document.getElementById('adminPendingCatalogsList');
       if(!container) return;
@@ -1069,11 +1131,10 @@
           <div style="flex-grow:1;">
             <div style="font-weight:700; font-size:0.9rem;">${item.title}</div>
             <div style="font-size:0.78rem; color:#666;">Seller: ${item.sellerEmail} | Category: ${item.category} | Price: ₹${item.price} (MRP: ₹${item.mrp})</div>
-            <div style="font-size:0.75rem; color:#444; margin-top:2px;">Specs: Fabric: ${item.fabric} | Color: ${item.color} | Size: ${item.size}</div>
             <div style="margin-top:6px; display:flex; gap:6px;">
-              <input type="text" id="feedback_${item.id}" placeholder="Correction feedback for seller..." style="padding:6px; font-size:0.75rem; border:1px solid var(--border); border-radius:4px; flex-grow:1;">
+              <input type="text" id="feedback_${item.id}" placeholder="Correction feedback..." style="padding:6px; font-size:0.75rem; border:1px solid var(--border); border-radius:4px; flex-grow:1;">
               <button type="button" onclick="adminApproveCatalog(${item.id})" style="background:var(--success); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Accept & Publish</button>
-              <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject / Fix</button>
+              <button type="button" onclick="adminRejectCatalog(${item.id})" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Reject</button>
             </div>
           </div>
         </div>
@@ -1152,15 +1213,21 @@
 
     function toggleGatewayFields() {
       let gw = document.getElementById('gatewaySelect').value;
-      document.getElementById('autoGatewayConfig').style.display = gw === 'UPI' ? 'none' : 'block';
-      document.getElementById('upiGatewayConfig').style.display = gw === 'UPI' ? 'block' : 'none';
+      let autoCfg = document.getElementById('autoGatewayConfig');
+      let upiCfg = document.getElementById('upiGatewayConfig');
+      if(autoCfg) autoCfg.style.display = gw === 'UPI' ? 'none' : 'block';
+      if(upiCfg) upiCfg.style.display = gw === 'UPI' ? 'block' : 'none';
     }
 
     function loadPaymentSettingsToUI() {
-      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
-      document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
-      document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
-      document.getElementById('gwAutoFetch').checked = paymentConfig.autoFetch || false;
+      let sel = document.getElementById('gatewaySelect');
+      if(sel) sel.value = paymentConfig.gateway || 'Cashfree';
+      let keyIn = document.getElementById('gwApiKey');
+      if(keyIn) keyIn.value = paymentConfig.apiKey || '';
+      let upiIn = document.getElementById('gwUpiId');
+      if(upiIn) upiIn.value = paymentConfig.upiId || '';
+      let autoChk = document.getElementById('gwAutoFetch');
+      if(autoChk) autoChk.checked = paymentConfig.autoFetch || false;
       toggleGatewayFields();
     }
 
@@ -1183,7 +1250,7 @@
         showAlert("Settings successfully saved!", "Success", true);
       };
 
-      if(qrFile.files && qrFile.files[0]) {
+      if(qrFile && qrFile.files && qrFile.files[0]) {
         let reader = new FileReader();
         reader.onload = function(e) { saveConfig(e.target.result); };
         reader.readAsDataURL(qrFile.files[0]);
@@ -1466,14 +1533,14 @@
       window.scrollTo(0, 0);
       if(pageId === 'admin-dashboard') {
         if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
-        switchAdminTab(activeAdminTab);
+        closeAdminView();
       }
       if(pageId === 'seller-dashboard') {
         let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
         if(seller) {
           document.getElementById('dashStoreTitle').innerText = 'Welcome back, ' + seller.storeName + '!';
         }
-        renderSellerOrdersStatus();
+        closeSellerSubPage();
       }
       if(pageId === 'profile') {
         checkLoginStatus();
@@ -1614,40 +1681,6 @@
         document.getElementById('adminLoginModal').style.display = 'none';
         navigateTo('admin-dashboard');
       } else { showAlert('Wrong credentials!'); }
-    }
-
-    function switchAdminTab(tab) {
-      activeAdminTab = tab;
-      localStorage.setItem('kosh_admin_tab', tab);
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('#page-admin-dashboard .dash-tab-content').forEach(c => c.classList.remove('active'));
-      
-      event && event.target && event.target.classList.add('active');
-      let contentEl = document.getElementById('admTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if(contentEl) contentEl.classList.add('active');
-
-      if(tab === 'payments') renderAdminPayments();
-      if(tab === 'approvals') renderAdminPendingCatalogs();
-      if(tab === 'dropshipping') renderAdminDropshippingList();
-      if(tab === 'sellers') {
-        let list = document.getElementById('admSellersList');
-        list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
-      }
-      if(tab === 'products') {
-        let list = document.getElementById('admProductsList');
-        list.innerHTML = products.length === 0 ? 'No products.' : products.map(p => `<div><b>${p.title}</b> - ₹${p.price}</div>`).join('');
-      }
-      if(tab === 'orders') {
-        let list = document.getElementById('admOrdersList');
-        list.innerHTML = ordersList.length === 0 ? 'No orders.' : ordersList.map(o => `<div>Order #${o.id} - ₹${o.total}</div>`).join('');
-      }
-      if(tab === 'tickets') {
-        let list = document.getElementById('admTicketsList');
-        list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
-      }
-      if(tab === 'settings') {
-        loadPaymentSettingsToUI();
-      }
     }
   </script>
 </body>
