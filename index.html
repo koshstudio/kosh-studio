@@ -255,11 +255,9 @@
     </div>
     <div class="page-content" style="display:flex; flex-direction:column; gap:20px;">
       
-      <!-- Scrollable Multiple Images Container -->
       <div id="pPageImagesContainer" style="display:flex; overflow-x:auto; gap:0px; scrollbar-width:none; width:100%; height:350px; background:#f9f9f9; border-radius:6px; border:1px solid var(--border);"></div>
 
       <div>
-        <!-- Offer Timer Badge -->
         <div id="pPageOfferTimer" style="background:linear-gradient(135deg, #ff3b6f, #d32f2f); color:#fff; padding:8px 12px; border-radius:6px; font-size:0.8rem; font-weight:bold; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
           <span>⚡ Special Offer! Price increases in:</span>
           <span id="pPageTimerVal" style="background:#000; color:#ffeb3b; padding:2px 6px; border-radius:4px;">02:45:10</span>
@@ -272,7 +270,6 @@
           <span id="pPageMrp" style="font-size:1rem; color:var(--muted); text-decoration:line-through;">₹0</span>
         </div>
 
-        <!-- Dynamic Size Selection Container (Strict Single-Select) -->
         <div id="pPageSizesSection" style="margin-bottom:16px; display:none;">
           <label style="font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:6px; display:block; color:#555;">Select Size (Select Any One):</label>
           <div id="pPageSizesButtons" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -496,7 +493,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -611,6 +608,13 @@
               <div class="desc">Manage catalog, increase price by % & add products</div>
             </div>
           </div>
+          <div class="admin-card-btn" onclick="openAdminView('coupons')">
+            <div class="icon">🎟️</div>
+            <div>
+              <div class="title">Coupon Generator</div>
+              <div class="desc">Create discount codes, flat/percent & min order limit</div>
+            </div>
+          </div>
           <div class="admin-card-btn" onclick="openAdminView('orders')">
             <div class="icon">📦</div>
             <div>
@@ -722,7 +726,7 @@
 
     <div style="background:#fff; padding:12px 16px; border-top:1px solid var(--border);">
       <div style="display:flex; gap:8px;">
-        <input type="text" id="cartCouponInput" placeholder="Enter Coupon (e.g. KOSH20)" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
+        <input type="text" id="cartCouponInput" placeholder="Enter Coupon" style="flex-grow:1; padding:8px; font-size:0.85rem; border:1px solid var(--border); border-radius:4px;">
         <button type="button" class="btn-solid" style="width:auto; padding:8px 14px; font-size:0.8rem; background:#333;" onclick="applyCartCoupon()">Apply</button>
       </div>
     </div>
@@ -731,6 +735,7 @@
       <div style="font-size:0.85rem; font-weight:800; margin-bottom:8px; color:#212121;">Price Details</div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--muted);"><span>Total MRP</span><span id="cartTotalMrp">₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--success);"><span>Discount on MRP</span><span id="cartDiscountMrp">- ₹0</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px; color:var(--primary); display:none;" id="couponDiscountRow"><span>Coupon Discount</span><span id="cartCouponDiscountAmt">- ₹0</span></div>
       <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:8px; color:var(--muted);"><span>Platform Fee</span><span>₹23</span></div>
       <div style="display:flex; justify-content:space-between; font-weight:800; font-size:0.95rem; margin-bottom:12px; border-top:1px solid #eee; padding-top:8px;"><span>Total Amount</span><span id="cartTotalPrice" style="color:var(--pro-pink);">₹0</span></div>
       
@@ -771,12 +776,14 @@
     let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
     let saleConfig = JSON.parse(localStorage.getItem('kosh_sale_config')) || { active: false, title: '🔥 Mega Sale Live!', text: 'Use coupon code KOSH20 for Flat ₹20 OFF', countdown: '05:42:18' };
     let bannerConfig = JSON.parse(localStorage.getItem('kosh_banner_config')) || { announcement: '', banners: [] };
+    let customCoupons = JSON.parse(localStorage.getItem('kosh_custom_coupons')) || [{code: 'KOSH20', type: 'flat', value: 20, minOrder: 0}];
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
-    let appliedDiscount = parseFloat(localStorage.getItem('kosh_applied_discount')) || 0;
+    let appliedDiscount = 0; // Default 0 so no auto-minus bug occurs
+    let appliedCouponCode = null;
     let currentSelectedProduct = null;
     let selectedProductSize = null;
     let activeAdminViewName = localStorage.getItem('kosh_admin_view_name') || null;
@@ -1373,6 +1380,27 @@
           <div id="admProductsList"></div>
         `;
         renderAdminProductManager();
+      } else if(viewName === 'coupons') {
+        contentBox.innerHTML = `
+          <h4 style="margin-bottom:12px; font-weight:bold; color:var(--primary);">🎟️ Coupon Generator & Manager</h4>
+          <div style="background:#f9f9f9; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid #ddd;">
+            <h5 style="margin-bottom:8px; font-size:0.9rem;">Create New Custom Coupon</h5>
+            <div class="form-group"><label>Coupon Code Name *</label><input type="text" id="newCouCode" placeholder="e.g. FESTIVE50"></div>
+            <div class="form-group">
+              <label>Discount Type *</label>
+              <select id="newCouType">
+                <option value="flat">Flat Amount (₹)</option>
+                <option value="percent">Percentage (%)</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Discount Value *</label><input type="number" id="newCouVal" placeholder="e.g. 50 (for ₹50 or 50%)"></div>
+            <div class="form-group"><label>Minimum Order Value (₹) *</label><input type="number" id="newCouMin" value="0" placeholder="Minimum cart price"></div>
+            <button type="button" class="btn-solid" style="background:var(--primary); padding:10px;" onclick="createNewCoupon()">Generate Coupon ✓</button>
+          </div>
+          <h5 style="margin:20px 0 10px; font-weight:bold;">Active Custom Coupons</h5>
+          <div id="adminCouponsListContainer"></div>
+        `;
+        renderAdminCouponsList();
       } else if(viewName === 'orders') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">📦 All Orders (Click order for details & delete)</h4><div id="admOrdersList"></div>`;
         renderAdminAllOrders();
@@ -1381,7 +1409,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
@@ -1408,6 +1436,70 @@
         if(saleTimer) saleTimer.value = saleConfig.countdown || '05:42:18';
         let annText = document.getElementById('setAnnounceText');
         if(annText) annText.value = bannerConfig.announcement || '';
+      }
+    }
+
+    function createNewCoupon() {
+      let code = document.getElementById('newCouCode').value.trim().toUpperCase();
+      let type = document.getElementById('newCouType').value;
+      let val = parseFloat(document.getElementById('newCouVal').value);
+      let minOrder = parseFloat(document.getElementById('newCouMin').value) || 0;
+
+      if(!code || isNaN(val) || val <= 0) {
+        showAlert("Kripya valid Coupon Code aur Discount Value bharein.");
+        return;
+      }
+
+      customCoupons.push({ code, type, value: val, minOrder });
+      localStorage.setItem('kosh_custom_coupons', JSON.stringify(customCoupons));
+      showAlert("Coupon successfully generated!", "Success", true);
+      renderAdminCouponsList();
+      document.getElementById('newCouCode').value = '';
+      document.getElementById('newCouVal').value = '';
+    }
+
+    function renderAdminCouponsList() {
+      let container = document.getElementById('adminCouponsListContainer');
+      if(!container) return;
+      if(customCoupons.length === 0) {
+        container.innerHTML = 'No custom coupons generated.';
+        return;
+      }
+      container.innerHTML = customCoupons.map(c => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid #eee; font-size:0.85rem;">
+          <div><b>${c.code}</b> — ${c.type === 'flat' ? '₹' + c.value + ' OFF' : c.value + '% OFF'} (Min Order: ₹${c.minOrder})</div>
+          <button type="button" onclick="deleteCoupon('${c.code}')" style="background:#ff5252; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.7rem; cursor:pointer;">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteCoupon(code) {
+      customCoupons = customCoupons.filter(c => c.code !== code);
+      localStorage.setItem('kosh_custom_coupons', JSON.stringify(customCoupons));
+      renderAdminCouponsList();
+      showAlert("Coupon deleted!");
+    }
+
+    function applyCartCoupon() {
+      let code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
+      let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
+
+      let found = customCoupons.find(c => c.code === code);
+      if(found) {
+        if(subtotal < found.minOrder) {
+          showAlert(`Yeh coupon tabhi applicable hai jab order value minimum ₹${found.minOrder} ho!`);
+          return;
+        }
+        if(found.type === 'flat') {
+          appliedDiscount = found.value;
+        } else {
+          appliedDiscount = Math.round(subtotal * found.value / 100);
+        }
+        appliedCouponCode = found.code;
+        showAlert(`Coupon ${found.code} applied successfully!`, "Success", true);
+        updateCartUI();
+      } else {
+        showAlert("Invalid coupon code.");
       }
     }
 
@@ -1916,11 +2008,22 @@
     }
 
     function applyCartCoupon() {
-      let code = document.getElementById('cartCouponInput').value.trim();
-      if(code === 'KOSH20') {
-        appliedDiscount = 20;
-        localStorage.setItem('kosh_applied_discount', appliedDiscount);
-        showAlert("Coupon KOSH20 applied successfully!", "Success", true);
+      let code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
+      let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
+
+      let found = customCoupons.find(c => c.code === code);
+      if(found) {
+        if(subtotal < found.minOrder) {
+          showAlert(`Yeh coupon tabhi applicable hai jab order value minimum ₹${found.minOrder} ho!`);
+          return;
+        }
+        if(found.type === 'flat') {
+          appliedDiscount = found.value;
+        } else {
+          appliedDiscount = Math.round(subtotal * found.value / 100);
+        }
+        appliedCouponCode = found.code;
+        showAlert(`Coupon ${found.code} applied successfully!`, "Success", true);
         updateCartUI();
       } else {
         showAlert("Invalid coupon code.");
@@ -2236,11 +2339,21 @@
       let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
       let totalMrp = cart.reduce((a,c) => a + ((parseFloat(c.mrp) || c.finalPrice * 1.4) * (c.qty || 1)), 0);
       let discountOnMrp = Math.max(0, totalMrp - subtotal);
+      
       let grandTotal = Math.max(0, subtotal + 23 - appliedDiscount);
       
       document.getElementById('cartTotalMrp').innerText = '₹' + Math.round(totalMrp);
       document.getElementById('cartDiscountMrp').innerText = '- ₹' + Math.round(discountOnMrp);
-      document.getElementById('cartSavingsText').innerText = `🎉 You're saving ₹${Math.round(discountOnMrp + appliedDiscount)} on this order`;
+      
+      if(appliedDiscount > 0) {
+        document.getElementById('couponDiscountRow').style.display = 'flex';
+        document.getElementById('cartCouponDiscountAmt').innerText = '- ₹' + appliedDiscount;
+        document.getElementById('cartSavingsText').innerText = `🎉 You're saving ₹${Math.round(discountOnMrp + appliedDiscount)} on this order`;
+      } else {
+        document.getElementById('couponDiscountRow').style.display = 'none';
+        document.getElementById('cartSavingsText').innerText = `🎉 You're saving ₹${Math.round(discountOnMrp)} on this order`;
+      }
+
       document.getElementById('cartTotalPrice').innerText = '₹' + grandTotal;
       
       let container = document.getElementById('cartItemsContainer');
