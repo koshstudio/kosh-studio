@@ -67,12 +67,9 @@
     .product-card { background: var(--card-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; }
     .product-img { width: 100%; padding-top: 100%; position: relative; background: #f9f9f9; cursor: pointer; }
     .product-img img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-    .wishlist-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.85); border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; z-index: 5; }
     .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
     .p-title { font-size: 0.82rem; font-weight: 600; color: #212121; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; min-height: 2.4em; }
-    .p-price-row { display: flex; align-items: baseline; gap: 6px; margin-top: auto; margin-bottom: 8px; }
     .p-price { font-size: 1rem; font-weight: 700; color: #111; }
-    .p-mrp { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; }
     .btn-add-cart { width: 100%; background: var(--primary); color: #fff; border: none; padding: 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
     .app-page { display: none; }
@@ -264,7 +261,7 @@
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- PROFILE PAGE WITH LOGIN & SIGNUP -->
   <div id="page-profile" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('home')">← Back</button>
@@ -300,6 +297,124 @@
           <p id="displayUserEmail" style="color:var(--muted); font-size:0.88rem; margin-bottom:14px;"></p>
           <button type="button" onclick="handleLogout()" style="background:#ff5252; color:#fff; border:none; padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:700; cursor:pointer;">Logout</button>
         </div>
+
+        <div id="sellerDashboardCard" style="display:none; background:#ede7f6; padding:20px; border-radius:8px; border:1px solid #d1c4e9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-dashboard')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#512da8;">🏪 Seller Dashboard (Manage Store)</h4>
+          <p style="font-size:0.8rem; color:#555;">Manage products, orders, sales, performance score & payouts.</p>
+        </div>
+
+        <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#2e7d32;">📝 Seller KYC & Bank Verification</h4>
+          <p style="font-size:0.8rem; color:#555;">Complete your PAN & bank verification to receive payouts.</p>
+        </div>
+
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('support')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:var(--primary);">🛠️ Customer Support & Grievances</h4>
+          <p style="font-size:0.8rem; color:var(--muted);">Raise a grievance ticket or chat with support.</p>
+        </div>
+
+        <div id="joinSellerCard" style="background:#e3f2fd; padding:20px; border-radius:8px; border:1px solid #bbdefb; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-reg')">
+          <h4 style="font-size:1rem; margin-bottom:4px; color:#0d47a1;">🏪 Join as Seller</h4>
+          <p style="font-size:0.8rem; color:#555;">Register your store and start selling products.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEDICATED SELLER DASHBOARD -->
+  <div id="page-seller-dashboard" class="app-page">
+    <div class="page-header" style="background:#512da8; color:#fff;">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')" style="color:#fff;">← Back to Profile</button>
+      <span style="font-weight:700;">🏪 Seller Dashboard (<span id="dashStoreTitle">Store</span>)</span>
+    </div>
+    <div class="page-content" style="max-width:1000px;">
+      <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:12px 16px; border-radius:8px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h4 style="font-size:0.9rem; color:#e65100;">🏖️ Vacation Mode</h4>
+          <p style="font-size:0.75rem; color:#666;">Temporarily pause new orders while away.</p>
+        </div>
+        <input type="checkbox" id="vacationModeToggle" onchange="toggleVacationMode(this.checked)" style="width:20px; height:20px; cursor:pointer;">
+      </div>
+      <div class="dash-tabs">
+        <button type="button" class="dash-tab-btn active" onclick="switchSellerDashTab('products')">🛍️ Products</button>
+        <button type="button" class="dash-tab-btn" onclick="switchSellerDashTab('performance')">📊 Performance Score</button>
+      </div>
+      <div id="sellerDashTabProducts" class="dash-tab-content active">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">
+          <h4 style="margin-bottom:12px; font-weight:bold;">My Store Products</h4>
+          <div id="sellerProductsList">No products added.</div>
+        </div>
+      </div>
+      <div id="sellerDashTabPerformance" class="dash-tab-content">
+        <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border);">
+          <h4 style="margin-bottom:12px; font-weight:bold; color:#512da8;">📊 Internal Seller Performance Scorecard</h4>
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:14px;">
+            <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border);">
+              <div style="font-size:0.75rem; color:var(--muted); font-weight:bold;">Overall Health Score</div>
+              <div id="perfOverallScore" style="font-size:1.6rem; font-weight:800; color:var(--success);">94 / 100</div>
+            </div>
+            <div style="background:#f8f9fa; padding:15px; border-radius:6px; border:1px solid var(--border);">
+              <div style="font-size:0.75rem; color:var(--muted); font-weight:bold;">Avg Dispatch Time</div>
+              <div id="perfDispatchTime" style="font-size:1.3rem; font-weight:800; color:var(--primary);">11.4 Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELLER KYC PAGE -->
+  <div id="page-seller-kyc" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700;">📝 Seller KYC & Bank Verification</span>
+    </div>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:16px;">PAN & Bank Details</h3>
+        <div class="form-group"><label>PAN Card Full Name *</label><input type="text" id="kycPanName" placeholder="Name"></div>
+        <div class="form-group"><label>PAN Number *</label><input type="text" id="kycPanNumber" placeholder="ABCDE1234F" maxlength="10"></div>
+        <button type="button" class="btn-solid" style="background:var(--success);" onclick="showAlert('KYC submitted!')">Submit KYC</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOMER SUPPORT PAGE -->
+  <div id="page-support" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700;">🛠️ Customer Support & Grievances</span>
+    </div>
+    <div class="page-content" style="max-width:650px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:16px;">Raise a Grievance Ticket</h3>
+        <div class="form-group">
+          <label>Select Category *</label>
+          <select id="grievanceCategorySelect">
+            <option value="Order late">Order late</option>
+            <option value="Wrong product">Wrong product</option>
+            <option value="Refund issue">Refund issue</option>
+          </select>
+        </div>
+        <button type="button" class="btn-solid" style="background:#2196f3;" onclick="showAlert('Ticket raised successfully!')">Submit Ticket</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOIN AS SELLER REGISTRATION PAGE -->
+  <div id="page-seller-reg" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back to Account</button>
+      <span style="font-weight:700;">🏪 Join as Seller Registration</span>
+    </div>
+    <div class="page-content" style="max-width:600px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border);">
+        <h3 style="margin-bottom:16px;">Register Your Store</h3>
+        <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Full Name"></div>
+        <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name"></div>
+        <div class="form-group"><label>Mobile Number *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile"></div>
+        <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Password"></div>
+        <button type="button" class="btn-solid" style="background:var(--success);" onclick="submitSellerRegistration()">Register Store Now</button>
       </div>
     </div>
   </div>
@@ -379,14 +494,25 @@
       <!-- Tab: Settings -->
       <div id="admTabSettings" class="dash-tab-content">
         <div style="background:#fff3e0; border:1px solid #ffe0b2; padding:20px; border-radius:6px; max-width:500px;">
-          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">💳 Payment Gateway & UPI Settings</h4>
           <div class="form-group">
             <label>Gateway</label>
-            <select id="gatewaySelect">
+            <select id="gatewaySelect" onchange="toggleGatewayFields()">
               <option value="Cashfree">Cashfree</option>
               <option value="Razorpay">Razorpay</option>
-              <option value="UPI">Manual UPI</option>
+              <option value="UPI">Manual UPI & Scanner</option>
             </select>
+          </div>
+          <div id="autoGatewayConfig" class="form-group"><label>API Key</label><input type="text" id="gwApiKey" placeholder="API Key"></div>
+          <div id="upiGatewayConfig" style="display:none;">
+            <div class="form-group"><label>UPI ID</label><input type="text" id="gwUpiId" placeholder="yourname@upi"></div>
+            <div class="form-group">
+              <label>QR Code Scanner Image</label>
+              <input type="file" id="gwQrFile" accept="image/*" style="padding:10px; background:#fff; border:1px dashed var(--border);">
+            </div>
+            <div class="form-group">
+              <label><input type="checkbox" id="gwAutoFetch" style="width:auto; margin-right:6px;"> Enable Auto Payment Fetch System</label>
+            </div>
           </div>
           <button type="button" class="btn-solid" style="background:#ff9800; margin-top:10px;" onclick="savePaymentSettings()">Save Settings</button>
         </div>
@@ -441,10 +567,11 @@
     let products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
     let dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
     let sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
+    let customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
     let ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
     let ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
     let cart = JSON.parse(localStorage.getItem('kosh_cart')) || [];
-    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree' };
+    let paymentConfig = JSON.parse(localStorage.getItem('kosh_payment_config')) || { gateway: 'Cashfree', apiKey: '', upiId: '', qrImage: '', autoFetch: false };
     
     let currentUser = localStorage.getItem('kosh_logged_email') || null;
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
@@ -460,6 +587,8 @@
       renderProducts();
       updateCartUI();
       checkLoginStatus();
+      loadPaymentSettingsToUI();
+      loadSellerKycData();
     });
 
     function switchAuthTab(tab) {
@@ -477,16 +606,44 @@
     }
 
     function handleCustomerSignup() {
+      let name = document.getElementById('signupName').value.trim();
+      let email = document.getElementById('signupEmail').value.trim();
+      let phone = document.getElementById('signupPhone').value.trim();
+      let pass = document.getElementById('signupPass').value.trim();
+
+      if(!name || !email || !phone || !pass) { showAlert("Kripya sabhi fields bharein."); return; }
+      let exists = customersList.some(c => c.email === email || c.phone === phone);
+      if(exists) { showAlert("Yeh email ya phone pehle se registered hai."); return; }
+
+      customersList.push({ name, email, phone, password: pass });
+      localStorage.setItem('kosh_customers', JSON.stringify(customersList));
       showAlert("Registration successful!", "Success", true);
       switchAuthTab('login');
     }
 
     function handleLogin() { 
-      showAlert('Logged in successfully!', 'Success', true);
-      currentUser = 'user@kosh.com';
-      localStorage.setItem('kosh_logged_email', currentUser);
-      checkLoginStatus();
-      navigateTo('home');
+      let val = document.getElementById('loginEmail').value.trim();
+      let pass = document.getElementById('loginPass').value.trim();
+
+      let seller = sellersList.find(s => (s.phone === val || s.email === val) && s.password === pass);
+      if(seller) {
+        currentUser = seller.phone;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        navigateTo('home');
+        return;
+      }
+
+      let customer = customersList.find(c => (c.email === val || c.phone === val) && c.password === pass);
+      if(customer) {
+        currentUser = customer.email;
+        localStorage.setItem('kosh_logged_email', currentUser);
+        checkLoginStatus();
+        navigateTo('home');
+        return;
+      }
+
+      showAlert('Invalid credentials!');
     }
 
     function handleLogout() { 
@@ -501,14 +658,94 @@
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('userDashboardSection').style.display = 'block';
         document.getElementById('displayUserEmail').innerText = currentUser;
+        loadSellerKycData();
       } else { 
         document.getElementById('userDashboardSection').style.display = 'none'; 
         document.getElementById('authContainer').style.display = 'block'; 
       }
     }
 
+    function submitSellerRegistration() {
+      let fullName = document.getElementById('selFullName').value.trim();
+      let storeName = document.getElementById('selStoreName').value.trim();
+      let phone = document.getElementById('selPhone').value.trim();
+      let pass = document.getElementById('selPassword').value.trim();
+
+      if(!fullName || !storeName || !phone || !pass) { showAlert("Sabhi mandatory fields bharein."); return; }
+
+      let newSeller = {
+        uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
+        fullName, storeName, phone, password: pass,
+        category: 'Men Wear',
+        performance: { score: 94, dispatchTime: '11.4 hrs' }
+      };
+
+      sellersList.unshift(newSeller);
+      localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+      currentUser = phone;
+      localStorage.setItem('kosh_logged_email', currentUser);
+      showAlert("Store registered successfully!", "Success", true);
+      navigateTo('profile');
+    }
+
+    function loadSellerKycData() {
+      let kycCard = document.getElementById('sellerKycCard');
+      let joinCard = document.getElementById('joinSellerCard');
+      let dashCard = document.getElementById('sellerDashboardCard');
+      if(!kycCard || !joinCard || !dashCard) return;
+
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        joinCard.style.display = 'none';
+        dashCard.style.display = 'block';
+        kycCard.style.display = 'block';
+      } else {
+        dashCard.style.display = 'none';
+        kycCard.style.display = 'none';
+        joinCard.style.display = 'block';
+      }
+    }
+
+    function toggleGatewayFields() {
+      let gw = document.getElementById('gatewaySelect').value;
+      document.getElementById('autoGatewayConfig').style.display = gw === 'UPI' ? 'none' : 'block';
+      document.getElementById('upiGatewayConfig').style.display = gw === 'UPI' ? 'block' : 'none';
+    }
+
+    function loadPaymentSettingsToUI() {
+      document.getElementById('gatewaySelect').value = paymentConfig.gateway || 'Cashfree';
+      document.getElementById('gwApiKey').value = paymentConfig.apiKey || '';
+      document.getElementById('gwUpiId').value = paymentConfig.upiId || '';
+      document.getElementById('gwAutoFetch').checked = paymentConfig.autoFetch || false;
+      toggleGatewayFields();
+    }
+
     function savePaymentSettings() {
-      showAlert("Settings successfully saved!", "Success", true);
+      let gw = document.getElementById('gatewaySelect').value;
+      let apiKey = document.getElementById('gwApiKey').value;
+      let upiId = document.getElementById('gwUpiId').value;
+      let autoFetch = document.getElementById('gwAutoFetch').checked;
+      let qrFile = document.getElementById('gwQrFile');
+
+      let saveConfig = (qrImg) => {
+        paymentConfig = {
+          gateway: gw,
+          apiKey: apiKey,
+          upiId: upiId,
+          qrImage: qrImg || paymentConfig.qrImage || '',
+          autoFetch: autoFetch
+        };
+        localStorage.setItem('kosh_payment_config', JSON.stringify(paymentConfig));
+        showAlert("Settings successfully saved!", "Success", true);
+      };
+
+      if(qrFile.files && qrFile.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) { saveConfig(e.target.result); };
+        reader.readAsDataURL(qrFile.files[0]);
+      } else {
+        saveConfig(paymentConfig.qrImage);
+      }
     }
 
     function lookupPincode(pin) {
@@ -555,9 +792,23 @@
       let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
       let total = Math.max(0, subtotal - appliedDiscount);
       document.getElementById('payTotalAmount').innerText = '₹' + total;
-      document.getElementById('paymentMethodContainer').innerHTML = `
-        <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment()">Pay ₹${total} Now</button>
-      `;
+      
+      let container = document.getElementById('paymentMethodContainer');
+      if(paymentConfig.gateway === 'UPI') {
+        container.innerHTML = `
+          <div style="margin-bottom:14px;">
+            <p style="font-size:0.85rem; margin-bottom:8px;">Scan QR or Pay via UPI ID:</p>
+            <strong style="color:var(--primary);">${paymentConfig.upiId || 'Not Configured'}</strong>
+            ${paymentConfig.qrImage ? `<br><img src="${paymentConfig.qrImage}" style="width:150px; height:150px; margin-top:10px; object-fit:contain; border:1px solid #ddd; border-radius:6px;">` : ''}
+          </div>
+          ${paymentConfig.autoFetch ? `<p style="font-size:0.75rem; color:#666; margin-bottom:10px;">⚡ Auto Payment Fetch Enabled</p>` : ''}
+          <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment()">I Have Paid ₹${total}</button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button type="button" class="btn-solid" style="background:var(--success); padding:14px;" onclick="processAutoPayment()">Pay ₹${total} Now (${paymentConfig.gateway})</button>
+        `;
+      }
     }
 
     function processAutoPayment() {
@@ -702,6 +953,14 @@
         if(!isAdminLoggedIn) { document.getElementById('adminLoginModal').style.display = 'flex'; return; }
         switchAdminTab(activeAdminTab);
       }
+      if(pageId === 'seller-dashboard') {
+        let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+        if(seller) {
+          document.getElementById('dashStoreTitle').innerText = seller.storeName;
+          let storeProducts = products.filter(p => p.category === seller.category);
+          document.getElementById('sellerProductsList').innerHTML = storeProducts.length === 0 ? 'No products.' : storeProducts.map(p => `<div><b>${p.title}</b> - ₹${p.price}</div>`).join('');
+        }
+      }
     }
 
     function filterCategory(cat) { renderProducts(cat); }
@@ -843,6 +1102,9 @@
       if(tab === 'tickets') {
         let list = document.getElementById('admTicketsList');
         list.innerHTML = ticketsList.length === 0 ? 'No tickets.' : ticketsList.map(t => `<div>Ticket #${t.id}</div>`).join('');
+      }
+      if(tab === 'settings') {
+        loadPaymentSettingsToUI();
       }
     }
   </script>
