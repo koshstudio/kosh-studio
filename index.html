@@ -458,20 +458,40 @@
     </div>
   </div>
 
-  <!-- SELLER REGISTRATION PAGE -->
+  <!-- SELLER REGISTRATION & KYC PAGE -->
   <div id="page-seller-reg" class="app-page">
     <div class="page-header">
       <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button>
-      <span style="font-weight:700;">🏪 Register as Seller</span>
+      <span style="font-weight:700;">🏪 Register as Seller & KYC</span>
     </div>
-    <div class="page-content" style="max-width:450px;">
+    <div class="page-content" style="max-width:550px;">
       <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
-        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Seller Store Registration</h3>
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Seller Store Registration & PAN KYC</h3>
         <div class="form-group"><label>Full Name *</label><input type="text" id="selFullName" placeholder="Your Name" required></div>
         <div class="form-group"><label>Store Name *</label><input type="text" id="selStoreName" placeholder="Store Name" required></div>
         <div class="form-group"><label>Phone Number *</label><input type="tel" id="selPhone" maxlength="10" placeholder="10-digit mobile" required></div>
         <div class="form-group"><label>Password *</label><input type="password" id="selPassword" placeholder="Password" required></div>
-        <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px;" onclick="submitSellerRegistration()">Register Store Now</button>
+        <div class="form-group"><label>PAN Card Number *</label><input type="text" id="selPanNum" placeholder="ABCDE1234F" required></div>
+        <div class="form-group"><label>PAN Card Photo Upload *</label><input type="file" id="selPanFile" accept="image/*" required style="padding:8px; background:#f9f9f9; border:1px dashed var(--border);"></div>
+        <button type="button" class="btn-solid" style="background:var(--success); margin-top:12px;" onclick="submitSellerRegistration()">Submit KYC & Register Store</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SELLER KYC & BANK VERIFICATION PAGE -->
+  <div id="page-seller-kyc" class="app-page">
+    <div class="page-header">
+      <button type="button" class="back-btn" onclick="navigateTo('profile')">← Back</button>
+      <span style="font-weight:700;">📝 Seller Bank Account & Payout Setup</span>
+    </div>
+    <div class="page-content" style="max-width:550px;">
+      <div style="background:#fff; padding:25px; border-radius:8px; border:1px solid var(--border); box-shadow:var(--shadow);">
+        <h3 style="margin-bottom:16px; font-size:1.15rem; color:var(--primary);">Bank Account Details for Payouts</h3>
+        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:14px;">Once Admin verifies your store and KYC, enter your bank details here to receive salary/sales payouts.</p>
+        <div class="form-group"><label>Account Holder Name *</label><input type="text" id="bankAccName" placeholder="Name as per Bank"></div>
+        <div class="form-group"><label>Bank Account Number *</label><input type="text" id="bankAccNum" placeholder="Account Number"></div>
+        <div class="form-group"><label>IFSC Code *</label><input type="text" id="bankIfsc" placeholder="IFSC Code"></div>
+        <button type="button" class="btn-solid" style="background:var(--primary); margin-top:12px;" onclick="saveSellerBankDetails()">Save Bank Details ✓</button>
       </div>
     </div>
   </div>
@@ -1152,12 +1172,18 @@
       let storeName = document.getElementById('selStoreName').value.trim();
       let phone = document.getElementById('selPhone').value.trim();
       let pass = document.getElementById('selPassword').value.trim();
+      let panNum = document.getElementById('selPanNum').value.trim();
 
-      if(!fullName || !storeName || !phone || !pass) { showAlert("Sabhi mandatory fields bharein."); return; }
+      if(!fullName || !storeName || !phone || !pass || !panNum) { 
+        showAlert("Kripya sabhi mandatory fields bharein."); 
+        return; 
+      }
 
       let newSeller = {
         uniqueId: 'SEL-' + Math.floor(10000 + Math.random() * 90000),
         fullName, storeName, phone, password: pass,
+        panNum,
+        kycStatus: 'Pending Admin Verification',
         category: 'Men Wear',
         performance: { score: 94, dispatchTime: '11.4 hrs' }
       };
@@ -1166,8 +1192,29 @@
       localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
       currentUser = phone;
       localStorage.setItem('kosh_logged_email', currentUser);
-      showAlert("Store registered successfully!", "Success", true);
+      showAlert("Store registered & PAN KYC submitted successfully!", "Success", true);
       navigateTo('profile');
+    }
+
+    function saveSellerBankDetails() {
+      let accName = document.getElementById('bankAccName').value.trim();
+      let accNum = document.getElementById('bankAccNum').value.trim();
+      let ifsc = document.getElementById('bankIfsc').value.trim();
+
+      if(!accName || !accNum || !ifsc) {
+        showAlert("Kripya sabhi bank details bharein.");
+        return;
+      }
+
+      let seller = sellersList.find(s => s.phone === currentUser || s.email === currentUser);
+      if(seller) {
+        seller.bankDetails = { accName, accNum, ifsc };
+        localStorage.setItem('kosh_sellers', JSON.stringify(sellersList));
+        showAlert("Bank details saved successfully for payouts!", "Success", true);
+        navigateTo('profile');
+      } else {
+        showAlert("Seller account not found.");
+      }
     }
 
     function loadSellerKycData() {
@@ -1391,7 +1438,7 @@
       } else if(viewName === 'sellers') {
         contentBox.innerHTML = `<h4 style="margin-bottom:12px; font-weight:bold;">🏪 Sellers & Performance Check</h4><div id="admSellersList">No sellers.</div>`;
         let list = document.getElementById('admSellersList');
-        if(list) list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone}</div>`).join('');
+        if(list) list.innerHTML = sellersList.length === 0 ? 'No sellers.' : sellersList.map(s => `<div><b>${s.storeName}</b> - ${s.phone} (PAN: ${s.panNum || 'N/A'})</div>`).join('');
       } else if(viewName === 'products') {
         contentBox.innerHTML = `
           <h4 style="margin-bottom:12px; font-weight:bold;">🛍️ Product Manager, Price Hike & Quick Add</h4>
@@ -1472,7 +1519,7 @@
         renderAdminTickets();
       } else if(viewName === 'settings') {
         contentBox.innerHTML = `
-          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gateway Settings</h4>
+          <h4 style="margin-bottom:8px; color:#e65100;">⚙️ Sale Live & Gallery Settings</h4>
           <div class="form-group"><label><input type="checkbox" id="setSaleActiveChk" style="width:auto; margin-right:6px;"> Active Live Sale Banner on Home</label></div>
           <div class="form-group"><label>Sale Banner Title</label><input type="text" id="setSaleTitleInput" placeholder="🔥 Mega Sale Live!"></div>
           <div class="form-group"><label>Sale Banner Text & Offer</label><input type="text" id="setSaleTextInput" placeholder="Use coupon code KOSH20 for Flat ₹20 OFF"></div>
