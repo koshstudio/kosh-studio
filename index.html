@@ -493,7 +493,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_1](start_span)[span_1](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -782,7 +782,7 @@
     let isAdminLoggedIn = localStorage.getItem('kosh_is_admin') === 'true';
     let secretClickCount = 0;
     let activeCategoryFilter = localStorage.getItem('kosh_active_category') || 'All';
-    let appliedDiscount = 0; // Default 0 so no auto-minus bug occurs
+    let appliedDiscount = 0;
     let appliedCouponCode = null;
     let currentSelectedProduct = null;
     let selectedProductSize = null;
@@ -1480,29 +1480,6 @@
       showAlert("Coupon deleted!");
     }
 
-    function applyCartCoupon() {
-      let code = document.getElementById('cartCouponInput').value.trim().toUpperCase();
-      let subtotal = cart.reduce((a,c) => a + (c.finalPrice * (c.qty || 1)), 0);
-
-      let found = customCoupons.find(c => c.code === code);
-      if(found) {
-        if(subtotal < found.minOrder) {
-          showAlert(`Yeh coupon tabhi applicable hai jab order value minimum ₹${found.minOrder} ho!`);
-          return;
-        }
-        if(found.type === 'flat') {
-          appliedDiscount = found.value;
-        } else {
-          appliedDiscount = Math.round(subtotal * found.value / 100);
-        }
-        appliedCouponCode = found.code;
-        showAlert(`Coupon ${found.code} applied successfully!`, "Success", true);
-        updateCartUI();
-      } else {
-        showAlert("Invalid coupon code.");
-      }
-    }
-
     function applyGlobalPriceHike() {
       let pct = parseFloat(document.getElementById('globalPriceIncInput').value);
       if(isNaN(pct) || pct <= 0) {
@@ -1517,6 +1494,132 @@
       renderAdminProductManager();
       renderProducts(activeCategoryFilter);
       showAlert(`Sabhi products ke prices ${pct}% se badha diye gaye hain!`, "Success", true);
+    }
+
+    function addNewDropshippingProduct() {
+      let title = document.getElementById('dsTitle').value.trim();
+      let category = document.getElementById('dsCategory').value;
+      let price = parseFloat(document.getElementById('dsPrice').value) || 0;
+      let mrp = parseFloat(document.getElementById('dsMrp').value) || price * 1.4;
+      let sourceName = document.getElementById('dsSourceWebsite').value.trim();
+      let sourceLink = document.getElementById('dsSourceLink').value.trim();
+      let desc = document.getElementById('dsDesc').value.trim();
+
+      let photoInputs = document.querySelectorAll('.ds-photo-input');
+      let filesList = [];
+      photoInputs.forEach(inp => {
+        if(inp.files && inp.files[0]) {
+          filesList.push(inp.files[0]);
+        }
+      });
+
+      let checkedSizes = [];
+      let sizeBoxes = document.querySelectorAll('#dsSizesCheckboxes input[type="checkbox"]:checked');
+      sizeBoxes.forEach(b => checkedSizes.push(b.value));
+      if(checkedSizes.length === 0) checkedSizes = ['Free Size'];
+
+      if(!title || !price || !sourceName || !sourceLink) {
+        showAlert("Kripya Title, Selling Price, Source Website aur Source Link zaroor bharein.");
+        return;
+      }
+
+      let saveItem = (imgUrls) => {
+        let newItem = {
+          id: Date.now(),
+          title, category, price, mrp, desc,
+          sourceName,
+          sourceUrl: sourceLink,
+          availableSizes: checkedSizes,
+          stockStatus: 'Available',
+          image: imgUrls[0],
+          images: imgUrls
+        };
+
+        dropshippingList.unshift(newItem);
+        localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
+
+        products.unshift({
+          id: newItem.id,
+          title, category, price, mrp, desc,
+          availableSizes: checkedSizes,
+          stockStatus: 'Available',
+          image: imgUrls[0],
+          images: imgUrls
+        });
+        localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+
+        showAlert("Dropshipping product successfully added!", "Success", true);
+        document.getElementById('dsTitle').value = '';
+        document.getElementById('dsPrice').value = '';
+        document.getElementById('dsMrp').value = '';
+        document.getElementById('dsSourceWebsite').value = '';
+        document.getElementById('dsSourceLink').value = '';
+        document.getElementById('dsDesc').value = '';
+        
+        let slotContainer = document.getElementById('dsPhotoSlotsContainer');
+        if(slotContainer) {
+          slotContainer.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:0.75rem; font-weight:bold; width:70px;">1st Photo:</span>
+              <input type="file" class="ds-photo-input" accept="image/*" style="padding:6px; background:#f9f9f9; border:1px solid var(--border); flex-grow:1;" required>
+            </div>
+          `;
+        }
+
+        renderAdminDropshippingList();
+        renderProducts(activeCategoryFilter);
+      };
+
+      if(filesList.length > 0) {
+        let loaded = [];
+        let count = 0;
+        for(let i=0; i<filesList.length; i++) {
+          let reader = new FileReader();
+          reader.onload = function(e) {
+            loaded.push(e.target.result);
+            count++;
+            if(count === filesList.length) {
+              saveItem(loaded);
+            }
+          };
+          reader.readAsDataURL(filesList[i]);
+        }
+      } else {
+        saveItem(['https://via.placeholder.com/300']);
+      }
+    }
+
+    function renderAdminDropshippingList() {
+      let container = document.getElementById('admDropshippingList');
+      if(!container) return;
+      if(dropshippingList.length === 0) {
+        container.innerHTML = 'No dropshipping products added.';
+        return;
+      }
+      container.innerHTML = dropshippingList.map(item => `
+        <div style="display:flex; gap:12px; align-items:center; padding:12px; border-bottom:1px solid #eee;">
+          <img src="${item.image}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;">
+          <div style="flex-grow:1;">
+            <div style="font-weight:700; font-size:0.9rem;">${item.title}</div>
+            <div style="font-size:0.78rem; color:#666;">Category: ${item.category} | Price: ₹${item.price}</div>
+            <div style="margin-top:6px; font-size:0.8rem; background:#f1f3f6; padding:6px 10px; border-radius:4px; display:inline-block;">
+              🌐 <b>Source Website:</b> <span style="color:#0d47a1; font-weight:bold;">${item.sourceName}</span> &nbsp;|&nbsp; 
+              🔗 <a href="${item.sourceUrl}" target="_blank" style="color:#d32f2f; font-weight:bold; text-decoration:underline;">Open Source Link ↗</a>
+            </div>
+          </div>
+          <button type="button" onclick="deleteDropshippingProduct(${item.id})" style="background:#ff5252; color:#fff; border:none; padding:6px 10px; border-radius:4px; font-size:0.75rem; cursor:pointer; font-weight:bold;">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteDropshippingProduct(id) {
+      dropshippingList = dropshippingList.filter(i => i.id !== id);
+      localStorage.setItem('kosh_dropshipping_list', JSON.stringify(dropshippingList));
+      products = products.filter(p => p.id !== id);
+      localStorage.setItem('kosh_products_v13', JSON.stringify(products));
+      renderAdminDropshippingList();
+      renderProducts(activeCategoryFilter);
+      showAlert("Deleted successfully!");
     }
 
     function adminAddNewProductDirect() {
