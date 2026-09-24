@@ -552,7 +552,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_2](start_span)[span_2](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -881,11 +881,11 @@
       db.collection('kosh_store').doc('master_data').set(storeData).catch(err => console.log(err));
     }
 
-    // Real-time Firestore Sync Listener
+    // Real-time Firestore Sync Listener with LocalStorage Migration Support
     db.collection('kosh_store').doc('master_data').onSnapshot((doc) => {
       if (doc.exists) {
         let data = doc.data();
-        products = data.products || [];
+        products = (data.products && data.products.length > 0) ? data.products : (JSON.parse(localStorage.getItem('kosh_products_v13')) || []);
         pendingCatalogs = data.pendingCatalogs || [];
         dropshippingList = data.dropshippingList || [];
         sellersList = data.sellers || [];
@@ -902,6 +902,15 @@
         updateCartUI();
         checkLoginStatus();
       } else {
+        // Fallback: If cloud is completely empty, grab existing data from localStorage and upload to cloud
+        products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
+        pendingCatalogs = JSON.parse(localStorage.getItem('kosh_pending_catalogs')) || [];
+        dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
+        sellersList = JSON.parse(localStorage.getItem('kosh_sellers')) || [];
+        customersList = JSON.parse(localStorage.getItem('kosh_customers')) || [];
+        ordersList = JSON.parse(localStorage.getItem('kosh_orders')) || [];
+        ticketsList = JSON.parse(localStorage.getItem('kosh_tickets')) || [];
+        productReviews = JSON.parse(localStorage.getItem('kosh_product_reviews')) || {};
         saveToCloud();
       }
     });
@@ -929,7 +938,6 @@
         }
         return true;
       });
-      saveToCloud();
 
       if(localStorage.getItem('kosh_cart_open') === 'true') {
         let drawer = document.getElementById('cartDrawer');
