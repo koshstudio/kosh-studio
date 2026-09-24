@@ -347,7 +347,7 @@
 
         <div id="sellerKycCard" style="display:none; background:#e8f5e9; padding:20px; border-radius:8px; border:1px solid #c8e6c9; margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('seller-kyc')">
           <h4 style="font-size:1rem; margin-bottom:4px; color:#2e7d32;">📝 Seller KYC & Bank Verification</h4>
-          <p style="font-size:0.8rem; color:#555;">Complete your PAN & bank verification to receive payouts.</p>
+          <p style="font-size:0.85rem; color:#555;">Complete your PAN & bank verification to receive payouts.</p>
         </div>
 
         <div style="background:#fff; padding:20px; border-radius:8px; border:1px solid var(--border); margin-bottom:14px; box-shadow:var(--shadow); cursor:pointer;" onclick="navigateTo('support')">
@@ -552,7 +552,7 @@
       </div>
 
       <div id="wizStep2" class="wizard-step-content" style="display:none;">
-        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_0](start_span)[span_0](end_span)</div>
+        <div style="font-size:0.75rem; color:var(--muted); font-weight:bold; margin-bottom:8px;">All fields are mandatory[span_1](start_span)[span_1](end_span)</div>
         <div style="display:flex; gap:10px;">
           <div class="form-group" style="flex:1;"><label>Weight (g) *</label><input type="number" id="wizWeight" value="350" required></div>
           <div class="form-group" style="flex:1;"><label>Color *</label><select id="wizColor"><option value="Assorted">Assorted</option><option value="Black">Black</option><option value="Blue">Blue</option></select></div>
@@ -816,15 +816,15 @@
   </div>
 
   <script>
-    // Firebase Initialization with provided config
+    // Firebase Initialization with updated config
     const firebaseConfig = {
-      apiKey: "AIzaSyAEwcdKacBZ25r_xvE8xxB-Dasb6u6GZw",
+      apiKey: "AIzaSyAEqwcdKac8z25r_xvE8xxB-Dasb6u5GZw",
       authDomain: "koshstudio-40e17.firebaseapp.com",
       projectId: "koshstudio-40e17",
-      storageBucket: "koshstudio-40e17.appspot.com",
+      storageBucket: "koshstudio-40e17.firebasestorage.app",
       messagingSenderId: "520749374423",
-      appId: "1:520749374423:web:ee1f371aaf7bf44883c992",
-      measurementId: "G-41VNCZMQY6"
+      appId: "1:520749374423:web:a77561f7b739179b83c992",
+      measurementId: "G-RHMJ5GEY2K"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
@@ -902,7 +902,6 @@
         updateCartUI();
         checkLoginStatus();
       } else {
-        // Fallback: If cloud is completely empty, grab existing data from localStorage and upload to cloud
         products = JSON.parse(localStorage.getItem('kosh_products_v13')) || [];
         pendingCatalogs = JSON.parse(localStorage.getItem('kosh_pending_catalogs')) || [];
         dropshippingList = JSON.parse(localStorage.getItem('kosh_dropshipping_list')) || [];
